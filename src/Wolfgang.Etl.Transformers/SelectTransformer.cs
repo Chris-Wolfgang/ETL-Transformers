@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Threading.Tasks;
 using Wolfgang.Etl.Abstractions;
 
@@ -22,19 +20,20 @@ namespace Wolfgang.Etl.Transformers;
 /// it applies a function to each input item and yields the result.
 /// </para>
 /// <para>
-/// Two constructors are provided: one for synchronous selectors and one for asynchronous selectors
-/// that accept the enumeration's <see cref="CancellationToken"/>. The asynchronous form is useful
-/// for I/O-bound transformations (database lookups, HTTP calls, etc.) that should observe cancellation.
+/// Two constructors are provided: one for synchronous selectors and one for asynchronous
+/// selectors returning <see cref="ValueTask{TResult}"/>. The asynchronous form is useful for
+/// I/O-bound projections (database lookups, HTTP calls, etc.).
 /// </para>
 /// <para>
-/// Exceptions thrown by the selector propagate to the caller. If an item needs to be skipped on error
-/// the caller is expected to handle that inside the selector.
+/// This type deliberately implements only <see cref="ITransformAsync{TSource, TDestination}"/> and
+/// does <b>not</b> inherit from <see cref="TransformerBase{TSource, TDestination, TProgress}"/>.
+/// It carries no progress reporting, no cancellation token, and no item counters - keeping the
+/// hot loop as small as possible for use as a building block in composed pipelines. See the
+/// benchmarks project for measurements motivating this choice.
 /// </para>
 /// <para>
-/// Inherits from <see cref="TransformerBase{TSource, TDestination, TProgress}"/> so consumers get
-/// <see cref="TransformerBase{TSource, TDestination, TProgress}.SkipItemCount"/>,
-/// <see cref="TransformerBase{TSource, TDestination, TProgress}.MaximumItemCount"/>, and periodic
-/// progress callbacks via <see cref="Report"/>.
+/// Exceptions thrown by the selector propagate to the caller. Callers that need to handle
+/// errors per item should do so inside the selector itself.
 /// </para>
 /// </remarks>
 /// <example>
@@ -42,18 +41,19 @@ namespace Wolfgang.Etl.Transformers;
 ///     // synchronous projection
 ///     var toUpper = new SelectTransformer&lt;string, string&gt;(s =&gt; s.ToUpperInvariant());
 ///
-///     // asynchronous projection that respects cancellation
+///     // asynchronous projection (I/O-bound)
 ///     var lookup = new SelectTransformer&lt;int, Customer&gt;
 ///     (
-///         async (id, token) =&gt; await customerService.GetByIdAsync(id, token).ConfigureAwait(false)
+///         async id =&gt; await customerService.GetByIdAsync(id).ConfigureAwait(false)
 ///     );
 /// </code>
 /// </example>
-public sealed class SelectTransformer<TSource, TDestination> : TransformerBase<TSource, TDestination, Report>
+public sealed class SelectTransformer<TSource, TDestination> : ITransformAsync<TSource, TDestination>
     where TSource : notnull
     where TDestination : notnull
 {
-    private readonly Func<TSource, CancellationToken, ValueTask<TDestination>> _selector;
+    private readonly Func<TSource, TDestination>? _syncSelector;
+    private readonly Func<TSource, ValueTask<TDestination>>? _asyncSelector;
 
 
 
@@ -73,23 +73,20 @@ public sealed class SelectTransformer<TSource, TDestination> : TransformerBase<T
         }
 #endif
 
-        _selector = (item, _) => new ValueTask<TDestination>(selector(item));
+        _syncSelector = selector;
     }
 
 
 
     /// <summary>
-    /// Initializes a new instance with an asynchronous selector function that accepts a
-    /// <see cref="CancellationToken"/>.
+    /// Initializes a new instance with an asynchronous selector function.
     /// </summary>
     /// <param name="selector">
     /// A function that asynchronously projects each input item to an output item.
-    /// The supplied <see cref="CancellationToken"/> is the same token passed to
-    /// <see cref="TransformerBase{TSource, TDestination, TProgress}.TransformAsync(IAsyncEnumerable{TSource}, CancellationToken)"/>
-    /// and its progress-reporting overloads.
+    /// Useful for I/O-bound projections.
     /// </param>
     /// <exception cref="ArgumentNullException"><paramref name="selector"/> is <see langword="null"/>.</exception>
-    public SelectTransformer(Func<TSource, CancellationToken, ValueTask<TDestination>> selector)
+    public SelectTransformer(Func<TSource, ValueTask<TDestination>> selector)
     {
 #if NET6_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(selector);
@@ -100,56 +97,61 @@ public sealed class SelectTransformer<TSource, TDestination> : TransformerBase<T
         }
 #endif
 
-        _selector = selector;
+        _asyncSelector = selector;
     }
 
 
 
     /// <summary>
-    /// Projects each item from <paramref name="items"/> through the selector supplied at construction,
-    /// honouring <see cref="TransformerBase{TSource, TDestination, TProgress}.SkipItemCount"/> and
-    /// <see cref="TransformerBase{TSource, TDestination, TProgress}.MaximumItemCount"/>.
+    /// Asynchronously projects each item from <paramref name="items"/> through the configured
+    /// selector and yields the result.
     /// </summary>
-    protected override async IAsyncEnumerable<TDestination> TransformWorkerAsync
+    /// <param name="items">The asynchronous source sequence.</param>
+    /// <returns>An asynchronous sequence of projected items.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="items"/> is <see langword="null"/>.</exception>
+    public IAsyncEnumerable<TDestination> TransformAsync(IAsyncEnumerable<TSource> items)
+    {
+#if NET6_0_OR_GREATER
+        ArgumentNullException.ThrowIfNull(items);
+#else
+#pragma warning disable RCS1140 // Roslynator does not associate throw inside #else block with method XML doc
+        if (items == null)
+        {
+            throw new ArgumentNullException(nameof(items));
+        }
+#pragma warning restore RCS1140
+#endif
+
+        return _syncSelector is not null
+            ? ProjectWithSyncSelectorAsync(items, _syncSelector)
+            : ProjectWithAsyncSelectorAsync(items, _asyncSelector!);
+    }
+
+
+
+    private static async IAsyncEnumerable<TDestination> ProjectWithSyncSelectorAsync
     (
         IAsyncEnumerable<TSource> items,
-        [EnumeratorCancellation] CancellationToken token
+        Func<TSource, TDestination> selector
     )
     {
-        var skipRemaining = SkipItemCount;
-        var maxRemaining = MaximumItemCount;
-
-        await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
+        await foreach (var item in items.ConfigureAwait(continueOnCapturedContext: false))
         {
-            token.ThrowIfCancellationRequested();
-
-            if (skipRemaining > 0)
-            {
-                skipRemaining--;
-                IncrementCurrentSkippedItemCount();
-                continue;
-            }
-
-            if (maxRemaining <= 0)
-            {
-                yield break;
-            }
-
-            var result = await _selector(item, token).ConfigureAwait(continueOnCapturedContext: false);
-            maxRemaining--;
-            IncrementCurrentItemCount();
-            yield return result;
+            yield return selector(item);
         }
     }
 
 
 
-    /// <summary>
-    /// Creates a <see cref="Report"/> snapshot reflecting the current transformed-item count.
-    /// </summary>
-    /// <returns>A new <see cref="Report"/> with <see cref="Report.CurrentItemCount"/> set to the current count.</returns>
-    protected override Report CreateProgressReport()
+    private static async IAsyncEnumerable<TDestination> ProjectWithAsyncSelectorAsync
+    (
+        IAsyncEnumerable<TSource> items,
+        Func<TSource, ValueTask<TDestination>> selector
+    )
     {
-        return new Report(CurrentItemCount);
+        await foreach (var item in items.ConfigureAwait(continueOnCapturedContext: false))
+        {
+            yield return await selector(item).ConfigureAwait(continueOnCapturedContext: false);
+        }
     }
 }
