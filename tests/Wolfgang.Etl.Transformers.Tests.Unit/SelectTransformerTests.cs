@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Wolfgang.Etl.Abstractions;
 using Xunit;
@@ -33,7 +32,7 @@ public class SelectTransformerTests
     {
         var ex = Assert.Throws<ArgumentNullException>
         (
-            () => new SelectTransformer<int, string>((Func<int, CancellationToken, ValueTask<string>>)null!)
+            () => new SelectTransformer<int, string>((Func<int, ValueTask<string>>)null!)
         );
 
         Assert.Equal("selector", ex.ParamName);
@@ -41,12 +40,31 @@ public class SelectTransformerTests
 
 
 
-    // ---------- basic projection ----------
+    // ---------- null input ----------
+
+    [Fact]
+    public void TransformAsync_when_items_is_null_throws_ArgumentNullException()
+    {
+        Func<int, string> selector = i => i.ToString(CultureInfo.InvariantCulture);
+        var sut = new SelectTransformer<int, string>(selector);
+
+        var ex = Assert.Throws<ArgumentNullException>
+        (
+            () => sut.TransformAsync(null!)
+        );
+
+        Assert.Equal("items", ex.ParamName);
+    }
+
+
+
+    // ---------- sync selector ----------
 
     [Fact]
     public async Task TransformAsync_sync_selector_projects_each_item()
     {
-        var sut = new SelectTransformer<int, string>(i => i.ToString(CultureInfo.InvariantCulture));
+        Func<int, string> selector = i => i.ToString(CultureInfo.InvariantCulture);
+        var sut = new SelectTransformer<int, string>(selector);
 
         var result = await CollectAsync(sut.TransformAsync(ToAsync(new[] { 1, 2, 3 })));
 
@@ -54,14 +72,15 @@ public class SelectTransformerTests
     }
 
 
+
+    // ---------- async selector ----------
 
     [Fact]
     public async Task TransformAsync_async_selector_projects_each_item()
     {
-        var sut = new SelectTransformer<int, string>
-        (
-            (i, _) => new ValueTask<string>(i.ToString(CultureInfo.InvariantCulture))
-        );
+        Func<int, ValueTask<string>> selector =
+            i => new ValueTask<string>(i.ToString(CultureInfo.InvariantCulture));
+        var sut = new SelectTransformer<int, string>(selector);
 
         var result = await CollectAsync(sut.TransformAsync(ToAsync(new[] { 1, 2, 3 })));
 
@@ -70,10 +89,13 @@ public class SelectTransformerTests
 
 
 
+    // ---------- empty source ----------
+
     [Fact]
-    public async Task TransformAsync_when_source_is_empty_yields_no_items()
+    public async Task TransformAsync_when_source_is_empty_yields_no_items_sync_selector()
     {
-        var sut = new SelectTransformer<int, string>(i => i.ToString(CultureInfo.InvariantCulture));
+        Func<int, string> selector = i => i.ToString(CultureInfo.InvariantCulture);
+        var sut = new SelectTransformer<int, string>(selector);
 
         var result = await CollectAsync(sut.TransformAsync(ToAsync(Array.Empty<int>())));
 
@@ -82,118 +104,27 @@ public class SelectTransformerTests
 
 
 
-    // ---------- counts ----------
-
     [Fact]
-    public async Task TransformAsync_increments_CurrentItemCount_per_yielded_item()
+    public async Task TransformAsync_when_source_is_empty_yields_no_items_async_selector()
     {
-        var sut = new SelectTransformer<int, int>(i => i * 2);
+        Func<int, ValueTask<string>> selector =
+            i => new ValueTask<string>(i.ToString(CultureInfo.InvariantCulture));
+        var sut = new SelectTransformer<int, string>(selector);
 
-        await CollectAsync(sut.TransformAsync(ToAsync(Enumerable.Range(0, 5))));
+        var result = await CollectAsync(sut.TransformAsync(ToAsync(Array.Empty<int>())));
 
-        Assert.Equal(5, sut.CurrentItemCount);
+        Assert.Empty(result);
     }
 
 
 
-    [Fact]
-    public async Task TransformAsync_when_SkipItemCount_is_set_skips_first_n_items()
-    {
-        var sut = new SelectTransformer<int, int>(i => i * 10) { SkipItemCount = 2 };
-
-        var result = await CollectAsync(sut.TransformAsync(ToAsync(new[] { 1, 2, 3, 4, 5 })));
-
-        Assert.Equal(new[] { 30, 40, 50 }, result);
-        Assert.Equal(3, sut.CurrentItemCount);
-        Assert.Equal(2, sut.CurrentSkippedItemCount);
-    }
-
-
-
-    [Fact]
-    public async Task TransformAsync_when_MaximumItemCount_is_set_stops_after_max_items()
-    {
-        var sut = new SelectTransformer<int, int>(i => i * 10) { MaximumItemCount = 3 };
-
-        var result = await CollectAsync(sut.TransformAsync(ToAsync(Enumerable.Range(1, 10))));
-
-        Assert.Equal(new[] { 10, 20, 30 }, result);
-        Assert.Equal(3, sut.CurrentItemCount);
-    }
-
-
-
-    [Fact]
-    public async Task TransformAsync_when_Skip_and_Max_are_both_set_applies_skip_then_max()
-    {
-        var sut = new SelectTransformer<int, int>(i => i * 10)
-        {
-            SkipItemCount = 2,
-            MaximumItemCount = 3,
-        };
-
-        var result = await CollectAsync(sut.TransformAsync(ToAsync(Enumerable.Range(1, 10))));
-
-        Assert.Equal(new[] { 30, 40, 50 }, result);
-        Assert.Equal(3, sut.CurrentItemCount);
-        Assert.Equal(2, sut.CurrentSkippedItemCount);
-    }
-
-
-
-    // ---------- cancellation ----------
-
-    [Fact]
-    public async Task TransformAsync_when_cancellation_already_requested_throws_OperationCanceledException()
-    {
-        using var cts = new CancellationTokenSource();
-        cts.Cancel();
-        var sut = new SelectTransformer<int, int>(i => i);
-
-        await Assert.ThrowsAnyAsync<OperationCanceledException>
-        (
-            async () =>
-            {
-                await foreach (var _ in sut.TransformAsync(ToAsync(new[] { 1, 2, 3 }), cts.Token))
-                {
-                }
-            }
-        );
-    }
-
-
-
-    [Fact]
-    public async Task TransformAsync_async_selector_receives_same_token_passed_to_TransformAsync()
-    {
-        using var cts = new CancellationTokenSource();
-        CancellationToken observed = default;
-
-        var sut = new SelectTransformer<int, int>
-        (
-            (i, token) =>
-            {
-                observed = token;
-                return new ValueTask<int>(i);
-            }
-        );
-
-        _ = await CollectAsync(sut.TransformAsync(ToAsync(new[] { 1 }), cts.Token));
-
-        Assert.Equal(cts.Token, observed);
-    }
-
-
-
-    // ---------- selector exceptions ----------
+    // ---------- exception propagation ----------
 
     [Fact]
     public async Task TransformAsync_when_sync_selector_throws_exception_propagates()
     {
-        var sut = new SelectTransformer<int, int>
-        (
-            _ => throw new InvalidOperationException("boom")
-        );
+        Func<int, int> selector = _ => throw new InvalidOperationException("boom");
+        var sut = new SelectTransformer<int, int>(selector);
 
         var ex = await Assert.ThrowsAsync<InvalidOperationException>
         (
@@ -208,10 +139,8 @@ public class SelectTransformerTests
     [Fact]
     public async Task TransformAsync_when_async_selector_throws_exception_propagates()
     {
-        var sut = new SelectTransformer<int, int>
-        (
-            (_, _) => throw new InvalidOperationException("async-boom")
-        );
+        Func<int, ValueTask<int>> selector = _ => throw new InvalidOperationException("async-boom");
+        var sut = new SelectTransformer<int, int>(selector);
 
         var ex = await Assert.ThrowsAsync<InvalidOperationException>
         (
@@ -223,61 +152,46 @@ public class SelectTransformerTests
 
 
 
-    // ---------- type inheritance sanity ----------
+    // ---------- order preservation ----------
 
     [Fact]
-    public void SelectTransformer_inherits_TransformerBase()
+    public async Task TransformAsync_preserves_order_of_projected_items()
     {
-        var sut = new SelectTransformer<int, int>(i => i);
+        Func<int, int> selector = i => i * 10;
+        var sut = new SelectTransformer<int, int>(selector);
+        var source = Enumerable.Range(1, 100).ToArray();
 
-        Assert.IsAssignableFrom<TransformerBase<int, int, Report>>(sut);
+        var result = await CollectAsync(sut.TransformAsync(ToAsync(source)));
+
+        Assert.Equal(source.Select(i => i * 10), result);
     }
 
 
 
-    [Fact]
-    public void SelectTransformer_implements_ITransformWithProgressAndCancellationAsync()
-    {
-        var sut = new SelectTransformer<int, int>(i => i);
-
-        Assert.IsAssignableFrom<ITransformWithProgressAndCancellationAsync<int, int, Report>>(sut);
-    }
-
-
-
-    // ---------- progress report ----------
-
-    [Fact]
-    public async Task TransformAsync_with_progress_reports_Report_with_current_item_count_at_completion()
-    {
-        var sut = new SelectTransformer<int, int>(i => i);
-        var lastReport = new Report(0);
-        var progress = new Progress<Report>(r => lastReport = r);
-
-        var result = await CollectAsync(sut.TransformAsync(ToAsync(new[] { 1, 2, 3, 4, 5 }), progress));
-
-        // Let the Progress<T> SynchronizationContext drain.
-        await Task.Delay(100);
-
-        Assert.Equal(5, result.Count);
-        Assert.Equal(5, lastReport.CurrentItemCount);
-    }
-
-
-
-    // ---------- type conversion use case ----------
+    // ---------- cross-type projection ----------
 
     [Fact]
     public async Task TransformAsync_supports_changing_type_from_source_to_destination()
     {
-        var sut = new SelectTransformer<int, string>
-        (
-            i => $"value={i}"
-        );
+        Func<int, string> selector = i => $"value={i}";
+        var sut = new SelectTransformer<int, string>(selector);
 
         var result = await CollectAsync(sut.TransformAsync(ToAsync(new[] { 10, 20 })));
 
         Assert.Equal(new[] { "value=10", "value=20" }, result);
+    }
+
+
+
+    // ---------- interface sanity ----------
+
+    [Fact]
+    public void SelectTransformer_implements_ITransformAsync()
+    {
+        Func<int, int> selector = i => i;
+        var sut = new SelectTransformer<int, int>(selector);
+
+        Assert.IsAssignableFrom<ITransformAsync<int, int>>(sut);
     }
 
 
