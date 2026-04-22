@@ -42,7 +42,11 @@
   </Folder>
   <Folder Name="/benchmarks/" />
   <Folder Name="/examples/" />
-  <Folder Name="/src/" />
-  <Folder Name="/tests/" />
+  <Folder Name="/src/">
+    <Project Path="src/Wolfgang.Etl.Transformers/Wolfgang.Etl.Transformers.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Wolfgang.Etl.Transformers.Tests.Unit/Wolfgang.Etl.Transformers.Tests.Unit.csproj" />
+  </Folder>
 </Solution>
 
