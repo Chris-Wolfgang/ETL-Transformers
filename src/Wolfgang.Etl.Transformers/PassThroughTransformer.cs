@@ -50,6 +50,12 @@ public sealed class PassThroughTransformer<T> : ITransformWithCancellationAsync<
     /// <returns>
     /// An asynchronous sequence containing the same items as <paramref name="items"/>, in the same order.
     /// </returns>
+    /// <remarks>
+    /// Because no transformation is applied, this overload returns the source sequence directly
+    /// without allocating a wrapping iterator. Any cancellation must be supplied by the caller
+    /// via <c>.WithCancellation(token)</c> on the returned sequence, or by using the
+    /// <see cref="TransformAsync(IAsyncEnumerable{T}, CancellationToken)"/> overload.
+    /// </remarks>
     /// <exception cref="ArgumentNullException"><paramref name="items"/> is <see langword="null"/>.</exception>
     public IAsyncEnumerable<T> TransformAsync(IAsyncEnumerable<T> items)
     {
@@ -63,7 +69,7 @@ public sealed class PassThroughTransformer<T> : ITransformWithCancellationAsync<
         }
 #pragma warning restore RCS1140
 #endif
-        return TransformAsyncCore(items, CancellationToken.None);
+        return items;
     }
 
 
