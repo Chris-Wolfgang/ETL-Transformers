@@ -44,6 +44,15 @@ public sealed class PassThroughTransformer<T> : ITransformWithCancellationAsync<
     where T : notnull
 {
     /// <summary>
+    /// Initializes a new instance of the <see cref="PassThroughTransformer{T}"/> class.
+    /// </summary>
+    public PassThroughTransformer()
+    {
+    }
+
+
+
+    /// <summary>
     /// Asynchronously yields each item from <paramref name="items"/> unchanged.
     /// </summary>
     /// <param name="items">The asynchronous source sequence.</param>
