@@ -53,6 +53,15 @@ public sealed class OfTypeTransformer<TSource, TDestination> : ITransformAsync<T
     where TDestination : notnull
 {
     /// <summary>
+    /// Initializes a new instance of the <see cref="OfTypeTransformer{TSource, TDestination}"/> class.
+    /// </summary>
+    public OfTypeTransformer()
+    {
+    }
+
+
+
+    /// <summary>
     /// Asynchronously yields each item from <paramref name="items"/> that is an instance of
     /// <typeparamref name="TDestination"/>.
     /// </summary>
