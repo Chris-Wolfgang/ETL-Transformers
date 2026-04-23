@@ -46,6 +46,15 @@ public sealed class CastTransformer<TSource, TDestination> : ITransformAsync<TSo
     where TDestination : notnull
 {
     /// <summary>
+    /// Initializes a new instance of the <see cref="CastTransformer{TSource, TDestination}"/> class.
+    /// </summary>
+    public CastTransformer()
+    {
+    }
+
+
+
+    /// <summary>
     /// Asynchronously yields each item from <paramref name="items"/> cast to
     /// <typeparamref name="TDestination"/>.
     /// </summary>
