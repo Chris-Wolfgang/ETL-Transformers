@@ -16,10 +16,10 @@ namespace Wolfgang.Etl.Transformers;
 /// <remarks>
 /// <para>
 /// <see cref="DistinctByTransformer{TSource, TKey}"/> is the transformer equivalent of LINQ's
-/// <see cref="System.Linq.Enumerable.DistinctBy{TSource, TKey}(System.Collections.Generic.IEnumerable{TSource}, System.Func{TSource, TKey})"/>.
-/// Keys are compared using either the supplied <see cref="IEqualityComparer{T}"/> or
-/// <see cref="EqualityComparer{T}.Default"/> if none is provided. Order is preserved: the
-/// item bearing the first occurrence of each key is yielded.
+/// <c>Enumerable.DistinctBy</c> (introduced in .NET 6). Keys are compared using either the
+/// supplied <see cref="IEqualityComparer{T}"/> or <see cref="EqualityComparer{T}.Default"/>
+/// if none is provided. Order is preserved: the item bearing the first occurrence of each
+/// key is yielded.
 /// </para>
 /// <para>
 /// The key selector is synchronous - key extraction is normally a cheap pure function (a
