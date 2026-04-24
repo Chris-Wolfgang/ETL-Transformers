@@ -71,4 +71,57 @@ public static class TransformerExtensions
 
         return new ChainTransformer<TSource, TIntermediate, TDestination>(first, next);
     }
+
+
+
+    /// <summary>
+    /// Composes two cancellation-aware transformers into a single one: items flow through
+    /// <paramref name="first"/>, then through <paramref name="next"/>, and any
+    /// <see cref="System.Threading.CancellationToken"/> supplied to the resulting chain is
+    /// propagated to both stages.
+    /// </summary>
+    /// <typeparam name="TSource">The input type of the chain. Must be non-null.</typeparam>
+    /// <typeparam name="TIntermediate">The intermediate type between the two transformers. Must be non-null.</typeparam>
+    /// <typeparam name="TDestination">The output type of the chain. Must be non-null.</typeparam>
+    /// <param name="first">The cancellation-aware transformer that runs first.</param>
+    /// <param name="next">The cancellation-aware transformer that runs after <paramref name="first"/>.</param>
+    /// <returns>An <see cref="ITransformWithCancellationAsync{TSource, TDestination}"/> representing the composed pipeline.</returns>
+    /// <exception cref="ArgumentNullException">
+    /// <paramref name="first"/> or <paramref name="next"/> is <see langword="null"/>.
+    /// </exception>
+    /// <remarks>
+    /// <para>
+    /// This overload is selected by the C# compiler when both arguments implement
+    /// <see cref="ITransformWithCancellationAsync{TSource, TDestination}"/> (more specific than
+    /// the base <see cref="ITransformAsync{TSource, TDestination}"/> overload). The returned
+    /// chain is itself <see cref="ITransformWithCancellationAsync{TSource, TDestination}"/>, so
+    /// subsequent <c>.Then(...)</c> calls in a longer chain also pick this overload, allowing
+    /// arbitrary-length cancellation-aware chains to compose without ceremony.
+    /// </para>
+    /// </remarks>
+    public static ITransformWithCancellationAsync<TSource, TDestination> Then<TSource, TIntermediate, TDestination>
+    (
+        this ITransformWithCancellationAsync<TSource, TIntermediate> first,
+        ITransformWithCancellationAsync<TIntermediate, TDestination> next
+    )
+        where TSource : notnull
+        where TIntermediate : notnull
+        where TDestination : notnull
+    {
+#if NET6_0_OR_GREATER
+        ArgumentNullException.ThrowIfNull(first);
+        ArgumentNullException.ThrowIfNull(next);
+#else
+        if (first == null)
+        {
+            throw new ArgumentNullException(nameof(first));
+        }
+        if (next == null)
+        {
+            throw new ArgumentNullException(nameof(next));
+        }
+#endif
+
+        return new ChainTransformerWithCancellation<TSource, TIntermediate, TDestination>(first, next);
+    }
 }
