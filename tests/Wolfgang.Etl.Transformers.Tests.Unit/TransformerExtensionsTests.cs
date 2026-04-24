@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading;
 using System.Threading.Tasks;
 using Wolfgang.Etl.Abstractions;
 using Xunit;
@@ -141,6 +142,112 @@ public class TransformerExtensionsTests
         // Outer is ChainTransformer<int, int, int>; its 'first' should itself be a
         // ChainTransformer (the a.Then(b) result), not the original a.
         Assert.IsType<ChainTransformer<int, int, int>>(chain);
+    }
+
+
+
+    // ---------- cancellation overload ----------
+
+    [Fact]
+    public void Then_cancellation_overload_when_first_is_null_throws_ArgumentNullException()
+    {
+        ITransformWithCancellationAsync<int, int> first = null!;
+
+        var ex = Assert.Throws<ArgumentNullException>
+        (
+            () => first.Then(new PassThroughTransformer<int>())
+        );
+
+        Assert.Equal("first", ex.ParamName);
+    }
+
+
+
+    [Fact]
+    public void Then_cancellation_overload_when_next_is_null_throws_ArgumentNullException()
+    {
+        ITransformWithCancellationAsync<int, int> first = new PassThroughTransformer<int>();
+
+        var ex = Assert.Throws<ArgumentNullException>
+        (
+            () => first.Then((ITransformWithCancellationAsync<int, int>)null!)
+        );
+
+        Assert.Equal("next", ex.ParamName);
+    }
+
+
+
+    [Fact]
+    public void Then_returns_ChainTransformerWithCancellation_when_both_args_have_cancellation()
+    {
+        ITransformWithCancellationAsync<int, int> first = new PassThroughTransformer<int>();
+        ITransformWithCancellationAsync<int, int> second = new PassThroughTransformer<int>();
+
+        var result = first.Then(second);
+
+        Assert.IsType<ChainTransformerWithCancellation<int, int, int>>(result);
+    }
+
+
+
+    [Fact]
+    public void Then_returned_chain_implements_ITransformWithCancellationAsync_when_both_args_have_cancellation()
+    {
+        ITransformWithCancellationAsync<int, int> first = new PassThroughTransformer<int>();
+        ITransformWithCancellationAsync<int, int> second = new PassThroughTransformer<int>();
+
+        var result = first.Then(second);
+
+        Assert.IsAssignableFrom<ITransformWithCancellationAsync<int, int>>(result);
+    }
+
+
+
+    [Fact]
+    public async Task Then_cancellation_overload_token_propagates_through_a_chain_of_three()
+    {
+        // Build a 3-stage cancellation-aware chain via .Then(...).Then(...) - each .Then call
+        // must pick the cancellation overload because the receiver and arg both implement
+        // ITransformWithCancellationAsync.
+        ITransformWithCancellationAsync<int, int> a = new PassThroughTransformer<int>();
+        ITransformWithCancellationAsync<int, int> b = new PassThroughTransformer<int>();
+        ITransformWithCancellationAsync<int, int> c = new PassThroughTransformer<int>();
+
+        var chain = a.Then(b).Then(c);
+
+        Assert.IsAssignableFrom<ITransformWithCancellationAsync<int, int>>(chain);
+
+        using var cts = new CancellationTokenSource();
+        cts.Cancel();
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>
+        (
+            async () =>
+            {
+                await foreach (var _ in chain.TransformAsync(ToAsync(new[] { 1, 2, 3 }), cts.Token))
+                {
+                }
+            }
+        );
+    }
+
+
+
+    [Fact]
+    public async Task Then_cancellation_overload_chain_runs_normally_with_uncancelled_token()
+    {
+        ITransformWithCancellationAsync<int, int> a = new PassThroughTransformer<int>();
+        ITransformWithCancellationAsync<int, int> b = new PassThroughTransformer<int>();
+
+        var chain = a.Then(b);
+
+        var result = await CollectAsync
+        (
+            chain.TransformAsync(ToAsync(new[] { 1, 2, 3 }), CancellationToken.None)
+        );
+
+        Assert.Equal(new[] { 1, 2, 3 }, result);
     }
 
 
