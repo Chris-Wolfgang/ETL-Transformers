@@ -26,9 +26,10 @@ env:
   CODECOV_MINIMUM: 90
   
 on:
-  pull_request_target:  # Runs from the main branch, not from PR branch
+  pull_request_target:  # Runs from the target branch, not from PR branch
     branches:
       - main
+      - dev
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
