@@ -16,7 +16,7 @@ Welcome to the Wolfgang.Etl.Transformers documentation. This site contains compr
 
 A collection of generic, broadly reusable transformers for use in ETL pipelines built on [Wolfgang.Etl.Abstractions](https://github.com/Chris-Wolfgang/ETL-Abstractions).
 
-The library ships 15 transformers covering the LINQ-style operators (`Where`, `Select`, `SelectMany`, `Distinct`, `Take`, `Skip`, `Chunk`, etc.), a `BufferedTransformer<T>` for pipeline parallelism, and `ChainTransformer` + `.Then(...)` extension methods for composing any number of transformers into one. Every transformer implements `ITransformAsync<,>` directly &mdash; no base-class inheritance &mdash; for minimal per-item overhead.
+The library ships a focused set of transformers covering the LINQ-style operators (`Where`, `Select`, `SelectMany`, `Distinct`, `Take`, `Skip`, `Chunk`, etc.), a `BufferedTransformer<T>` for pipeline parallelism, and `ChainTransformer` + `.Then(...)` extension methods for composing any number of transformers into one. Every transformer implements `ITransformAsync<,>` directly &mdash; no base-class inheritance &mdash; for minimal per-item overhead. See [Introduction](docs/introduction.md) for the complete list grouped by category.
 
 ## Installation
 
