@@ -26,9 +26,29 @@ Install-Package Wolfgang.Etl.Transformers
 Compose three small transformers into a single pipeline with `.Then(...)`:
 
 ```csharp
+using System.Threading;
 using Wolfgang.Etl.Abstractions;
 using Wolfgang.Etl.TestKit;
 using Wolfgang.Etl.Transformers;
+
+// Hypothetical domain type. Replace with your own.
+public sealed record Order(int Quantity, decimal Price)
+{
+    public static Order Parse(string line)
+    {
+        var parts = line.Split(',');
+        return new Order(int.Parse(parts[0]), decimal.Parse(parts[1]));
+    }
+}
+
+// The input you would normally read from a file, database, or HTTP stream.
+string[] rawLines =
+{
+    "2,9.99",
+    "",
+    "1,4.50",
+    "0,12.00",
+};
 
 // 1. Build three small, single-purpose transformers.
 ITransformAsync<string, string> stripBlanks = new WhereTransformer<string>
