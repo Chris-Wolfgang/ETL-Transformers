@@ -1,6 +1,6 @@
-# Contributing to ETL-Transformers
+# Contributing to Wolfgang.Etl.Transformers
 
-Thank you for your interest in contributing to **ETL-Transformers**! We welcome contributions to help improve this project.
+Thank you for your interest in contributing to **Wolfgang.Etl.Transformers**! We welcome contributions to help improve this project.
 
 ## How Can You Contribute?
 
