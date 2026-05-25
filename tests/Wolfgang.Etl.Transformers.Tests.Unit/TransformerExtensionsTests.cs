@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Wolfgang.Etl.Abstractions;
@@ -248,6 +249,116 @@ public class TransformerExtensionsTests
         );
 
         Assert.Equal(new[] { 1, 2, 3 }, result);
+    }
+
+
+
+    // ---------- Buffered — null / range guards ----------
+
+    [Fact]
+    public void Buffered_when_source_is_null_throws_ArgumentNullException()
+    {
+        IAsyncEnumerable<int> source = null!;
+
+        var ex = Assert.Throws<ArgumentNullException>
+        (
+            () => source.Buffered(capacity: 1)
+        );
+
+        Assert.Equal("items", ex.ParamName);
+    }
+
+
+
+    [Fact]
+    public void Buffered_when_capacity_is_zero_throws_ArgumentOutOfRangeException()
+    {
+        var ex = Assert.Throws<ArgumentOutOfRangeException>
+        (
+            () => ToAsync(new[] { 1, 2, 3 }).Buffered(capacity: 0)
+        );
+
+        Assert.Equal("capacity", ex.ParamName);
+    }
+
+
+
+    [Fact]
+    public void Buffered_when_capacity_is_negative_throws_ArgumentOutOfRangeException()
+    {
+        var ex = Assert.Throws<ArgumentOutOfRangeException>
+        (
+            () => ToAsync(new[] { 1, 2, 3 }).Buffered(capacity: -1)
+        );
+
+        Assert.Equal("capacity", ex.ParamName);
+    }
+
+
+
+    // ---------- Buffered — functional ----------
+
+    [Fact]
+    public async Task Buffered_yields_same_items_in_same_order()
+    {
+        var source = new[] { 1, 2, 3, 4, 5 };
+
+        var result = await CollectAsync(ToAsync(source).Buffered(capacity: 2));
+
+        Assert.Equal(source, result);
+    }
+
+
+
+    [Fact]
+    public async Task Buffered_when_source_is_empty_yields_empty_sequence()
+    {
+        var result = await CollectAsync(ToAsync(Array.Empty<int>()).Buffered(capacity: 8));
+
+        Assert.Empty(result);
+    }
+
+
+
+    [Fact]
+    public async Task Buffered_with_capacity_1_yields_all_items()
+    {
+        var source = new[] { 10, 20, 30 };
+
+        var result = await CollectAsync(ToAsync(source).Buffered(capacity: 1));
+
+        Assert.Equal(source, result);
+    }
+
+
+
+    [Fact]
+    public async Task Buffered_with_large_capacity_yields_all_items()
+    {
+        var source = Enumerable.Range(1, 500).ToArray();
+
+        var result = await CollectAsync(ToAsync(source).Buffered(capacity: 8192));
+
+        Assert.Equal(source, result);
+    }
+
+
+
+    [Fact]
+    public async Task Buffered_cancellation_stops_enumeration()
+    {
+        using var cts = new CancellationTokenSource();
+        cts.Cancel();
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>
+        (
+            async () =>
+            {
+                await foreach (var _ in ToAsync(Enumerable.Range(1, 1000)).Buffered(capacity: 4).WithCancellation(cts.Token))
+                {
+                }
+            }
+        );
     }
 
 
