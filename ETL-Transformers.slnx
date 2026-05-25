@@ -40,9 +40,19 @@
     <File Path="scripts/Setup-Labels.ps1" />
     <File Path="scripts/setup.ps1" />
   </Folder>
-  <Folder Name="/benchmarks/" />
-  <Folder Name="/examples/" />
-  <Folder Name="/src/" />
-  <Folder Name="/tests/" />
+  <Folder Name="/benchmarks/">
+    <Project Path="benchmarks/Wolfgang.Etl.Transformers.Benchmarks/Wolfgang.Etl.Transformers.Benchmarks.csproj" />
+  </Folder>
+  <Folder Name="/examples/">
+    <Project Path="examples/BasicChain/BasicChain.csproj" />
+    <Project Path="examples/BufferedPipeline/BufferedPipeline.csproj" />
+    <Project Path="examples/LinqOps/LinqOps.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Wolfgang.Etl.Transformers/Wolfgang.Etl.Transformers.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Wolfgang.Etl.Transformers.Tests.Unit/Wolfgang.Etl.Transformers.Tests.Unit.csproj" />
+  </Folder>
 </Solution>
 
