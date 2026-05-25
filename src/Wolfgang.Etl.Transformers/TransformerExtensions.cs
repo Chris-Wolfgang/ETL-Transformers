@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Wolfgang.Etl.Abstractions;
 
 
@@ -6,11 +7,53 @@ using Wolfgang.Etl.Abstractions;
 namespace Wolfgang.Etl.Transformers;
 
 /// <summary>
-/// Extension methods on <see cref="ITransformAsync{TSource, TDestination}"/> that compose
-/// transformers into larger units.
+/// Extension methods that compose transformers and wrap sequences with pipeline infrastructure.
 /// </summary>
 public static class TransformerExtensions
 {
+    /// <summary>
+    /// Inserts a <see cref="BufferedTransformer{T}"/> into a sequence, decoupling the upstream
+    /// producer from the downstream consumer so both stages can run concurrently.
+    /// </summary>
+    /// <typeparam name="T">The type of items in the sequence. Must be non-null.</typeparam>
+    /// <param name="source">The source sequence to buffer. Must not be <see langword="null"/>.</param>
+    /// <param name="capacity">
+    /// The maximum number of items the internal buffer holds. Must be at least 1.
+    /// </param>
+    /// <returns>
+    /// An <see cref="IAsyncEnumerable{T}"/> containing the same items as <paramref name="source"/>,
+    /// in the same order, but produced concurrently with consumption.
+    /// </returns>
+    /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="capacity"/> is less than 1.</exception>
+    /// <remarks>
+    /// <para>
+    /// Sugar for <c>new <see cref="BufferedTransformer{T}"/>(capacity).TransformAsync(source)</c>.
+    /// See <see cref="BufferedTransformer{T}"/> for a full description of the buffering semantics,
+    /// cancellation handling, and error propagation.
+    /// </para>
+    /// </remarks>
+    /// <example>
+    /// <code>
+    ///     var results = await extractor
+    ///         .ExtractAsync(token)
+    ///         .Buffered(capacity: 500)
+    ///         .SelectAsync(Parse)
+    ///         .ToListAsync();
+    /// </code>
+    /// </example>
+    public static IAsyncEnumerable<T> Buffered<T>
+    (
+        this IAsyncEnumerable<T> source,
+        int capacity
+    )
+        where T : notnull
+    {
+        return new BufferedTransformer<T>(capacity).TransformAsync(source);
+    }
+
+
+
     /// <summary>
     /// Composes two transformers into a single one: items flow through <paramref name="first"/>,
     /// then through <paramref name="next"/>. Equivalent to constructing
