@@ -128,7 +128,7 @@ If you plan to publish NuGet packages using the automated release workflow, you 
    - Set expiration date (recommended: 1 year)
 5. Click **"Add secret"**
 
-**Note:** The release workflow automatically publishes packages to NuGet.org when you push a version tag (e.g., `v1.0.0`).
+**Note:** The release workflow automatically publishes packages to NuGet.org when you publish a GitHub Release (not on a bare tag push). To trigger: go to **Releases → Draft a new release**, create or choose a version tag (e.g., `v1.0.0`), and click **Publish release**.
 
 
 ## Update Template Files
@@ -162,7 +162,7 @@ If you want to publish your DocFX documentation to GitHub Pages automatically wh
 1. Set up GitHub Pages manually:
    - Go to your repository's **Settings → Pages**
    - Under "Build and deployment," select **Deploy from a branch**
-   - Select the `gh-pages` branch (create it if it doesn't exist: `git checkout --orphan gh-pages && git push origin gh-pages`)
+   - Select the `gh-pages` branch (create it if it doesn't exist: `git checkout --orphan gh-pages && git commit --allow-empty -m "init gh-pages" && git push origin gh-pages`)
    - Save the settings
    - Update the DocFX configuration files in `docfx_project/` to replace placeholders (e.g., `Wolfgang.D20-Dice`, `https://Chris-Wolfgang.github.io/D20-Dice/`) with your project's values
 

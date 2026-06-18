@@ -147,7 +147,7 @@ var now = DateTimeOffset.UtcNow;
 ## Build and Test Instructions
 
 ### Prerequisites
-- .NET 10.0 SDK or later (required for the repo's net10.0 target; older SDKs cannot load the csproj)
+- .NET 10.0 SDK or later (required to build and run the full TFM matrix)
 - PowerShell Core (optional, for formatting scripts)
 
 ### Build the Project
