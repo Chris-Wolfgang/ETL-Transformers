@@ -176,8 +176,9 @@ jobs:
               $aId = $aIds[$i]
               $bId = $bIds[$i]
 
-              $aIsNum = [int]::TryParse($aId, [ref]([int]$null))
-              $bIsNum = [int]::TryParse($bId, [ref]([int]$null))
+              $tmp = 0
+              $aIsNum = [int]::TryParse($aId, [ref]$tmp)
+              $bIsNum = [int]::TryParse($bId, [ref]$tmp)
 
               if ($aIsNum -and $bIsNum) {
                 $aVal = [int]$aId
