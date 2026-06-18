@@ -49,6 +49,15 @@ public static class TransformerExtensions
     )
         where T : notnull
     {
+#if NET6_0_OR_GREATER
+        ArgumentNullException.ThrowIfNull(source);
+#else
+        if (source == null)
+        {
+            throw new ArgumentNullException(nameof(source));
+        }
+#endif
+
         return new BufferedTransformer<T>(capacity).TransformAsync(source);
     }
 

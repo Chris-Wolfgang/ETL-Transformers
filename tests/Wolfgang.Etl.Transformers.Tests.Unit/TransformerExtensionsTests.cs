@@ -265,7 +265,7 @@ public class TransformerExtensionsTests
             () => source.Buffered(capacity: 1)
         );
 
-        Assert.Equal("items", ex.ParamName);
+        Assert.Equal("source", ex.ParamName);
     }
 
 
