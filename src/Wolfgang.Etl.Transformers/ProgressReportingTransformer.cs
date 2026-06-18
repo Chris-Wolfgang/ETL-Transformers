@@ -62,10 +62,14 @@ public sealed class ProgressReportingTransformer<T> : ITransformAsync<T, T>
     /// <exception cref="ArgumentNullException"><paramref name="callback"/> is <see langword="null"/>.</exception>
     public ProgressReportingTransformer(Action<T> callback)
     {
+#if NET6_0_OR_GREATER
+        ArgumentNullException.ThrowIfNull(callback);
+#else
         if (callback == null)
         {
             throw new ArgumentNullException(nameof(callback));
         }
+#endif
 
         _syncCallback = callback;
     }
@@ -82,10 +86,14 @@ public sealed class ProgressReportingTransformer<T> : ITransformAsync<T, T>
     /// <exception cref="ArgumentNullException"><paramref name="callback"/> is <see langword="null"/>.</exception>
     public ProgressReportingTransformer(Func<T, ValueTask> callback)
     {
+#if NET6_0_OR_GREATER
+        ArgumentNullException.ThrowIfNull(callback);
+#else
         if (callback == null)
         {
             throw new ArgumentNullException(nameof(callback));
         }
+#endif
 
         _asyncCallback = callback;
     }
