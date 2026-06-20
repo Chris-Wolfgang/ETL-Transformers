@@ -1,97 +1,136 @@
 # Wolfgang.Etl.Transformers
 
-A collection generic transformers for use in ETLs using Wolfgang.Etl.Abstractions
+A collection of generic, composable transformers for ETL pipelines built on [Wolfgang.Etl.Abstractions](https://github.com/Chris-Wolfgang/ETL-Abstractions).
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![NuGet](https://img.shields.io/nuget/v/Wolfgang.Etl.Transformers.svg)](https://www.nuget.org/packages/Wolfgang.Etl.Transformers)
 [![.NET](https://img.shields.io/badge/.NET-Multi--Targeted-purple.svg)](https://dotnet.microsoft.com/)
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?logo=github)](https://github.com/Chris-Wolfgang/ETL-Transformers)
 
 ---
 
-## 📦 Installation
+## Installation
 
 ```bash
 dotnet add package Wolfgang.Etl.Transformers
 ```
 
-**NuGet Package:** Coming soon to NuGet.org
+---
+
+## Quick Start
+
+```csharp
+using Wolfgang.Etl.Transformers;
+
+// Build a pipeline: parse → filter → project → buffer
+var pipeline = new SelectTransformer<string, Order>(ParseOrder)
+    .Then(new WhereTransformer<Order>(o => o.IsValid))
+    .Then(new SelectTransformer<Order, InvoiceRow>(ToInvoice));
+
+await foreach (var row in pipeline.TransformAsync(rawLines))
+{
+    await loader.LoadAsync(row);
+}
+
+// Or use extension methods inline:
+await foreach (var row in rawLines
+    .Buffered(capacity: 500)
+    .SelectAsync(ParseOrder)
+    .WhereAsync(o => o.IsValid)
+    .SelectAsync(ToInvoice))
+{
+    await loader.LoadAsync(row);
+}
+```
 
 ---
 
-## 📄 License
+## Transformers
 
-This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
+### LINQ-style
+
+| Transformer | Description |
+|-------------|-------------|
+| `WhereTransformer<T>` | Filters items by a sync or async predicate |
+| `SelectTransformer<TSource, TDestination>` | Projects each item with a sync or async selector |
+| `SelectManyTransformer<TSource, TDestination>` | Fan-out: maps each item to a sequence (sync or async) |
+| `OfTypeTransformer<TSource, TDestination>` | Passes only items that are assignable to `TDestination` |
+| `CastTransformer<TSource, TDestination>` | Casts each item; throws on incompatible types |
+| `DistinctTransformer<T>` | Deduplicates using the default or a supplied `IEqualityComparer<T>` |
+| `DistinctByTransformer<TSource, TKey>` | Deduplicates by a key selector |
+| `TakeTransformer<T>` | Yields only the first N items |
+| `TakeWhileTransformer<T>` | Yields items while a predicate holds |
+| `SkipTransformer<T>` | Skips the first N items |
+| `SkipWhileTransformer<T>` | Skips items while a predicate holds |
+| `ChunkTransformer<T>` | Batches items into fixed-size arrays |
+
+### Pipeline infrastructure
+
+| Transformer | Description |
+|-------------|-------------|
+| `PassThroughTransformer<T>` | Identity pass-through; also implements `ITransformWithCancellationAsync<T, T>` |
+| `BufferedTransformer<T>` | Decouples producer from consumer via a `System.Threading.Channels` buffer |
+| `ProgressReportingTransformer<T>` | Calls a sync or async callback per item without altering the stream |
+
+### Composition
+
+| Type / Method | Description |
+|---------------|-------------|
+| `ChainTransformer<TSource, TIntermediate, TDestination>` | Composes two `ITransformAsync` transformers into one |
+| `ChainTransformerWithCancellation<TSource, TIntermediate, TDestination>` | Same as above but propagates `CancellationToken` through both stages |
+| `TransformerExtensions.Then(...)` | Fluent composition — four overloads covering sync × cancellation combinations |
+| `TransformerExtensions.Buffered(...)` | Inline buffer insertion — sugar for `new BufferedTransformer<T>(n).TransformAsync(source)` |
 
 ---
 
-## 📚 Documentation
-
-- **GitHub Repository:** [https://github.com/Chris-Wolfgang/ETL-Transformers](https://github.com/Chris-Wolfgang/ETL-Transformers)
-- **API Documentation:** https://Chris-Wolfgang.github.io/ETL-Transformers/
-- **Formatting Guide:** [README-FORMATTING.md](README-FORMATTING.md)
-- **Contributing Guide:** [CONTRIBUTING.md](CONTRIBUTING.md)
-
----
-
-## 🚀 Quick Start
-
-{{QUICK_START_EXAMPLE}}
-
----
-
-## ✨ Features
-
-{{FEATURES_TABLE}}
-
-**Examples:**
-{{FEATURE_EXAMPLES}}
-
----
-
-## 🎯 Target Frameworks
+## Target Frameworks
 
 | Framework | Versions |
 |-----------|----------|
-| .NET Framework | .NET 4.6.2, .NET 4.7.0, .NET 4.7.1, .NET 4.7.2, .NET 4.8, .NET 4.8.1 |
-| .NET Core | .NET Core 3.1 |
-| .NET | .NET 5.0, .NET 6.0, .NET 7.0, .NET 8.0, .NET 9.0, .NET 10.0 |
+| .NET Framework | 4.6.2, 4.7, 4.7.1, 4.7.2, 4.8, 4.8.1 |
+| .NET Core | 3.1 |
+| .NET | 5.0, 6.0, 7.0, 8.0, 9.0, 10.0 |
 
 ---
 
-## 🔍 Code Quality & Static Analysis
+## Code Quality & Static Analysis
 
 This project enforces **strict code quality standards** through **7 specialized analyzers** and custom async-first rules:
 
 ### Analyzers in Use
 
-1. **Microsoft.CodeAnalysis.NetAnalyzers** - Built-in .NET analyzers for correctness and performance
-2. **Roslynator.Analyzers** - Advanced refactoring and code quality rules
-3. **AsyncFixer** - Async/await best practices and anti-pattern detection
-4. **Microsoft.VisualStudio.Threading.Analyzers** - Thread safety and async patterns
-5. **Microsoft.CodeAnalysis.BannedApiAnalyzers** - Prevents usage of banned synchronous APIs
-6. **Meziantou.Analyzer** - Comprehensive code quality rules
-7. **SonarAnalyzer.CSharp** - Industry-standard code analysis
+1. **Microsoft.CodeAnalysis.NetAnalyzers** — Correctness, performance, and security rules
+2. **Roslynator.Analyzers** — 500+ refactoring and code quality rules
+3. **AsyncFixer** — Async/await best practices and anti-pattern detection
+4. **Microsoft.VisualStudio.Threading.Analyzers** — Thread safety and async patterns
+5. **Microsoft.CodeAnalysis.BannedApiAnalyzers** — Blocks synchronous APIs listed in `BannedSymbols.txt`
+6. **Meziantou.Analyzer** — Comprehensive code quality checks
+7. **SonarAnalyzer.CSharp** — Industry-standard code analysis
 
 ### Async-First Enforcement
 
-This library uses **`BannedSymbols.txt`** to prohibit synchronous APIs and enforce async-first patterns:
+This library prohibits synchronous blocking calls via `BannedSymbols.txt`:
 
-**Blocked APIs Include:**
-- ❌ `Task.Wait()`, `Task.Result` - Use `await` instead
-- ❌ `Thread.Sleep()` - Use `await Task.Delay()` instead
-- ❌ Synchronous file I/O (`File.ReadAllText`) - Use async versions
-- ❌ Synchronous stream operations - Use `ReadAsync()`, `WriteAsync()`
-- ❌ `Parallel.For/ForEach` - Use `Task.WhenAll()` or `Parallel.ForEachAsync()`
-- ❌ Obsolete APIs (`WebClient`, `BinaryFormatter`)
+```csharp
+// ❌ Banned
+task.Wait();
+task.Result;
+File.ReadAllText(path);
+Thread.Sleep(1000);
 
-**Why?** To ensure all code is **truly async** and **non-blocking** for optimal performance in async contexts.
+// ✅ Required
+await task;
+await File.ReadAllTextAsync(path);
+await Task.Delay(1000);
+```
 
 ---
 
-## 🛠️ Building from Source
+## Building from Source
 
 ### Prerequisites
-- [.NET 8.0 SDK](https://dotnet.microsoft.com/download) or later
+
+- [.NET 10.0 SDK](https://dotnet.microsoft.com/download) or later (required to build the full TFM matrix)
 - Optional: [PowerShell Core](https://github.com/PowerShell/PowerShell) for formatting scripts
 
 ### Build Steps
@@ -104,78 +143,45 @@ cd ETL-Transformers
 # Restore dependencies
 dotnet restore
 
-# Build the solution
+# Build (Release enforces all analyzers as errors)
 dotnet build --configuration Release
 
 # Run tests
 dotnet test --configuration Release
 
-# Run code formatting (PowerShell Core)
-pwsh ./format.ps1
-```
-
-### Code Formatting
-
-This project uses `.editorconfig` and `dotnet format`:
-
-```bash
 # Format code
-dotnet format
-
-# Verify formatting (as CI does)
-dotnet format --verify-no-changes
+pwsh ./scripts/format.ps1
 ```
-
-See [README-FORMATTING.md](README-FORMATTING.md) for detailed formatting guidelines.
 
 ### Building Documentation
 
-This project uses [DocFX](https://dotnet.github.io/docfx/) to generate API documentation:
+This project uses [DocFX](https://dotnet.github.io/docfx/) for API documentation:
 
 ```bash
-# Install DocFX (one-time setup)
 dotnet tool install -g docfx
-
-# Generate API metadata and build documentation
-cd docfx_project
-docfx metadata  # Extract API metadata from source code
-docfx build     # Build HTML documentation
-
-# Documentation is generated in the docs/ folder at the repository root
-```
-
-The documentation is automatically built and deployed to GitHub Pages when changes are pushed to the `main` branch.
-
-**Local Preview:**
-```bash
-# Serve documentation locally (with live reload)
 cd docfx_project
 docfx build --serve
-
-# Open http://localhost:8080 in your browser
+# Open http://localhost:8080
 ```
 
-**Documentation Structure:**
-- `docfx_project/` - DocFX configuration and source files
-- `docs/` - Generated HTML documentation (published to GitHub Pages)
-- `docfx_project/index.md` - Main landing page content
-- `docfx_project/docs/` - Additional documentation articles
-- `docfx_project/api/` - Auto-generated API reference YAML files
+Documentation is automatically built and deployed to GitHub Pages when a GitHub Release is published.
+
+**Documentation:** [https://Chris-Wolfgang.github.io/ETL-Transformers/](https://Chris-Wolfgang.github.io/ETL-Transformers/)
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for:
-- Code quality standards
-- Build and test instructions
-- Pull request guidelines
-- Analyzer configuration details
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for code quality standards, build instructions, and pull request guidelines.
 
 ---
 
+## License
 
-## 🙏 Acknowledgments
+This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
 
-{{ACKNOWLEDGMENTS}}
+---
 
+## Acknowledgments
+
+Built on [Wolfgang.Etl.Abstractions](https://github.com/Chris-Wolfgang/ETL-Abstractions) — the base class library providing `ExtractorBase<TSource, TProgress>`, `LoaderBase<TDestination, TProgress>`, and `TransformerBase<TSource, TDestination, TProgress>`.

@@ -14,7 +14,9 @@ Welcome to the Wolfgang.Etl.Transformers documentation. This site contains compr
 
 ## About Wolfgang.Etl.Transformers
 
-A collection generic transformers for use in ETLs using Wolfgang.Etl.Abstractions
+A collection of generic, composable transformers for ETL pipelines built on Wolfgang.Etl.Abstractions.
+Covers LINQ-style operations (filter, project, fan-out, distinct, take/skip, chunk), pipeline
+infrastructure (buffering, progress reporting, pass-through), and fluent composition via `.Then(...)`.
 
 ## Installation
 
