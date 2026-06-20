@@ -1,0 +1,124 @@
+name: Benchmark Report
+
+# Runs BenchmarkDotNet and publishes results to gh-pages/benchmarks/.
+# Triggered manually or on GitHub Release publish — NOT on every push,
+# because BDN runs are slow (minutes per benchmark class).
+#
+# Published URL:
+#   https://chris-wolfgang.github.io/<repo>/benchmarks/latest/
+#   https://chris-wolfgang.github.io/<repo>/benchmarks/<tag>/   (on release)
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Branch, tag, or SHA to benchmark'
+        required: false
+        default: 'main'
+
+permissions:
+  contents: write   # required to push to gh-pages
+
+jobs:
+  benchmark-report:
+    name: Run Benchmarks & Publish Results
+    runs-on: ubuntu-latest
+    if: github.repository != 'Chris-Wolfgang/repo-template'
+    timeout-minutes: 60
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.inputs.ref || github.ref }}
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Run benchmarks
+        shell: bash
+        run: |
+          set -e
+          mkdir -p BenchmarkResults
+          dotnet run \
+            --project benchmarks/Wolfgang.Etl.Transformers.Benchmarks/Wolfgang.Etl.Transformers.Benchmarks.csproj \
+            --configuration Release \
+            -- \
+            --filter '*' \
+            --exporters json html \
+            --artifacts BenchmarkResults \
+            --join
+
+      - name: Determine version label
+        id: version
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          if [[ -n "$RELEASE_TAG" ]]; then
+            echo "label=${RELEASE_TAG}" >> "$GITHUB_OUTPUT"
+          else
+            echo "label=latest" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check out gh-pages
+        uses: actions/checkout@v6
+        with:
+          ref: gh-pages
+          path: gh-pages
+          persist-credentials: true
+
+      - name: Publish results to gh-pages
+        shell: bash
+        env:
+          VERSION_LABEL: ${{ steps.version.outputs.label }}
+        run: |
+          set -e
+          dest="gh-pages/benchmarks/${VERSION_LABEL}"
+          rm -rf "$dest"
+          mkdir -p "$dest"
+
+          # Copy all BDN HTML reports
+          find BenchmarkResults -name "*.html" -exec cp {} "$dest/" \;
+          # Copy JSON results for external tooling
+          find BenchmarkResults -name "*.json" -exec cp {} "$dest/" \;
+
+          # Always update benchmarks/latest/
+          rm -rf gh-pages/benchmarks/latest
+          mkdir -p gh-pages/benchmarks/latest
+          find BenchmarkResults -name "*.html" -exec cp {} gh-pages/benchmarks/latest/ \;
+          find BenchmarkResults -name "*.json" -exec cp {} gh-pages/benchmarks/latest/ \;
+
+          # Generate a simple index.html listing all available benchmark runs
+          {
+            echo "<html><head><title>Benchmark Results — Wolfgang.Etl.Transformers</title></head><body>"
+            echo "<h1>Benchmark Results</h1>"
+            echo "<h2>${VERSION_LABEL}</h2><ul>"
+            for f in "$dest"/*.html; do
+              name=$(basename "$f" .html)
+              echo "<li><a href=\"${VERSION_LABEL}/$(basename $f)\">$name</a></li>"
+            done
+            echo "</ul>"
+            echo "<h2>All Versions</h2><ul>"
+            for dir in gh-pages/benchmarks/*/; do
+              v=$(basename "$dir")
+              [[ "$v" == "latest" ]] && continue
+              echo "<li><a href=\"$v/\">$v</a></li>"
+            done
+            echo "</ul></body></html>"
+          } > gh-pages/benchmarks/index.html
+
+          cd gh-pages
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add benchmarks/
+          git diff --cached --quiet || git commit -m "benchmarks: publish results for ${VERSION_LABEL}"
+          git push
