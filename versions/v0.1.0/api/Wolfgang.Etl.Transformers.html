@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Namespace Wolfgang.Etl.Transformers | Wolfgang.Etl.Transformers Documentation </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Namespace Wolfgang.Etl.Transformers | Wolfgang.Etl.Transformers Documentation ">
+      
+      
+      <link rel="icon" href="../favicon.svg">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="Wolfgang.Etl.Transformers">
+            Wolfgang.Etl.Transformers
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+
+      <div class="content">
+        <div class="actionbar">
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Wolfgang.Etl.Transformers">
+
+  <h1 id="Wolfgang_Etl_Transformers" data-uid="Wolfgang.Etl.Transformers" class="text-break">Namespace Wolfgang.Etl.Transformers</h1>
+  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="markdown level0 remarks"></div>
+
+    <h3 id="classes">
+Classes
+</h3>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Wolfgang.Etl.Transformers.BufferedTransformer-1.html">BufferedTransformer&lt;T&gt;</a></dt>
+      <dd><p>A transformer that decouples its upstream and downstream stages using a bounded
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.channels.channel-1">Channel&lt;T&gt;</a>, enabling pipeline parallelism: the upstream stage can run ahead
+while the downstream stage consumes, instead of being lock-stepped by
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iasyncenumerable-1">IAsyncEnumerable&lt;T&gt;</a>'s pull model.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Wolfgang.Etl.Transformers.CastTransformer-2.html">CastTransformer&lt;TSource, TDestination&gt;</a></dt>
+      <dd><p>A transformer that casts each input item to <code class="typeparamref">TDestination</code>, throwing
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.invalidcastexception">InvalidCastException</a> if any item is not of that type.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Wolfgang.Etl.Transformers.ChainTransformerWithCancellation-3.html">ChainTransformerWithCancellation&lt;TSource, TIntermediate, TDestination&gt;</a></dt>
+      <dd><p>Combines two cancellation-aware transformers into a single
+<span class="xref">Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync&lt;TSource, TDestination&gt;</span>: items flow through
+the first, then through the second, and a single <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a> supplied
+to the chain is propagated to both stages.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Wolfgang.Etl.Transformers.ChainTransformer-3.html">ChainTransformer&lt;TSource, TIntermediate, TDestination&gt;</a></dt>
+      <dd><p>Combines two transformers into a single transformer: items flow through the first,
+then through the second, with the intermediate type erased from the chain's public
+signature.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Wolfgang.Etl.Transformers.ChunkTransformer-1.html">ChunkTransformer&lt;T&gt;</a></dt>
+      <dd><p>A transformer that batches the input sequence into arrays of a fixed size and yields each
+batch as a single output item.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Wolfgang.Etl.Transformers.DistinctByTransformer-2.html">DistinctByTransformer&lt;TSource, TKey&gt;</a></dt>
+      <dd><p>A transformer that yields each input item with a unique key, where the key is produced by a
+caller-supplied selector. Subsequent items whose key has already been seen are dropped.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Wolfgang.Etl.Transformers.DistinctTransformer-1.html">DistinctTransformer&lt;T&gt;</a></dt>
+      <dd><p>A transformer that yields each unique item from the input sequence, dropping subsequent
+duplicates.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Wolfgang.Etl.Transformers.OfTypeTransformer-2.html">OfTypeTransformer&lt;TSource, TDestination&gt;</a></dt>
+      <dd><p>A transformer that yields each input item that is of type <code class="typeparamref">TDestination</code>,
+silently skipping items of any other type.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Wolfgang.Etl.Transformers.PassThroughTransformer-1.html">PassThroughTransformer&lt;T&gt;</a></dt>
+      <dd><p>A transformer that yields each item from the input sequence unchanged.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Wolfgang.Etl.Transformers.ProgressReportingTransformer-1.html">ProgressReportingTransformer&lt;T&gt;</a></dt>
+      <dd><p>A decorator transformer that calls a user-supplied callback for each item as it passes
+through, then yields the item unchanged. Useful for reporting progress, logging, or
+collecting metrics on any stage in a composed pipeline.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Wolfgang.Etl.Transformers.SelectManyTransformer-2.html">SelectManyTransformer&lt;TSource, TDestination&gt;</a></dt>
+      <dd><p>A transformer that projects each input item to a sequence of zero or more output items
+and yields the concatenation of all those sequences.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Wolfgang.Etl.Transformers.SelectTransformer-2.html">SelectTransformer&lt;TSource, TDestination&gt;</a></dt>
+      <dd><p>A transformer that projects each item from the input sequence through a caller-supplied
+selector function, returning the result.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Wolfgang.Etl.Transformers.SkipTransformer-1.html">SkipTransformer&lt;T&gt;</a></dt>
+      <dd><p>A transformer that skips a fixed number of items from the start of the input sequence and
+yields the rest unchanged.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Wolfgang.Etl.Transformers.SkipWhileTransformer-1.html">SkipWhileTransformer&lt;T&gt;</a></dt>
+      <dd><p>A transformer that skips items from the start of the input sequence as long as a
+caller-supplied predicate returns <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a>; once the predicate returns
+<a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a> for an item, that item and every item after it are yielded without
+further predicate evaluation.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Wolfgang.Etl.Transformers.TakeTransformer-1.html">TakeTransformer&lt;T&gt;</a></dt>
+      <dd><p>A transformer that yields at most a fixed number of items from the start of the input
+sequence.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Wolfgang.Etl.Transformers.TakeWhileTransformer-1.html">TakeWhileTransformer&lt;T&gt;</a></dt>
+      <dd><p>A transformer that yields items from the start of the input sequence as long as a
+caller-supplied predicate returns <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a>; the first item that fails
+the predicate stops enumeration immediately and is not yielded.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Wolfgang.Etl.Transformers.TransformerExtensions.html">TransformerExtensions</a></dt>
+      <dd><p>Extension methods that compose transformers and wrap sequences with pipeline infrastructure.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
+      <dt><a class="xref" href="Wolfgang.Etl.Transformers.WhereTransformer-1.html">WhereTransformer&lt;T&gt;</a></dt>
+      <dd><p>A transformer that yields each item from the input sequence for which a caller-supplied
+predicate returns <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a>.</p>
+</dd>
+    </dl>
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Made with DocFX
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

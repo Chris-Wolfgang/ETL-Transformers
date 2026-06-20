@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Introduction | Wolfgang.Etl.Transformers Documentation </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Introduction | Wolfgang.Etl.Transformers Documentation ">
+      
+      
+      <link rel="icon" href="../favicon.svg">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.1.0/docfx_project/docs/introduction.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="Wolfgang.Etl.Transformers">
+            Wolfgang.Etl.Transformers
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+
+      <div class="content">
+        <div class="actionbar">
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="introduction">Introduction</h1>
+
+<h2 id="overview">Overview</h2>
+<p><strong>Wolfgang.Etl.Transformers</strong> is a library of generic, composable transformers for ETL pipelines.
+It builds on <a href="https://github.com/Chris-Wolfgang/ETL-Abstractions">Wolfgang.Etl.Abstractions</a> and
+provides the middle tier of a pipeline — the T in ETL — through 18 public types covering filtering,
+projection, fan-out, deduplication, batching, buffering, progress reporting, and composition.</p>
+<h2 id="key-features">Key Features</h2>
+<ul>
+<li><strong>LINQ-style operations</strong>: <code>WhereTransformer</code>, <code>SelectTransformer</code>, <code>SelectManyTransformer</code>,
+<code>OfTypeTransformer</code>, <code>CastTransformer</code>, <code>DistinctTransformer</code>, <code>DistinctByTransformer</code>,
+<code>TakeTransformer</code>, <code>TakeWhileTransformer</code>, <code>SkipTransformer</code>, <code>SkipWhileTransformer</code>, <code>ChunkTransformer</code></li>
+<li><strong>Pipeline infrastructure</strong>: <code>BufferedTransformer</code> decouples producer from consumer using
+<code>System.Threading.Channels</code> so both stages run concurrently; <code>ProgressReportingTransformer</code>
+calls a callback per item without changing the stream</li>
+<li><strong>Fluent composition</strong>: <code>.Then(next)</code> extension composes any two transformers into one,
+chains arbitrarily deep, and automatically picks the cancellation-aware overload when both
+sides implement <code>ITransformWithCancellationAsync&lt;TSource, TDestination&gt;</code></li>
+<li><strong>Multi-TFM</strong>: targets .NET Framework 4.6.2–4.8.1, .NET Core 3.1, and .NET 5.0–10.0</li>
+<li><strong>Zero allocations on hot paths</strong>: all transformers yield items via <code>IAsyncEnumerable&lt;T&gt;</code> with
+no intermediate buffering beyond <code>BufferedTransformer</code>'s explicit channel</li>
+</ul>
+<h2 id="design-principles">Design Principles</h2>
+<ul>
+<li>Every transformer implements <code>ITransformAsync&lt;TSource, TDestination&gt;</code> — a single-method
+interface (<code>TransformAsync(IAsyncEnumerable&lt;TSource&gt;) -&gt; IAsyncEnumerable&lt;TDestination&gt;</code>)
+that composes naturally with <code>.Then(...)</code> and the ETL framework's extractor/loader contracts</li>
+<li>No base class required: transformers are sealed, self-contained classes with no inheritance
+hierarchy beyond the interface they implement</li>
+<li>Sync-blocking APIs are prohibited by <code>BannedSymbols.txt</code> — all I/O is async throughout</li>
+</ul>
+<h2 id="getting-help">Getting Help</h2>
+<ul>
+<li>Check the <a href="getting-started.html">Getting Started</a> guide</li>
+<li>Browse the <a href="../api/index.html">API Reference</a></li>
+<li>Visit the <a href="https://github.com/Chris-Wolfgang/ETL-Transformers">GitHub repository</a></li>
+<li>Open an issue on <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/issues">GitHub Issues</a></li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.1.0/docfx_project/docs/introduction.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Made with DocFX
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

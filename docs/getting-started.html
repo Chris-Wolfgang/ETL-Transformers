@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Getting Started | Wolfgang.Etl.Transformers Documentation </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Getting Started | Wolfgang.Etl.Transformers Documentation ">
+      
+      
+      <link rel="icon" href="../favicon.svg">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.1.0/docfx_project/docs/getting-started.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="Wolfgang.Etl.Transformers">
+            Wolfgang.Etl.Transformers
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+
+      <div class="content">
+        <div class="actionbar">
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="getting-started">Getting Started</h1>
+
+<p>This guide will help you quickly get up and running with Wolfgang.Etl.Transformers.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li>.NET 5.0 or later (any TFM from .NET Framework 4.6.2 to .NET 10.0 is supported at runtime)</li>
+<li>.NET 10.0 SDK to build from source and run the full TFM matrix</li>
+</ul>
+<h2 id="installation">Installation</h2>
+<h3 id="via-net-cli">Via .NET CLI</h3>
+<pre><code class="lang-bash">dotnet add package Wolfgang.Etl.Transformers
+</code></pre>
+<h3 id="via-package-manager-console">Via Package Manager Console</h3>
+<pre><code class="lang-powershell">Install-Package Wolfgang.Etl.Transformers
+</code></pre>
+<h2 id="quick-start">Quick Start</h2>
+<h3 id="basic-filter--project-pipeline">Basic filter + project pipeline</h3>
+<pre><code class="lang-csharp">using Wolfgang.Etl.Transformers;
+
+ITransformAsync&lt;string, InvoiceRow&gt; pipeline =
+    new SelectTransformer&lt;string, Order&gt;(ParseOrder)
+        .Then(new WhereTransformer&lt;Order&gt;(o =&gt; o.IsValid))
+        .Then(new SelectTransformer&lt;Order, InvoiceRow&gt;(ToInvoice));
+
+await foreach (var row in pipeline.TransformAsync(rawLines))
+{
+    await loader.LoadAsync(row, token);
+}
+</code></pre>
+<h3 id="buffered-producerconsumer">Buffered producer–consumer</h3>
+<p>Insert <code>BufferedTransformer&lt;T&gt;</code> (or <code>.Buffered(n)</code>) to decouple a slow producer from a slow
+consumer so both run concurrently:</p>
+<pre><code class="lang-csharp">ITransformAsync&lt;Order, InvoiceRow&gt; pipeline =
+    new SelectTransformer&lt;Order, Order&gt;(Normalize)
+        .Then(new BufferedTransformer&lt;Order&gt;(capacity: 500))
+        .Then(new SelectTransformer&lt;Order, InvoiceRow&gt;(ToInvoice));
+</code></pre>
+<h3 id="progress-reporting">Progress reporting</h3>
+<p>Tap the stream at any point without changing the data:</p>
+<pre><code class="lang-csharp">long count = 0;
+var reporter = new ProgressReportingTransformer&lt;Order&gt;(_ =&gt;
+    progress.Report(Interlocked.Increment(ref count)));
+
+ITransformAsync&lt;string, InvoiceRow&gt; pipeline =
+    new SelectTransformer&lt;string, Order&gt;(ParseOrder)
+        .Then(reporter)
+        .Then(new SelectTransformer&lt;Order, InvoiceRow&gt;(ToInvoice));
+</code></pre>
+<h2 id="next-steps">Next Steps</h2>
+<ul>
+<li>Explore the <a href="../api/index.html">API Reference</a> for detailed documentation on every transformer</li>
+<li>Check out example projects in the <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/tree/main/examples">GitHub repository</a></li>
+<li>Read <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a> if you want to contribute</li>
+</ul>
+<h2 id="additional-resources">Additional Resources</h2>
+<ul>
+<li><a href="https://github.com/Chris-Wolfgang/ETL-Transformers">GitHub Repository</a></li>
+<li><a href="https://www.nuget.org/packages/Wolfgang.Etl.Transformers">NuGet Package</a></li>
+<li><a href="https://github.com/Chris-Wolfgang/ETL-Transformers/issues">Report an Issue</a></li>
+</ul>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.1.0/docfx_project/docs/getting-started.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Made with DocFX
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

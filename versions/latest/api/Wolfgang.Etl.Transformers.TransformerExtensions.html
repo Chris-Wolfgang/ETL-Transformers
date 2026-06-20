@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class TransformerExtensions | Wolfgang.Etl.Transformers Documentation </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class TransformerExtensions | Wolfgang.Etl.Transformers Documentation ">
+      
+      <meta name="description" content="Extension methods that compose transformers and wrap sequences with pipeline infrastructure.">
+      <link rel="icon" href="../favicon.svg">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/ETL-Transformers/new/v0.1.0/apiSpec/new?filename=Wolfgang_Etl_Transformers_TransformerExtensions.md&amp;value=---%0Auid%3A%20Wolfgang.Etl.Transformers.TransformerExtensions%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="Wolfgang.Etl.Transformers">
+            Wolfgang.Etl.Transformers
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+
+      <div class="content">
+        <div class="actionbar">
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Wolfgang.Etl.Transformers.TransformerExtensions">
+
+
+
+  <h1 id="Wolfgang_Etl_Transformers_TransformerExtensions" data-uid="Wolfgang.Etl.Transformers.TransformerExtensions" class="text-break">
+Class TransformerExtensions  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.1.0/src/Wolfgang.Etl.Transformers/TransformerExtensions.cs/#L12"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Wolfgang.html">Wolfgang</a>.<a class="xref" href="Wolfgang.Etl.html">Etl</a>.<a class="xref" href="Wolfgang.Etl.Transformers.html">Transformers</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Wolfgang.Etl.Transformers.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Extension methods that compose transformers and wrap sequences with pipeline infrastructure.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static class TransformerExtensions</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">TransformerExtensions</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Wolfgang_Etl_Transformers_TransformerExtensions_Buffered_" data-uid="Wolfgang.Etl.Transformers.TransformerExtensions.Buffered*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_TransformerExtensions_Buffered__1_System_Collections_Generic_IAsyncEnumerable___0__System_Int32_" data-uid="Wolfgang.Etl.Transformers.TransformerExtensions.Buffered``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Int32)">
+  Buffered&lt;T&gt;(IAsyncEnumerable&lt;T&gt;, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.1.0/src/Wolfgang.Etl.Transformers/TransformerExtensions.cs/#L45"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Inserts a <a class="xref" href="Wolfgang.Etl.Transformers.BufferedTransformer-1.html">BufferedTransformer&lt;T&gt;</a> into a sequence, decoupling the upstream
+producer from the downstream consumer so both stages can run concurrently.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IAsyncEnumerable&lt;T&gt; Buffered&lt;T&gt;(this IAsyncEnumerable&lt;T&gt; source, int capacity) where T : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>source</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iasyncenumerable-1">IAsyncEnumerable</a>&lt;T&gt;</dt>
+    <dd><p>The source sequence to buffer. Must not be <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+    <dt><code>capacity</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The maximum number of items the internal buffer holds. Must be at least 1.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iasyncenumerable-1">IAsyncEnumerable</a>&lt;T&gt;</dt>
+    <dd><p>An <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iasyncenumerable-1">IAsyncEnumerable&lt;T&gt;</a> containing the same items as <code class="paramref">source</code>,
+in the same order, but produced concurrently with consumption.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>The type of items in the sequence. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+  <h4 class="section" id="Wolfgang_Etl_Transformers_TransformerExtensions_Buffered__1_System_Collections_Generic_IAsyncEnumerable___0__System_Int32__examples">Examples</h4>
+  <pre><code class="lang-csharp">var results = await extractor
+    .ExtractAsync(token)
+    .Buffered(capacity: 500)
+    .SelectAsync(Parse)
+    .ToListAsync();</code></pre>
+
+
+  <h4 class="section" id="Wolfgang_Etl_Transformers_TransformerExtensions_Buffered__1_System_Collections_Generic_IAsyncEnumerable___0__System_Int32__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+Sugar for <code>new <a class="xref" href="Wolfgang.Etl.Transformers.BufferedTransformer-1.html">BufferedTransformer&lt;T&gt;</a>(capacity).TransformAsync(source)</code>.
+See <a class="xref" href="Wolfgang.Etl.Transformers.BufferedTransformer-1.html">BufferedTransformer&lt;T&gt;</a> for a full description of the buffering semantics,
+cancellation handling, and error propagation.
+</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">source</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p><code class="paramref">capacity</code> is less than 1.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Wolfgang_Etl_Transformers_TransformerExtensions_Then_" data-uid="Wolfgang.Etl.Transformers.TransformerExtensions.Then*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_TransformerExtensions_Then__3_Wolfgang_Etl_Abstractions_ITransformAsync___0___1__Wolfgang_Etl_Abstractions_ITransformAsync___1___2__" data-uid="Wolfgang.Etl.Transformers.TransformerExtensions.Then``3(Wolfgang.Etl.Abstractions.ITransformAsync{``0,``1},Wolfgang.Etl.Abstractions.ITransformAsync{``1,``2})">
+  Then&lt;TSource, TIntermediate, TDestination&gt;(ITransformAsync&lt;TSource, TIntermediate&gt;, ITransformAsync&lt;TIntermediate, TDestination&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.1.0/src/Wolfgang.Etl.Transformers/TransformerExtensions.cs/#L101"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Composes two transformers into a single one: items flow through <code class="paramref">first</code>,
+then through <code class="paramref">next</code>. Equivalent to constructing
+<code>new ChainTransformer&lt;TSource, TIntermediate, TDestination&gt;(first, next)</code>
+but with all type parameters inferred at the call site.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ITransformAsync&lt;TSource, TDestination&gt; Then&lt;TSource, TIntermediate, TDestination&gt;(this ITransformAsync&lt;TSource, TIntermediate&gt; first, ITransformAsync&lt;TIntermediate, TDestination&gt; next) where TSource : notnull where TIntermediate : notnull where TDestination : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>first</code> <span class="xref">ITransformAsync</span>&lt;TSource, TIntermediate&gt;</dt>
+    <dd><p>The transformer that runs first.</p>
+</dd>
+    <dt><code>next</code> <span class="xref">ITransformAsync</span>&lt;TIntermediate, TDestination&gt;</dt>
+    <dd><p>The transformer that runs after <code class="paramref">first</code>.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">ITransformAsync</span>&lt;TSource, TDestination&gt;</dt>
+    <dd><p>An <span class="xref">Wolfgang.Etl.Abstractions.ITransformAsync&lt;TSource, TDestination&gt;</span> representing the composed pipeline.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TSource</code></dt>
+    <dd><p>The input type of the chain. Must be non-null.</p>
+</dd>
+    <dt><code>TIntermediate</code></dt>
+    <dd><p>The intermediate type between the two transformers. Must be non-null.</p>
+</dd>
+    <dt><code>TDestination</code></dt>
+    <dd><p>The output type of the chain. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+  <h4 class="section" id="Wolfgang_Etl_Transformers_TransformerExtensions_Then__3_Wolfgang_Etl_Abstractions_ITransformAsync___0___1__Wolfgang_Etl_Abstractions_ITransformAsync___1___2___remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+Multiple stages compose by chaining successive <code>.Then(...)</code> calls. Each call returns
+a new <a class="xref" href="Wolfgang.Etl.Transformers.ChainTransformer-3.html">ChainTransformer&lt;TSource, TIntermediate, TDestination&gt;</a> with the
+previous chain as its first member, so the resulting structure is a left-leaning linked
+list of two-stage chains. The C# compiler infers all type parameters from the receiver
+and argument.
+</p>
+<example>
+<pre><code class="lang-csharp">var pipeline = parseRaw       // string  -&gt; DataRow
+    .Then(normalize)          // DataRow -&gt; DataRow
+    .Then(lookupCustomer)     // DataRow -&gt; CustomerRow
+    .Then(validate)           // CustomerRow -&gt; CustomerRow
+    .Then(formatForLoad);     // CustomerRow -&gt; LoadRow
+<p>// pipeline is ITransformAsync&lt;string, LoadRow&gt;</p></code></pre>
+</example>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">first</code> or <code class="paramref">next</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Wolfgang_Etl_Transformers_TransformerExtensions_Then_" data-uid="Wolfgang.Etl.Transformers.TransformerExtensions.Then*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_TransformerExtensions_Then__3_Wolfgang_Etl_Abstractions_ITransformWithCancellationAsync___0___1__Wolfgang_Etl_Abstractions_ITransformWithCancellationAsync___1___2__" data-uid="Wolfgang.Etl.Transformers.TransformerExtensions.Then``3(Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync{``0,``1},Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync{``1,``2})">
+  Then&lt;TSource, TIntermediate, TDestination&gt;(ITransformWithCancellationAsync&lt;TSource, TIntermediate&gt;, ITransformWithCancellationAsync&lt;TIntermediate, TDestination&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.1.0/src/Wolfgang.Etl.Transformers/TransformerExtensions.cs/#L154"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Composes two cancellation-aware transformers into a single one: items flow through
+<code class="paramref">first</code>, then through <code class="paramref">next</code>, and any
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a> supplied to the resulting chain is
+propagated to both stages.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ITransformWithCancellationAsync&lt;TSource, TDestination&gt; Then&lt;TSource, TIntermediate, TDestination&gt;(this ITransformWithCancellationAsync&lt;TSource, TIntermediate&gt; first, ITransformWithCancellationAsync&lt;TIntermediate, TDestination&gt; next) where TSource : notnull where TIntermediate : notnull where TDestination : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>first</code> <span class="xref">ITransformWithCancellationAsync</span>&lt;TSource, TIntermediate&gt;</dt>
+    <dd><p>The cancellation-aware transformer that runs first.</p>
+</dd>
+    <dt><code>next</code> <span class="xref">ITransformWithCancellationAsync</span>&lt;TIntermediate, TDestination&gt;</dt>
+    <dd><p>The cancellation-aware transformer that runs after <code class="paramref">first</code>.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">ITransformWithCancellationAsync</span>&lt;TSource, TDestination&gt;</dt>
+    <dd><p>An <span class="xref">Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync&lt;TSource, TDestination&gt;</span> representing the composed pipeline.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TSource</code></dt>
+    <dd><p>The input type of the chain. Must be non-null.</p>
+</dd>
+    <dt><code>TIntermediate</code></dt>
+    <dd><p>The intermediate type between the two transformers. Must be non-null.</p>
+</dd>
+    <dt><code>TDestination</code></dt>
+    <dd><p>The output type of the chain. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+  <h4 class="section" id="Wolfgang_Etl_Transformers_TransformerExtensions_Then__3_Wolfgang_Etl_Abstractions_ITransformWithCancellationAsync___0___1__Wolfgang_Etl_Abstractions_ITransformWithCancellationAsync___1___2___remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>
+This overload is selected by the C# compiler when both arguments implement
+<span class="xref">Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync&lt;TSource, TDestination&gt;</span> (more specific than
+the base <span class="xref">Wolfgang.Etl.Abstractions.ITransformAsync&lt;TSource, TDestination&gt;</span> overload). The returned
+chain is itself <span class="xref">Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync&lt;TSource, TDestination&gt;</span>, so
+subsequent <code>.Then(...)</code> calls in a longer chain also pick this overload, allowing
+arbitrary-length cancellation-aware chains to compose without ceremony.
+</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">first</code> or <code class="paramref">next</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.1.0/src/Wolfgang.Etl.Transformers/TransformerExtensions.cs/#L12" class="edit-link">Edit this page</a>
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Made with DocFX
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

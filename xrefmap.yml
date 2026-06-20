@@ -1,0 +1,996 @@
+### YamlMime:XRefMap
+sorted: true
+references:
+- uid: Wolfgang.Etl.Transformers
+  name: Wolfgang.Etl.Transformers
+  href: api/Wolfgang.Etl.Transformers.html
+  commentId: N:Wolfgang.Etl.Transformers
+  fullName: Wolfgang.Etl.Transformers
+  nameWithType: Wolfgang.Etl.Transformers
+- uid: Wolfgang.Etl.Transformers.BufferedTransformer`1
+  name: BufferedTransformer<T>
+  href: api/Wolfgang.Etl.Transformers.BufferedTransformer-1.html
+  commentId: T:Wolfgang.Etl.Transformers.BufferedTransformer`1
+  name.vb: BufferedTransformer(Of T)
+  fullName: Wolfgang.Etl.Transformers.BufferedTransformer<T>
+  fullName.vb: Wolfgang.Etl.Transformers.BufferedTransformer(Of T)
+  nameWithType: BufferedTransformer<T>
+  nameWithType.vb: BufferedTransformer(Of T)
+- uid: Wolfgang.Etl.Transformers.BufferedTransformer`1.#ctor(System.Int32)
+  name: BufferedTransformer(int)
+  href: api/Wolfgang.Etl.Transformers.BufferedTransformer-1.html#Wolfgang_Etl_Transformers_BufferedTransformer_1__ctor_System_Int32_
+  commentId: M:Wolfgang.Etl.Transformers.BufferedTransformer`1.#ctor(System.Int32)
+  name.vb: New(Integer)
+  fullName: Wolfgang.Etl.Transformers.BufferedTransformer<T>.BufferedTransformer(int)
+  fullName.vb: Wolfgang.Etl.Transformers.BufferedTransformer(Of T).New(Integer)
+  nameWithType: BufferedTransformer<T>.BufferedTransformer(int)
+  nameWithType.vb: BufferedTransformer(Of T).New(Integer)
+- uid: Wolfgang.Etl.Transformers.BufferedTransformer`1.#ctor*
+  name: BufferedTransformer
+  href: api/Wolfgang.Etl.Transformers.BufferedTransformer-1.html#Wolfgang_Etl_Transformers_BufferedTransformer_1__ctor_
+  commentId: Overload:Wolfgang.Etl.Transformers.BufferedTransformer`1.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Wolfgang.Etl.Transformers.BufferedTransformer<T>.BufferedTransformer
+  fullName.vb: Wolfgang.Etl.Transformers.BufferedTransformer(Of T).New
+  nameWithType: BufferedTransformer<T>.BufferedTransformer
+  nameWithType.vb: BufferedTransformer(Of T).New
+- uid: Wolfgang.Etl.Transformers.BufferedTransformer`1.Capacity
+  name: Capacity
+  href: api/Wolfgang.Etl.Transformers.BufferedTransformer-1.html#Wolfgang_Etl_Transformers_BufferedTransformer_1_Capacity
+  commentId: P:Wolfgang.Etl.Transformers.BufferedTransformer`1.Capacity
+  fullName: Wolfgang.Etl.Transformers.BufferedTransformer<T>.Capacity
+  fullName.vb: Wolfgang.Etl.Transformers.BufferedTransformer(Of T).Capacity
+  nameWithType: BufferedTransformer<T>.Capacity
+  nameWithType.vb: BufferedTransformer(Of T).Capacity
+- uid: Wolfgang.Etl.Transformers.BufferedTransformer`1.Capacity*
+  name: Capacity
+  href: api/Wolfgang.Etl.Transformers.BufferedTransformer-1.html#Wolfgang_Etl_Transformers_BufferedTransformer_1_Capacity_
+  commentId: Overload:Wolfgang.Etl.Transformers.BufferedTransformer`1.Capacity
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.BufferedTransformer<T>.Capacity
+  fullName.vb: Wolfgang.Etl.Transformers.BufferedTransformer(Of T).Capacity
+  nameWithType: BufferedTransformer<T>.Capacity
+  nameWithType.vb: BufferedTransformer(Of T).Capacity
+- uid: Wolfgang.Etl.Transformers.BufferedTransformer`1.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name: TransformAsync(IAsyncEnumerable<T>)
+  href: api/Wolfgang.Etl.Transformers.BufferedTransformer-1.html#Wolfgang_Etl_Transformers_BufferedTransformer_1_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__
+  commentId: M:Wolfgang.Etl.Transformers.BufferedTransformer`1.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name.vb: TransformAsync(IAsyncEnumerable(Of T))
+  fullName: Wolfgang.Etl.Transformers.BufferedTransformer<T>.TransformAsync(System.Collections.Generic.IAsyncEnumerable<T>)
+  fullName.vb: Wolfgang.Etl.Transformers.BufferedTransformer(Of T).TransformAsync(System.Collections.Generic.IAsyncEnumerable(Of T))
+  nameWithType: BufferedTransformer<T>.TransformAsync(IAsyncEnumerable<T>)
+  nameWithType.vb: BufferedTransformer(Of T).TransformAsync(IAsyncEnumerable(Of T))
+- uid: Wolfgang.Etl.Transformers.BufferedTransformer`1.TransformAsync*
+  name: TransformAsync
+  href: api/Wolfgang.Etl.Transformers.BufferedTransformer-1.html#Wolfgang_Etl_Transformers_BufferedTransformer_1_TransformAsync_
+  commentId: Overload:Wolfgang.Etl.Transformers.BufferedTransformer`1.TransformAsync
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.BufferedTransformer<T>.TransformAsync
+  fullName.vb: Wolfgang.Etl.Transformers.BufferedTransformer(Of T).TransformAsync
+  nameWithType: BufferedTransformer<T>.TransformAsync
+  nameWithType.vb: BufferedTransformer(Of T).TransformAsync
+- uid: Wolfgang.Etl.Transformers.CastTransformer`2
+  name: CastTransformer<TSource, TDestination>
+  href: api/Wolfgang.Etl.Transformers.CastTransformer-2.html
+  commentId: T:Wolfgang.Etl.Transformers.CastTransformer`2
+  name.vb: CastTransformer(Of TSource, TDestination)
+  fullName: Wolfgang.Etl.Transformers.CastTransformer<TSource, TDestination>
+  fullName.vb: Wolfgang.Etl.Transformers.CastTransformer(Of TSource, TDestination)
+  nameWithType: CastTransformer<TSource, TDestination>
+  nameWithType.vb: CastTransformer(Of TSource, TDestination)
+- uid: Wolfgang.Etl.Transformers.CastTransformer`2.#ctor
+  name: CastTransformer()
+  href: api/Wolfgang.Etl.Transformers.CastTransformer-2.html#Wolfgang_Etl_Transformers_CastTransformer_2__ctor
+  commentId: M:Wolfgang.Etl.Transformers.CastTransformer`2.#ctor
+  name.vb: New()
+  fullName: Wolfgang.Etl.Transformers.CastTransformer<TSource, TDestination>.CastTransformer()
+  fullName.vb: Wolfgang.Etl.Transformers.CastTransformer(Of TSource, TDestination).New()
+  nameWithType: CastTransformer<TSource, TDestination>.CastTransformer()
+  nameWithType.vb: CastTransformer(Of TSource, TDestination).New()
+- uid: Wolfgang.Etl.Transformers.CastTransformer`2.#ctor*
+  name: CastTransformer
+  href: api/Wolfgang.Etl.Transformers.CastTransformer-2.html#Wolfgang_Etl_Transformers_CastTransformer_2__ctor_
+  commentId: Overload:Wolfgang.Etl.Transformers.CastTransformer`2.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Wolfgang.Etl.Transformers.CastTransformer<TSource, TDestination>.CastTransformer
+  fullName.vb: Wolfgang.Etl.Transformers.CastTransformer(Of TSource, TDestination).New
+  nameWithType: CastTransformer<TSource, TDestination>.CastTransformer
+  nameWithType.vb: CastTransformer(Of TSource, TDestination).New
+- uid: Wolfgang.Etl.Transformers.CastTransformer`2.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name: TransformAsync(IAsyncEnumerable<TSource>)
+  href: api/Wolfgang.Etl.Transformers.CastTransformer-2.html#Wolfgang_Etl_Transformers_CastTransformer_2_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__
+  commentId: M:Wolfgang.Etl.Transformers.CastTransformer`2.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name.vb: TransformAsync(IAsyncEnumerable(Of TSource))
+  fullName: Wolfgang.Etl.Transformers.CastTransformer<TSource, TDestination>.TransformAsync(System.Collections.Generic.IAsyncEnumerable<TSource>)
+  fullName.vb: Wolfgang.Etl.Transformers.CastTransformer(Of TSource, TDestination).TransformAsync(System.Collections.Generic.IAsyncEnumerable(Of TSource))
+  nameWithType: CastTransformer<TSource, TDestination>.TransformAsync(IAsyncEnumerable<TSource>)
+  nameWithType.vb: CastTransformer(Of TSource, TDestination).TransformAsync(IAsyncEnumerable(Of TSource))
+- uid: Wolfgang.Etl.Transformers.CastTransformer`2.TransformAsync*
+  name: TransformAsync
+  href: api/Wolfgang.Etl.Transformers.CastTransformer-2.html#Wolfgang_Etl_Transformers_CastTransformer_2_TransformAsync_
+  commentId: Overload:Wolfgang.Etl.Transformers.CastTransformer`2.TransformAsync
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.CastTransformer<TSource, TDestination>.TransformAsync
+  fullName.vb: Wolfgang.Etl.Transformers.CastTransformer(Of TSource, TDestination).TransformAsync
+  nameWithType: CastTransformer<TSource, TDestination>.TransformAsync
+  nameWithType.vb: CastTransformer(Of TSource, TDestination).TransformAsync
+- uid: Wolfgang.Etl.Transformers.ChainTransformerWithCancellation`3
+  name: ChainTransformerWithCancellation<TSource, TIntermediate, TDestination>
+  href: api/Wolfgang.Etl.Transformers.ChainTransformerWithCancellation-3.html
+  commentId: T:Wolfgang.Etl.Transformers.ChainTransformerWithCancellation`3
+  name.vb: ChainTransformerWithCancellation(Of TSource, TIntermediate, TDestination)
+  fullName: Wolfgang.Etl.Transformers.ChainTransformerWithCancellation<TSource, TIntermediate, TDestination>
+  fullName.vb: Wolfgang.Etl.Transformers.ChainTransformerWithCancellation(Of TSource, TIntermediate, TDestination)
+  nameWithType: ChainTransformerWithCancellation<TSource, TIntermediate, TDestination>
+  nameWithType.vb: ChainTransformerWithCancellation(Of TSource, TIntermediate, TDestination)
+- uid: Wolfgang.Etl.Transformers.ChainTransformerWithCancellation`3.#ctor(Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync{`0,`1},Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync{`1,`2})
+  name: ChainTransformerWithCancellation(ITransformWithCancellationAsync<TSource, TIntermediate>, ITransformWithCancellationAsync<TIntermediate, TDestination>)
+  href: api/Wolfgang.Etl.Transformers.ChainTransformerWithCancellation-3.html#Wolfgang_Etl_Transformers_ChainTransformerWithCancellation_3__ctor_Wolfgang_Etl_Abstractions_ITransformWithCancellationAsync__0__1__Wolfgang_Etl_Abstractions_ITransformWithCancellationAsync__1__2__
+  commentId: M:Wolfgang.Etl.Transformers.ChainTransformerWithCancellation`3.#ctor(Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync{`0,`1},Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync{`1,`2})
+  name.vb: New(ITransformWithCancellationAsync(Of TSource, TIntermediate), ITransformWithCancellationAsync(Of TIntermediate, TDestination))
+  fullName: Wolfgang.Etl.Transformers.ChainTransformerWithCancellation<TSource, TIntermediate, TDestination>.ChainTransformerWithCancellation(Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync<TSource, TIntermediate>, Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync<TIntermediate, TDestination>)
+  fullName.vb: Wolfgang.Etl.Transformers.ChainTransformerWithCancellation(Of TSource, TIntermediate, TDestination).New(Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync(Of TSource, TIntermediate), Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync(Of TIntermediate, TDestination))
+  nameWithType: ChainTransformerWithCancellation<TSource, TIntermediate, TDestination>.ChainTransformerWithCancellation(ITransformWithCancellationAsync<TSource, TIntermediate>, ITransformWithCancellationAsync<TIntermediate, TDestination>)
+  nameWithType.vb: ChainTransformerWithCancellation(Of TSource, TIntermediate, TDestination).New(ITransformWithCancellationAsync(Of TSource, TIntermediate), ITransformWithCancellationAsync(Of TIntermediate, TDestination))
+- uid: Wolfgang.Etl.Transformers.ChainTransformerWithCancellation`3.#ctor*
+  name: ChainTransformerWithCancellation
+  href: api/Wolfgang.Etl.Transformers.ChainTransformerWithCancellation-3.html#Wolfgang_Etl_Transformers_ChainTransformerWithCancellation_3__ctor_
+  commentId: Overload:Wolfgang.Etl.Transformers.ChainTransformerWithCancellation`3.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Wolfgang.Etl.Transformers.ChainTransformerWithCancellation<TSource, TIntermediate, TDestination>.ChainTransformerWithCancellation
+  fullName.vb: Wolfgang.Etl.Transformers.ChainTransformerWithCancellation(Of TSource, TIntermediate, TDestination).New
+  nameWithType: ChainTransformerWithCancellation<TSource, TIntermediate, TDestination>.ChainTransformerWithCancellation
+  nameWithType.vb: ChainTransformerWithCancellation(Of TSource, TIntermediate, TDestination).New
+- uid: Wolfgang.Etl.Transformers.ChainTransformerWithCancellation`3.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name: TransformAsync(IAsyncEnumerable<TSource>)
+  href: api/Wolfgang.Etl.Transformers.ChainTransformerWithCancellation-3.html#Wolfgang_Etl_Transformers_ChainTransformerWithCancellation_3_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__
+  commentId: M:Wolfgang.Etl.Transformers.ChainTransformerWithCancellation`3.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name.vb: TransformAsync(IAsyncEnumerable(Of TSource))
+  fullName: Wolfgang.Etl.Transformers.ChainTransformerWithCancellation<TSource, TIntermediate, TDestination>.TransformAsync(System.Collections.Generic.IAsyncEnumerable<TSource>)
+  fullName.vb: Wolfgang.Etl.Transformers.ChainTransformerWithCancellation(Of TSource, TIntermediate, TDestination).TransformAsync(System.Collections.Generic.IAsyncEnumerable(Of TSource))
+  nameWithType: ChainTransformerWithCancellation<TSource, TIntermediate, TDestination>.TransformAsync(IAsyncEnumerable<TSource>)
+  nameWithType.vb: ChainTransformerWithCancellation(Of TSource, TIntermediate, TDestination).TransformAsync(IAsyncEnumerable(Of TSource))
+- uid: Wolfgang.Etl.Transformers.ChainTransformerWithCancellation`3.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0},System.Threading.CancellationToken)
+  name: TransformAsync(IAsyncEnumerable<TSource>, CancellationToken)
+  href: api/Wolfgang.Etl.Transformers.ChainTransformerWithCancellation-3.html#Wolfgang_Etl_Transformers_ChainTransformerWithCancellation_3_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__System_Threading_CancellationToken_
+  commentId: M:Wolfgang.Etl.Transformers.ChainTransformerWithCancellation`3.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0},System.Threading.CancellationToken)
+  name.vb: TransformAsync(IAsyncEnumerable(Of TSource), CancellationToken)
+  fullName: Wolfgang.Etl.Transformers.ChainTransformerWithCancellation<TSource, TIntermediate, TDestination>.TransformAsync(System.Collections.Generic.IAsyncEnumerable<TSource>, System.Threading.CancellationToken)
+  fullName.vb: Wolfgang.Etl.Transformers.ChainTransformerWithCancellation(Of TSource, TIntermediate, TDestination).TransformAsync(System.Collections.Generic.IAsyncEnumerable(Of TSource), System.Threading.CancellationToken)
+  nameWithType: ChainTransformerWithCancellation<TSource, TIntermediate, TDestination>.TransformAsync(IAsyncEnumerable<TSource>, CancellationToken)
+  nameWithType.vb: ChainTransformerWithCancellation(Of TSource, TIntermediate, TDestination).TransformAsync(IAsyncEnumerable(Of TSource), CancellationToken)
+- uid: Wolfgang.Etl.Transformers.ChainTransformerWithCancellation`3.TransformAsync*
+  name: TransformAsync
+  href: api/Wolfgang.Etl.Transformers.ChainTransformerWithCancellation-3.html#Wolfgang_Etl_Transformers_ChainTransformerWithCancellation_3_TransformAsync_
+  commentId: Overload:Wolfgang.Etl.Transformers.ChainTransformerWithCancellation`3.TransformAsync
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.ChainTransformerWithCancellation<TSource, TIntermediate, TDestination>.TransformAsync
+  fullName.vb: Wolfgang.Etl.Transformers.ChainTransformerWithCancellation(Of TSource, TIntermediate, TDestination).TransformAsync
+  nameWithType: ChainTransformerWithCancellation<TSource, TIntermediate, TDestination>.TransformAsync
+  nameWithType.vb: ChainTransformerWithCancellation(Of TSource, TIntermediate, TDestination).TransformAsync
+- uid: Wolfgang.Etl.Transformers.ChainTransformer`3
+  name: ChainTransformer<TSource, TIntermediate, TDestination>
+  href: api/Wolfgang.Etl.Transformers.ChainTransformer-3.html
+  commentId: T:Wolfgang.Etl.Transformers.ChainTransformer`3
+  name.vb: ChainTransformer(Of TSource, TIntermediate, TDestination)
+  fullName: Wolfgang.Etl.Transformers.ChainTransformer<TSource, TIntermediate, TDestination>
+  fullName.vb: Wolfgang.Etl.Transformers.ChainTransformer(Of TSource, TIntermediate, TDestination)
+  nameWithType: ChainTransformer<TSource, TIntermediate, TDestination>
+  nameWithType.vb: ChainTransformer(Of TSource, TIntermediate, TDestination)
+- uid: Wolfgang.Etl.Transformers.ChainTransformer`3.#ctor(Wolfgang.Etl.Abstractions.ITransformAsync{`0,`1},Wolfgang.Etl.Abstractions.ITransformAsync{`1,`2})
+  name: ChainTransformer(ITransformAsync<TSource, TIntermediate>, ITransformAsync<TIntermediate, TDestination>)
+  href: api/Wolfgang.Etl.Transformers.ChainTransformer-3.html#Wolfgang_Etl_Transformers_ChainTransformer_3__ctor_Wolfgang_Etl_Abstractions_ITransformAsync__0__1__Wolfgang_Etl_Abstractions_ITransformAsync__1__2__
+  commentId: M:Wolfgang.Etl.Transformers.ChainTransformer`3.#ctor(Wolfgang.Etl.Abstractions.ITransformAsync{`0,`1},Wolfgang.Etl.Abstractions.ITransformAsync{`1,`2})
+  name.vb: New(ITransformAsync(Of TSource, TIntermediate), ITransformAsync(Of TIntermediate, TDestination))
+  fullName: Wolfgang.Etl.Transformers.ChainTransformer<TSource, TIntermediate, TDestination>.ChainTransformer(Wolfgang.Etl.Abstractions.ITransformAsync<TSource, TIntermediate>, Wolfgang.Etl.Abstractions.ITransformAsync<TIntermediate, TDestination>)
+  fullName.vb: Wolfgang.Etl.Transformers.ChainTransformer(Of TSource, TIntermediate, TDestination).New(Wolfgang.Etl.Abstractions.ITransformAsync(Of TSource, TIntermediate), Wolfgang.Etl.Abstractions.ITransformAsync(Of TIntermediate, TDestination))
+  nameWithType: ChainTransformer<TSource, TIntermediate, TDestination>.ChainTransformer(ITransformAsync<TSource, TIntermediate>, ITransformAsync<TIntermediate, TDestination>)
+  nameWithType.vb: ChainTransformer(Of TSource, TIntermediate, TDestination).New(ITransformAsync(Of TSource, TIntermediate), ITransformAsync(Of TIntermediate, TDestination))
+- uid: Wolfgang.Etl.Transformers.ChainTransformer`3.#ctor*
+  name: ChainTransformer
+  href: api/Wolfgang.Etl.Transformers.ChainTransformer-3.html#Wolfgang_Etl_Transformers_ChainTransformer_3__ctor_
+  commentId: Overload:Wolfgang.Etl.Transformers.ChainTransformer`3.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Wolfgang.Etl.Transformers.ChainTransformer<TSource, TIntermediate, TDestination>.ChainTransformer
+  fullName.vb: Wolfgang.Etl.Transformers.ChainTransformer(Of TSource, TIntermediate, TDestination).New
+  nameWithType: ChainTransformer<TSource, TIntermediate, TDestination>.ChainTransformer
+  nameWithType.vb: ChainTransformer(Of TSource, TIntermediate, TDestination).New
+- uid: Wolfgang.Etl.Transformers.ChainTransformer`3.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name: TransformAsync(IAsyncEnumerable<TSource>)
+  href: api/Wolfgang.Etl.Transformers.ChainTransformer-3.html#Wolfgang_Etl_Transformers_ChainTransformer_3_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__
+  commentId: M:Wolfgang.Etl.Transformers.ChainTransformer`3.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name.vb: TransformAsync(IAsyncEnumerable(Of TSource))
+  fullName: Wolfgang.Etl.Transformers.ChainTransformer<TSource, TIntermediate, TDestination>.TransformAsync(System.Collections.Generic.IAsyncEnumerable<TSource>)
+  fullName.vb: Wolfgang.Etl.Transformers.ChainTransformer(Of TSource, TIntermediate, TDestination).TransformAsync(System.Collections.Generic.IAsyncEnumerable(Of TSource))
+  nameWithType: ChainTransformer<TSource, TIntermediate, TDestination>.TransformAsync(IAsyncEnumerable<TSource>)
+  nameWithType.vb: ChainTransformer(Of TSource, TIntermediate, TDestination).TransformAsync(IAsyncEnumerable(Of TSource))
+- uid: Wolfgang.Etl.Transformers.ChainTransformer`3.TransformAsync*
+  name: TransformAsync
+  href: api/Wolfgang.Etl.Transformers.ChainTransformer-3.html#Wolfgang_Etl_Transformers_ChainTransformer_3_TransformAsync_
+  commentId: Overload:Wolfgang.Etl.Transformers.ChainTransformer`3.TransformAsync
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.ChainTransformer<TSource, TIntermediate, TDestination>.TransformAsync
+  fullName.vb: Wolfgang.Etl.Transformers.ChainTransformer(Of TSource, TIntermediate, TDestination).TransformAsync
+  nameWithType: ChainTransformer<TSource, TIntermediate, TDestination>.TransformAsync
+  nameWithType.vb: ChainTransformer(Of TSource, TIntermediate, TDestination).TransformAsync
+- uid: Wolfgang.Etl.Transformers.ChunkTransformer`1
+  name: ChunkTransformer<T>
+  href: api/Wolfgang.Etl.Transformers.ChunkTransformer-1.html
+  commentId: T:Wolfgang.Etl.Transformers.ChunkTransformer`1
+  name.vb: ChunkTransformer(Of T)
+  fullName: Wolfgang.Etl.Transformers.ChunkTransformer<T>
+  fullName.vb: Wolfgang.Etl.Transformers.ChunkTransformer(Of T)
+  nameWithType: ChunkTransformer<T>
+  nameWithType.vb: ChunkTransformer(Of T)
+- uid: Wolfgang.Etl.Transformers.ChunkTransformer`1.#ctor(System.Int32)
+  name: ChunkTransformer(int)
+  href: api/Wolfgang.Etl.Transformers.ChunkTransformer-1.html#Wolfgang_Etl_Transformers_ChunkTransformer_1__ctor_System_Int32_
+  commentId: M:Wolfgang.Etl.Transformers.ChunkTransformer`1.#ctor(System.Int32)
+  name.vb: New(Integer)
+  fullName: Wolfgang.Etl.Transformers.ChunkTransformer<T>.ChunkTransformer(int)
+  fullName.vb: Wolfgang.Etl.Transformers.ChunkTransformer(Of T).New(Integer)
+  nameWithType: ChunkTransformer<T>.ChunkTransformer(int)
+  nameWithType.vb: ChunkTransformer(Of T).New(Integer)
+- uid: Wolfgang.Etl.Transformers.ChunkTransformer`1.#ctor*
+  name: ChunkTransformer
+  href: api/Wolfgang.Etl.Transformers.ChunkTransformer-1.html#Wolfgang_Etl_Transformers_ChunkTransformer_1__ctor_
+  commentId: Overload:Wolfgang.Etl.Transformers.ChunkTransformer`1.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Wolfgang.Etl.Transformers.ChunkTransformer<T>.ChunkTransformer
+  fullName.vb: Wolfgang.Etl.Transformers.ChunkTransformer(Of T).New
+  nameWithType: ChunkTransformer<T>.ChunkTransformer
+  nameWithType.vb: ChunkTransformer(Of T).New
+- uid: Wolfgang.Etl.Transformers.ChunkTransformer`1.Size
+  name: Size
+  href: api/Wolfgang.Etl.Transformers.ChunkTransformer-1.html#Wolfgang_Etl_Transformers_ChunkTransformer_1_Size
+  commentId: P:Wolfgang.Etl.Transformers.ChunkTransformer`1.Size
+  fullName: Wolfgang.Etl.Transformers.ChunkTransformer<T>.Size
+  fullName.vb: Wolfgang.Etl.Transformers.ChunkTransformer(Of T).Size
+  nameWithType: ChunkTransformer<T>.Size
+  nameWithType.vb: ChunkTransformer(Of T).Size
+- uid: Wolfgang.Etl.Transformers.ChunkTransformer`1.Size*
+  name: Size
+  href: api/Wolfgang.Etl.Transformers.ChunkTransformer-1.html#Wolfgang_Etl_Transformers_ChunkTransformer_1_Size_
+  commentId: Overload:Wolfgang.Etl.Transformers.ChunkTransformer`1.Size
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.ChunkTransformer<T>.Size
+  fullName.vb: Wolfgang.Etl.Transformers.ChunkTransformer(Of T).Size
+  nameWithType: ChunkTransformer<T>.Size
+  nameWithType.vb: ChunkTransformer(Of T).Size
+- uid: Wolfgang.Etl.Transformers.ChunkTransformer`1.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name: TransformAsync(IAsyncEnumerable<T>)
+  href: api/Wolfgang.Etl.Transformers.ChunkTransformer-1.html#Wolfgang_Etl_Transformers_ChunkTransformer_1_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__
+  commentId: M:Wolfgang.Etl.Transformers.ChunkTransformer`1.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name.vb: TransformAsync(IAsyncEnumerable(Of T))
+  fullName: Wolfgang.Etl.Transformers.ChunkTransformer<T>.TransformAsync(System.Collections.Generic.IAsyncEnumerable<T>)
+  fullName.vb: Wolfgang.Etl.Transformers.ChunkTransformer(Of T).TransformAsync(System.Collections.Generic.IAsyncEnumerable(Of T))
+  nameWithType: ChunkTransformer<T>.TransformAsync(IAsyncEnumerable<T>)
+  nameWithType.vb: ChunkTransformer(Of T).TransformAsync(IAsyncEnumerable(Of T))
+- uid: Wolfgang.Etl.Transformers.ChunkTransformer`1.TransformAsync*
+  name: TransformAsync
+  href: api/Wolfgang.Etl.Transformers.ChunkTransformer-1.html#Wolfgang_Etl_Transformers_ChunkTransformer_1_TransformAsync_
+  commentId: Overload:Wolfgang.Etl.Transformers.ChunkTransformer`1.TransformAsync
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.ChunkTransformer<T>.TransformAsync
+  fullName.vb: Wolfgang.Etl.Transformers.ChunkTransformer(Of T).TransformAsync
+  nameWithType: ChunkTransformer<T>.TransformAsync
+  nameWithType.vb: ChunkTransformer(Of T).TransformAsync
+- uid: Wolfgang.Etl.Transformers.DistinctByTransformer`2
+  name: DistinctByTransformer<TSource, TKey>
+  href: api/Wolfgang.Etl.Transformers.DistinctByTransformer-2.html
+  commentId: T:Wolfgang.Etl.Transformers.DistinctByTransformer`2
+  name.vb: DistinctByTransformer(Of TSource, TKey)
+  fullName: Wolfgang.Etl.Transformers.DistinctByTransformer<TSource, TKey>
+  fullName.vb: Wolfgang.Etl.Transformers.DistinctByTransformer(Of TSource, TKey)
+  nameWithType: DistinctByTransformer<TSource, TKey>
+  nameWithType.vb: DistinctByTransformer(Of TSource, TKey)
+- uid: Wolfgang.Etl.Transformers.DistinctByTransformer`2.#ctor(System.Func{`0,`1})
+  name: DistinctByTransformer(Func<TSource, TKey>)
+  href: api/Wolfgang.Etl.Transformers.DistinctByTransformer-2.html#Wolfgang_Etl_Transformers_DistinctByTransformer_2__ctor_System_Func__0__1__
+  commentId: M:Wolfgang.Etl.Transformers.DistinctByTransformer`2.#ctor(System.Func{`0,`1})
+  name.vb: New(Func(Of TSource, TKey))
+  fullName: Wolfgang.Etl.Transformers.DistinctByTransformer<TSource, TKey>.DistinctByTransformer(System.Func<TSource, TKey>)
+  fullName.vb: Wolfgang.Etl.Transformers.DistinctByTransformer(Of TSource, TKey).New(System.Func(Of TSource, TKey))
+  nameWithType: DistinctByTransformer<TSource, TKey>.DistinctByTransformer(Func<TSource, TKey>)
+  nameWithType.vb: DistinctByTransformer(Of TSource, TKey).New(Func(Of TSource, TKey))
+- uid: Wolfgang.Etl.Transformers.DistinctByTransformer`2.#ctor(System.Func{`0,`1},System.Collections.Generic.IEqualityComparer{`1})
+  name: DistinctByTransformer(Func<TSource, TKey>, IEqualityComparer<TKey>?)
+  href: api/Wolfgang.Etl.Transformers.DistinctByTransformer-2.html#Wolfgang_Etl_Transformers_DistinctByTransformer_2__ctor_System_Func__0__1__System_Collections_Generic_IEqualityComparer__1__
+  commentId: M:Wolfgang.Etl.Transformers.DistinctByTransformer`2.#ctor(System.Func{`0,`1},System.Collections.Generic.IEqualityComparer{`1})
+  name.vb: New(Func(Of TSource, TKey), IEqualityComparer(Of TKey))
+  fullName: Wolfgang.Etl.Transformers.DistinctByTransformer<TSource, TKey>.DistinctByTransformer(System.Func<TSource, TKey>, System.Collections.Generic.IEqualityComparer<TKey>?)
+  fullName.vb: Wolfgang.Etl.Transformers.DistinctByTransformer(Of TSource, TKey).New(System.Func(Of TSource, TKey), System.Collections.Generic.IEqualityComparer(Of TKey))
+  nameWithType: DistinctByTransformer<TSource, TKey>.DistinctByTransformer(Func<TSource, TKey>, IEqualityComparer<TKey>?)
+  nameWithType.vb: DistinctByTransformer(Of TSource, TKey).New(Func(Of TSource, TKey), IEqualityComparer(Of TKey))
+- uid: Wolfgang.Etl.Transformers.DistinctByTransformer`2.#ctor*
+  name: DistinctByTransformer
+  href: api/Wolfgang.Etl.Transformers.DistinctByTransformer-2.html#Wolfgang_Etl_Transformers_DistinctByTransformer_2__ctor_
+  commentId: Overload:Wolfgang.Etl.Transformers.DistinctByTransformer`2.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Wolfgang.Etl.Transformers.DistinctByTransformer<TSource, TKey>.DistinctByTransformer
+  fullName.vb: Wolfgang.Etl.Transformers.DistinctByTransformer(Of TSource, TKey).New
+  nameWithType: DistinctByTransformer<TSource, TKey>.DistinctByTransformer
+  nameWithType.vb: DistinctByTransformer(Of TSource, TKey).New
+- uid: Wolfgang.Etl.Transformers.DistinctByTransformer`2.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name: TransformAsync(IAsyncEnumerable<TSource>)
+  href: api/Wolfgang.Etl.Transformers.DistinctByTransformer-2.html#Wolfgang_Etl_Transformers_DistinctByTransformer_2_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__
+  commentId: M:Wolfgang.Etl.Transformers.DistinctByTransformer`2.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name.vb: TransformAsync(IAsyncEnumerable(Of TSource))
+  fullName: Wolfgang.Etl.Transformers.DistinctByTransformer<TSource, TKey>.TransformAsync(System.Collections.Generic.IAsyncEnumerable<TSource>)
+  fullName.vb: Wolfgang.Etl.Transformers.DistinctByTransformer(Of TSource, TKey).TransformAsync(System.Collections.Generic.IAsyncEnumerable(Of TSource))
+  nameWithType: DistinctByTransformer<TSource, TKey>.TransformAsync(IAsyncEnumerable<TSource>)
+  nameWithType.vb: DistinctByTransformer(Of TSource, TKey).TransformAsync(IAsyncEnumerable(Of TSource))
+- uid: Wolfgang.Etl.Transformers.DistinctByTransformer`2.TransformAsync*
+  name: TransformAsync
+  href: api/Wolfgang.Etl.Transformers.DistinctByTransformer-2.html#Wolfgang_Etl_Transformers_DistinctByTransformer_2_TransformAsync_
+  commentId: Overload:Wolfgang.Etl.Transformers.DistinctByTransformer`2.TransformAsync
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.DistinctByTransformer<TSource, TKey>.TransformAsync
+  fullName.vb: Wolfgang.Etl.Transformers.DistinctByTransformer(Of TSource, TKey).TransformAsync
+  nameWithType: DistinctByTransformer<TSource, TKey>.TransformAsync
+  nameWithType.vb: DistinctByTransformer(Of TSource, TKey).TransformAsync
+- uid: Wolfgang.Etl.Transformers.DistinctTransformer`1
+  name: DistinctTransformer<T>
+  href: api/Wolfgang.Etl.Transformers.DistinctTransformer-1.html
+  commentId: T:Wolfgang.Etl.Transformers.DistinctTransformer`1
+  name.vb: DistinctTransformer(Of T)
+  fullName: Wolfgang.Etl.Transformers.DistinctTransformer<T>
+  fullName.vb: Wolfgang.Etl.Transformers.DistinctTransformer(Of T)
+  nameWithType: DistinctTransformer<T>
+  nameWithType.vb: DistinctTransformer(Of T)
+- uid: Wolfgang.Etl.Transformers.DistinctTransformer`1.#ctor
+  name: DistinctTransformer()
+  href: api/Wolfgang.Etl.Transformers.DistinctTransformer-1.html#Wolfgang_Etl_Transformers_DistinctTransformer_1__ctor
+  commentId: M:Wolfgang.Etl.Transformers.DistinctTransformer`1.#ctor
+  name.vb: New()
+  fullName: Wolfgang.Etl.Transformers.DistinctTransformer<T>.DistinctTransformer()
+  fullName.vb: Wolfgang.Etl.Transformers.DistinctTransformer(Of T).New()
+  nameWithType: DistinctTransformer<T>.DistinctTransformer()
+  nameWithType.vb: DistinctTransformer(Of T).New()
+- uid: Wolfgang.Etl.Transformers.DistinctTransformer`1.#ctor(System.Collections.Generic.IEqualityComparer{`0})
+  name: DistinctTransformer(IEqualityComparer<T>?)
+  href: api/Wolfgang.Etl.Transformers.DistinctTransformer-1.html#Wolfgang_Etl_Transformers_DistinctTransformer_1__ctor_System_Collections_Generic_IEqualityComparer__0__
+  commentId: M:Wolfgang.Etl.Transformers.DistinctTransformer`1.#ctor(System.Collections.Generic.IEqualityComparer{`0})
+  name.vb: New(IEqualityComparer(Of T))
+  fullName: Wolfgang.Etl.Transformers.DistinctTransformer<T>.DistinctTransformer(System.Collections.Generic.IEqualityComparer<T>?)
+  fullName.vb: Wolfgang.Etl.Transformers.DistinctTransformer(Of T).New(System.Collections.Generic.IEqualityComparer(Of T))
+  nameWithType: DistinctTransformer<T>.DistinctTransformer(IEqualityComparer<T>?)
+  nameWithType.vb: DistinctTransformer(Of T).New(IEqualityComparer(Of T))
+- uid: Wolfgang.Etl.Transformers.DistinctTransformer`1.#ctor*
+  name: DistinctTransformer
+  href: api/Wolfgang.Etl.Transformers.DistinctTransformer-1.html#Wolfgang_Etl_Transformers_DistinctTransformer_1__ctor_
+  commentId: Overload:Wolfgang.Etl.Transformers.DistinctTransformer`1.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Wolfgang.Etl.Transformers.DistinctTransformer<T>.DistinctTransformer
+  fullName.vb: Wolfgang.Etl.Transformers.DistinctTransformer(Of T).New
+  nameWithType: DistinctTransformer<T>.DistinctTransformer
+  nameWithType.vb: DistinctTransformer(Of T).New
+- uid: Wolfgang.Etl.Transformers.DistinctTransformer`1.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name: TransformAsync(IAsyncEnumerable<T>)
+  href: api/Wolfgang.Etl.Transformers.DistinctTransformer-1.html#Wolfgang_Etl_Transformers_DistinctTransformer_1_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__
+  commentId: M:Wolfgang.Etl.Transformers.DistinctTransformer`1.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name.vb: TransformAsync(IAsyncEnumerable(Of T))
+  fullName: Wolfgang.Etl.Transformers.DistinctTransformer<T>.TransformAsync(System.Collections.Generic.IAsyncEnumerable<T>)
+  fullName.vb: Wolfgang.Etl.Transformers.DistinctTransformer(Of T).TransformAsync(System.Collections.Generic.IAsyncEnumerable(Of T))
+  nameWithType: DistinctTransformer<T>.TransformAsync(IAsyncEnumerable<T>)
+  nameWithType.vb: DistinctTransformer(Of T).TransformAsync(IAsyncEnumerable(Of T))
+- uid: Wolfgang.Etl.Transformers.DistinctTransformer`1.TransformAsync*
+  name: TransformAsync
+  href: api/Wolfgang.Etl.Transformers.DistinctTransformer-1.html#Wolfgang_Etl_Transformers_DistinctTransformer_1_TransformAsync_
+  commentId: Overload:Wolfgang.Etl.Transformers.DistinctTransformer`1.TransformAsync
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.DistinctTransformer<T>.TransformAsync
+  fullName.vb: Wolfgang.Etl.Transformers.DistinctTransformer(Of T).TransformAsync
+  nameWithType: DistinctTransformer<T>.TransformAsync
+  nameWithType.vb: DistinctTransformer(Of T).TransformAsync
+- uid: Wolfgang.Etl.Transformers.OfTypeTransformer`2
+  name: OfTypeTransformer<TSource, TDestination>
+  href: api/Wolfgang.Etl.Transformers.OfTypeTransformer-2.html
+  commentId: T:Wolfgang.Etl.Transformers.OfTypeTransformer`2
+  name.vb: OfTypeTransformer(Of TSource, TDestination)
+  fullName: Wolfgang.Etl.Transformers.OfTypeTransformer<TSource, TDestination>
+  fullName.vb: Wolfgang.Etl.Transformers.OfTypeTransformer(Of TSource, TDestination)
+  nameWithType: OfTypeTransformer<TSource, TDestination>
+  nameWithType.vb: OfTypeTransformer(Of TSource, TDestination)
+- uid: Wolfgang.Etl.Transformers.OfTypeTransformer`2.#ctor
+  name: OfTypeTransformer()
+  href: api/Wolfgang.Etl.Transformers.OfTypeTransformer-2.html#Wolfgang_Etl_Transformers_OfTypeTransformer_2__ctor
+  commentId: M:Wolfgang.Etl.Transformers.OfTypeTransformer`2.#ctor
+  name.vb: New()
+  fullName: Wolfgang.Etl.Transformers.OfTypeTransformer<TSource, TDestination>.OfTypeTransformer()
+  fullName.vb: Wolfgang.Etl.Transformers.OfTypeTransformer(Of TSource, TDestination).New()
+  nameWithType: OfTypeTransformer<TSource, TDestination>.OfTypeTransformer()
+  nameWithType.vb: OfTypeTransformer(Of TSource, TDestination).New()
+- uid: Wolfgang.Etl.Transformers.OfTypeTransformer`2.#ctor*
+  name: OfTypeTransformer
+  href: api/Wolfgang.Etl.Transformers.OfTypeTransformer-2.html#Wolfgang_Etl_Transformers_OfTypeTransformer_2__ctor_
+  commentId: Overload:Wolfgang.Etl.Transformers.OfTypeTransformer`2.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Wolfgang.Etl.Transformers.OfTypeTransformer<TSource, TDestination>.OfTypeTransformer
+  fullName.vb: Wolfgang.Etl.Transformers.OfTypeTransformer(Of TSource, TDestination).New
+  nameWithType: OfTypeTransformer<TSource, TDestination>.OfTypeTransformer
+  nameWithType.vb: OfTypeTransformer(Of TSource, TDestination).New
+- uid: Wolfgang.Etl.Transformers.OfTypeTransformer`2.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name: TransformAsync(IAsyncEnumerable<TSource>)
+  href: api/Wolfgang.Etl.Transformers.OfTypeTransformer-2.html#Wolfgang_Etl_Transformers_OfTypeTransformer_2_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__
+  commentId: M:Wolfgang.Etl.Transformers.OfTypeTransformer`2.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name.vb: TransformAsync(IAsyncEnumerable(Of TSource))
+  fullName: Wolfgang.Etl.Transformers.OfTypeTransformer<TSource, TDestination>.TransformAsync(System.Collections.Generic.IAsyncEnumerable<TSource>)
+  fullName.vb: Wolfgang.Etl.Transformers.OfTypeTransformer(Of TSource, TDestination).TransformAsync(System.Collections.Generic.IAsyncEnumerable(Of TSource))
+  nameWithType: OfTypeTransformer<TSource, TDestination>.TransformAsync(IAsyncEnumerable<TSource>)
+  nameWithType.vb: OfTypeTransformer(Of TSource, TDestination).TransformAsync(IAsyncEnumerable(Of TSource))
+- uid: Wolfgang.Etl.Transformers.OfTypeTransformer`2.TransformAsync*
+  name: TransformAsync
+  href: api/Wolfgang.Etl.Transformers.OfTypeTransformer-2.html#Wolfgang_Etl_Transformers_OfTypeTransformer_2_TransformAsync_
+  commentId: Overload:Wolfgang.Etl.Transformers.OfTypeTransformer`2.TransformAsync
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.OfTypeTransformer<TSource, TDestination>.TransformAsync
+  fullName.vb: Wolfgang.Etl.Transformers.OfTypeTransformer(Of TSource, TDestination).TransformAsync
+  nameWithType: OfTypeTransformer<TSource, TDestination>.TransformAsync
+  nameWithType.vb: OfTypeTransformer(Of TSource, TDestination).TransformAsync
+- uid: Wolfgang.Etl.Transformers.PassThroughTransformer`1
+  name: PassThroughTransformer<T>
+  href: api/Wolfgang.Etl.Transformers.PassThroughTransformer-1.html
+  commentId: T:Wolfgang.Etl.Transformers.PassThroughTransformer`1
+  name.vb: PassThroughTransformer(Of T)
+  fullName: Wolfgang.Etl.Transformers.PassThroughTransformer<T>
+  fullName.vb: Wolfgang.Etl.Transformers.PassThroughTransformer(Of T)
+  nameWithType: PassThroughTransformer<T>
+  nameWithType.vb: PassThroughTransformer(Of T)
+- uid: Wolfgang.Etl.Transformers.PassThroughTransformer`1.#ctor
+  name: PassThroughTransformer()
+  href: api/Wolfgang.Etl.Transformers.PassThroughTransformer-1.html#Wolfgang_Etl_Transformers_PassThroughTransformer_1__ctor
+  commentId: M:Wolfgang.Etl.Transformers.PassThroughTransformer`1.#ctor
+  name.vb: New()
+  fullName: Wolfgang.Etl.Transformers.PassThroughTransformer<T>.PassThroughTransformer()
+  fullName.vb: Wolfgang.Etl.Transformers.PassThroughTransformer(Of T).New()
+  nameWithType: PassThroughTransformer<T>.PassThroughTransformer()
+  nameWithType.vb: PassThroughTransformer(Of T).New()
+- uid: Wolfgang.Etl.Transformers.PassThroughTransformer`1.#ctor*
+  name: PassThroughTransformer
+  href: api/Wolfgang.Etl.Transformers.PassThroughTransformer-1.html#Wolfgang_Etl_Transformers_PassThroughTransformer_1__ctor_
+  commentId: Overload:Wolfgang.Etl.Transformers.PassThroughTransformer`1.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Wolfgang.Etl.Transformers.PassThroughTransformer<T>.PassThroughTransformer
+  fullName.vb: Wolfgang.Etl.Transformers.PassThroughTransformer(Of T).New
+  nameWithType: PassThroughTransformer<T>.PassThroughTransformer
+  nameWithType.vb: PassThroughTransformer(Of T).New
+- uid: Wolfgang.Etl.Transformers.PassThroughTransformer`1.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name: TransformAsync(IAsyncEnumerable<T>)
+  href: api/Wolfgang.Etl.Transformers.PassThroughTransformer-1.html#Wolfgang_Etl_Transformers_PassThroughTransformer_1_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__
+  commentId: M:Wolfgang.Etl.Transformers.PassThroughTransformer`1.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name.vb: TransformAsync(IAsyncEnumerable(Of T))
+  fullName: Wolfgang.Etl.Transformers.PassThroughTransformer<T>.TransformAsync(System.Collections.Generic.IAsyncEnumerable<T>)
+  fullName.vb: Wolfgang.Etl.Transformers.PassThroughTransformer(Of T).TransformAsync(System.Collections.Generic.IAsyncEnumerable(Of T))
+  nameWithType: PassThroughTransformer<T>.TransformAsync(IAsyncEnumerable<T>)
+  nameWithType.vb: PassThroughTransformer(Of T).TransformAsync(IAsyncEnumerable(Of T))
+- uid: Wolfgang.Etl.Transformers.PassThroughTransformer`1.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0},System.Threading.CancellationToken)
+  name: TransformAsync(IAsyncEnumerable<T>, CancellationToken)
+  href: api/Wolfgang.Etl.Transformers.PassThroughTransformer-1.html#Wolfgang_Etl_Transformers_PassThroughTransformer_1_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__System_Threading_CancellationToken_
+  commentId: M:Wolfgang.Etl.Transformers.PassThroughTransformer`1.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0},System.Threading.CancellationToken)
+  name.vb: TransformAsync(IAsyncEnumerable(Of T), CancellationToken)
+  fullName: Wolfgang.Etl.Transformers.PassThroughTransformer<T>.TransformAsync(System.Collections.Generic.IAsyncEnumerable<T>, System.Threading.CancellationToken)
+  fullName.vb: Wolfgang.Etl.Transformers.PassThroughTransformer(Of T).TransformAsync(System.Collections.Generic.IAsyncEnumerable(Of T), System.Threading.CancellationToken)
+  nameWithType: PassThroughTransformer<T>.TransformAsync(IAsyncEnumerable<T>, CancellationToken)
+  nameWithType.vb: PassThroughTransformer(Of T).TransformAsync(IAsyncEnumerable(Of T), CancellationToken)
+- uid: Wolfgang.Etl.Transformers.PassThroughTransformer`1.TransformAsync*
+  name: TransformAsync
+  href: api/Wolfgang.Etl.Transformers.PassThroughTransformer-1.html#Wolfgang_Etl_Transformers_PassThroughTransformer_1_TransformAsync_
+  commentId: Overload:Wolfgang.Etl.Transformers.PassThroughTransformer`1.TransformAsync
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.PassThroughTransformer<T>.TransformAsync
+  fullName.vb: Wolfgang.Etl.Transformers.PassThroughTransformer(Of T).TransformAsync
+  nameWithType: PassThroughTransformer<T>.TransformAsync
+  nameWithType.vb: PassThroughTransformer(Of T).TransformAsync
+- uid: Wolfgang.Etl.Transformers.ProgressReportingTransformer`1
+  name: ProgressReportingTransformer<T>
+  href: api/Wolfgang.Etl.Transformers.ProgressReportingTransformer-1.html
+  commentId: T:Wolfgang.Etl.Transformers.ProgressReportingTransformer`1
+  name.vb: ProgressReportingTransformer(Of T)
+  fullName: Wolfgang.Etl.Transformers.ProgressReportingTransformer<T>
+  fullName.vb: Wolfgang.Etl.Transformers.ProgressReportingTransformer(Of T)
+  nameWithType: ProgressReportingTransformer<T>
+  nameWithType.vb: ProgressReportingTransformer(Of T)
+- uid: Wolfgang.Etl.Transformers.ProgressReportingTransformer`1.#ctor(System.Action{`0})
+  name: ProgressReportingTransformer(Action<T>)
+  href: api/Wolfgang.Etl.Transformers.ProgressReportingTransformer-1.html#Wolfgang_Etl_Transformers_ProgressReportingTransformer_1__ctor_System_Action__0__
+  commentId: M:Wolfgang.Etl.Transformers.ProgressReportingTransformer`1.#ctor(System.Action{`0})
+  name.vb: New(Action(Of T))
+  fullName: Wolfgang.Etl.Transformers.ProgressReportingTransformer<T>.ProgressReportingTransformer(System.Action<T>)
+  fullName.vb: Wolfgang.Etl.Transformers.ProgressReportingTransformer(Of T).New(System.Action(Of T))
+  nameWithType: ProgressReportingTransformer<T>.ProgressReportingTransformer(Action<T>)
+  nameWithType.vb: ProgressReportingTransformer(Of T).New(Action(Of T))
+- uid: Wolfgang.Etl.Transformers.ProgressReportingTransformer`1.#ctor(System.Func{`0,System.Threading.Tasks.ValueTask})
+  name: ProgressReportingTransformer(Func<T, ValueTask>)
+  href: api/Wolfgang.Etl.Transformers.ProgressReportingTransformer-1.html#Wolfgang_Etl_Transformers_ProgressReportingTransformer_1__ctor_System_Func__0_System_Threading_Tasks_ValueTask__
+  commentId: M:Wolfgang.Etl.Transformers.ProgressReportingTransformer`1.#ctor(System.Func{`0,System.Threading.Tasks.ValueTask})
+  name.vb: New(Func(Of T, ValueTask))
+  fullName: Wolfgang.Etl.Transformers.ProgressReportingTransformer<T>.ProgressReportingTransformer(System.Func<T, System.Threading.Tasks.ValueTask>)
+  fullName.vb: Wolfgang.Etl.Transformers.ProgressReportingTransformer(Of T).New(System.Func(Of T, System.Threading.Tasks.ValueTask))
+  nameWithType: ProgressReportingTransformer<T>.ProgressReportingTransformer(Func<T, ValueTask>)
+  nameWithType.vb: ProgressReportingTransformer(Of T).New(Func(Of T, ValueTask))
+- uid: Wolfgang.Etl.Transformers.ProgressReportingTransformer`1.#ctor*
+  name: ProgressReportingTransformer
+  href: api/Wolfgang.Etl.Transformers.ProgressReportingTransformer-1.html#Wolfgang_Etl_Transformers_ProgressReportingTransformer_1__ctor_
+  commentId: Overload:Wolfgang.Etl.Transformers.ProgressReportingTransformer`1.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Wolfgang.Etl.Transformers.ProgressReportingTransformer<T>.ProgressReportingTransformer
+  fullName.vb: Wolfgang.Etl.Transformers.ProgressReportingTransformer(Of T).New
+  nameWithType: ProgressReportingTransformer<T>.ProgressReportingTransformer
+  nameWithType.vb: ProgressReportingTransformer(Of T).New
+- uid: Wolfgang.Etl.Transformers.ProgressReportingTransformer`1.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name: TransformAsync(IAsyncEnumerable<T>)
+  href: api/Wolfgang.Etl.Transformers.ProgressReportingTransformer-1.html#Wolfgang_Etl_Transformers_ProgressReportingTransformer_1_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__
+  commentId: M:Wolfgang.Etl.Transformers.ProgressReportingTransformer`1.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name.vb: TransformAsync(IAsyncEnumerable(Of T))
+  fullName: Wolfgang.Etl.Transformers.ProgressReportingTransformer<T>.TransformAsync(System.Collections.Generic.IAsyncEnumerable<T>)
+  fullName.vb: Wolfgang.Etl.Transformers.ProgressReportingTransformer(Of T).TransformAsync(System.Collections.Generic.IAsyncEnumerable(Of T))
+  nameWithType: ProgressReportingTransformer<T>.TransformAsync(IAsyncEnumerable<T>)
+  nameWithType.vb: ProgressReportingTransformer(Of T).TransformAsync(IAsyncEnumerable(Of T))
+- uid: Wolfgang.Etl.Transformers.ProgressReportingTransformer`1.TransformAsync*
+  name: TransformAsync
+  href: api/Wolfgang.Etl.Transformers.ProgressReportingTransformer-1.html#Wolfgang_Etl_Transformers_ProgressReportingTransformer_1_TransformAsync_
+  commentId: Overload:Wolfgang.Etl.Transformers.ProgressReportingTransformer`1.TransformAsync
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.ProgressReportingTransformer<T>.TransformAsync
+  fullName.vb: Wolfgang.Etl.Transformers.ProgressReportingTransformer(Of T).TransformAsync
+  nameWithType: ProgressReportingTransformer<T>.TransformAsync
+  nameWithType.vb: ProgressReportingTransformer(Of T).TransformAsync
+- uid: Wolfgang.Etl.Transformers.SelectManyTransformer`2
+  name: SelectManyTransformer<TSource, TDestination>
+  href: api/Wolfgang.Etl.Transformers.SelectManyTransformer-2.html
+  commentId: T:Wolfgang.Etl.Transformers.SelectManyTransformer`2
+  name.vb: SelectManyTransformer(Of TSource, TDestination)
+  fullName: Wolfgang.Etl.Transformers.SelectManyTransformer<TSource, TDestination>
+  fullName.vb: Wolfgang.Etl.Transformers.SelectManyTransformer(Of TSource, TDestination)
+  nameWithType: SelectManyTransformer<TSource, TDestination>
+  nameWithType.vb: SelectManyTransformer(Of TSource, TDestination)
+- uid: Wolfgang.Etl.Transformers.SelectManyTransformer`2.#ctor(System.Func{`0,System.Collections.Generic.IAsyncEnumerable{`1}})
+  name: SelectManyTransformer(Func<TSource, IAsyncEnumerable<TDestination>>)
+  href: api/Wolfgang.Etl.Transformers.SelectManyTransformer-2.html#Wolfgang_Etl_Transformers_SelectManyTransformer_2__ctor_System_Func__0_System_Collections_Generic_IAsyncEnumerable__1___
+  commentId: M:Wolfgang.Etl.Transformers.SelectManyTransformer`2.#ctor(System.Func{`0,System.Collections.Generic.IAsyncEnumerable{`1}})
+  name.vb: New(Func(Of TSource, IAsyncEnumerable(Of TDestination)))
+  fullName: Wolfgang.Etl.Transformers.SelectManyTransformer<TSource, TDestination>.SelectManyTransformer(System.Func<TSource, System.Collections.Generic.IAsyncEnumerable<TDestination>>)
+  fullName.vb: Wolfgang.Etl.Transformers.SelectManyTransformer(Of TSource, TDestination).New(System.Func(Of TSource, System.Collections.Generic.IAsyncEnumerable(Of TDestination)))
+  nameWithType: SelectManyTransformer<TSource, TDestination>.SelectManyTransformer(Func<TSource, IAsyncEnumerable<TDestination>>)
+  nameWithType.vb: SelectManyTransformer(Of TSource, TDestination).New(Func(Of TSource, IAsyncEnumerable(Of TDestination)))
+- uid: Wolfgang.Etl.Transformers.SelectManyTransformer`2.#ctor(System.Func{`0,System.Collections.Generic.IEnumerable{`1}})
+  name: SelectManyTransformer(Func<TSource, IEnumerable<TDestination>>)
+  href: api/Wolfgang.Etl.Transformers.SelectManyTransformer-2.html#Wolfgang_Etl_Transformers_SelectManyTransformer_2__ctor_System_Func__0_System_Collections_Generic_IEnumerable__1___
+  commentId: M:Wolfgang.Etl.Transformers.SelectManyTransformer`2.#ctor(System.Func{`0,System.Collections.Generic.IEnumerable{`1}})
+  name.vb: New(Func(Of TSource, IEnumerable(Of TDestination)))
+  fullName: Wolfgang.Etl.Transformers.SelectManyTransformer<TSource, TDestination>.SelectManyTransformer(System.Func<TSource, System.Collections.Generic.IEnumerable<TDestination>>)
+  fullName.vb: Wolfgang.Etl.Transformers.SelectManyTransformer(Of TSource, TDestination).New(System.Func(Of TSource, System.Collections.Generic.IEnumerable(Of TDestination)))
+  nameWithType: SelectManyTransformer<TSource, TDestination>.SelectManyTransformer(Func<TSource, IEnumerable<TDestination>>)
+  nameWithType.vb: SelectManyTransformer(Of TSource, TDestination).New(Func(Of TSource, IEnumerable(Of TDestination)))
+- uid: Wolfgang.Etl.Transformers.SelectManyTransformer`2.#ctor*
+  name: SelectManyTransformer
+  href: api/Wolfgang.Etl.Transformers.SelectManyTransformer-2.html#Wolfgang_Etl_Transformers_SelectManyTransformer_2__ctor_
+  commentId: Overload:Wolfgang.Etl.Transformers.SelectManyTransformer`2.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Wolfgang.Etl.Transformers.SelectManyTransformer<TSource, TDestination>.SelectManyTransformer
+  fullName.vb: Wolfgang.Etl.Transformers.SelectManyTransformer(Of TSource, TDestination).New
+  nameWithType: SelectManyTransformer<TSource, TDestination>.SelectManyTransformer
+  nameWithType.vb: SelectManyTransformer(Of TSource, TDestination).New
+- uid: Wolfgang.Etl.Transformers.SelectManyTransformer`2.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name: TransformAsync(IAsyncEnumerable<TSource>)
+  href: api/Wolfgang.Etl.Transformers.SelectManyTransformer-2.html#Wolfgang_Etl_Transformers_SelectManyTransformer_2_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__
+  commentId: M:Wolfgang.Etl.Transformers.SelectManyTransformer`2.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name.vb: TransformAsync(IAsyncEnumerable(Of TSource))
+  fullName: Wolfgang.Etl.Transformers.SelectManyTransformer<TSource, TDestination>.TransformAsync(System.Collections.Generic.IAsyncEnumerable<TSource>)
+  fullName.vb: Wolfgang.Etl.Transformers.SelectManyTransformer(Of TSource, TDestination).TransformAsync(System.Collections.Generic.IAsyncEnumerable(Of TSource))
+  nameWithType: SelectManyTransformer<TSource, TDestination>.TransformAsync(IAsyncEnumerable<TSource>)
+  nameWithType.vb: SelectManyTransformer(Of TSource, TDestination).TransformAsync(IAsyncEnumerable(Of TSource))
+- uid: Wolfgang.Etl.Transformers.SelectManyTransformer`2.TransformAsync*
+  name: TransformAsync
+  href: api/Wolfgang.Etl.Transformers.SelectManyTransformer-2.html#Wolfgang_Etl_Transformers_SelectManyTransformer_2_TransformAsync_
+  commentId: Overload:Wolfgang.Etl.Transformers.SelectManyTransformer`2.TransformAsync
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.SelectManyTransformer<TSource, TDestination>.TransformAsync
+  fullName.vb: Wolfgang.Etl.Transformers.SelectManyTransformer(Of TSource, TDestination).TransformAsync
+  nameWithType: SelectManyTransformer<TSource, TDestination>.TransformAsync
+  nameWithType.vb: SelectManyTransformer(Of TSource, TDestination).TransformAsync
+- uid: Wolfgang.Etl.Transformers.SelectTransformer`2
+  name: SelectTransformer<TSource, TDestination>
+  href: api/Wolfgang.Etl.Transformers.SelectTransformer-2.html
+  commentId: T:Wolfgang.Etl.Transformers.SelectTransformer`2
+  name.vb: SelectTransformer(Of TSource, TDestination)
+  fullName: Wolfgang.Etl.Transformers.SelectTransformer<TSource, TDestination>
+  fullName.vb: Wolfgang.Etl.Transformers.SelectTransformer(Of TSource, TDestination)
+  nameWithType: SelectTransformer<TSource, TDestination>
+  nameWithType.vb: SelectTransformer(Of TSource, TDestination)
+- uid: Wolfgang.Etl.Transformers.SelectTransformer`2.#ctor(System.Func{`0,System.Threading.Tasks.ValueTask{`1}})
+  name: SelectTransformer(Func<TSource, ValueTask<TDestination>>)
+  href: api/Wolfgang.Etl.Transformers.SelectTransformer-2.html#Wolfgang_Etl_Transformers_SelectTransformer_2__ctor_System_Func__0_System_Threading_Tasks_ValueTask__1___
+  commentId: M:Wolfgang.Etl.Transformers.SelectTransformer`2.#ctor(System.Func{`0,System.Threading.Tasks.ValueTask{`1}})
+  name.vb: New(Func(Of TSource, ValueTask(Of TDestination)))
+  fullName: Wolfgang.Etl.Transformers.SelectTransformer<TSource, TDestination>.SelectTransformer(System.Func<TSource, System.Threading.Tasks.ValueTask<TDestination>>)
+  fullName.vb: Wolfgang.Etl.Transformers.SelectTransformer(Of TSource, TDestination).New(System.Func(Of TSource, System.Threading.Tasks.ValueTask(Of TDestination)))
+  nameWithType: SelectTransformer<TSource, TDestination>.SelectTransformer(Func<TSource, ValueTask<TDestination>>)
+  nameWithType.vb: SelectTransformer(Of TSource, TDestination).New(Func(Of TSource, ValueTask(Of TDestination)))
+- uid: Wolfgang.Etl.Transformers.SelectTransformer`2.#ctor(System.Func{`0,`1})
+  name: SelectTransformer(Func<TSource, TDestination>)
+  href: api/Wolfgang.Etl.Transformers.SelectTransformer-2.html#Wolfgang_Etl_Transformers_SelectTransformer_2__ctor_System_Func__0__1__
+  commentId: M:Wolfgang.Etl.Transformers.SelectTransformer`2.#ctor(System.Func{`0,`1})
+  name.vb: New(Func(Of TSource, TDestination))
+  fullName: Wolfgang.Etl.Transformers.SelectTransformer<TSource, TDestination>.SelectTransformer(System.Func<TSource, TDestination>)
+  fullName.vb: Wolfgang.Etl.Transformers.SelectTransformer(Of TSource, TDestination).New(System.Func(Of TSource, TDestination))
+  nameWithType: SelectTransformer<TSource, TDestination>.SelectTransformer(Func<TSource, TDestination>)
+  nameWithType.vb: SelectTransformer(Of TSource, TDestination).New(Func(Of TSource, TDestination))
+- uid: Wolfgang.Etl.Transformers.SelectTransformer`2.#ctor*
+  name: SelectTransformer
+  href: api/Wolfgang.Etl.Transformers.SelectTransformer-2.html#Wolfgang_Etl_Transformers_SelectTransformer_2__ctor_
+  commentId: Overload:Wolfgang.Etl.Transformers.SelectTransformer`2.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Wolfgang.Etl.Transformers.SelectTransformer<TSource, TDestination>.SelectTransformer
+  fullName.vb: Wolfgang.Etl.Transformers.SelectTransformer(Of TSource, TDestination).New
+  nameWithType: SelectTransformer<TSource, TDestination>.SelectTransformer
+  nameWithType.vb: SelectTransformer(Of TSource, TDestination).New
+- uid: Wolfgang.Etl.Transformers.SelectTransformer`2.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name: TransformAsync(IAsyncEnumerable<TSource>)
+  href: api/Wolfgang.Etl.Transformers.SelectTransformer-2.html#Wolfgang_Etl_Transformers_SelectTransformer_2_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__
+  commentId: M:Wolfgang.Etl.Transformers.SelectTransformer`2.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name.vb: TransformAsync(IAsyncEnumerable(Of TSource))
+  fullName: Wolfgang.Etl.Transformers.SelectTransformer<TSource, TDestination>.TransformAsync(System.Collections.Generic.IAsyncEnumerable<TSource>)
+  fullName.vb: Wolfgang.Etl.Transformers.SelectTransformer(Of TSource, TDestination).TransformAsync(System.Collections.Generic.IAsyncEnumerable(Of TSource))
+  nameWithType: SelectTransformer<TSource, TDestination>.TransformAsync(IAsyncEnumerable<TSource>)
+  nameWithType.vb: SelectTransformer(Of TSource, TDestination).TransformAsync(IAsyncEnumerable(Of TSource))
+- uid: Wolfgang.Etl.Transformers.SelectTransformer`2.TransformAsync*
+  name: TransformAsync
+  href: api/Wolfgang.Etl.Transformers.SelectTransformer-2.html#Wolfgang_Etl_Transformers_SelectTransformer_2_TransformAsync_
+  commentId: Overload:Wolfgang.Etl.Transformers.SelectTransformer`2.TransformAsync
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.SelectTransformer<TSource, TDestination>.TransformAsync
+  fullName.vb: Wolfgang.Etl.Transformers.SelectTransformer(Of TSource, TDestination).TransformAsync
+  nameWithType: SelectTransformer<TSource, TDestination>.TransformAsync
+  nameWithType.vb: SelectTransformer(Of TSource, TDestination).TransformAsync
+- uid: Wolfgang.Etl.Transformers.SkipTransformer`1
+  name: SkipTransformer<T>
+  href: api/Wolfgang.Etl.Transformers.SkipTransformer-1.html
+  commentId: T:Wolfgang.Etl.Transformers.SkipTransformer`1
+  name.vb: SkipTransformer(Of T)
+  fullName: Wolfgang.Etl.Transformers.SkipTransformer<T>
+  fullName.vb: Wolfgang.Etl.Transformers.SkipTransformer(Of T)
+  nameWithType: SkipTransformer<T>
+  nameWithType.vb: SkipTransformer(Of T)
+- uid: Wolfgang.Etl.Transformers.SkipTransformer`1.#ctor(System.Int32)
+  name: SkipTransformer(int)
+  href: api/Wolfgang.Etl.Transformers.SkipTransformer-1.html#Wolfgang_Etl_Transformers_SkipTransformer_1__ctor_System_Int32_
+  commentId: M:Wolfgang.Etl.Transformers.SkipTransformer`1.#ctor(System.Int32)
+  name.vb: New(Integer)
+  fullName: Wolfgang.Etl.Transformers.SkipTransformer<T>.SkipTransformer(int)
+  fullName.vb: Wolfgang.Etl.Transformers.SkipTransformer(Of T).New(Integer)
+  nameWithType: SkipTransformer<T>.SkipTransformer(int)
+  nameWithType.vb: SkipTransformer(Of T).New(Integer)
+- uid: Wolfgang.Etl.Transformers.SkipTransformer`1.#ctor*
+  name: SkipTransformer
+  href: api/Wolfgang.Etl.Transformers.SkipTransformer-1.html#Wolfgang_Etl_Transformers_SkipTransformer_1__ctor_
+  commentId: Overload:Wolfgang.Etl.Transformers.SkipTransformer`1.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Wolfgang.Etl.Transformers.SkipTransformer<T>.SkipTransformer
+  fullName.vb: Wolfgang.Etl.Transformers.SkipTransformer(Of T).New
+  nameWithType: SkipTransformer<T>.SkipTransformer
+  nameWithType.vb: SkipTransformer(Of T).New
+- uid: Wolfgang.Etl.Transformers.SkipTransformer`1.Count
+  name: Count
+  href: api/Wolfgang.Etl.Transformers.SkipTransformer-1.html#Wolfgang_Etl_Transformers_SkipTransformer_1_Count
+  commentId: P:Wolfgang.Etl.Transformers.SkipTransformer`1.Count
+  fullName: Wolfgang.Etl.Transformers.SkipTransformer<T>.Count
+  fullName.vb: Wolfgang.Etl.Transformers.SkipTransformer(Of T).Count
+  nameWithType: SkipTransformer<T>.Count
+  nameWithType.vb: SkipTransformer(Of T).Count
+- uid: Wolfgang.Etl.Transformers.SkipTransformer`1.Count*
+  name: Count
+  href: api/Wolfgang.Etl.Transformers.SkipTransformer-1.html#Wolfgang_Etl_Transformers_SkipTransformer_1_Count_
+  commentId: Overload:Wolfgang.Etl.Transformers.SkipTransformer`1.Count
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.SkipTransformer<T>.Count
+  fullName.vb: Wolfgang.Etl.Transformers.SkipTransformer(Of T).Count
+  nameWithType: SkipTransformer<T>.Count
+  nameWithType.vb: SkipTransformer(Of T).Count
+- uid: Wolfgang.Etl.Transformers.SkipTransformer`1.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name: TransformAsync(IAsyncEnumerable<T>)
+  href: api/Wolfgang.Etl.Transformers.SkipTransformer-1.html#Wolfgang_Etl_Transformers_SkipTransformer_1_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__
+  commentId: M:Wolfgang.Etl.Transformers.SkipTransformer`1.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name.vb: TransformAsync(IAsyncEnumerable(Of T))
+  fullName: Wolfgang.Etl.Transformers.SkipTransformer<T>.TransformAsync(System.Collections.Generic.IAsyncEnumerable<T>)
+  fullName.vb: Wolfgang.Etl.Transformers.SkipTransformer(Of T).TransformAsync(System.Collections.Generic.IAsyncEnumerable(Of T))
+  nameWithType: SkipTransformer<T>.TransformAsync(IAsyncEnumerable<T>)
+  nameWithType.vb: SkipTransformer(Of T).TransformAsync(IAsyncEnumerable(Of T))
+- uid: Wolfgang.Etl.Transformers.SkipTransformer`1.TransformAsync*
+  name: TransformAsync
+  href: api/Wolfgang.Etl.Transformers.SkipTransformer-1.html#Wolfgang_Etl_Transformers_SkipTransformer_1_TransformAsync_
+  commentId: Overload:Wolfgang.Etl.Transformers.SkipTransformer`1.TransformAsync
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.SkipTransformer<T>.TransformAsync
+  fullName.vb: Wolfgang.Etl.Transformers.SkipTransformer(Of T).TransformAsync
+  nameWithType: SkipTransformer<T>.TransformAsync
+  nameWithType.vb: SkipTransformer(Of T).TransformAsync
+- uid: Wolfgang.Etl.Transformers.SkipWhileTransformer`1
+  name: SkipWhileTransformer<T>
+  href: api/Wolfgang.Etl.Transformers.SkipWhileTransformer-1.html
+  commentId: T:Wolfgang.Etl.Transformers.SkipWhileTransformer`1
+  name.vb: SkipWhileTransformer(Of T)
+  fullName: Wolfgang.Etl.Transformers.SkipWhileTransformer<T>
+  fullName.vb: Wolfgang.Etl.Transformers.SkipWhileTransformer(Of T)
+  nameWithType: SkipWhileTransformer<T>
+  nameWithType.vb: SkipWhileTransformer(Of T)
+- uid: Wolfgang.Etl.Transformers.SkipWhileTransformer`1.#ctor(System.Func{`0,System.Boolean})
+  name: SkipWhileTransformer(Func<T, bool>)
+  href: api/Wolfgang.Etl.Transformers.SkipWhileTransformer-1.html#Wolfgang_Etl_Transformers_SkipWhileTransformer_1__ctor_System_Func__0_System_Boolean__
+  commentId: M:Wolfgang.Etl.Transformers.SkipWhileTransformer`1.#ctor(System.Func{`0,System.Boolean})
+  name.vb: New(Func(Of T, Boolean))
+  fullName: Wolfgang.Etl.Transformers.SkipWhileTransformer<T>.SkipWhileTransformer(System.Func<T, bool>)
+  fullName.vb: Wolfgang.Etl.Transformers.SkipWhileTransformer(Of T).New(System.Func(Of T, Boolean))
+  nameWithType: SkipWhileTransformer<T>.SkipWhileTransformer(Func<T, bool>)
+  nameWithType.vb: SkipWhileTransformer(Of T).New(Func(Of T, Boolean))
+- uid: Wolfgang.Etl.Transformers.SkipWhileTransformer`1.#ctor(System.Func{`0,System.Threading.Tasks.ValueTask{System.Boolean}})
+  name: SkipWhileTransformer(Func<T, ValueTask<bool>>)
+  href: api/Wolfgang.Etl.Transformers.SkipWhileTransformer-1.html#Wolfgang_Etl_Transformers_SkipWhileTransformer_1__ctor_System_Func__0_System_Threading_Tasks_ValueTask_System_Boolean___
+  commentId: M:Wolfgang.Etl.Transformers.SkipWhileTransformer`1.#ctor(System.Func{`0,System.Threading.Tasks.ValueTask{System.Boolean}})
+  name.vb: New(Func(Of T, ValueTask(Of Boolean)))
+  fullName: Wolfgang.Etl.Transformers.SkipWhileTransformer<T>.SkipWhileTransformer(System.Func<T, System.Threading.Tasks.ValueTask<bool>>)
+  fullName.vb: Wolfgang.Etl.Transformers.SkipWhileTransformer(Of T).New(System.Func(Of T, System.Threading.Tasks.ValueTask(Of Boolean)))
+  nameWithType: SkipWhileTransformer<T>.SkipWhileTransformer(Func<T, ValueTask<bool>>)
+  nameWithType.vb: SkipWhileTransformer(Of T).New(Func(Of T, ValueTask(Of Boolean)))
+- uid: Wolfgang.Etl.Transformers.SkipWhileTransformer`1.#ctor*
+  name: SkipWhileTransformer
+  href: api/Wolfgang.Etl.Transformers.SkipWhileTransformer-1.html#Wolfgang_Etl_Transformers_SkipWhileTransformer_1__ctor_
+  commentId: Overload:Wolfgang.Etl.Transformers.SkipWhileTransformer`1.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Wolfgang.Etl.Transformers.SkipWhileTransformer<T>.SkipWhileTransformer
+  fullName.vb: Wolfgang.Etl.Transformers.SkipWhileTransformer(Of T).New
+  nameWithType: SkipWhileTransformer<T>.SkipWhileTransformer
+  nameWithType.vb: SkipWhileTransformer(Of T).New
+- uid: Wolfgang.Etl.Transformers.SkipWhileTransformer`1.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name: TransformAsync(IAsyncEnumerable<T>)
+  href: api/Wolfgang.Etl.Transformers.SkipWhileTransformer-1.html#Wolfgang_Etl_Transformers_SkipWhileTransformer_1_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__
+  commentId: M:Wolfgang.Etl.Transformers.SkipWhileTransformer`1.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name.vb: TransformAsync(IAsyncEnumerable(Of T))
+  fullName: Wolfgang.Etl.Transformers.SkipWhileTransformer<T>.TransformAsync(System.Collections.Generic.IAsyncEnumerable<T>)
+  fullName.vb: Wolfgang.Etl.Transformers.SkipWhileTransformer(Of T).TransformAsync(System.Collections.Generic.IAsyncEnumerable(Of T))
+  nameWithType: SkipWhileTransformer<T>.TransformAsync(IAsyncEnumerable<T>)
+  nameWithType.vb: SkipWhileTransformer(Of T).TransformAsync(IAsyncEnumerable(Of T))
+- uid: Wolfgang.Etl.Transformers.SkipWhileTransformer`1.TransformAsync*
+  name: TransformAsync
+  href: api/Wolfgang.Etl.Transformers.SkipWhileTransformer-1.html#Wolfgang_Etl_Transformers_SkipWhileTransformer_1_TransformAsync_
+  commentId: Overload:Wolfgang.Etl.Transformers.SkipWhileTransformer`1.TransformAsync
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.SkipWhileTransformer<T>.TransformAsync
+  fullName.vb: Wolfgang.Etl.Transformers.SkipWhileTransformer(Of T).TransformAsync
+  nameWithType: SkipWhileTransformer<T>.TransformAsync
+  nameWithType.vb: SkipWhileTransformer(Of T).TransformAsync
+- uid: Wolfgang.Etl.Transformers.TakeTransformer`1
+  name: TakeTransformer<T>
+  href: api/Wolfgang.Etl.Transformers.TakeTransformer-1.html
+  commentId: T:Wolfgang.Etl.Transformers.TakeTransformer`1
+  name.vb: TakeTransformer(Of T)
+  fullName: Wolfgang.Etl.Transformers.TakeTransformer<T>
+  fullName.vb: Wolfgang.Etl.Transformers.TakeTransformer(Of T)
+  nameWithType: TakeTransformer<T>
+  nameWithType.vb: TakeTransformer(Of T)
+- uid: Wolfgang.Etl.Transformers.TakeTransformer`1.#ctor(System.Int32)
+  name: TakeTransformer(int)
+  href: api/Wolfgang.Etl.Transformers.TakeTransformer-1.html#Wolfgang_Etl_Transformers_TakeTransformer_1__ctor_System_Int32_
+  commentId: M:Wolfgang.Etl.Transformers.TakeTransformer`1.#ctor(System.Int32)
+  name.vb: New(Integer)
+  fullName: Wolfgang.Etl.Transformers.TakeTransformer<T>.TakeTransformer(int)
+  fullName.vb: Wolfgang.Etl.Transformers.TakeTransformer(Of T).New(Integer)
+  nameWithType: TakeTransformer<T>.TakeTransformer(int)
+  nameWithType.vb: TakeTransformer(Of T).New(Integer)
+- uid: Wolfgang.Etl.Transformers.TakeTransformer`1.#ctor*
+  name: TakeTransformer
+  href: api/Wolfgang.Etl.Transformers.TakeTransformer-1.html#Wolfgang_Etl_Transformers_TakeTransformer_1__ctor_
+  commentId: Overload:Wolfgang.Etl.Transformers.TakeTransformer`1.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Wolfgang.Etl.Transformers.TakeTransformer<T>.TakeTransformer
+  fullName.vb: Wolfgang.Etl.Transformers.TakeTransformer(Of T).New
+  nameWithType: TakeTransformer<T>.TakeTransformer
+  nameWithType.vb: TakeTransformer(Of T).New
+- uid: Wolfgang.Etl.Transformers.TakeTransformer`1.Count
+  name: Count
+  href: api/Wolfgang.Etl.Transformers.TakeTransformer-1.html#Wolfgang_Etl_Transformers_TakeTransformer_1_Count
+  commentId: P:Wolfgang.Etl.Transformers.TakeTransformer`1.Count
+  fullName: Wolfgang.Etl.Transformers.TakeTransformer<T>.Count
+  fullName.vb: Wolfgang.Etl.Transformers.TakeTransformer(Of T).Count
+  nameWithType: TakeTransformer<T>.Count
+  nameWithType.vb: TakeTransformer(Of T).Count
+- uid: Wolfgang.Etl.Transformers.TakeTransformer`1.Count*
+  name: Count
+  href: api/Wolfgang.Etl.Transformers.TakeTransformer-1.html#Wolfgang_Etl_Transformers_TakeTransformer_1_Count_
+  commentId: Overload:Wolfgang.Etl.Transformers.TakeTransformer`1.Count
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.TakeTransformer<T>.Count
+  fullName.vb: Wolfgang.Etl.Transformers.TakeTransformer(Of T).Count
+  nameWithType: TakeTransformer<T>.Count
+  nameWithType.vb: TakeTransformer(Of T).Count
+- uid: Wolfgang.Etl.Transformers.TakeTransformer`1.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name: TransformAsync(IAsyncEnumerable<T>)
+  href: api/Wolfgang.Etl.Transformers.TakeTransformer-1.html#Wolfgang_Etl_Transformers_TakeTransformer_1_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__
+  commentId: M:Wolfgang.Etl.Transformers.TakeTransformer`1.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name.vb: TransformAsync(IAsyncEnumerable(Of T))
+  fullName: Wolfgang.Etl.Transformers.TakeTransformer<T>.TransformAsync(System.Collections.Generic.IAsyncEnumerable<T>)
+  fullName.vb: Wolfgang.Etl.Transformers.TakeTransformer(Of T).TransformAsync(System.Collections.Generic.IAsyncEnumerable(Of T))
+  nameWithType: TakeTransformer<T>.TransformAsync(IAsyncEnumerable<T>)
+  nameWithType.vb: TakeTransformer(Of T).TransformAsync(IAsyncEnumerable(Of T))
+- uid: Wolfgang.Etl.Transformers.TakeTransformer`1.TransformAsync*
+  name: TransformAsync
+  href: api/Wolfgang.Etl.Transformers.TakeTransformer-1.html#Wolfgang_Etl_Transformers_TakeTransformer_1_TransformAsync_
+  commentId: Overload:Wolfgang.Etl.Transformers.TakeTransformer`1.TransformAsync
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.TakeTransformer<T>.TransformAsync
+  fullName.vb: Wolfgang.Etl.Transformers.TakeTransformer(Of T).TransformAsync
+  nameWithType: TakeTransformer<T>.TransformAsync
+  nameWithType.vb: TakeTransformer(Of T).TransformAsync
+- uid: Wolfgang.Etl.Transformers.TakeWhileTransformer`1
+  name: TakeWhileTransformer<T>
+  href: api/Wolfgang.Etl.Transformers.TakeWhileTransformer-1.html
+  commentId: T:Wolfgang.Etl.Transformers.TakeWhileTransformer`1
+  name.vb: TakeWhileTransformer(Of T)
+  fullName: Wolfgang.Etl.Transformers.TakeWhileTransformer<T>
+  fullName.vb: Wolfgang.Etl.Transformers.TakeWhileTransformer(Of T)
+  nameWithType: TakeWhileTransformer<T>
+  nameWithType.vb: TakeWhileTransformer(Of T)
+- uid: Wolfgang.Etl.Transformers.TakeWhileTransformer`1.#ctor(System.Func{`0,System.Boolean})
+  name: TakeWhileTransformer(Func<T, bool>)
+  href: api/Wolfgang.Etl.Transformers.TakeWhileTransformer-1.html#Wolfgang_Etl_Transformers_TakeWhileTransformer_1__ctor_System_Func__0_System_Boolean__
+  commentId: M:Wolfgang.Etl.Transformers.TakeWhileTransformer`1.#ctor(System.Func{`0,System.Boolean})
+  name.vb: New(Func(Of T, Boolean))
+  fullName: Wolfgang.Etl.Transformers.TakeWhileTransformer<T>.TakeWhileTransformer(System.Func<T, bool>)
+  fullName.vb: Wolfgang.Etl.Transformers.TakeWhileTransformer(Of T).New(System.Func(Of T, Boolean))
+  nameWithType: TakeWhileTransformer<T>.TakeWhileTransformer(Func<T, bool>)
+  nameWithType.vb: TakeWhileTransformer(Of T).New(Func(Of T, Boolean))
+- uid: Wolfgang.Etl.Transformers.TakeWhileTransformer`1.#ctor(System.Func{`0,System.Threading.Tasks.ValueTask{System.Boolean}})
+  name: TakeWhileTransformer(Func<T, ValueTask<bool>>)
+  href: api/Wolfgang.Etl.Transformers.TakeWhileTransformer-1.html#Wolfgang_Etl_Transformers_TakeWhileTransformer_1__ctor_System_Func__0_System_Threading_Tasks_ValueTask_System_Boolean___
+  commentId: M:Wolfgang.Etl.Transformers.TakeWhileTransformer`1.#ctor(System.Func{`0,System.Threading.Tasks.ValueTask{System.Boolean}})
+  name.vb: New(Func(Of T, ValueTask(Of Boolean)))
+  fullName: Wolfgang.Etl.Transformers.TakeWhileTransformer<T>.TakeWhileTransformer(System.Func<T, System.Threading.Tasks.ValueTask<bool>>)
+  fullName.vb: Wolfgang.Etl.Transformers.TakeWhileTransformer(Of T).New(System.Func(Of T, System.Threading.Tasks.ValueTask(Of Boolean)))
+  nameWithType: TakeWhileTransformer<T>.TakeWhileTransformer(Func<T, ValueTask<bool>>)
+  nameWithType.vb: TakeWhileTransformer(Of T).New(Func(Of T, ValueTask(Of Boolean)))
+- uid: Wolfgang.Etl.Transformers.TakeWhileTransformer`1.#ctor*
+  name: TakeWhileTransformer
+  href: api/Wolfgang.Etl.Transformers.TakeWhileTransformer-1.html#Wolfgang_Etl_Transformers_TakeWhileTransformer_1__ctor_
+  commentId: Overload:Wolfgang.Etl.Transformers.TakeWhileTransformer`1.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Wolfgang.Etl.Transformers.TakeWhileTransformer<T>.TakeWhileTransformer
+  fullName.vb: Wolfgang.Etl.Transformers.TakeWhileTransformer(Of T).New
+  nameWithType: TakeWhileTransformer<T>.TakeWhileTransformer
+  nameWithType.vb: TakeWhileTransformer(Of T).New
+- uid: Wolfgang.Etl.Transformers.TakeWhileTransformer`1.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name: TransformAsync(IAsyncEnumerable<T>)
+  href: api/Wolfgang.Etl.Transformers.TakeWhileTransformer-1.html#Wolfgang_Etl_Transformers_TakeWhileTransformer_1_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__
+  commentId: M:Wolfgang.Etl.Transformers.TakeWhileTransformer`1.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name.vb: TransformAsync(IAsyncEnumerable(Of T))
+  fullName: Wolfgang.Etl.Transformers.TakeWhileTransformer<T>.TransformAsync(System.Collections.Generic.IAsyncEnumerable<T>)
+  fullName.vb: Wolfgang.Etl.Transformers.TakeWhileTransformer(Of T).TransformAsync(System.Collections.Generic.IAsyncEnumerable(Of T))
+  nameWithType: TakeWhileTransformer<T>.TransformAsync(IAsyncEnumerable<T>)
+  nameWithType.vb: TakeWhileTransformer(Of T).TransformAsync(IAsyncEnumerable(Of T))
+- uid: Wolfgang.Etl.Transformers.TakeWhileTransformer`1.TransformAsync*
+  name: TransformAsync
+  href: api/Wolfgang.Etl.Transformers.TakeWhileTransformer-1.html#Wolfgang_Etl_Transformers_TakeWhileTransformer_1_TransformAsync_
+  commentId: Overload:Wolfgang.Etl.Transformers.TakeWhileTransformer`1.TransformAsync
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.TakeWhileTransformer<T>.TransformAsync
+  fullName.vb: Wolfgang.Etl.Transformers.TakeWhileTransformer(Of T).TransformAsync
+  nameWithType: TakeWhileTransformer<T>.TransformAsync
+  nameWithType.vb: TakeWhileTransformer(Of T).TransformAsync
+- uid: Wolfgang.Etl.Transformers.TransformerExtensions
+  name: TransformerExtensions
+  href: api/Wolfgang.Etl.Transformers.TransformerExtensions.html
+  commentId: T:Wolfgang.Etl.Transformers.TransformerExtensions
+  fullName: Wolfgang.Etl.Transformers.TransformerExtensions
+  nameWithType: TransformerExtensions
+- uid: Wolfgang.Etl.Transformers.TransformerExtensions.Buffered*
+  name: Buffered
+  href: api/Wolfgang.Etl.Transformers.TransformerExtensions.html#Wolfgang_Etl_Transformers_TransformerExtensions_Buffered_
+  commentId: Overload:Wolfgang.Etl.Transformers.TransformerExtensions.Buffered
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.TransformerExtensions.Buffered
+  nameWithType: TransformerExtensions.Buffered
+- uid: Wolfgang.Etl.Transformers.TransformerExtensions.Buffered``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Int32)
+  name: Buffered<T>(IAsyncEnumerable<T>, int)
+  href: api/Wolfgang.Etl.Transformers.TransformerExtensions.html#Wolfgang_Etl_Transformers_TransformerExtensions_Buffered__1_System_Collections_Generic_IAsyncEnumerable___0__System_Int32_
+  commentId: M:Wolfgang.Etl.Transformers.TransformerExtensions.Buffered``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Int32)
+  name.vb: Buffered(Of T)(IAsyncEnumerable(Of T), Integer)
+  fullName: Wolfgang.Etl.Transformers.TransformerExtensions.Buffered<T>(System.Collections.Generic.IAsyncEnumerable<T>, int)
+  fullName.vb: Wolfgang.Etl.Transformers.TransformerExtensions.Buffered(Of T)(System.Collections.Generic.IAsyncEnumerable(Of T), Integer)
+  nameWithType: TransformerExtensions.Buffered<T>(IAsyncEnumerable<T>, int)
+  nameWithType.vb: TransformerExtensions.Buffered(Of T)(IAsyncEnumerable(Of T), Integer)
+- uid: Wolfgang.Etl.Transformers.TransformerExtensions.Then*
+  name: Then
+  href: api/Wolfgang.Etl.Transformers.TransformerExtensions.html#Wolfgang_Etl_Transformers_TransformerExtensions_Then_
+  commentId: Overload:Wolfgang.Etl.Transformers.TransformerExtensions.Then
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.TransformerExtensions.Then
+  nameWithType: TransformerExtensions.Then
+- uid: Wolfgang.Etl.Transformers.TransformerExtensions.Then``3(Wolfgang.Etl.Abstractions.ITransformAsync{``0,``1},Wolfgang.Etl.Abstractions.ITransformAsync{``1,``2})
+  name: Then<TSource, TIntermediate, TDestination>(ITransformAsync<TSource, TIntermediate>, ITransformAsync<TIntermediate, TDestination>)
+  href: api/Wolfgang.Etl.Transformers.TransformerExtensions.html#Wolfgang_Etl_Transformers_TransformerExtensions_Then__3_Wolfgang_Etl_Abstractions_ITransformAsync___0___1__Wolfgang_Etl_Abstractions_ITransformAsync___1___2__
+  commentId: M:Wolfgang.Etl.Transformers.TransformerExtensions.Then``3(Wolfgang.Etl.Abstractions.ITransformAsync{``0,``1},Wolfgang.Etl.Abstractions.ITransformAsync{``1,``2})
+  name.vb: Then(Of TSource, TIntermediate, TDestination)(ITransformAsync(Of TSource, TIntermediate), ITransformAsync(Of TIntermediate, TDestination))
+  fullName: Wolfgang.Etl.Transformers.TransformerExtensions.Then<TSource, TIntermediate, TDestination>(Wolfgang.Etl.Abstractions.ITransformAsync<TSource, TIntermediate>, Wolfgang.Etl.Abstractions.ITransformAsync<TIntermediate, TDestination>)
+  fullName.vb: Wolfgang.Etl.Transformers.TransformerExtensions.Then(Of TSource, TIntermediate, TDestination)(Wolfgang.Etl.Abstractions.ITransformAsync(Of TSource, TIntermediate), Wolfgang.Etl.Abstractions.ITransformAsync(Of TIntermediate, TDestination))
+  nameWithType: TransformerExtensions.Then<TSource, TIntermediate, TDestination>(ITransformAsync<TSource, TIntermediate>, ITransformAsync<TIntermediate, TDestination>)
+  nameWithType.vb: TransformerExtensions.Then(Of TSource, TIntermediate, TDestination)(ITransformAsync(Of TSource, TIntermediate), ITransformAsync(Of TIntermediate, TDestination))
+- uid: Wolfgang.Etl.Transformers.TransformerExtensions.Then``3(Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync{``0,``1},Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync{``1,``2})
+  name: Then<TSource, TIntermediate, TDestination>(ITransformWithCancellationAsync<TSource, TIntermediate>, ITransformWithCancellationAsync<TIntermediate, TDestination>)
+  href: api/Wolfgang.Etl.Transformers.TransformerExtensions.html#Wolfgang_Etl_Transformers_TransformerExtensions_Then__3_Wolfgang_Etl_Abstractions_ITransformWithCancellationAsync___0___1__Wolfgang_Etl_Abstractions_ITransformWithCancellationAsync___1___2__
+  commentId: M:Wolfgang.Etl.Transformers.TransformerExtensions.Then``3(Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync{``0,``1},Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync{``1,``2})
+  name.vb: Then(Of TSource, TIntermediate, TDestination)(ITransformWithCancellationAsync(Of TSource, TIntermediate), ITransformWithCancellationAsync(Of TIntermediate, TDestination))
+  fullName: Wolfgang.Etl.Transformers.TransformerExtensions.Then<TSource, TIntermediate, TDestination>(Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync<TSource, TIntermediate>, Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync<TIntermediate, TDestination>)
+  fullName.vb: Wolfgang.Etl.Transformers.TransformerExtensions.Then(Of TSource, TIntermediate, TDestination)(Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync(Of TSource, TIntermediate), Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync(Of TIntermediate, TDestination))
+  nameWithType: TransformerExtensions.Then<TSource, TIntermediate, TDestination>(ITransformWithCancellationAsync<TSource, TIntermediate>, ITransformWithCancellationAsync<TIntermediate, TDestination>)
+  nameWithType.vb: TransformerExtensions.Then(Of TSource, TIntermediate, TDestination)(ITransformWithCancellationAsync(Of TSource, TIntermediate), ITransformWithCancellationAsync(Of TIntermediate, TDestination))
+- uid: Wolfgang.Etl.Transformers.WhereTransformer`1
+  name: WhereTransformer<T>
+  href: api/Wolfgang.Etl.Transformers.WhereTransformer-1.html
+  commentId: T:Wolfgang.Etl.Transformers.WhereTransformer`1
+  name.vb: WhereTransformer(Of T)
+  fullName: Wolfgang.Etl.Transformers.WhereTransformer<T>
+  fullName.vb: Wolfgang.Etl.Transformers.WhereTransformer(Of T)
+  nameWithType: WhereTransformer<T>
+  nameWithType.vb: WhereTransformer(Of T)
+- uid: Wolfgang.Etl.Transformers.WhereTransformer`1.#ctor(System.Func{`0,System.Boolean})
+  name: WhereTransformer(Func<T, bool>)
+  href: api/Wolfgang.Etl.Transformers.WhereTransformer-1.html#Wolfgang_Etl_Transformers_WhereTransformer_1__ctor_System_Func__0_System_Boolean__
+  commentId: M:Wolfgang.Etl.Transformers.WhereTransformer`1.#ctor(System.Func{`0,System.Boolean})
+  name.vb: New(Func(Of T, Boolean))
+  fullName: Wolfgang.Etl.Transformers.WhereTransformer<T>.WhereTransformer(System.Func<T, bool>)
+  fullName.vb: Wolfgang.Etl.Transformers.WhereTransformer(Of T).New(System.Func(Of T, Boolean))
+  nameWithType: WhereTransformer<T>.WhereTransformer(Func<T, bool>)
+  nameWithType.vb: WhereTransformer(Of T).New(Func(Of T, Boolean))
+- uid: Wolfgang.Etl.Transformers.WhereTransformer`1.#ctor(System.Func{`0,System.Threading.Tasks.ValueTask{System.Boolean}})
+  name: WhereTransformer(Func<T, ValueTask<bool>>)
+  href: api/Wolfgang.Etl.Transformers.WhereTransformer-1.html#Wolfgang_Etl_Transformers_WhereTransformer_1__ctor_System_Func__0_System_Threading_Tasks_ValueTask_System_Boolean___
+  commentId: M:Wolfgang.Etl.Transformers.WhereTransformer`1.#ctor(System.Func{`0,System.Threading.Tasks.ValueTask{System.Boolean}})
+  name.vb: New(Func(Of T, ValueTask(Of Boolean)))
+  fullName: Wolfgang.Etl.Transformers.WhereTransformer<T>.WhereTransformer(System.Func<T, System.Threading.Tasks.ValueTask<bool>>)
+  fullName.vb: Wolfgang.Etl.Transformers.WhereTransformer(Of T).New(System.Func(Of T, System.Threading.Tasks.ValueTask(Of Boolean)))
+  nameWithType: WhereTransformer<T>.WhereTransformer(Func<T, ValueTask<bool>>)
+  nameWithType.vb: WhereTransformer(Of T).New(Func(Of T, ValueTask(Of Boolean)))
+- uid: Wolfgang.Etl.Transformers.WhereTransformer`1.#ctor*
+  name: WhereTransformer
+  href: api/Wolfgang.Etl.Transformers.WhereTransformer-1.html#Wolfgang_Etl_Transformers_WhereTransformer_1__ctor_
+  commentId: Overload:Wolfgang.Etl.Transformers.WhereTransformer`1.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Wolfgang.Etl.Transformers.WhereTransformer<T>.WhereTransformer
+  fullName.vb: Wolfgang.Etl.Transformers.WhereTransformer(Of T).New
+  nameWithType: WhereTransformer<T>.WhereTransformer
+  nameWithType.vb: WhereTransformer(Of T).New
+- uid: Wolfgang.Etl.Transformers.WhereTransformer`1.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name: TransformAsync(IAsyncEnumerable<T>)
+  href: api/Wolfgang.Etl.Transformers.WhereTransformer-1.html#Wolfgang_Etl_Transformers_WhereTransformer_1_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__
+  commentId: M:Wolfgang.Etl.Transformers.WhereTransformer`1.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name.vb: TransformAsync(IAsyncEnumerable(Of T))
+  fullName: Wolfgang.Etl.Transformers.WhereTransformer<T>.TransformAsync(System.Collections.Generic.IAsyncEnumerable<T>)
+  fullName.vb: Wolfgang.Etl.Transformers.WhereTransformer(Of T).TransformAsync(System.Collections.Generic.IAsyncEnumerable(Of T))
+  nameWithType: WhereTransformer<T>.TransformAsync(IAsyncEnumerable<T>)
+  nameWithType.vb: WhereTransformer(Of T).TransformAsync(IAsyncEnumerable(Of T))
+- uid: Wolfgang.Etl.Transformers.WhereTransformer`1.TransformAsync*
+  name: TransformAsync
+  href: api/Wolfgang.Etl.Transformers.WhereTransformer-1.html#Wolfgang_Etl_Transformers_WhereTransformer_1_TransformAsync_
+  commentId: Overload:Wolfgang.Etl.Transformers.WhereTransformer`1.TransformAsync
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.WhereTransformer<T>.TransformAsync
+  fullName.vb: Wolfgang.Etl.Transformers.WhereTransformer(Of T).TransformAsync
+  nameWithType: WhereTransformer<T>.TransformAsync
+  nameWithType.vb: WhereTransformer(Of T).TransformAsync

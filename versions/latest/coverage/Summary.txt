@@ -1,0 +1,40 @@
+Summary
+  Generated on: 6/20/2026 - 5:38:15 PM
+  Coverage date: 6/20/2026 - 5:38:12 PM
+  Parser: Cobertura
+  Assemblies: 1
+  Classes: 18
+  Files: 18
+  Line coverage: 100%
+  Covered lines: 305
+  Uncovered lines: 0
+  Coverable lines: 305
+  Total lines: 2548
+  Branch coverage: 96.1% (100 of 104)
+  Covered branches: 100
+  Total branches: 104
+  Method coverage: 100% (74 of 74)
+  Full method coverage: 100% (74 of 74)
+  Covered methods: 74
+  Fully covered methods: 74
+  Total methods: 74
+
+Wolfgang.Etl.Transformers                                                   100%
+  Wolfgang.Etl.Transformers.BufferedTransformer<T>                          100%
+  Wolfgang.Etl.Transformers.CastTransformer<T1, T2>                         100%
+  Wolfgang.Etl.Transformers.ChainTransformer<T1, T2, T3>                    100%
+  Wolfgang.Etl.Transformers.ChainTransformerWithCancellation<T1, T2, T3>    100%
+  Wolfgang.Etl.Transformers.ChunkTransformer<T>                             100%
+  Wolfgang.Etl.Transformers.DistinctByTransformer<T1, T2>                   100%
+  Wolfgang.Etl.Transformers.DistinctTransformer<T>                          100%
+  Wolfgang.Etl.Transformers.OfTypeTransformer<T1, T2>                       100%
+  Wolfgang.Etl.Transformers.PassThroughTransformer<T>                       100%
+  Wolfgang.Etl.Transformers.ProgressReportingTransformer<T>                 100%
+  Wolfgang.Etl.Transformers.SelectManyTransformer<T1, T2>                   100%
+  Wolfgang.Etl.Transformers.SelectTransformer<T1, T2>                       100%
+  Wolfgang.Etl.Transformers.SkipTransformer<T>                              100%
+  Wolfgang.Etl.Transformers.SkipWhileTransformer<T>                         100%
+  Wolfgang.Etl.Transformers.TakeTransformer<T>                              100%
+  Wolfgang.Etl.Transformers.TakeWhileTransformer<T>                         100%
+  Wolfgang.Etl.Transformers.TransformerExtensions                           100%
+  Wolfgang.Etl.Transformers.WhereTransformer<T>                             100%
