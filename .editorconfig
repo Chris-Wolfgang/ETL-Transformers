@@ -351,6 +351,9 @@ dotnet_diagnostic.CA1707.severity = error
 [src/**/*.cs]
 # Documentation required
 dotnet_diagnostic.SA1600.severity = warning
+
+# A1: PublicApiAnalyzers — enforce API surface tracking
+dotnet_diagnostic.RS0016.severity = warning   # Symbol is not part of the declared API (must add to PublicAPI.Unshipped.txt)
 dotnet_diagnostic.SA1601.severity = warning
 dotnet_diagnostic.SA1602.severity = warning
 
