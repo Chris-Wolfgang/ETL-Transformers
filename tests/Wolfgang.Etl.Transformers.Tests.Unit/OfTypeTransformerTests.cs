@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Wolfgang.Etl.Abstractions;
 using Xunit;
+using static Wolfgang.Etl.Transformers.Tests.Unit.TestHelpers;
 
 
 
@@ -170,31 +171,6 @@ public class OfTypeTransformerTests
         var sut = new OfTypeTransformer<object, string>();
 
         Assert.IsAssignableFrom<ITransformAsync<object, string>>(sut);
-    }
-
-
-
-    // ---------- helpers ----------
-
-    private static async IAsyncEnumerable<T> ToAsync<T>(IEnumerable<T> items)
-    {
-        foreach (var item in items)
-        {
-            await Task.Yield();
-            yield return item;
-        }
-    }
-
-
-
-    private static async Task<List<T>> CollectAsync<T>(IAsyncEnumerable<T> items)
-    {
-        var list = new List<T>();
-        await foreach (var item in items)
-        {
-            list.Add(item);
-        }
-        return list;
     }
 
 
