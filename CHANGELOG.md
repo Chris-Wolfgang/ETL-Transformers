@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-06-20
+
+### Changed
+
+- Corrected README Target Frameworks table (removed net4.7/net4.7.1, added .NET Standard 2.0)
+- Fixed README and CHANGELOG `Then(...)` overload count: two overloads, not four
+- Replaced README Quick Start inline-extension example with a self-contained example using only this package
+- Updated CHANGELOG v0.1.0 entry: release date, test count (257 unit + 11 integration), Keep-a-Changelog footer link
+
+### Added
+
+- Integration test project (`Wolfgang.Etl.Transformers.Tests.Integration`) with 11 pipeline composition tests
+- Shared `TestHelpers` class in the unit test project (eliminates duplicate `ToAsync`/`CollectAsync` helpers)
+- Documentation version picker (`docfx_project/public/version-picker.js` + `versions.json`)
+- Canonical `benchmarks.yaml` GitHub Actions workflow (interactive BenchmarkDotNet line chart on gh-pages)
+
+### Fixed
+
+- `ETL-Transformers.slnx`: removed references to 6 files that were never created after template setup
+
+[0.1.1]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.1.0...v0.1.1
+
 ## [0.1.0] - 2026-06-20
 
 ### Added
