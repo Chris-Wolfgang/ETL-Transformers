@@ -6,7 +6,6 @@
     <File Path="Directory.Build.props" />
     <File Path="LICENSE" />
     <File Path="README.md" />
-    <File Path="REPO-INSTRUCTIONS.md" />
     <File Path="SECURITY.md" />
   </Folder>
   <Folder Name="/.root/.github/">
@@ -28,16 +27,11 @@
   </Folder>
   <Folder Name="/.root/docs/">
     <File Path="docs/RELEASE-WORKFLOW-SETUP.md" />
-    <File Path="docs/SECURITY.md" />
   </Folder>
   <Folder Name="/.root/scripts/">
     <File Path="scripts/build-pr.ps1" />
-    <File Path="scripts/Fix-BranchRuleset.ps1" />
     <File Path="scripts/format.ps1" />
-    <File Path="scripts/Setup-BranchRuleset.ps1" />
-    <File Path="scripts/Setup-GitHubPages.ps1" />
     <File Path="scripts/Setup-Labels.ps1" />
-    <File Path="scripts/setup.ps1" />
   </Folder>
   <Folder Name="/benchmarks/">
     <Project Path="benchmarks/Wolfgang.Etl.Transformers.Benchmarks/Wolfgang.Etl.Transformers.Benchmarks.csproj" />

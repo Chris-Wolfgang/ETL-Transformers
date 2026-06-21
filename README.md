@@ -32,12 +32,12 @@ await foreach (var row in pipeline.TransformAsync(rawLines))
     await loader.LoadAsync(row);
 }
 
-// Or use extension methods inline:
-await foreach (var row in rawLines
-    .Buffered(capacity: 500)
-    .SelectAsync(ParseOrder)
-    .WhereAsync(o => o.IsValid)
-    .SelectAsync(ToInvoice))
+// Or buffer inline between pipeline stages:
+var buffered = rawLines.Buffered(capacity: 500);
+var filtered = new WhereTransformer<Order>(o => o.IsValid);
+var projected = new SelectTransformer<Order, InvoiceRow>(ToInvoice);
+
+await foreach (var row in projected.TransformAsync(filtered.TransformAsync(buffered)))
 {
     await loader.LoadAsync(row);
 }
@@ -78,7 +78,7 @@ await foreach (var row in rawLines
 |---------------|-------------|
 | `ChainTransformer<TSource, TIntermediate, TDestination>` | Composes two `ITransformAsync` transformers into one |
 | `ChainTransformerWithCancellation<TSource, TIntermediate, TDestination>` | Same as above but propagates `CancellationToken` through both stages |
-| `TransformerExtensions.Then(...)` | Fluent composition — four overloads covering sync × cancellation combinations |
+| `TransformerExtensions.Then(...)` | Fluent composition — two overloads: one for `ITransformAsync` pairs, one for `ITransformWithCancellationAsync` pairs |
 | `TransformerExtensions.Buffered(...)` | Inline buffer insertion — sugar for `new BufferedTransformer<T>(n).TransformAsync(source)` |
 
 ---
@@ -87,8 +87,8 @@ await foreach (var row in rawLines
 
 | Framework | Versions |
 |-----------|----------|
-| .NET Framework | 4.6.2, 4.7, 4.7.1, 4.7.2, 4.8, 4.8.1 |
-| .NET Core | 3.1 |
+| .NET Framework | 4.6.2, 4.7.2, 4.8, 4.8.1 |
+| .NET Standard | 2.0 |
 | .NET | 5.0, 6.0, 7.0, 8.0, 9.0, 10.0 |
 
 ---

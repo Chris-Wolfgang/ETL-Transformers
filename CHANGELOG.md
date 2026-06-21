@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1.0] - Upcoming
+## [0.1.0] - 2026-06-20
 
 ### Added
 
@@ -21,8 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `ProgressReportingTransformer<T>` (per-item callback without altering the stream)
 - **Composition**: `ChainTransformer<TSource, TIntermediate, TDestination>`,
   `ChainTransformerWithCancellation<TSource, TIntermediate, TDestination>`,
-  `TransformerExtensions.Then(...)` (4 overloads), `TransformerExtensions.Buffered(...)`
-- Multi-TFM targeting: .NET Framework 4.6.2–4.8.1, .NET Core 3.1, .NET 5.0–10.0
-- 231 unit tests with 100% line and method coverage across all 13 target frameworks
+  `TransformerExtensions.Then(...)` (2 overloads), `TransformerExtensions.Buffered(...)`
+- Multi-TFM targeting: .NET Framework 4.6.2–4.8.1, .NET Standard 2.0, .NET 5.0–10.0
+- 257 unit tests + 11 integration tests with 100% line and method coverage
 - BenchmarkDotNet project for baseline performance measurement
 - Full DocFX API documentation site
+
+[0.1.0]: https://github.com/Chris-Wolfgang/ETL-Transformers/releases/tag/v0.1.0

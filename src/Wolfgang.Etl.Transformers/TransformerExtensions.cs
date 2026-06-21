@@ -35,11 +35,9 @@ public static class TransformerExtensions
     /// </remarks>
     /// <example>
     /// <code>
-    ///     var results = await extractor
-    ///         .ExtractAsync(token)
-    ///         .Buffered(capacity: 500)
-    ///         .SelectAsync(Parse)
-    ///         .ToListAsync();
+    ///     var select = new SelectTransformer&lt;RawRecord, ParsedRecord&gt;(Parse);
+    ///     var results = select.TransformAsync(extractor.ExtractAsync(token).Buffered(capacity: 500));
+    ///     await foreach (var item in results) { ... }
     /// </code>
     /// </example>
     public static IAsyncEnumerable<T> Buffered<T>
