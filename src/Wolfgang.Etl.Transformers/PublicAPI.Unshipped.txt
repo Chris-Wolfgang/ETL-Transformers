@@ -1,1 +1,2 @@
 #nullable enable
+Wolfgang.Etl.Transformers.ChunkTransformer<T>.ChunkTransformer(int size, System.IProgress<int>? progress) -> void
