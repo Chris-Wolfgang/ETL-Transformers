@@ -268,7 +268,84 @@ public class ChunkTransformerTests
 
 
 
+    // ---------- progress reporting ----------
+
+    [Fact]
+    public void Ctor_with_progress_when_size_is_zero_throws_ArgumentOutOfRangeException()
+    {
+        var progress = new ListProgress<int>();
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => new ChunkTransformer<int>(size: 0, progress));
+    }
+
+
+
+    [Fact]
+    public async Task TransformAsync_with_progress_reports_cumulative_item_count_per_chunk()
+    {
+        var progress = new ListProgress<int>();
+        var sut = new ChunkTransformer<int>(size: 3, progress);
+
+        _ = await CollectAsync(sut.TransformAsync(ToAsync(Enumerable.Range(1, 9).ToArray())));
+
+        Assert.Equal(new[] { 3, 6, 9 }, progress.Reports);
+    }
+
+
+
+    [Fact]
+    public async Task TransformAsync_with_progress_reports_partial_final_chunk()
+    {
+        var progress = new ListProgress<int>();
+        var sut = new ChunkTransformer<int>(size: 3, progress);
+
+        _ = await CollectAsync(sut.TransformAsync(ToAsync(Enumerable.Range(1, 7).ToArray())));
+
+        Assert.Equal(new[] { 3, 6, 7 }, progress.Reports);
+    }
+
+
+
+    [Fact]
+    public async Task TransformAsync_with_progress_reports_nothing_for_empty_source()
+    {
+        var progress = new ListProgress<int>();
+        var sut = new ChunkTransformer<int>(size: 3, progress);
+
+        _ = await CollectAsync(sut.TransformAsync(ToAsync(Array.Empty<int>())));
+
+        Assert.Empty(progress.Reports);
+    }
+
+
+
+    [Fact]
+    public async Task TransformAsync_with_null_progress_does_not_throw()
+    {
+        var sut = new ChunkTransformer<int>(size: 3, progress: null);
+
+        var result = await CollectAsync(sut.TransformAsync(ToAsync(new[] { 1, 2, 3, 4 })));
+
+        Assert.Equal(2, result.Count);
+    }
+
+
+
     // test fixtures
+
+    private sealed class ListProgress<TValue> : IProgress<TValue>
+    {
+        public List<TValue> Reports { get; } = new();
+
+
+
+        public void Report(TValue value)
+        {
+            Reports.Add(value);
+        }
+    }
+
+
 
     private sealed class Box
     {

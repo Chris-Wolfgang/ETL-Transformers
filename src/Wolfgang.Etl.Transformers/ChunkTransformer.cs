@@ -29,20 +29,27 @@ namespace Wolfgang.Etl.Transformers;
 /// materializing the entire stream.
 /// </para>
 /// <para>
-/// Implements only <see cref="ITransformAsync{TSource, TDestination}"/> - no progress, no
-/// cancellation, no Skip/Max - to keep the hot loop minimal.
+/// Implements only <see cref="ITransformAsync{TSource, TDestination}"/> - no cancellation, no
+/// Skip/Max - to keep the hot loop minimal. An optional <see cref="IProgress{T}"/> sink may be
+/// supplied to receive the running count of source items consumed; when none is supplied the
+/// hot path allocates and reports nothing.
 /// </para>
 /// </remarks>
 /// <example>
 /// <code>
 ///     // batch rows into groups of 1000 for bulk loading
 ///     var batches = new ChunkTransformer&lt;Row&gt;(size: 1000);
+///
+///     // batch and report progress as items are consumed
+///     var progress = new Progress&lt;int&gt;(n =&gt; Console.WriteLine($"{n} rows chunked"));
+///     var tracked = new ChunkTransformer&lt;Row&gt;(size: 1000, progress);
 /// </code>
 /// </example>
 public sealed class ChunkTransformer<T> : ITransformAsync<T, IReadOnlyList<T>>
     where T : notnull
 {
     private readonly int _size;
+    private readonly IProgress<int>? _progress;
 
 
 
@@ -68,6 +75,24 @@ public sealed class ChunkTransformer<T> : ITransformAsync<T, IReadOnlyList<T>>
 
 
     /// <summary>
+    /// Initializes a new instance with the given chunk size and a progress sink that receives the
+    /// running count of source items consumed.
+    /// </summary>
+    /// <param name="size">The maximum number of items in each yielded chunk. Must be at least 1.</param>
+    /// <param name="progress">
+    /// A sink that receives the cumulative number of source items consumed so far, reported once per
+    /// yielded chunk (including the partial final chunk). May be <see langword="null"/> to disable reporting.
+    /// </param>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="size"/> is less than 1.</exception>
+    public ChunkTransformer(int size, IProgress<int>? progress)
+        : this(size)
+    {
+        _progress = progress;
+    }
+
+
+
+    /// <summary>
     /// Asynchronously yields successive chunks of <see cref="Size"/> consecutive items from
     /// <paramref name="items"/>. The last chunk may contain fewer items if the source length
     /// is not a multiple of <see cref="Size"/>.
@@ -88,7 +113,7 @@ public sealed class ChunkTransformer<T> : ITransformAsync<T, IReadOnlyList<T>>
 #pragma warning restore RCS1140
 #endif
 
-        return ChunkAsync(items, _size);
+        return ChunkAsync(items, _size, _progress);
     }
 
 
@@ -100,18 +125,21 @@ public sealed class ChunkTransformer<T> : ITransformAsync<T, IReadOnlyList<T>>
 
 
 
-    private static async IAsyncEnumerable<IReadOnlyList<T>> ChunkAsync(IAsyncEnumerable<T> items, int size)
+    private static async IAsyncEnumerable<IReadOnlyList<T>> ChunkAsync(IAsyncEnumerable<T> items, int size, IProgress<int>? progress)
     {
         var buffer = new T[size];
         var index = 0;
+        var itemsConsumed = 0;
 
         await foreach (var item in items.ConfigureAwait(continueOnCapturedContext: false))
         {
             buffer[index++] = item;
+            itemsConsumed++;
 
             if (index == size)
             {
                 yield return buffer;
+                progress?.Report(itemsConsumed);
                 buffer = new T[size];
                 index = 0;
             }
@@ -124,6 +152,7 @@ public sealed class ChunkTransformer<T> : ITransformAsync<T, IReadOnlyList<T>>
             var partial = new T[index];
             Array.Copy(buffer, partial, index);
             yield return partial;
+            progress?.Report(itemsConsumed);
         }
     }
 }
