@@ -175,17 +175,17 @@ public class ChunkTransformerTests
     // ---------- chunks are independent arrays (no aliasing) ----------
 
     [Fact]
-    public async Task TransformAsync_yields_independent_chunk_arrays()
+    public async Task TransformAsync_yields_independent_chunk_instances()
     {
         var sut = new ChunkTransformer<int>(size: 2);
 
         var result = await CollectAsync(sut.TransformAsync(ToAsync(new[] { 1, 2, 3, 4 })));
 
         Assert.Equal(2, result.Count);
-        Assert.NotSame(result[0], result[1]);
 
-        // Mutating one chunk must not affect the other
-        result[0][0] = 999;
+        // Each chunk is a distinct instance — chunks do not share backing storage.
+        Assert.NotSame(result[0], result[1]);
+        Assert.Equal(new[] { 1, 2 }, result[0]);
         Assert.Equal(new[] { 3, 4 }, result[1]);
     }
 
@@ -201,8 +201,8 @@ public class ChunkTransformerTests
         var result = await CollectAsync(sut.TransformAsync(ToAsync(new[] { 1, 2, 3, 4, 5, 6, 7 })));
 
         Assert.Equal(2, result.Count);
-        Assert.Equal(5, result[0].Length);
-        Assert.Equal(2, result[1].Length);   // not 5 with default trailing values
+        Assert.Equal(5, result[0].Count);
+        Assert.Equal(2, result[1].Count);   // not 5 with default trailing values
     }
 
 
@@ -263,7 +263,7 @@ public class ChunkTransformerTests
     {
         var sut = new ChunkTransformer<int>(size: 1);
 
-        Assert.IsAssignableFrom<ITransformAsync<int, int[]>>(sut);
+        Assert.IsAssignableFrom<ITransformAsync<int, IReadOnlyList<int>>>(sut);
     }
 
 
