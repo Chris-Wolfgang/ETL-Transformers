@@ -8,8 +8,8 @@ using Wolfgang.Etl.Abstractions;
 namespace Wolfgang.Etl.Transformers;
 
 /// <summary>
-/// A transformer that batches the input sequence into arrays of a fixed size and yields each
-/// batch as a single output item.
+/// A transformer that batches the input sequence into fixed-size groups and yields each batch as
+/// a single <see cref="IReadOnlyList{T}"/> output item.
 /// </summary>
 /// <typeparam name="T">The type of items flowing through the transformer. Must be non-null.</typeparam>
 /// <remarks>
@@ -20,9 +20,9 @@ namespace Wolfgang.Etl.Transformers;
 /// if the input length is not an exact multiple of <see cref="Size"/>.
 /// </para>
 /// <para>
-/// Each yielded chunk is a freshly-allocated <typeparamref name="T"/>[] - chunks do not share
-/// backing storage with the transformer or with each other. Consumers are free to retain or
-/// mutate each chunk without affecting subsequent output.
+/// Each yielded chunk is backed by a freshly-allocated <typeparamref name="T"/>[] (exposed as
+/// <see cref="IReadOnlyList{T}"/>) - chunks do not share backing storage with the transformer or
+/// with each other, so consumers can retain each chunk without affecting subsequent output.
 /// </para>
 /// <para>
 /// Useful for batching writes to a downstream loader (e.g. <c>SqlBulkCopy</c>) without
@@ -39,7 +39,7 @@ namespace Wolfgang.Etl.Transformers;
 ///     var batches = new ChunkTransformer&lt;Row&gt;(size: 1000);
 /// </code>
 /// </example>
-public sealed class ChunkTransformer<T> : ITransformAsync<T, T[]>
+public sealed class ChunkTransformer<T> : ITransformAsync<T, IReadOnlyList<T>>
     where T : notnull
 {
     private readonly int _size;
@@ -73,9 +73,9 @@ public sealed class ChunkTransformer<T> : ITransformAsync<T, T[]>
     /// is not a multiple of <see cref="Size"/>.
     /// </summary>
     /// <param name="items">The asynchronous source sequence.</param>
-    /// <returns>An asynchronous sequence of arrays, each containing up to <see cref="Size"/> items.</returns>
+    /// <returns>An asynchronous sequence of read-only lists, each containing up to <see cref="Size"/> items.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="items"/> is <see langword="null"/>.</exception>
-    public IAsyncEnumerable<T[]> TransformAsync(IAsyncEnumerable<T> items)
+    public IAsyncEnumerable<IReadOnlyList<T>> TransformAsync(IAsyncEnumerable<T> items)
     {
 #if NET6_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(items);
@@ -100,7 +100,7 @@ public sealed class ChunkTransformer<T> : ITransformAsync<T, T[]>
 
 
 
-    private static async IAsyncEnumerable<T[]> ChunkAsync(IAsyncEnumerable<T> items, int size)
+    private static async IAsyncEnumerable<IReadOnlyList<T>> ChunkAsync(IAsyncEnumerable<T> items, int size)
     {
         var buffer = new T[size];
         var index = 0;
