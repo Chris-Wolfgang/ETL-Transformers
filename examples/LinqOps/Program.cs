@@ -35,6 +35,7 @@
 // ---------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -86,7 +87,7 @@ var pipeline = new WhereTransformer<int>(i => i % 2 == 0)
 // ---------------------------------------------------------------------------
 
 var extractor = new TestExtractor<int>(source);
-var loader = new TestLoader<Bucket[]>(collectItems: true);
+var loader = new TestLoader<IReadOnlyList<Bucket>>(collectItems: true);
 var token = CancellationToken.None;
 
 await loader.LoadAsync
@@ -111,13 +112,13 @@ foreach (var chunk in loader.GetCollectedItems()!)
 {
     chunkIndex++;
     var rendered = string.Join(", ", chunk.Select(b => $"({b.Number},{b.Label})"));
-    Console.WriteLine($"  chunk #{chunkIndex} ({chunk.Length} item{(chunk.Length == 1 ? string.Empty : "s")}):  {rendered}");
+    Console.WriteLine($"  chunk #{chunkIndex} ({chunk.Count} item{(chunk.Count == 1 ? string.Empty : "s")}):  {rendered}");
 }
 
 Console.WriteLine(new string('-', 70));
 var chunks = loader.GetCollectedItems()!;
 Console.WriteLine($"Total chunks emitted: {chunks.Count}");
-Console.WriteLine($"Total Bucket items:   {chunks.Sum(c => c.Length)}");
+Console.WriteLine($"Total Bucket items:   {chunks.Sum(c => c.Count)}");
 
 // ---------------------------------------------------------------------------
 // Bucket - intermediate record type produced by the Select stage.

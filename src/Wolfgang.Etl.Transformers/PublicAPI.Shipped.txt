@@ -19,7 +19,7 @@ Wolfgang.Etl.Transformers.ChainTransformerWithCancellation<TSource, TIntermediat
 Wolfgang.Etl.Transformers.ChunkTransformer<T>
 Wolfgang.Etl.Transformers.ChunkTransformer<T>.ChunkTransformer(int size) -> void
 Wolfgang.Etl.Transformers.ChunkTransformer<T>.Size.get -> int
-Wolfgang.Etl.Transformers.ChunkTransformer<T>.TransformAsync(System.Collections.Generic.IAsyncEnumerable<T>! items) -> System.Collections.Generic.IAsyncEnumerable<T[]!>!
+Wolfgang.Etl.Transformers.ChunkTransformer<T>.TransformAsync(System.Collections.Generic.IAsyncEnumerable<T>! items) -> System.Collections.Generic.IAsyncEnumerable<System.Collections.Generic.IReadOnlyList<T>!>!
 Wolfgang.Etl.Transformers.DistinctByTransformer<TSource, TKey>
 Wolfgang.Etl.Transformers.DistinctByTransformer<TSource, TKey>.DistinctByTransformer(System.Func<TSource, TKey>! keySelector) -> void
 Wolfgang.Etl.Transformers.DistinctByTransformer<TSource, TKey>.DistinctByTransformer(System.Func<TSource, TKey>! keySelector, System.Collections.Generic.IEqualityComparer<TKey>? comparer) -> void

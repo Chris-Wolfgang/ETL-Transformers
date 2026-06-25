@@ -148,7 +148,7 @@ public class PipelineIntegrationTests
         // Arrange: chunk into groups of 3, then sum each group
         var source = Enumerable.Range(1, 9);
         var chunk = new ChunkTransformer<int>(3);
-        var select = new SelectTransformer<int[], int>(arr => arr.Sum());
+        var select = new SelectTransformer<IReadOnlyList<int>, int>(arr => arr.Sum());
 
         // Act
         var result = await CollectAsync(select.TransformAsync(chunk.TransformAsync(ToAsync(source))));
