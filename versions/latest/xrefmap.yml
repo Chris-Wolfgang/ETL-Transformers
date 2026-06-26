@@ -235,6 +235,15 @@ references:
   fullName.vb: Wolfgang.Etl.Transformers.ChunkTransformer(Of T).New(Integer)
   nameWithType: ChunkTransformer<T>.ChunkTransformer(int)
   nameWithType.vb: ChunkTransformer(Of T).New(Integer)
+- uid: Wolfgang.Etl.Transformers.ChunkTransformer`1.#ctor(System.Int32,System.IProgress{System.Int32})
+  name: ChunkTransformer(int, IProgress<int>?)
+  href: api/Wolfgang.Etl.Transformers.ChunkTransformer-1.html#Wolfgang_Etl_Transformers_ChunkTransformer_1__ctor_System_Int32_System_IProgress_System_Int32__
+  commentId: M:Wolfgang.Etl.Transformers.ChunkTransformer`1.#ctor(System.Int32,System.IProgress{System.Int32})
+  name.vb: New(Integer, IProgress(Of Integer))
+  fullName: Wolfgang.Etl.Transformers.ChunkTransformer<T>.ChunkTransformer(int, System.IProgress<int>?)
+  fullName.vb: Wolfgang.Etl.Transformers.ChunkTransformer(Of T).New(Integer, System.IProgress(Of Integer))
+  nameWithType: ChunkTransformer<T>.ChunkTransformer(int, IProgress<int>?)
+  nameWithType.vb: ChunkTransformer(Of T).New(Integer, IProgress(Of Integer))
 - uid: Wolfgang.Etl.Transformers.ChunkTransformer`1.#ctor*
   name: ChunkTransformer
   href: api/Wolfgang.Etl.Transformers.ChunkTransformer-1.html#Wolfgang_Etl_Transformers_ChunkTransformer_1__ctor_

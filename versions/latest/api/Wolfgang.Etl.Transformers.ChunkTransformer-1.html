@@ -6,7 +6,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta name="title" content="Class ChunkTransformer&lt;T&gt; | Wolfgang.Etl.Transformers Documentation ">
       
-      <meta name="description" content="A transformer that batches the input sequence into arrays of a fixed size and yields each batch as a single output item.">
+      <meta name="description" content="A transformer that batches the input sequence into fixed-size groups and yields each batch as a single  output item.">
       <link rel="icon" href="../favicon.svg">
       <link rel="stylesheet" href="../public/docfx.min.css">
       <link rel="stylesheet" href="../public/main.css">
@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/ETL-Transformers/new/v0.1.1/apiSpec/new?filename=Wolfgang_Etl_Transformers_ChunkTransformer_1.md&amp;value=---%0Auid%3A%20Wolfgang.Etl.Transformers.ChunkTransformer%601%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/ETL-Transformers/new/v0.2.0/apiSpec/new?filename=Wolfgang_Etl_Transformers_ChunkTransformer_1.md&amp;value=---%0Auid%3A%20Wolfgang.Etl.Transformers.ChunkTransformer%601%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -75,7 +75,7 @@
 
 
   <h1 id="Wolfgang_Etl_Transformers_ChunkTransformer_1" data-uid="Wolfgang.Etl.Transformers.ChunkTransformer`1" class="text-break">
-Class ChunkTransformer&lt;T&gt;  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.1.1/src/Wolfgang.Etl.Transformers/ChunkTransformer.cs/#L42"><i class="bi bi-code-slash"></i></a>
+Class ChunkTransformer&lt;T&gt;  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.2.0/src/Wolfgang.Etl.Transformers/ChunkTransformer.cs/#L48"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -83,13 +83,13 @@ Class ChunkTransformer&lt;T&gt;  <a class="header-action link-secondary" title="
   <dl><dt>Assembly</dt><dd>Wolfgang.Etl.Transformers.dll</dd></dl>
   </div>
 
-  <div class="markdown summary"><p>A transformer that batches the input sequence into arrays of a fixed size and yields each
-batch as a single output item.</p>
+  <div class="markdown summary"><p>A transformer that batches the input sequence into fixed-size groups and yields each batch as
+a single <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList&lt;T&gt;</a> output item.</p>
 </div>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class ChunkTransformer&lt;T&gt; : ITransformAsync&lt;T, T[]&gt; where T : notnull</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class ChunkTransformer&lt;T&gt; : ITransformAsync&lt;T, IReadOnlyList&lt;T&gt;&gt; where T : notnull</code></pre>
   </div>
 
 
@@ -112,7 +112,7 @@ batch as a single output item.</p>
   <dl class="typelist implements">
     <dt>Implements</dt>
     <dd>
-      <div><span class="xref">ITransformAsync</span>&lt;T, T[]&gt;</div>
+      <div><span class="xref">ITransformAsync</span>&lt;T, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;T&gt;&gt;</div>
     </dd>
   </dl>
 
@@ -151,7 +151,11 @@ batch as a single output item.</p>
 
   <h2 id="Wolfgang_Etl_Transformers_ChunkTransformer_1_examples">Examples</h2>
   <pre><code class="lang-csharp">// batch rows into groups of 1000 for bulk loading
-var batches = new ChunkTransformer&lt;Row&gt;(size: 1000);</code></pre>
+var batches = new ChunkTransformer&lt;Row&gt;(size: 1000);
+
+// batch and report progress as items are consumed
+var progress = new Progress&lt;int&gt;(n =&gt; Console.WriteLine($"{n} rows chunked"));
+var tracked = new ChunkTransformer&lt;Row&gt;(size: 1000, progress);</code></pre>
 
 
   <h2 id="Wolfgang_Etl_Transformers_ChunkTransformer_1_remarks">Remarks</h2>
@@ -162,17 +166,19 @@ var batches = new ChunkTransformer&lt;Row&gt;(size: 1000);</code></pre>
 if the input length is not an exact multiple of <a class="xref" href="Wolfgang.Etl.Transformers.ChunkTransformer-1.html#Wolfgang_Etl_Transformers_ChunkTransformer_1_Size">Size</a>.
 </p>
 <p>
-Each yielded chunk is a freshly-allocated <code class="typeparamref">T</code>[] - chunks do not share
-backing storage with the transformer or with each other. Consumers are free to retain or
-mutate each chunk without affecting subsequent output.
+Each yielded chunk is backed by a freshly-allocated <code class="typeparamref">T</code>[] (exposed as
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList&lt;T&gt;</a>) - chunks do not share backing storage with the transformer or
+with each other, so consumers can retain each chunk without affecting subsequent output.
 </p>
 <p>
 Useful for batching writes to a downstream loader (e.g. <code>SqlBulkCopy</code>) without
 materializing the entire stream.
 </p>
 <p>
-Implements only <span class="xref">Wolfgang.Etl.Abstractions.ITransformAsync&lt;TSource, TDestination&gt;</span> - no progress, no
-cancellation, no Skip/Max - to keep the hot loop minimal.
+Implements only <span class="xref">Wolfgang.Etl.Abstractions.ITransformAsync&lt;TSource, TDestination&gt;</span> - no cancellation, no
+Skip/Max - to keep the hot loop minimal. An optional <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iprogress-1">IProgress&lt;T&gt;</a> sink may be
+supplied to receive the running count of source items consumed; when none is supplied the
+hot path allocates and reports nothing.
 </p>
 </div>
 
@@ -185,7 +191,7 @@ cancellation, no Skip/Max - to keep the hot loop minimal.
 
   <h3 id="Wolfgang_Etl_Transformers_ChunkTransformer_1__ctor_System_Int32_" data-uid="Wolfgang.Etl.Transformers.ChunkTransformer`1.#ctor(System.Int32)">
   ChunkTransformer(int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.1.1/src/Wolfgang.Etl.Transformers/ChunkTransformer.cs/#L54"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.2.0/src/Wolfgang.Etl.Transformers/ChunkTransformer.cs/#L61"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance with the given chunk size.</p>
@@ -220,6 +226,50 @@ cancellation, no Skip/Max - to keep the hot loop minimal.
 
 
 
+  <a id="Wolfgang_Etl_Transformers_ChunkTransformer_1__ctor_" data-uid="Wolfgang.Etl.Transformers.ChunkTransformer`1.#ctor*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_ChunkTransformer_1__ctor_System_Int32_System_IProgress_System_Int32__" data-uid="Wolfgang.Etl.Transformers.ChunkTransformer`1.#ctor(System.Int32,System.IProgress{System.Int32})">
+  ChunkTransformer(int, IProgress&lt;int&gt;?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.2.0/src/Wolfgang.Etl.Transformers/ChunkTransformer.cs/#L87"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Initializes a new instance with the given chunk size and a progress sink that receives the
+running count of source items consumed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ChunkTransformer(int size, IProgress&lt;int&gt;? progress)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>size</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The maximum number of items in each yielded chunk. Must be at least 1.</p>
+</dd>
+    <dt><code>progress</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iprogress-1">IProgress</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>&gt;</dt>
+    <dd><p>A sink that receives the cumulative number of source items consumed so far, reported once per
+yielded chunk (including the partial final chunk). May be <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a> to disable reporting.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p><code class="paramref">size</code> is less than 1.</p>
+</dd>
+  </dl>
+
+
+
   <h2 class="section" id="properties">Properties
 </h2>
 
@@ -228,7 +278,7 @@ cancellation, no Skip/Max - to keep the hot loop minimal.
 
   <h3 id="Wolfgang_Etl_Transformers_ChunkTransformer_1_Size" data-uid="Wolfgang.Etl.Transformers.ChunkTransformer`1.Size">
   Size
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.1.1/src/Wolfgang.Etl.Transformers/ChunkTransformer.cs/#L99"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.2.0/src/Wolfgang.Etl.Transformers/ChunkTransformer.cs/#L124"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The maximum number of items in each yielded chunk.</p>
@@ -264,7 +314,7 @@ cancellation, no Skip/Max - to keep the hot loop minimal.
 
   <h3 id="Wolfgang_Etl_Transformers_ChunkTransformer_1_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__" data-uid="Wolfgang.Etl.Transformers.ChunkTransformer`1.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})">
   TransformAsync(IAsyncEnumerable&lt;T&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.1.1/src/Wolfgang.Etl.Transformers/ChunkTransformer.cs/#L78"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.2.0/src/Wolfgang.Etl.Transformers/ChunkTransformer.cs/#L103"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Asynchronously yields successive chunks of <a class="xref" href="Wolfgang.Etl.Transformers.ChunkTransformer-1.html#Wolfgang_Etl_Transformers_ChunkTransformer_1_Size">Size</a> consecutive items from
@@ -274,7 +324,7 @@ is not a multiple of <a class="xref" href="Wolfgang.Etl.Transformers.ChunkTransf
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IAsyncEnumerable&lt;T[]&gt; TransformAsync(IAsyncEnumerable&lt;T&gt; items)</code></pre>
+    <pre><code class="lang-csharp hljs">public IAsyncEnumerable&lt;IReadOnlyList&lt;T&gt;&gt; TransformAsync(IAsyncEnumerable&lt;T&gt; items)</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -286,8 +336,8 @@ is not a multiple of <a class="xref" href="Wolfgang.Etl.Transformers.ChunkTransf
 
   <h4 class="section">Returns</h4>
   <dl class="parameters">
-    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iasyncenumerable-1">IAsyncEnumerable</a>&lt;T[]&gt;</dt>
-    <dd><p>An asynchronous sequence of arrays, each containing up to <a class="xref" href="Wolfgang.Etl.Transformers.ChunkTransformer-1.html#Wolfgang_Etl_Transformers_ChunkTransformer_1_Size">Size</a> items.</p>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iasyncenumerable-1">IAsyncEnumerable</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;T&gt;&gt;</dt>
+    <dd><p>An asynchronous sequence of read-only lists, each containing up to <a class="xref" href="Wolfgang.Etl.Transformers.ChunkTransformer-1.html#Wolfgang_Etl_Transformers_ChunkTransformer_1_Size">Size</a> items.</p>
 </dd>
   </dl>
 
@@ -311,7 +361,7 @@ is not a multiple of <a class="xref" href="Wolfgang.Etl.Transformers.ChunkTransf
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.1.1/src/Wolfgang.Etl.Transformers/ChunkTransformer.cs/#L42" class="edit-link">Edit this page</a>
+          <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.2.0/src/Wolfgang.Etl.Transformers/ChunkTransformer.cs/#L48" class="edit-link">Edit this page</a>
         </div>
 
 
