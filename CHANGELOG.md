@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-06-26
+
+### Changed
+
+- **Breaking:** `ChunkTransformer<T>` now produces `IReadOnlyList<T>` instead of `T[]` (`ITransformAsync<T, IReadOnlyList<T>>`). Callers that relied on the array contract (indexing a `T[]` variable, passing chunks where an array is required) must adjust to the read-only list.
+- Bumped `Wolfgang.Etl.Abstractions` to 0.14.1 and `Microsoft.Bcl.AsyncInterfaces` to 10.0.9.
+
+### Added
+
+- `ChunkTransformer<T>` gains a constructor overload accepting an optional `IProgress<int>?` sink that reports the cumulative item count as chunks are produced.
+
 ## [0.1.1] - 2026-06-20
 
 ### Changed
@@ -27,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `ETL-Transformers.slnx`: removed references to 6 files that were never created after template setup
 
+[0.2.0]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.1.0...v0.1.1
 
 ## [0.1.0] - 2026-06-20
