@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [0.2.1] - 2026-07-06
+
+### Changed
+
+- Dependabot bump: dotnet-dependencies group (7 packages).
+
 ## [0.2.0] - 2026-06-26
 
 ### Changed
@@ -38,6 +56,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `ETL-Transformers.slnx`: removed references to 6 files that were never created after template setup
 
+[Unreleased]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.1.0...v0.1.1
 
