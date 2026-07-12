@@ -1,0 +1,444 @@
+{
+  "source_base_path": "D:/a/ETL-Transformers/ETL-Transformers/docfx_project",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "Resource",
+      "output": {
+        "resource": {
+          "relative_path": "index.json"
+        }
+      }
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/README.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/README.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Wolfgang.Etl.Transformers.BufferedTransformer-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Wolfgang.Etl.Transformers.BufferedTransformer-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Wolfgang.Etl.Transformers.BufferedTransformer<T>",
+      "Summary": "<p sourcefile=\"api/Wolfgang.Etl.Transformers.BufferedTransformer-1.yml\" sourcestartlinenumber=\"1\">A transformer that decouples its upstream and downstream stages using a bounded\n<xref href=\"System.Threading.Channels.Channel%601\" data-throw-if-not-resolved=\"false\"></xref>, enabling pipeline parallelism: the upstream stage can run ahead\nwhile the downstream stage consumes, instead of being lock-stepped by\n<xref href=\"System.Collections.Generic.IAsyncEnumerable%601\" data-throw-if-not-resolved=\"false\"></xref>'s pull model.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Wolfgang.Etl.Transformers.CastTransformer-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Wolfgang.Etl.Transformers.CastTransformer-2.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Wolfgang.Etl.Transformers.CastTransformer<TSource, TDestination>",
+      "Summary": "<p sourcefile=\"api/Wolfgang.Etl.Transformers.CastTransformer-2.yml\" sourcestartlinenumber=\"1\">A transformer that casts each input item to <code class=\"typeparamref\">TDestination</code>, throwing\n<xref href=\"System.InvalidCastException\" data-throw-if-not-resolved=\"false\"></xref> if any item is not of that type.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Wolfgang.Etl.Transformers.ChainTransformer-3.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Wolfgang.Etl.Transformers.ChainTransformer-3.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Wolfgang.Etl.Transformers.ChainTransformer<TSource, TIntermediate, TDestination>",
+      "Summary": "<p sourcefile=\"api/Wolfgang.Etl.Transformers.ChainTransformer-3.yml\" sourcestartlinenumber=\"1\">Combines two transformers into a single transformer: items flow through the first,\nthen through the second, with the intermediate type erased from the chain's public\nsignature.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Wolfgang.Etl.Transformers.ChainTransformerWithCancellation-3.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Wolfgang.Etl.Transformers.ChainTransformerWithCancellation-3.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Wolfgang.Etl.Transformers.ChainTransformerWithCancellation<TSource, TIntermediate, TDestination>",
+      "Summary": "<p sourcefile=\"api/Wolfgang.Etl.Transformers.ChainTransformerWithCancellation-3.yml\" sourcestartlinenumber=\"1\">Combines two cancellation-aware transformers into a single\n<xref href=\"Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync%602\" data-throw-if-not-resolved=\"false\"></xref>: items flow through\nthe first, then through the second, and a single <xref href=\"System.Threading.CancellationToken\" data-throw-if-not-resolved=\"false\"></xref> supplied\nto the chain is propagated to both stages.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Wolfgang.Etl.Transformers.ChunkTransformer-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Wolfgang.Etl.Transformers.ChunkTransformer-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Wolfgang.Etl.Transformers.ChunkTransformer<T>",
+      "Summary": "<p sourcefile=\"api/Wolfgang.Etl.Transformers.ChunkTransformer-1.yml\" sourcestartlinenumber=\"1\">A transformer that batches the input sequence into fixed-size groups and yields each batch as\na single <xref href=\"System.Collections.Generic.IReadOnlyList%601\" data-throw-if-not-resolved=\"false\"></xref> output item.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Wolfgang.Etl.Transformers.DistinctByTransformer-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Wolfgang.Etl.Transformers.DistinctByTransformer-2.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Wolfgang.Etl.Transformers.DistinctByTransformer<TSource, TKey>",
+      "Summary": "<p sourcefile=\"api/Wolfgang.Etl.Transformers.DistinctByTransformer-2.yml\" sourcestartlinenumber=\"1\">A transformer that yields each input item with a unique key, where the key is produced by a\ncaller-supplied selector. Subsequent items whose key has already been seen are dropped.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Wolfgang.Etl.Transformers.DistinctTransformer-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Wolfgang.Etl.Transformers.DistinctTransformer-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Wolfgang.Etl.Transformers.DistinctTransformer<T>",
+      "Summary": "<p sourcefile=\"api/Wolfgang.Etl.Transformers.DistinctTransformer-1.yml\" sourcestartlinenumber=\"1\">A transformer that yields each unique item from the input sequence, dropping subsequent\nduplicates.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Wolfgang.Etl.Transformers.OfTypeTransformer-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Wolfgang.Etl.Transformers.OfTypeTransformer-2.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Wolfgang.Etl.Transformers.OfTypeTransformer<TSource, TDestination>",
+      "Summary": "<p sourcefile=\"api/Wolfgang.Etl.Transformers.OfTypeTransformer-2.yml\" sourcestartlinenumber=\"1\">A transformer that yields each input item that is of type <code class=\"typeparamref\">TDestination</code>,\nsilently skipping items of any other type.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Wolfgang.Etl.Transformers.PassThroughTransformer-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Wolfgang.Etl.Transformers.PassThroughTransformer-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Wolfgang.Etl.Transformers.PassThroughTransformer<T>",
+      "Summary": "<p sourcefile=\"api/Wolfgang.Etl.Transformers.PassThroughTransformer-1.yml\" sourcestartlinenumber=\"1\">A transformer that yields each item from the input sequence unchanged.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Wolfgang.Etl.Transformers.ProgressReportingTransformer-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Wolfgang.Etl.Transformers.ProgressReportingTransformer-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Wolfgang.Etl.Transformers.ProgressReportingTransformer<T>",
+      "Summary": "<p sourcefile=\"api/Wolfgang.Etl.Transformers.ProgressReportingTransformer-1.yml\" sourcestartlinenumber=\"1\">A decorator transformer that calls a user-supplied callback for each item as it passes\nthrough, then yields the item unchanged. Useful for reporting progress, logging, or\ncollecting metrics on any stage in a composed pipeline.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Wolfgang.Etl.Transformers.SelectManyTransformer-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Wolfgang.Etl.Transformers.SelectManyTransformer-2.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Wolfgang.Etl.Transformers.SelectManyTransformer<TSource, TDestination>",
+      "Summary": "<p sourcefile=\"api/Wolfgang.Etl.Transformers.SelectManyTransformer-2.yml\" sourcestartlinenumber=\"1\">A transformer that projects each input item to a sequence of zero or more output items\nand yields the concatenation of all those sequences.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Wolfgang.Etl.Transformers.SelectTransformer-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Wolfgang.Etl.Transformers.SelectTransformer-2.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Wolfgang.Etl.Transformers.SelectTransformer<TSource, TDestination>",
+      "Summary": "<p sourcefile=\"api/Wolfgang.Etl.Transformers.SelectTransformer-2.yml\" sourcestartlinenumber=\"1\">A transformer that projects each item from the input sequence through a caller-supplied\nselector function, returning the result.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Wolfgang.Etl.Transformers.SkipTransformer-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Wolfgang.Etl.Transformers.SkipTransformer-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Wolfgang.Etl.Transformers.SkipTransformer<T>",
+      "Summary": "<p sourcefile=\"api/Wolfgang.Etl.Transformers.SkipTransformer-1.yml\" sourcestartlinenumber=\"1\">A transformer that skips a fixed number of items from the start of the input sequence and\nyields the rest unchanged.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Wolfgang.Etl.Transformers.SkipWhileTransformer-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Wolfgang.Etl.Transformers.SkipWhileTransformer-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Wolfgang.Etl.Transformers.SkipWhileTransformer<T>",
+      "Summary": "<p sourcefile=\"api/Wolfgang.Etl.Transformers.SkipWhileTransformer-1.yml\" sourcestartlinenumber=\"1\">A transformer that skips items from the start of the input sequence as long as a\ncaller-supplied predicate returns <a href=\"https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool\">true</a>; once the predicate returns\n<a href=\"https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool\">false</a> for an item, that item and every item after it are yielded without\nfurther predicate evaluation.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Wolfgang.Etl.Transformers.TakeTransformer-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Wolfgang.Etl.Transformers.TakeTransformer-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Wolfgang.Etl.Transformers.TakeTransformer<T>",
+      "Summary": "<p sourcefile=\"api/Wolfgang.Etl.Transformers.TakeTransformer-1.yml\" sourcestartlinenumber=\"1\">A transformer that yields at most a fixed number of items from the start of the input\nsequence.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Wolfgang.Etl.Transformers.TakeWhileTransformer-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Wolfgang.Etl.Transformers.TakeWhileTransformer-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Wolfgang.Etl.Transformers.TakeWhileTransformer<T>",
+      "Summary": "<p sourcefile=\"api/Wolfgang.Etl.Transformers.TakeWhileTransformer-1.yml\" sourcestartlinenumber=\"1\">A transformer that yields items from the start of the input sequence as long as a\ncaller-supplied predicate returns <a href=\"https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool\">true</a>; the first item that fails\nthe predicate stops enumeration immediately and is not yielded.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Wolfgang.Etl.Transformers.TransformerExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Wolfgang.Etl.Transformers.TransformerExtensions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Wolfgang.Etl.Transformers.TransformerExtensions",
+      "Summary": "<p sourcefile=\"api/Wolfgang.Etl.Transformers.TransformerExtensions.yml\" sourcestartlinenumber=\"1\">Extension methods that compose transformers and wrap sequences with pipeline infrastructure.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Wolfgang.Etl.Transformers.WhereTransformer-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Wolfgang.Etl.Transformers.WhereTransformer-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Wolfgang.Etl.Transformers.WhereTransformer<T>",
+      "Summary": "<p sourcefile=\"api/Wolfgang.Etl.Transformers.WhereTransformer-1.yml\" sourcestartlinenumber=\"1\">A transformer that yields each item from the input sequence for which a caller-supplied\npredicate returns <a href=\"https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool\">true</a>.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Wolfgang.Etl.Transformers.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Wolfgang.Etl.Transformers.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Wolfgang.Etl.Transformers",
+      "Summary": null
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html"
+        },
+        ".json": {
+          "relative_path": "api/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "apple-touch-icon.png",
+      "output": {
+        "resource": {
+          "relative_path": "apple-touch-icon.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/getting-started.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/getting-started.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/index.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/introduction.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/introduction.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "docs/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docs/toc.html"
+        },
+        ".json": {
+          "relative_path": "docs/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "favicon.ico",
+      "output": {
+        "resource": {
+          "relative_path": "favicon.ico"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "favicon.svg",
+      "output": {
+        "resource": {
+          "relative_path": "favicon.svg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "logo.svg",
+      "output": {
+        "resource": {
+          "relative_path": "logo.svg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "public/version-picker.js",
+      "output": {
+        "resource": {
+          "relative_path": "public/version-picker.js"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html"
+        },
+        ".json": {
+          "relative_path": "toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "versions.json",
+      "output": {
+        "resource": {
+          "relative_path": "versions.json"
+        }
+      },
+      "version": ""
+    }
+  ],
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}
