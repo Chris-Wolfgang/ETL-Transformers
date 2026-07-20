@@ -6,6 +6,7 @@ A collection of generic, composable transformers for ETL pipelines built on [Wol
 [![NuGet](https://img.shields.io/nuget/v/Wolfgang.Etl.Transformers.svg)](https://www.nuget.org/packages/Wolfgang.Etl.Transformers)
 [![.NET](https://img.shields.io/badge/.NET-Multi--Targeted-purple.svg)](https://dotnet.microsoft.com/)
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?logo=github)](https://github.com/Chris-Wolfgang/ETL-Transformers)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/Chris-Wolfgang/ETL-Transformers/badge)](https://securityscorecards.dev/viewer/?uri=github.com/Chris-Wolfgang/ETL-Transformers)
 
 ---
 
