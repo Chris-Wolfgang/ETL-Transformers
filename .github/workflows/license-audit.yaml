@@ -1,0 +1,103 @@
+name: License Audit
+
+# Enumerates every package (direct + transitive) that the shipped library pulls
+# in, resolves each declared license, and fails on anything outside the
+# permissive allowlist in .github/license-audit/allowed-licenses.json. Dependabot
+# tracks versions/CVEs but not licenses; this closes that gap so an incompatible
+# (copyleft/business-source) transitive dependency can't silently leak into this
+# MIT package. See .github/license-audit/README.md for policy.
+
+on:
+  pull_request:
+  schedule:
+    - cron: '0 6 * * 1'   # Mondays 06:00 UTC — catch newly-published license changes
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: license-audit-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  license-audit:
+    name: Audit third-party licenses
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          persist-credentials: false
+
+      - name: Detect src projects
+        id: detect
+        run: |
+          if git ls-files 'src/**/*.csproj' 'src/*.csproj' | grep -q .; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No src/**/*.csproj found — skipping license audit."
+            echo "found=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup .NET
+        if: steps.detect.outputs.found == 'true'
+        uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Install nuget-license
+        if: steps.detect.outputs.found == 'true'
+        run: dotnet tool install --global nuget-license
+
+      - name: Restore
+        if: steps.detect.outputs.found == 'true'
+        run: |
+          while IFS= read -r proj; do
+            echo "== restore $proj =="
+            dotnet restore "$proj"
+          done < <(git ls-files 'src/**/*.csproj' 'src/*.csproj')
+
+      # Load-bearing gate: --error-only prints (and exits non-zero) only for
+      # packages whose resolved license is not in the allowlist. Build-time
+      # analyzers are excluded via ignored-packages.json; Microsoft URL-only
+      # licenses resolve via license-url-mappings.json.
+      - name: Enforce license allowlist
+        if: steps.detect.outputs.found == 'true'
+        run: |
+          export PATH="$PATH:$HOME/.dotnet/tools"
+          while IFS= read -r proj; do
+            echo "== license check $proj =="
+            nuget-license \
+              --input "$proj" \
+              --include-transitive \
+              --allowed-license-types .github/license-audit/allowed-licenses.json \
+              --licenseurl-to-license-mappings .github/license-audit/license-url-mappings.json \
+              --ignored-packages .github/license-audit/ignored-packages.json \
+              --error-only
+          done < <(git ls-files 'src/**/*.csproj' 'src/*.csproj')
+          echo "✅ All shipped dependencies carry allowlisted licenses."
+
+      # Informational: export the full package→license table so THIRD-PARTY-NOTICES.md
+      # can be refreshed from it. Non-gating (the allowlist step above is the gate).
+      - name: Export license inventory
+        if: steps.detect.outputs.found == 'true'
+        run: |
+          export PATH="$PATH:$HOME/.dotnet/tools"
+          proj="$(git ls-files 'src/**/*.csproj' 'src/*.csproj' | head -n1)"
+          nuget-license \
+            --input "$proj" \
+            --include-transitive \
+            --licenseurl-to-license-mappings .github/license-audit/license-url-mappings.json \
+            --ignored-packages .github/license-audit/ignored-packages.json \
+            --output jsonPretty \
+            --file-output license-inventory.json || true
+
+      - name: Upload license inventory
+        if: steps.detect.outputs.found == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: license-inventory
+          path: license-inventory.json
+          if-no-files-found: ignore
