@@ -64,7 +64,7 @@ jobs:
       - name: Run zizmor (SARIF)
         env:
           GH_TOKEN: ${{ github.token }}
-        run: pipx run zizmor --persona pedantic --format sarif . > zizmor.sarif || true
+        run: pipx run zizmor --config .zizmor.yml --persona pedantic --format sarif . > zizmor.sarif || true
 
       - name: Upload SARIF to code scanning
         uses: github/codeql-action/upload-sarif@v4
@@ -77,4 +77,4 @@ jobs:
       - name: Gate on high-severity findings
         env:
           GH_TOKEN: ${{ github.token }}
-        run: pipx run zizmor --min-severity high --format plain .
+        run: pipx run zizmor --config .zizmor.yml --min-severity high --format plain .

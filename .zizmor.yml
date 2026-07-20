@@ -22,3 +22,13 @@ rules:
   template-injection:
     ignore:
       - pr.yaml
+
+  # The workflows currently pin actions by version TAG (e.g. actions/checkout@v7),
+  # not by commit SHA. Require at least a ref/tag pin here (rejecting fully
+  # unpinned or branch refs) rather than gating on full SHA-pinning — the
+  # migration to hash pins across all 11 workflows is tracked separately as its
+  # own change. Flip "*" to hash-pin once that lands to re-enable strict pinning.
+  unpinned-uses:
+    config:
+      policies:
+        "*": ref-pin
