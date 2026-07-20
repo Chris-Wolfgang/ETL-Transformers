@@ -1,0 +1,11 @@
+[
+  "Roslynator.Analyzers",
+  "AsyncFixer",
+  "Microsoft.VisualStudio.Threading.Analyzers",
+  "Microsoft.CodeAnalysis.BannedApiAnalyzers",
+  "Microsoft.CodeAnalysis.PublicApiAnalyzers",
+  "Meziantou.Analyzer",
+  "SonarAnalyzer.CSharp",
+  "Microsoft.SourceLink.GitHub",
+  "Microsoft.SourceLink.Common"
+]
