@@ -72,7 +72,6 @@ jobs:
             nuget-license \
               --input "$proj" \
               --include-transitive \
-              --framework net10.0 \
               --allowed-license-types .github/license-audit/allowed-licenses.json \
               --licenseurl-to-license-mappings .github/license-audit/license-url-mappings.json \
               --ignored-packages .github/license-audit/ignored-packages.json \
@@ -90,7 +89,6 @@ jobs:
           nuget-license \
             --input "$proj" \
             --include-transitive \
-            --framework net10.0 \
             --licenseurl-to-license-mappings .github/license-audit/license-url-mappings.json \
             --ignored-packages .github/license-audit/ignored-packages.json \
             --output jsonPretty \
