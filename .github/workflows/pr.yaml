@@ -333,6 +333,31 @@ jobs:
             fi
           done
 
+          # .DotSettings (ReSharper team-shared settings, e.g. <solution>.DotSettings)
+          # is read by InspectCode to determine inspection severities. The
+          # overwrite-from-main pass above only protects files that already exist
+          # in main, so it cannot neutralise a PR that *adds* a new .DotSettings to
+          # downgrade error-level findings. Explicitly reconcile every .DotSettings
+          # in the PR checkout against main: restore ones that exist in main, delete
+          # any that don't.
+          echo ""
+          echo "Reconciling *.DotSettings against main branch..."
+          main_dotsettings=$(git ls-tree -r --name-only main-branch | { grep -iE '\.dotsettings$' || true; })
+          while read -r file; do
+            if [ -n "$file" ]; then
+              if printf '%s\n' "$main_dotsettings" | grep -qxF "$file"; then
+                echo "  ✓ Restoring $file from main branch"
+                if ! git show "main-branch:$file" > "$file"; then
+                  echo "::error::Failed to restore $file from main-branch — aborting to prevent silent fall-back to PR-supplied ReSharper settings."
+                  exit 1
+                fi
+              else
+                echo "  ✗ Removing PR-added $file (not present in main — could suppress InspectCode findings)"
+                rm -f "$file"
+              fi
+            fi
+          done < <(git ls-files -- '*.DotSettings' '*.dotsettings')
+
           echo ""
           echo "✅ Configuration files secured - using versions from main branch"
 
