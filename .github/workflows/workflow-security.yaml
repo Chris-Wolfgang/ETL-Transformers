@@ -1,0 +1,80 @@
+name: Workflow Security
+
+# Static analysis of the GitHub Actions workflows themselves — the layer CodeQL
+# and the .NET analyzers don't inspect. Two complementary tools run on every PR:
+#
+#   * actionlint (+ shellcheck on run: blocks) — syntax, expression, and shell
+#     correctness. Findings surface as inline PR annotations via reviewdog.
+#   * zizmor — workflow-security auditor: untrusted-input template injection,
+#     dangerous triggers, over-broad permissions, unpinned actions, credential
+#     persistence. Findings upload as SARIF (Security tab + annotations); the
+#     gate step fails the PR on high-severity findings.
+#
+# Accepted suppressions are documented in .zizmor.yml (repo root) and
+# .github/actionlint.yaml.
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: workflow-security-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  actionlint:
+    name: actionlint
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      checks: write   # reviewdog github-pr-check annotations
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Run actionlint
+        uses: reviewdog/action-actionlint@6fb7acc99f4a1008869fa8a0f09cfca740837d9d # v1
+        with:
+          reporter: github-pr-check
+          level: error
+          fail_level: error
+
+  zizmor:
+    name: zizmor
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      security-events: write   # upload SARIF to code scanning
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      # SARIF for annotations + Security tab (non-gating). GH_TOKEN lets zizmor
+      # resolve action refs for its online audits. pipx is preinstalled on the
+      # ubuntu runner.
+      - name: Run zizmor (SARIF)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: pipx run zizmor --config .zizmor.yml --persona pedantic --format sarif . > zizmor.sarif || true
+
+      - name: Upload SARIF to code scanning
+        uses: github/codeql-action/upload-sarif@7188fc363630916deb702c7fdcf4e481b751f97a # v4
+        with:
+          sarif_file: zizmor.sarif
+          category: zizmor
+
+      # Gate: fail the PR only on high-severity findings. Accepted patterns are
+      # suppressed in .zizmor.yml so this stays actionable.
+      - name: Gate on high-severity findings
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: pipx run zizmor --config .zizmor.yml --min-severity high --format plain .
