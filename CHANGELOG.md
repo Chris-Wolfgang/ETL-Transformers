@@ -9,7 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- LINQ-flavored pipeline operator extensions on `IEtlPipeline<T>`
+  (`EtlPipelineOperatorExtensions`): `Where`, `Select`, `SelectMany` (sync +
+  async), `Distinct`, `DistinctBy`, `Take`, `Skip`, `TakeWhile`, `SkipWhile`,
+  `Chunk`, `Buffered`, `Cast`, `OfType`. Each is a thin wrapper over the
+  matching transformer via the pipeline core's `Through(...)`, lighting up the
+  `EtlPipeline.Create().From(...).Where(...).Select(...).To(...).RunAsync()`
+  fluent chain once this package is referenced. ([#150](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/150))
+
 ### Changed
+
+- Bumped `Wolfgang.Etl.Abstractions` from 0.15.0 to 0.16.0 (ships the
+  `EtlPipeline` core the operators build on).
 
 ### Deprecated
 

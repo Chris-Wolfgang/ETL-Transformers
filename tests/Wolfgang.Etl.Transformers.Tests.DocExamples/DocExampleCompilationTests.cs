@@ -63,6 +63,7 @@ public sealed class DocExampleCompilationTests
         "System.Linq",
         "System.Threading",
         "System.Threading.Tasks",
+        "Wolfgang.Etl.Abstractions",
         "Wolfgang.Etl.Transformers",
     };
 

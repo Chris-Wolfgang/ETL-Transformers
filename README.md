@@ -84,6 +84,28 @@ await foreach (var row in projected.TransformAsync(filtered.TransformAsync(buffe
 
 ---
 
+## Pipeline operators
+
+Referencing this package lights up LINQ-flavored operators on `IEtlPipeline<T>` (the pipeline core from `Wolfgang.Etl.Abstractions`). Each operator is a thin wrapper over the matching transformer, so they slot between the source (`From(...)`) and sink (`To(...)`) stages of a fluent pipeline:
+
+```csharp
+using Wolfgang.Etl.Transformers;
+
+await EtlPipeline
+    .Create()
+    .From(records)
+    .Where(r => r.Amount > 0)
+    .Select(r => r.Id)
+    .Distinct()
+    .Chunk(500)
+    .To(loader)
+    .RunAsync();
+```
+
+Available operators: `Where`, `Select`, `SelectMany` (each with sync and async overloads), `Distinct`, `DistinctBy`, `Take`, `Skip`, `TakeWhile`, `SkipWhile`, `Chunk`, `Buffered`, `Cast`, and `OfType`.
+
+---
+
 ## Target Frameworks
 
 | Framework | Versions |
