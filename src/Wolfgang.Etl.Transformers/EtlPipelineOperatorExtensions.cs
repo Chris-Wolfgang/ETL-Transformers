@@ -20,6 +20,7 @@ namespace Wolfgang.Etl.Transformers;
 /// to light these up between the source (<c>From(...)</c>) and sink (<c>To(...)</c>) stages of a
 /// pipeline:
 /// </para>
+/// <example>
 /// <code>
 ///     await EtlPipeline
 ///         .Create()
@@ -29,6 +30,7 @@ namespace Wolfgang.Etl.Transformers;
 ///         .To(loader)
 ///         .RunAsync();
 /// </code>
+/// </example>
 /// </remarks>
 public static class EtlPipelineOperatorExtensions
 {
