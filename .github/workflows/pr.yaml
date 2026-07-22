@@ -384,10 +384,15 @@ jobs:
         run: |
           # Find a solution to inspect. Prefer .slnx (new format) then .sln.
           # InspectCode requires SOMETHING solution-shaped — fail loudly if neither exists.
-          SLN=$(ls *.slnx 2>/dev/null | head -n1)
-          if [ -z "$SLN" ]; then
-            SLN=$(ls *.sln 2>/dev/null | head -n1)
-          fi
+          # Glob directly (no `ls`) and `./`-prefix so shellcheck stays clean
+          # (SC2012/SC2035); a non-matching glob stays literal, guarded by -e.
+          SLN=""
+          for candidate in ./*.slnx ./*.sln; do
+            if [ -e "$candidate" ]; then
+              SLN="$candidate"
+              break
+            fi
+          done
           if [ -z "$SLN" ]; then
             echo "::error::No .slnx or .sln found at repo root — InspectCode needs one to run."
             exit 1
