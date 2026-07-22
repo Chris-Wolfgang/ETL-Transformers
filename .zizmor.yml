@@ -16,19 +16,38 @@ rules:
     ignore:
       - pr.yaml
 
-  # The gated jobs check out the PR head by design (that is the code under test);
-  # every job re-fetches trusted config from main afterwards (see above). Templated
-  # PR context is not expanded into run: blocks unsafely.
+  # pr.yaml — the gated jobs check out the PR head by design (that is the code
+  # under test) and re-fetch trusted config from main afterwards. codeql.yaml —
+  # the flagged expansions are `${{ steps.*.outcome }}` / `steps.*.outputs.*`
+  # assigned to pwsh variables in the summary step; step outcomes/outputs are
+  # controlled enum values, not untrusted input.
   template-injection:
     ignore:
       - pr.yaml
+      - codeql.yaml
 
-  # The workflows currently pin actions by version TAG (e.g. actions/checkout@v7),
-  # not by commit SHA. Require at least a ref/tag pin here (rejecting fully
-  # unpinned or branch refs) rather than gating on full SHA-pinning — the
-  # migration to hash pins across all 11 workflows is tracked separately as its
-  # own change. Flip "*" to hash-pin once that lands to re-enable strict pinning.
+  # All actions are pinned to a full commit SHA with an EXACT version-tag comment
+  # (e.g. `# v4.37.1`, not a floating `# v4` that drifts as the major tag moves
+  # past the pinned SHA). Require hash pins everywhere.
   unpinned-uses:
     config:
       policies:
-        "*": ref-pin
+        "*": hash-pin
+
+  # scorecard.yml — OSSF Scorecard's canonical template declares `read-all` at
+  # the top level and elevates only the analysis job (security-events/id-token);
+  # read-all is the documented, recommended shape and the write scopes are
+  # job-local. coverage-report.yml — a single-job workflow that pushes the
+  # generated report to gh-pages, so `contents: write` at the top level is the
+  # whole job's scope, not an over-grant.
+  excessive-permissions:
+    ignore:
+      - scorecard.yml
+      - coverage-report.yaml
+
+  # release.yaml — softprops/action-gh-release attaches the built .nupkg /
+  # coverage artifacts to the GitHub Release; that upload is not something the
+  # runner provides on its own.
+  superfluous-actions:
+    ignore:
+      - release.yaml
