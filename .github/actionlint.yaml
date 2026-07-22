@@ -1,0 +1,14 @@
+# actionlint configuration — https://github.com/rhysd/actionlint/blob/main/docs/config.md
+#
+# No self-hosted runner labels or custom config are needed today. This file
+# exists as the documented home for actionlint baseline settings (e.g.
+# `self-hosted-runner.labels`, `config-variables`) if the workflows ever require
+# them. Keep accepted suppressions documented here rather than inline-disabling.
+
+self-hosted-runner:
+  # No self-hosted runners — all jobs run on GitHub-hosted ubuntu/windows/macos.
+  labels: []
+
+# Set to null to allow any configuration variable name; tighten to an explicit
+# list if the workflows start reading `vars.*`.
+config-variables: null

@@ -1,0 +1,34 @@
+# zizmor configuration — https://docs.zizmor.sh/configuration/
+#
+# Accepted suppressions for intentional, reviewed patterns. Every entry must
+# carry a reason so it isn't re-litigated each run. Prefer the narrowest scope
+# (file:line) over a whole-file ignore.
+
+rules:
+  # pr.yaml intentionally uses `pull_request_target` so gated jobs can run with
+  # repo permissions against fork PRs. The known risk is mitigated by the
+  # "Fetch trusted configuration files from main branch" step in every job,
+  # which overwrites PR-supplied protected config (.editorconfig, Directory.Build.*,
+  # *.ruleset, *.globalconfig, *.DotSettings, workflows) with main's versions
+  # before any build/analyzer runs. This is a deliberate design, reviewed in the
+  # workflow's SECURITY NOTE.
+  dangerous-triggers:
+    ignore:
+      - pr.yaml
+
+  # The gated jobs check out the PR head by design (that is the code under test);
+  # every job re-fetches trusted config from main afterwards (see above). Templated
+  # PR context is not expanded into run: blocks unsafely.
+  template-injection:
+    ignore:
+      - pr.yaml
+
+  # The workflows currently pin actions by version TAG (e.g. actions/checkout@v7),
+  # not by commit SHA. Require at least a ref/tag pin here (rejecting fully
+  # unpinned or branch refs) rather than gating on full SHA-pinning — the
+  # migration to hash pins across all 11 workflows is tracked separately as its
+  # own change. Flip "*" to hash-pin once that lands to re-enable strict pinning.
+  unpinned-uses:
+    config:
+      policies:
+        "*": ref-pin

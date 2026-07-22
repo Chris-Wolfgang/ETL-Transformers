@@ -6,6 +6,7 @@ A collection of generic, composable transformers for ETL pipelines built on [Wol
 [![NuGet](https://img.shields.io/nuget/v/Wolfgang.Etl.Transformers.svg)](https://www.nuget.org/packages/Wolfgang.Etl.Transformers)
 [![.NET](https://img.shields.io/badge/.NET-Multi--Targeted-purple.svg)](https://dotnet.microsoft.com/)
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?logo=github)](https://github.com/Chris-Wolfgang/ETL-Transformers)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/Chris-Wolfgang/ETL-Transformers/badge)](https://securityscorecards.dev/viewer/?uri=github.com/Chris-Wolfgang/ETL-Transformers)
 
 ---
 
@@ -80,6 +81,28 @@ await foreach (var row in projected.TransformAsync(filtered.TransformAsync(buffe
 | `ChainTransformerWithCancellation<TSource, TIntermediate, TDestination>` | Same as above but propagates `CancellationToken` through both stages |
 | `TransformerExtensions.Then(...)` | Fluent composition — two overloads: one for `ITransformAsync` pairs, one for `ITransformWithCancellationAsync` pairs |
 | `TransformerExtensions.Buffered(...)` | Inline buffer insertion — sugar for `new BufferedTransformer<T>(n).TransformAsync(source)` |
+
+---
+
+## Pipeline operators
+
+Referencing this package lights up LINQ-flavored operators on `IEtlPipeline<T>` (the pipeline core from `Wolfgang.Etl.Abstractions`). Each operator is a thin wrapper over the matching transformer, so they slot between the source (`From(...)`) and sink (`To(...)`) stages of a fluent pipeline:
+
+```csharp
+using Wolfgang.Etl.Transformers;
+
+await EtlPipeline
+    .Create()
+    .From(records)
+    .Where(r => r.Amount > 0)
+    .Select(r => r.Id)
+    .Distinct()
+    .Chunk(500)
+    .To(loader)
+    .RunAsync();
+```
+
+Available operators: `Where`, `Select`, `SelectMany` (each with sync and async overloads), `Distinct`, `DistinctBy`, `Take`, `Skip`, `TakeWhile`, `SkipWhile`, `Chunk`, `Buffered`, `Cast`, and `OfType`.
 
 ---
 
