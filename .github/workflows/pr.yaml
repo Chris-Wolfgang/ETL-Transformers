@@ -333,36 +333,11 @@ jobs:
             fi
           done
 
-          # .DotSettings (ReSharper team-shared settings, e.g. <solution>.DotSettings)
-          # is read by InspectCode to determine inspection severities. The
-          # overwrite-from-main pass above only protects files that already exist
-          # in main, so it cannot neutralise a PR that *adds* a new .DotSettings to
-          # downgrade error-level findings. Explicitly reconcile every .DotSettings
-          # in the PR checkout against main: restore ones that exist in main, delete
-          # any that don't.
-          echo ""
-          echo "Reconciling *.DotSettings against main branch..."
-          main_dotsettings=$(git ls-tree -r --name-only main-branch | { grep -iE '\.dotsettings$' || true; })
-          while read -r file; do
-            if [ -n "$file" ]; then
-              if printf '%s\n' "$main_dotsettings" | grep -qxF "$file"; then
-                echo "  ✓ Restoring $file from main branch"
-                if ! git show "main-branch:$file" > "$file"; then
-                  echo "::error::Failed to restore $file from main-branch — aborting to prevent silent fall-back to PR-supplied ReSharper settings."
-                  exit 1
-                fi
-              else
-                echo "  ✗ Removing PR-added $file (not present in main — could suppress InspectCode findings)"
-                rm -f "$file"
-              fi
-            fi
-          done < <(git ls-files -- '*.DotSettings' '*.dotsettings')
-
           echo ""
           echo "✅ Configuration files secured - using versions from main branch"
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v6
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '10.0.x'
 
@@ -383,11 +358,23 @@ jobs:
       - name: Run InspectCode
         run: |
           # Find a solution to inspect. Prefer .slnx (new format) then .sln.
-          # InspectCode requires SOMETHING solution-shaped — fail loudly if neither exists.
-          SLN=$(ls *.slnx 2>/dev/null | head -n1)
-          if [ -z "$SLN" ]; then
-            SLN=$(ls *.sln 2>/dev/null | head -n1)
-          fi
+          # InspectCode requires SOMETHING solution-shaped — fail loudly if
+          # neither exists.
+          #
+          # Uses direct glob iteration (not `ls | head`). Under the workflow's
+          # `-e -o pipefail` shell, on Git Bash for Windows, an
+          # `ls *.slnx 2>/dev/null | head -n1` where no `*.slnx` exists exits
+          # the whole step with code 2 (pipefail propagates ls's non-zero
+          # exit through the pipe) BEFORE the `if [ -z ]` fallback even runs.
+          # Direct globbing with `for f in *.slnx *.sln` sidesteps the pipe
+          # entirely — no ls, no pipefail interaction.
+          SLN=""
+          for candidate in *.slnx *.sln; do
+            if [ -f "$candidate" ]; then
+              SLN="$candidate"
+              break
+            fi
+          done
           if [ -z "$SLN" ]; then
             echo "::error::No .slnx or .sln found at repo root — InspectCode needs one to run."
             exit 1
