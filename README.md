@@ -106,15 +106,15 @@ Available operators: `Where`, `Select`, `SelectMany` (each with sync and async o
 
 ---
 
-## Target Frameworks
+## 🎯 Supported Frameworks
 
-| Framework | Versions |
-|-----------|----------|
-| .NET Framework | 4.6.2, 4.7.2, 4.8, 4.8.1 |
-| .NET Standard | 2.0 |
-| .NET | 5.0, 6.0, 7.0, 8.0, 9.0, 10.0 |
+This library targets:
 
----
+- **.NET Framework:** 4.6.2, 4.7.2, 4.8, 4.8.1
+- **.NET Standard:** 2.0
+- **.NET:** 5.0, 6.0, 7.0, 8.0, 9.0, 10.0
+
+See the [NuGet package page](https://www.nuget.org/packages/Wolfgang.Etl.Transformers/) for the authoritative per-TFM compatibility matrix.
 
 ## Code Quality & Static Analysis
 
