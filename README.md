@@ -2,8 +2,11 @@
 
 A collection of generic, composable transformers for ETL pipelines built on [Wolfgang.Etl.Abstractions](https://github.com/Chris-Wolfgang/ETL-Abstractions).
 
+[![NuGet](https://img.shields.io/nuget/v/Wolfgang.Etl.Transformers.svg?logo=nuget&label=NuGet)](https://www.nuget.org/packages/Wolfgang.Etl.Transformers/)
+[![Downloads](https://img.shields.io/nuget/dt/Wolfgang.Etl.Transformers.svg?logo=nuget&label=downloads)](https://www.nuget.org/packages/Wolfgang.Etl.Transformers/)
+[![PR build](https://img.shields.io/github/actions/workflow/status/Chris-Wolfgang/ETL-Transformers/pr.yaml?event=pull_request_target&label=PR%20build&logo=github)](https://github.com/Chris-Wolfgang/ETL-Transformers/actions/workflows/pr.yaml)
+[![release](https://img.shields.io/github/actions/workflow/status/Chris-Wolfgang/ETL-Transformers/release.yaml?event=release&label=release&logo=github)](https://github.com/Chris-Wolfgang/ETL-Transformers/actions/workflows/release.yaml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![NuGet](https://img.shields.io/nuget/v/Wolfgang.Etl.Transformers.svg)](https://www.nuget.org/packages/Wolfgang.Etl.Transformers)
 [![.NET](https://img.shields.io/badge/.NET-Multi--Targeted-purple.svg)](https://dotnet.microsoft.com/)
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?logo=github)](https://github.com/Chris-Wolfgang/ETL-Transformers)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/Chris-Wolfgang/ETL-Transformers/badge)](https://securityscorecards.dev/viewer/?uri=github.com/Chris-Wolfgang/ETL-Transformers)
