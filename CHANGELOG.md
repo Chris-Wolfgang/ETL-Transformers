@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Sustained-load GC/allocation profiling: a scheduled `GC Profiling` workflow drives a
+  new `Wolfgang.Etl.Transformers.Profiling` harness under ~10 min of continuous pipeline
+  load, captures cross-platform EventPipe data (`dotnet-counters` CSV + `dotnet-gcdump`
+  heap snapshot + `dotnet-trace` GC trace), and gates gen2/LOH/allocation-rate against a
+  committed baseline via `scripts/gc-profile-report.py`. Documented in `docs/gc-profiling.md`. ([#89](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/89))
+
 ### Changed
 
 ### Deprecated
