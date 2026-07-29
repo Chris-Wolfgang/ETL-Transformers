@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Concurrency / race-condition testing: a `Tests.Concurrency` project defines interleaving
+  scenarios (concurrent enumeration of one transformer, BufferedTransformer producer/consumer,
+  cancellation mid-enumeration) run both as an xunit stress gate and as Microsoft Coyote
+  systematic-exploration entry points. A weekly `Concurrency (Coyote)` workflow runs the
+  stress gate (blocking) and Coyote exploration (non-blocking, traces uploaded). Documented
+  in `docs/concurrency-testing.md`. ([#84](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/84))
+
 ### Changed
 
 ### Deprecated
