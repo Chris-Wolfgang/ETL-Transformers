@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Per-PR benchmark regression gate: a `PR Benchmarks` workflow runs BenchmarkDotNet
+  on the PR head and its base commit, posts a sticky delta-table comment, and fails
+  the PR when a benchmark is >20% slower or allocates >50% more (overridable with the
+  `perf-impact-acknowledged` label). Backed by `scripts/compare-benchmarks.py` and
+  documented in `docs/pr-benchmarks.md`. ([#101](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/101))
+
 ### Changed
 
 ### Deprecated
