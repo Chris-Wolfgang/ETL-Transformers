@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Consumer-side reproducible-build verification: `REPRODUCIBLE-BUILD.md` now documents
+  how a third party regenerates and diffs the per-release
+  `reproducible-build-manifest.json` (produced by `scripts/generate-repro-manifest.py`),
+  files a discrepancy, and publishes an independent verification attestation; a "Verify
+  the build" section links it from the README. ([#102](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/102))
 - Reproducible-build verification: a `Reproducible Build` workflow packs the
   project on Ubuntu and Windows and fails on any byte divergence between the two,
   plus `REPRODUCIBLE-BUILD.md` documenting the guarantee and how a third party can
