@@ -572,6 +572,33 @@ jobs:
           }
 
 
+      # Author-sign the packages if a code-signing certificate is configured. This
+      # runs before the artifact is uploaded, so the SAME signed .nupkg is both
+      # pushed to NuGet.org and attached to the Release. The step is skipped when the
+      # NUGET_SIGN_CERT_BASE64 secret is absent, so the pipeline keeps working until a
+      # certificate is provisioned. (NuGet.org additionally applies its own repository
+      # signature on publish, verifiable via `nuget verify --signatures` regardless.)
+      - name: Sign NuGet packages
+        if: steps.check-packages.outputs.has-packages == 'true' && secrets.NUGET_SIGN_CERT_BASE64 != ''
+        shell: pwsh
+        env:
+          SIGN_CERT_BASE64: ${{ secrets.NUGET_SIGN_CERT_BASE64 }}
+          SIGN_CERT_PASSWORD: ${{ secrets.NUGET_SIGN_CERT_PASSWORD }}
+          TIMESTAMPER: http://timestamp.digicert.com
+        run: |
+          $certPath = Join-Path $env:RUNNER_TEMP 'signing-cert.pfx'
+          [IO.File]::WriteAllBytes($certPath, [Convert]::FromBase64String($env:SIGN_CERT_BASE64))
+          $packages = Get-ChildItem -Path './nuget-packages' -Filter '*.nupkg' -ErrorAction SilentlyContinue
+          foreach ($package in $packages) {
+            Write-Host "🔏 Signing $($package.Name)" -ForegroundColor Cyan
+            dotnet nuget sign $package.FullName `
+              --certificate-path $certPath `
+              --certificate-password $env:SIGN_CERT_PASSWORD `
+              --timestamper $env:TIMESTAMPER
+            if ($LASTEXITCODE -ne 0) { throw "Signing failed for $($package.Name)" }
+          }
+          Remove-Item $certPath -Force
+
       - name: Upload NuGet packages
         uses: actions/upload-artifact@v7
         with:
@@ -768,7 +795,9 @@ jobs:
     if: needs.pack-and-validate.outputs.has-packages == 'true'
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # Required to upload assets to the GitHub Release
+      contents: write       # Required to upload assets to the GitHub Release
+      id-token: write        # Required by attest-build-provenance (Sigstore OIDC)
+      attestations: write    # Required to record the SLSA provenance attestation
     steps:
       # Checkout first: actions/checkout cleans the workspace by default, so it must
       # run before the artifacts are downloaded. Provides scripts/generate-repro-manifest.py
@@ -803,6 +832,16 @@ jobs:
             --packages ./nuget-packages \
             --out reproducible-build-manifest.json \
             --tag "$TAG" --sdk "$SDK"
+
+      # SLSA build-provenance attestation (Sigstore-backed, keyless). Proves the
+      # packages were produced by this workflow from this repo. Consumers verify with
+      # `gh attestation verify <pkg> --repo Chris-Wolfgang/ETL-Transformers`.
+      - name: Attest build provenance (SLSA)
+        uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3.0.0
+        with:
+          subject-path: |
+            ./nuget-packages/*.nupkg
+            ./nuget-packages/*.snupkg
 
       - name: Attach artifacts to release
         uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228  # v3.0.2

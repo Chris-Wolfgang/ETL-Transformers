@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Supply-chain hardening: releases now emit a Sigstore-backed SLSA build-provenance
+  attestation (`actions/attest-build-provenance`, verifiable via `gh attestation
+  verify`) and support secret-gated NuGet author-signing (inert until a code-signing
+  certificate is configured; NuGet.org repository signing applies regardless). SECURITY.md
+  documents the full consumer verification chain (signature → provenance → SBOM →
+  reproducible build). ([#85](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/85))
 - Consumer-side reproducible-build verification: `REPRODUCIBLE-BUILD.md` now documents
   how a third party regenerates and diffs the per-release
   `reproducible-build-manifest.json` (produced by `scripts/generate-repro-manifest.py`),
