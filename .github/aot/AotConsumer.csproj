@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    A tiny console consumer that exercises the whole public transformer surface
+    and is published Native-AOT + trimmed. If the library relied on reflection
+    the trimmer can't see, dynamic generic instantiation, or runtime codegen, the
+    AOT publish emits IL2xxx/IL3xxx trim/AOT warnings (the workflow fails on any)
+    or the native binary faults at runtime. ProjectReference (not the package) so
+    the smoke runs against the working tree.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <PublishAot>true</PublishAot>
+    <PublishTrimmed>true</PublishTrimmed>
+    <!-- Surface every trim/AOT warning individually (not collapsed) so the
+         workflow's grep catches them, and treat them as build-breaking. -->
+    <TrimmerSingleWarn>false</TrimmerSingleWarn>
+    <IlcTreatWarningsAsErrors>true</IlcTreatWarningsAsErrors>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <TransformersProject Condition="'$(TransformersProject)' == ''">../../src/Wolfgang.Etl.Transformers/Wolfgang.Etl.Transformers.csproj</TransformersProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="$(TransformersProject)" />
+  </ItemGroup>
+
+</Project>
