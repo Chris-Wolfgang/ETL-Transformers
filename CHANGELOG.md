@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Shadow testing: `samples/ShadowWorkloads` models realistic production traffic (variable
+  page sizes, concurrent enumeration, mixed sync/async sources, bursty windows) across the
+  public transformers, and a nightly `Shadow Testing` workflow replays them against a
+  committed golden baseline, opening a tracking issue and failing on regression beyond
+  threshold. Documented in `docs/shadow-testing.md`. ([#77](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/77))
 - Per-PR benchmark regression gate: a `PR Benchmarks` workflow runs BenchmarkDotNet
   on the PR head and its base commit, posts a sticky delta-table comment, and fails
   the PR when a benchmark is >20% slower or allocates >50% more (overridable with the

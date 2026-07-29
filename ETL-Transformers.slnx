@@ -41,6 +41,9 @@
     <Project Path="examples/BufferedPipeline/BufferedPipeline.csproj" />
     <Project Path="examples/LinqOps/LinqOps.csproj" />
   </Folder>
+  <Folder Name="/samples/">
+    <Project Path="samples/ShadowWorkloads/ShadowWorkloads.csproj" />
+  </Folder>
   <Folder Name="/src/">
     <Project Path="src/Wolfgang.Etl.Transformers/Wolfgang.Etl.Transformers.csproj" />
   </Folder>
