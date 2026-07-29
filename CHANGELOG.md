@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Cross-platform/multi-arch differential: a `Cross-Platform Differential` workflow runs
+  the test suite on linux-x64, linux-arm64, macos-arm64, and windows-x64, normalizes the
+  `.trx` outcomes (`scripts/normalize-test-results.py`), and fails on any divergence
+  between platforms — adding ARM64 coverage and catching bugs a per-OS pass/fail gate
+  misses. Platform-specific tests opt out via `[Trait("Category","PlatformSpecific")]`.
+  Documented in `docs/cross-platform-differential.md`. ([#86](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/86))
+
 ### Changed
 
 ### Deprecated
