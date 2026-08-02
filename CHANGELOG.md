@@ -10,9 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Reproducible-build verification: a `Reproducible Build` workflow packs the
-  project on Ubuntu and Windows and fails on any byte divergence between the two,
-  plus `REPRODUCIBLE-BUILD.md` documenting the guarantee and how a third party can
-  verify a published package against source. ([#93](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/93))
+  project on Ubuntu and Windows and compares output hashes — same-OS/SDK
+  determinism is the guarantee; cross-OS divergence is reported as an advisory
+  warning (not a failure) pending a tracked follow-up. Plus `REPRODUCIBLE-BUILD.md`
+  documenting the guarantee and how a third party can verify a published package
+  against source on the same OS. ([#93](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/93))
 
 ### Changed
 
