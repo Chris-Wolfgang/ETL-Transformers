@@ -113,5 +113,5 @@ jobs:
           if diff -u ubuntu/manifest.txt windows/manifest.txt; then
             echo "Reproducible: Ubuntu and Windows produced byte-identical outputs."
           else
-            echo "::warning::Outputs differ across runners - the build is not byte-identical cross-OS. This is advisory; see the cross-OS reproducibility follow-up issue."
+            echo "::warning::Outputs differ across runners - the build is not byte-identical cross-OS. This is advisory; tracked in issue #193."
           fi

@@ -19,7 +19,8 @@ following outputs are bit-for-bit identical:
 > *different* operating system may currently produce different bytes — .NET does
 > not guarantee cross-OS byte-identity (embedded source ordering, path
 > normalization, and ref/targeting-pack differences can leak). The CI check reports
-> cross-OS divergence as a warning, and closing that gap is tracked as a follow-up.
+> cross-OS divergence as a warning, and closing that gap is tracked in
+> [#193](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/193).
 > Reproduce a release on the **same OS** the release was built on (see below).
 
 ## How it is achieved
