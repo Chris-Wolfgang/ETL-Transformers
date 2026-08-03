@@ -20,10 +20,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `reproducible-build-manifest.json` (produced by `scripts/generate-repro-manifest.py`),
   files a discrepancy, and publishes an independent verification attestation; a "Verify
   the build" section links it from the README. ([#102](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/102))
+- Allocation-budget enforcement: a net10.0 `Tests.Allocation` project asserts the
+  library's one intentional zero-allocation hot path
+  (`PassThroughTransformer<T>.TransformAsync(IAsyncEnumerable<T>)` returns the
+  source by reference, 0 bytes) via `GC.GetAllocatedBytesForCurrentThread`, plus
+  `docs/allocation-budget.md` documenting the covered call sites and why streaming
+  transformers are deliberately out of scope. ([#94](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/94))
 - Reproducible-build verification: a `Reproducible Build` workflow packs the
-  project on Ubuntu and Windows and fails on any byte divergence between the two,
-  plus `REPRODUCIBLE-BUILD.md` documenting the guarantee and how a third party can
-  verify a published package against source. ([#93](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/93))
+  project on Ubuntu and Windows and compares output hashes — same-OS/SDK
+  determinism is the guarantee; cross-OS divergence is reported as an advisory
+  warning (not a failure) pending a tracked follow-up. Plus `REPRODUCIBLE-BUILD.md`
+  documenting the guarantee and how a third party can verify a published package
+  against source on the same OS. ([#93](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/93))
 
 ### Changed
 
@@ -49,8 +57,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Bumped `Wolfgang.Etl.Abstractions` from 0.15.0 to 0.16.0 (ships the
-  `EtlPipeline` core the operators build on).
+- Bumped `Wolfgang.Etl.Abstractions` from 0.15.0 to 0.20.0 (ships the
+  `EtlPipeline` core the operators build on, plus item-error handling,
+  middleware, and time-source abstractions).
 
 ## [0.2.1] - 2026-07-06
 
