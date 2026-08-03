@@ -40,8 +40,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Bumped `Wolfgang.Etl.Abstractions` from 0.15.0 to 0.16.0 (ships the
-  `EtlPipeline` core the operators build on).
+- Bumped `Wolfgang.Etl.Abstractions` from 0.15.0 to 0.20.0 (ships the
+  `EtlPipeline` core the operators build on, plus item-error handling,
+  middleware, and time-source abstractions).
 
 ## [0.2.1] - 2026-07-06
 
