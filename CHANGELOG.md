@@ -18,6 +18,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Bumped `Wolfgang.Etl.Abstractions` from 0.20.0 to 0.22.0 (adds the `ErrorPolicy`
+  property and item-error hooks on the base classes, plus simplified single-parameter
+  `ExtractorBase<T>` / `LoaderBase<T>` / `TransformerBase<TSource, TDestination>` bases).
+  Additive — no breaking changes.
+
 ### Deprecated
 
 ### Removed
