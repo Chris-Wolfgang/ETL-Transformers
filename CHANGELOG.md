@@ -9,22 +9,88 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Property-based fuzzing: a CsCheck suite asserts each transformer is equivalent to its
+  `System.Linq` counterpart on randomised input, plus a scheduled `fuzz.yaml` (high iteration
+  count, uploads results and auto-files an issue on failure). ([#76](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/76))
+
 - Shadow testing: `samples/ShadowWorkloads` models realistic production traffic (variable
   page sizes, concurrent enumeration, mixed sync/async sources, bursty windows) across the
   public transformers, and a nightly `Shadow Testing` workflow replays them against a
   committed golden baseline, opening a tracking issue and failing on regression beyond
   threshold. Documented in `docs/shadow-testing.md`. ([#77](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/77))
-- Per-PR benchmark regression gate: a `PR Benchmarks` workflow runs BenchmarkDotNet
-  on the PR head and its base commit, posts a sticky delta-table comment, and fails
-  the PR when a benchmark is >20% slower or allocates >50% more (overridable with the
-  `perf-impact-acknowledged` label). Backed by `scripts/compare-benchmarks.py` and
-  documented in `docs/pr-benchmarks.md`. ([#101](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/101))
+
+- Security-grade SAST beyond CodeQL: a `semgrep.yaml` workflow runs Semgrep OSS
+  (p/csharp, p/security-audit, p/secrets), diff-aware with SARIF upload to code scanning, plus
+  `docs/sast.md`. ([#78](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/78))
+
+- ABI-compatibility gate: `EnablePackageValidation` with a pinned
+  `PackageValidationBaselineVersion` fails the build on a breaking public-API change versus
+  the last published release. ([#83](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/83))
+
+- Concurrency / race-condition testing: a `Tests.Concurrency` project defines interleaving
+  scenarios (concurrent enumeration of one transformer, BufferedTransformer producer/consumer,
+  cancellation mid-enumeration) run both as an xunit stress gate and as Microsoft Coyote
+  systematic-exploration entry points. A weekly `Concurrency (Coyote)` workflow runs the
+  stress gate (blocking) and Coyote exploration (non-blocking, traces uploaded). Documented
+  in `docs/concurrency-testing.md`. ([#84](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/84))
+
+- Supply-chain hardening: releases now emit a Sigstore-backed SLSA build-provenance
+  attestation (`actions/attest-build-provenance`, verifiable via `gh attestation
+  verify`) and support secret-gated NuGet author-signing (inert until a code-signing
+  certificate is configured; NuGet.org repository signing applies regardless). SECURITY.md
+  documents the full consumer verification chain (signature → provenance → SBOM →
+  reproducible build). ([#85](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/85))
+
+- Cross-platform/multi-arch differential: a `Cross-Platform Differential` workflow runs
+  the test suite on linux-x64, linux-arm64, macos-arm64, and windows-x64, normalizes the
+  `.trx` outcomes (`scripts/normalize-test-results.py`), and fails on any divergence
+  between platforms — adding ARM64 coverage and catching bugs a per-OS pass/fail gate
+  misses. Platform-specific tests opt out via `[Trait("Category","PlatformSpecific")]`.
+  Documented in `docs/cross-platform-differential.md`. ([#86](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/86))
+
+- Snapshot / approval testing: a `Tests.Snapshots` project uses Verify to lock stable
+  transformer outputs against committed snapshots, plus `docs/snapshot-testing.md`. ([#87](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/87))
+
+- Sustained-load GC/allocation profiling: a scheduled `GC Profiling` workflow drives a
+  new `Wolfgang.Etl.Transformers.Profiling` harness under ~10 min of continuous pipeline
+  load, captures cross-platform EventPipe data (`dotnet-counters` CSV + `dotnet-gcdump`
+  heap snapshot + `dotnet-trace` GC trace), and gates gen2/LOH/allocation-rate against a
+  committed baseline via `scripts/gc-profile-report.py`. Documented in `docs/gc-profiling.md`. ([#89](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/89))
+
+- Native-AOT / trim smoke: an `AotConsumer` roots every public call site and an `aot.yaml`
+  workflow publishes it with `PublishAot` / `PublishTrimmed` / `IlcTreatWarningsAsErrors`,
+  failing on any IL trim/AOT warning. ([#90](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/90))
+
+- Globalization / culture-invariance test matrix: `GlobalizationInvarianceTests` runs the
+  suite under en-US, tr-TR, de-DE, zh-CN, ar-SA and ja-JP to catch culture-sensitive
+  behaviour (numeric/date formatting, ordinal vs culture-aware comparison), plus
+  `docs/globalization.md`. ([#92](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/92))
+
+- Reproducible-build verification: a `Reproducible Build` workflow packs the
+  project on Ubuntu and Windows and compares output hashes — same-OS/SDK
+  determinism is the guarantee; cross-OS divergence is reported as an advisory
+  warning (not a failure) pending a tracked follow-up. Plus `REPRODUCIBLE-BUILD.md`
+  documenting the guarantee and how a third party can verify a published package
+  against source on the same OS. ([#93](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/93))
+
 - Allocation-budget enforcement: a net10.0 `Tests.Allocation` project asserts the
   library's one intentional zero-allocation hot path
   (`PassThroughTransformer<T>.TransformAsync(IAsyncEnumerable<T>)` returns the
   source by reference, 0 bytes) via `GC.GetAllocatedBytesForCurrentThread`, plus
   `docs/allocation-budget.md` documenting the covered call sites and why streaming
   transformers are deliberately out of scope. ([#94](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/94))
+
+- Per-PR benchmark regression gate: a `PR Benchmarks` workflow runs BenchmarkDotNet
+  on the PR head and its base commit, posts a sticky delta-table comment, and fails
+  the PR when a benchmark is >20% slower or allocates >50% more (overridable with the
+  `perf-impact-acknowledged` label). Backed by `scripts/compare-benchmarks.py` and
+  documented in `docs/pr-benchmarks.md`. ([#101](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/101))
+
+- Consumer-side reproducible-build verification: `REPRODUCIBLE-BUILD.md` now documents
+  how a third party regenerates and diffs the per-release
+  `reproducible-build-manifest.json` (produced by `scripts/generate-repro-manifest.py`),
+  files a discrepancy, and publishes an independent verification attestation; a "Verify
+  the build" section links it from the README. ([#102](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/102))
 
 ### Changed
 
