@@ -15,6 +15,12 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <PublishAot>true</PublishAot>
     <PublishTrimmed>true</PublishTrimmed>
+    <!-- The empty Directory.Build.props stub blocks the repo's package-based analyzers, but
+         the SDK's built-in NetAnalyzers (CA*) still run and pick up the repo .editorconfig
+         severities, spamming this throwaway harness with CA2007/CA1849 warnings. Turn them
+         off to complete the isolation. This does NOT affect trim/AOT (IL2xxx/IL3xxx) detection,
+         which comes from the ILC compiler, not the CA analyzers. -->
+    <EnableNETAnalyzers>false</EnableNETAnalyzers>
     <!-- Surface every trim/AOT warning individually (not collapsed) so the
          workflow's grep catches them, and treat them as build-breaking. -->
     <TrimmerSingleWarn>false</TrimmerSingleWarn>
