@@ -1,0 +1,33 @@
+﻿[
+  [
+    {
+      Id: 1,
+      Name: Ada,
+      City: London
+    },
+    {
+      Id: 2,
+      Name: Alan,
+      City: London
+    }
+  ],
+  [
+    {
+      Id: 3,
+      Name: Grace,
+      City: New York
+    },
+    {
+      Id: 4,
+      Name: Edsger,
+      City: Rotterdam
+    }
+  ],
+  [
+    {
+      Id: 5,
+      Name: Barbara,
+      City: New York
+    }
+  ]
+]
