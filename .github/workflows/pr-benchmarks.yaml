@@ -1,0 +1,157 @@
+name: PR Benchmarks
+
+# Forward-looking perf gate: runs BenchmarkDotNet on the PR head AND on the PR's
+# base commit, computes the per-benchmark time/allocation delta, and posts (or
+# replaces) a sticky comment with the delta table. Fails the PR when a benchmark
+# regresses past the threshold unless the PR carries the `perf-impact-acknowledged`
+# label.
+#
+# Complements benchmarks.yaml (which graphs the post-merge trend on main); this one
+# catches a regression before it merges.
+
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'benchmarks/**'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  # One run per PR; a new push cancels the in-flight comparison so the sticky
+  # comment always reflects the latest head.
+  group: pr-benchmarks-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  BENCH_PROJECT: benchmarks/Wolfgang.Etl.Transformers.Benchmarks/Wolfgang.Etl.Transformers.Benchmarks.csproj
+  BENCH_DIR: benchmarks/Wolfgang.Etl.Transformers.Benchmarks
+  TIME_THRESHOLD: '20'
+  ALLOC_THRESHOLD: '50'
+  ACK_LABEL: perf-impact-acknowledged
+
+jobs:
+  benchmark:
+    name: Compare BDN delta vs base
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          # Full history so the base commit can be checked out into a worktree.
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Check benchmark project exists on both sides
+        id: guard
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          head_ok=false
+          base_ok=false
+          [ -f "$BENCH_PROJECT" ] && head_ok=true
+          if git cat-file -e "${BASE_SHA}:${BENCH_PROJECT}" 2>/dev/null; then
+            base_ok=true
+          fi
+          echo "head_ok=$head_ok" >> "$GITHUB_OUTPUT"
+          echo "base_ok=$base_ok" >> "$GITHUB_OUTPUT"
+          if [ "$head_ok" = true ] && [ "$base_ok" = true ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Benchmark project missing on head ($head_ok) or base ($base_ok); skipping perf gate."
+          fi
+
+      - name: Run benchmarks on PR head
+        if: steps.guard.outputs.run == 'true'
+        working-directory: ${{ env.BENCH_DIR }}
+        # ShortRun keeps wall-clock reasonable; --memory adds the allocation column.
+        run: dotnet run -c Release -- --filter "*" --job short --memory --exporters json
+
+      - name: Stash head results
+        if: steps.guard.outputs.run == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/head-results"
+          cp -r "$BENCH_DIR/BenchmarkDotNet.Artifacts/results/." "$RUNNER_TEMP/head-results/"
+
+      - name: Run benchmarks on base
+        if: steps.guard.outputs.run == 'true'
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          # Build the base commit in an isolated worktree so head build outputs and
+          # BDN artifacts don't clash.
+          git worktree add --detach "$RUNNER_TEMP/base" "$BASE_SHA"
+          ( cd "$RUNNER_TEMP/base/$BENCH_DIR" \
+            && dotnet run -c Release -- --filter "*" --job short --memory --exporters json )
+          mkdir -p "$RUNNER_TEMP/base-results"
+          cp -r "$RUNNER_TEMP/base/$BENCH_DIR/BenchmarkDotNet.Artifacts/results/." "$RUNNER_TEMP/base-results/"
+
+      - name: Compute delta
+        id: delta
+        if: steps.guard.outputs.run == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/compare-benchmarks.py \
+            --base-dir "$RUNNER_TEMP/base-results" \
+            --head-dir "$RUNNER_TEMP/head-results" \
+            --time-threshold "$TIME_THRESHOLD" \
+            --alloc-threshold "$ALLOC_THRESHOLD" \
+            --out "$RUNNER_TEMP/comment.md" | tee -a "$GITHUB_OUTPUT"
+
+      - name: Post or update sticky comment
+        if: steps.guard.outputs.run == 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          marker='<!-- pr-benchmarks -->'
+          { printf '%s\n\n' "$marker"; cat "$RUNNER_TEMP/comment.md"; } > "$RUNNER_TEMP/body.md"
+          existing=$(gh api "repos/$REPO/issues/$PR/comments" --paginate \
+            --jq "[.[] | select(.body | startswith(\"$marker\")) | .id] | first // empty")
+          if [ -n "$existing" ]; then
+            gh api -X PATCH "repos/$REPO/issues/comments/$existing" -F body=@"$RUNNER_TEMP/body.md" >/dev/null
+            echo "Updated comment $existing"
+          else
+            gh api -X POST "repos/$REPO/issues/$PR/comments" -F body=@"$RUNNER_TEMP/body.md" >/dev/null
+            echo "Created new comment"
+          fi
+
+      - name: Enforce threshold
+        if: steps.guard.outputs.run == 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          if [ "${{ steps.delta.outputs.regressed }}" != "true" ]; then
+            echo "✅ No benchmark regression beyond threshold."
+            exit 0
+          fi
+          acknowledged=$(gh api "repos/$REPO/issues/$PR/labels" \
+            --jq "any(.[]; .name == \"$ACK_LABEL\")")
+          if [ "$acknowledged" = "true" ]; then
+            echo "::warning::Perf regression detected but acknowledged via '$ACK_LABEL' label."
+            exit 0
+          fi
+          echo "::error::Benchmark regression exceeds the threshold (time > ${TIME_THRESHOLD}% or alloc > ${ALLOC_THRESHOLD}%). Review the delta comment, or add the '$ACK_LABEL' label if the change is intentional."
+          exit 1
