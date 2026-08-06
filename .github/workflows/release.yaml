@@ -352,6 +352,7 @@ jobs:
     runs-on: windows-latest
     outputs:
       has-packages: ${{ steps.check-packages.outputs.has-packages }}
+      build-sdk: ${{ steps.build-sdk.outputs.version }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
@@ -369,6 +370,16 @@ jobs:
             8.0.x
             9.0.x
             10.0.x
+
+      - name: Record build SDK version
+        id: build-sdk
+        shell: pwsh
+        run: |
+          # The resolved SDK that packs the packages, recorded into the
+          # reproducible-build manifest so third parties know which SDK to use.
+          $version = (dotnet --version).Trim()
+          Write-Host "Build SDK: $version"
+          "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
 
       - name: Restore and build
         run: |
@@ -759,6 +770,15 @@ jobs:
     permissions:
       contents: write  # Required to upload assets to the GitHub Release
     steps:
+      # Checkout first: actions/checkout cleans the workspace by default, so it must
+      # run before the artifacts are downloaded. Provides scripts/generate-repro-manifest.py
+      # at the released tag.
+      - name: Checkout code at release tag
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.release.tag_name }}
+          persist-credentials: false
+
       - name: Download NuGet packages artifact
         uses: actions/download-artifact@v8.0.1
         with:
@@ -774,6 +794,16 @@ jobs:
       - name: Zip coverage report
         run: zip -r release-coverage.zip ./release-coverage
 
+      - name: Generate reproducible-build manifest
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+          SDK: ${{ needs.pack-and-validate.outputs.build-sdk }}
+        run: |
+          python3 scripts/generate-repro-manifest.py \
+            --packages ./nuget-packages \
+            --out reproducible-build-manifest.json \
+            --tag "$TAG" --sdk "$SDK"
+
       - name: Attach artifacts to release
         uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228  # v3.0.2
         with:
@@ -782,5 +812,6 @@ jobs:
             ./nuget-packages/*.nupkg
             ./nuget-packages/*.snupkg
             ./nuget-packages/*.bom.json
+            reproducible-build-manifest.json
             release-coverage.zip
 
