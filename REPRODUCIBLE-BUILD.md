@@ -87,3 +87,67 @@ framework.
 > SDK. A different SDK/compiler version can legitimately emit different (but still
 > deterministic) bytes. Use the SDK pinned by the CI workflow (`10.0.x`) when
 > reproducing a release.
+
+## The release manifest
+
+Every published release attaches a **`reproducible-build-manifest.json`** asset (built
+by [`scripts/generate-repro-manifest.py`](scripts/generate-repro-manifest.py) inside
+`release.yaml`). It records, for that exact tag:
+
+- the `repository`, `tag`, `commit`, and `sdkVersion` used,
+- the exact `buildCommand`,
+- the SHA-256 of every published `.nupkg` / `.snupkg`,
+- the SHA-256 of each assembly (`lib/**/*.dll`, `lib/**/*.pdb`) *inside* those packages.
+
+This is the authoritative list of expected hashes — you don't have to eyeball
+individual `sha256sum` output. To verify a release end to end:
+
+```bash
+# 1. Check out the tagged source and pack it with the pinned SDK (see the note above).
+git checkout v<version>
+CI=true dotnet pack src/Wolfgang.Etl.Transformers/Wolfgang.Etl.Transformers.csproj \
+  -c Release -p:ContinuousIntegrationBuild=true -p:Deterministic=true -o artifacts
+
+# 2. Regenerate the manifest from your own build.
+python3 scripts/generate-repro-manifest.py --packages artifacts --out my-manifest.json \
+  --repository Chris-Wolfgang/ETL-Transformers --tag v<version>
+
+# 3. Download the published manifest from the GitHub Release and diff the hashes.
+#    (repository/commit/tag/sdk metadata may differ; the `artifacts` hashes must match.)
+curl -sSL -o released-manifest.json \
+  https://github.com/Chris-Wolfgang/ETL-Transformers/releases/download/v<version>/reproducible-build-manifest.json
+diff \
+  <(jq -S '.artifacts' released-manifest.json) \
+  <(jq -S '.artifacts' my-manifest.json)
+```
+
+An empty `diff` is proof that the packages you can rebuild from source are byte-identical
+to the ones that were published.
+
+## File a discrepancy
+
+If any hash differs and you are using the SDK version recorded in the manifest, that is a
+supply-chain signal worth reporting. Please
+[open an issue](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/new) titled
+`Reproducible-build discrepancy: v<version>` and include:
+
+- the release tag and the `sdkVersion` from the published manifest,
+- your OS / architecture and `dotnet --version`,
+- your generated `my-manifest.json` and the released `reproducible-build-manifest.json`,
+- the `diff` output.
+
+Discrepancies are treated as a security concern — see [SECURITY.md](SECURITY.md).
+
+## Publish a third-party attestation
+
+Independent verification is more valuable when it is *public*. If you have reproduced a
+release, you can publish an attestation that others can find:
+
+- Follow the [Reproducible Builds project](https://reproducible-builds.org/) conventions
+  for recording a successful independent rebuild, or
+- publish a signed attestation via a service such as [vouchsafe.io](https://vouchsafe.io/)
+  referencing the release tag and the manifest hashes you confirmed.
+
+Then link your attestation from a comment on the release, or in a
+`Reproducible-build attestation: v<version>` issue, so future consumers can see the build
+has been independently verified.
