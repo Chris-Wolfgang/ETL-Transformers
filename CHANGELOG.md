@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Allocation-budget enforcement: a net10.0 `Tests.Allocation` project asserts the
+  library's one intentional zero-allocation hot path
+  (`PassThroughTransformer<T>.TransformAsync(IAsyncEnumerable<T>)` returns the
+  source by reference, 0 bytes) via `GC.GetAllocatedBytesForCurrentThread`, plus
+  `docs/allocation-budget.md` documenting the covered call sites and why streaming
+  transformers are deliberately out of scope. ([#94](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/94))
+
 ### Changed
 
 ### Deprecated
@@ -33,8 +40,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Bumped `Wolfgang.Etl.Abstractions` from 0.15.0 to 0.16.0 (ships the
-  `EtlPipeline` core the operators build on).
+- Bumped `Wolfgang.Etl.Abstractions` from 0.15.0 to 0.20.0 (ships the
+  `EtlPipeline` core the operators build on, plus item-error handling,
+  middleware, and time-source abstractions).
 
 ## [0.2.1] - 2026-07-06
 
