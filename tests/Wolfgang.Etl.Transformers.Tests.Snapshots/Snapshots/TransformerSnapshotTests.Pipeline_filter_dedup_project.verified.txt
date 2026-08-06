@@ -1,0 +1,14 @@
+﻿[
+  {
+    City: London,
+    Representative: Ada
+  },
+  {
+    City: New York,
+    Representative: Grace
+  },
+  {
+    City: Rotterdam,
+    Representative: Edsger
+  }
+]
