@@ -1,0 +1,94 @@
+name: Concurrency (Coyote)
+
+# Systematic concurrency / race-condition testing (issue #84).
+#
+# Two layers:
+#   1. Blocking gate  — the xunit stress suite runs each concurrency scenario many times on
+#      the real scheduler. A race that reproduces reasonably often fails the job.
+#   2. Exploration    — Microsoft Coyote rewrites the assembly and explores thousands of
+#      schedule interleavings per scenario. Coyote's support for IAsyncEnumerable-heavy code
+#      is still rough (async-iterator state, framework-assembly load), so its findings are
+#      surfaced as artifacts for triage rather than gating the build.
+#
+# The project targets net8.0 because the Coyote CLI runs on the .NET 8 runtime and cannot
+# load a net10 assembly.
+
+on:
+  schedule:
+    - cron: '0 4 * * 2'  # weekly, Tuesdays 04:00 UTC
+  workflow_dispatch:
+    inputs:
+      iterations:
+        description: Coyote schedule iterations per scenario
+        default: '10000'
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: concurrency-coyote
+  cancel-in-progress: false
+
+env:
+  PROJECT: tests/Wolfgang.Etl.Transformers.Tests.Concurrency
+  ITERATIONS: ${{ github.event.inputs.iterations || '10000' }}
+
+jobs:
+  concurrency:
+    name: Stress + Coyote exploration
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          persist-credentials: false
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: 8.0.x
+
+      # --- Layer 1: blocking stress gate (runs the un-rewritten assembly) ---
+      - name: Concurrency stress tests
+        run: dotnet test "$PROJECT" -c Release --filter "Category=Concurrency"
+
+      # --- Layer 2: Coyote systematic exploration (non-blocking) ---
+      - name: Install Coyote CLI
+        run: |
+          dotnet tool install -g Microsoft.Coyote.CLI
+          echo "$HOME/.dotnet/tools" >> "$GITHUB_PATH"
+
+      - name: Coyote rewrite
+        working-directory: ${{ env.PROJECT }}
+        run: coyote rewrite rewrite.coyote.json
+
+      - name: Coyote explore scenarios
+        id: coyote
+        continue-on-error: true
+        working-directory: ${{ env.PROJECT }}
+        run: |
+          set -uo pipefail
+          dll=bin/Release/net8.0/Wolfgang.Etl.Transformers.Tests.Concurrency.dll
+          methods=(
+            Wolfgang.Etl.Transformers.Tests.Concurrency.CoyoteEntryPoints.ConcurrentEnumerations
+            Wolfgang.Etl.Transformers.Tests.Concurrency.CoyoteEntryPoints.BufferedProducerConsumer
+            Wolfgang.Etl.Transformers.Tests.Concurrency.CoyoteEntryPoints.CancellationDuringEnumeration
+          )
+          status=0
+          for m in "${methods[@]}"; do
+            echo "::group::Coyote $m ($ITERATIONS iterations)"
+            coyote test "$dll" -m "$m" -i "$ITERATIONS" || status=1
+            echo "::endgroup::"
+          done
+          if [ "$status" -ne 0 ]; then
+            echo "::warning::Coyote reported findings. These are exploratory (Coyote's IAsyncEnumerable support is limited); triage the uploaded traces before treating as real races."
+          fi
+
+      - name: Upload Coyote traces
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: coyote-traces
+          path: ${{ env.PROJECT }}/bin/Release/net8.0/Output/
+          if-no-files-found: ignore
