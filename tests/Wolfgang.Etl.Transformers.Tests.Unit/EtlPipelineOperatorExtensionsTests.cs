@@ -208,6 +208,18 @@ public class EtlPipelineOperatorExtensionsTests
     }
 
     [Fact]
+    public async Task Throttle_yields_all_items_in_order()
+    {
+        var result = await CollectAsync(Pipe(1, 2, 3).Throttle(TimeSpan.FromMilliseconds(1)).AsAsyncEnumerable());
+
+        Assert.Equal(new[] { 1, 2, 3 }, result);
+    }
+
+    [Fact]
+    public void Throttle_when_min_interval_is_negative_throws_ArgumentOutOfRangeException()
+        => Assert.Throws<ArgumentOutOfRangeException>(() => Pipe(1, 2, 3).Throttle(TimeSpan.FromMilliseconds(-1)));
+
+    [Fact]
     public void Operators_when_pipeline_is_null_throw_ArgumentNullException()
     {
         IEtlPipeline<int> nullPipeline = null!;
@@ -233,6 +245,7 @@ public class EtlPipelineOperatorExtensionsTests
         Assert.Throws<ArgumentNullException>(() => nullPipeline.Tap(_ => { }));
         Assert.Throws<ArgumentNullException>(() => nullPipeline.Tap(_ => default));
         Assert.Throws<ArgumentNullException>(() => nullPipeline.Log(x => x.ToString(), _ => { }));
+        Assert.Throws<ArgumentNullException>(() => nullPipeline.Throttle(TimeSpan.Zero));
     }
 
     [Fact]

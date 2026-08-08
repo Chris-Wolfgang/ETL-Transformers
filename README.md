@@ -75,6 +75,7 @@ await foreach (var row in projected.TransformAsync(filtered.TransformAsync(buffe
 | `PassThroughTransformer<T>` | Identity pass-through; also implements `ITransformWithCancellationAsync<T, T>` |
 | `BufferedTransformer<T>` | Decouples producer from consumer via a `System.Threading.Channels` buffer |
 | `ProgressReportingTransformer<T>` | Calls a sync or async callback per item without altering the stream |
+| `ThrottleTransformer<T>` | Paces items at least a minimum `TimeSpan` apart (adaptive; honours cancellation) without altering the stream |
 
 ### Composition
 
@@ -107,7 +108,7 @@ await EtlPipeline
 
 **Data-shape operators:** `Where`, `Select`, `SelectMany` (each with sync and async overloads), `Distinct`, `DistinctBy`, `Take`, `Skip`, `TakeWhile`, `SkipWhile`, `Chunk`, `Buffered`, `Cast`, and `OfType`.
 
-**Observability operators** (watch or pace the stream without changing its shape): `Tap` (sync/async side effect per item, passed through unchanged); `Log` (`Log(format, sink)` — one formatted message per item via a delegate sink, no logging-framework dependency).
+**Observability operators** (watch or pace the stream without changing its shape): `Tap` (sync/async side effect per item, passed through unchanged); `Log` (`Log(format, sink)` — one formatted message per item via a delegate sink, no logging-framework dependency); `Throttle` (`Throttle(minInterval)` — paces items at least a `TimeSpan` apart to rate-limit a downstream sink).
 
 ---
 
