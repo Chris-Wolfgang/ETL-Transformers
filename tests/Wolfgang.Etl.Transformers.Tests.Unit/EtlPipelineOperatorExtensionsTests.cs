@@ -175,6 +175,28 @@ public class EtlPipelineOperatorExtensionsTests
     }
 
     [Fact]
+    public async Task Tap_when_sync_runs_side_effect_per_item_and_passes_items_through()
+    {
+        var seen = new List<int>();
+
+        var result = await CollectAsync(Pipe(1, 2, 3).Tap(seen.Add).AsAsyncEnumerable());
+
+        Assert.Equal(new[] { 1, 2, 3 }, result);
+        Assert.Equal(new[] { 1, 2, 3 }, seen);
+    }
+
+    [Fact]
+    public async Task Tap_when_async_runs_side_effect_per_item_and_passes_items_through()
+    {
+        var seen = new List<int>();
+
+        var result = await CollectAsync(Pipe(1, 2, 3).Tap(x => { seen.Add(x); return default; }).AsAsyncEnumerable());
+
+        Assert.Equal(new[] { 1, 2, 3 }, result);
+        Assert.Equal(new[] { 1, 2, 3 }, seen);
+    }
+
+    [Fact]
     public void Operators_when_pipeline_is_null_throw_ArgumentNullException()
     {
         IEtlPipeline<int> nullPipeline = null!;
@@ -197,6 +219,8 @@ public class EtlPipelineOperatorExtensionsTests
         Assert.Throws<ArgumentNullException>(() => nullPipeline.Buffered(1));
         Assert.Throws<ArgumentNullException>(() => nullPipeline.Cast<int, object>());
         Assert.Throws<ArgumentNullException>(() => nullPipeline.OfType<int, object>());
+        Assert.Throws<ArgumentNullException>(() => nullPipeline.Tap(_ => { }));
+        Assert.Throws<ArgumentNullException>(() => nullPipeline.Tap(_ => default));
     }
 
     [Fact]
@@ -215,5 +239,7 @@ public class EtlPipelineOperatorExtensionsTests
         Assert.Throws<ArgumentNullException>(() => pipeline.TakeWhile((Func<int, ValueTask<bool>>)null!));
         Assert.Throws<ArgumentNullException>(() => pipeline.SkipWhile((Func<int, bool>)null!));
         Assert.Throws<ArgumentNullException>(() => pipeline.SkipWhile((Func<int, ValueTask<bool>>)null!));
+        Assert.Throws<ArgumentNullException>(() => pipeline.Tap((Action<int>)null!));
+        Assert.Throws<ArgumentNullException>(() => pipeline.Tap((Func<int, ValueTask>)null!));
     }
 }

@@ -355,6 +355,56 @@ public static class EtlPipelineOperatorExtensions
 
 
 
+    /// <summary>
+    /// Runs a synchronous side effect on each item and passes the item through unchanged — an
+    /// observability "tap" point (logging, metrics, debugging) that does not alter the stream's shape.
+    /// </summary>
+    /// <typeparam name="T">The item type. Must be non-null.</typeparam>
+    /// <param name="pipeline">The pipeline to observe.</param>
+    /// <param name="onItem">The side effect to run for each item before it flows on.</param>
+    /// <returns>A pipeline yielding the same items, in the same order, with <paramref name="onItem"/> invoked per item.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="pipeline"/> or <paramref name="onItem"/> is <see langword="null"/>.</exception>
+    /// <example>
+    /// <code>
+    ///     await EtlPipeline
+    ///         .Create()
+    ///         .From(records)
+    ///         .Tap(r =&gt; Console.WriteLine($"seen {r.Id}"))
+    ///         .To(loader)
+    ///         .RunAsync();
+    /// </code>
+    /// </example>
+    public static IEtlPipeline<T> Tap<T>(this IEtlPipeline<T> pipeline, Action<T> onItem)
+        where T : notnull
+    {
+        ThrowIfNull(pipeline, nameof(pipeline));
+        ThrowIfNull(onItem, nameof(onItem));
+
+        return pipeline.Through(new ProgressReportingTransformer<T>(onItem));
+    }
+
+
+
+    /// <summary>
+    /// Runs an asynchronous side effect on each item and passes the item through unchanged — an
+    /// observability "tap" point that does not alter the stream's shape.
+    /// </summary>
+    /// <typeparam name="T">The item type. Must be non-null.</typeparam>
+    /// <param name="pipeline">The pipeline to observe.</param>
+    /// <param name="onItem">The asynchronous side effect to run for each item before it flows on.</param>
+    /// <returns>A pipeline yielding the same items, in the same order, with <paramref name="onItem"/> awaited per item.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="pipeline"/> or <paramref name="onItem"/> is <see langword="null"/>.</exception>
+    public static IEtlPipeline<T> Tap<T>(this IEtlPipeline<T> pipeline, Func<T, ValueTask> onItem)
+        where T : notnull
+    {
+        ThrowIfNull(pipeline, nameof(pipeline));
+        ThrowIfNull(onItem, nameof(onItem));
+
+        return pipeline.Through(new ProgressReportingTransformer<T>(onItem));
+    }
+
+
+
     private static void ThrowIfNull(object? argument, string paramName)
     {
         if (argument is null)
