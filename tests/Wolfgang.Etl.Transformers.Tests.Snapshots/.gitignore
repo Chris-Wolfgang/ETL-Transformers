@@ -1,0 +1,2 @@
+# Verify received snapshots are transient local iteration output.
+*.received.*

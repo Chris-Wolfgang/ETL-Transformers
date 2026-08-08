@@ -196,6 +196,19 @@ Documentation is automatically built and deployed to GitHub Pages when a GitHub 
 
 ---
 
+## Verify the build
+
+This package is built [**reproducibly**](REPRODUCIBLE-BUILD.md): rebuilding a tagged
+release with the pinned SDK produces byte-for-byte identical assemblies and packages.
+Every release attaches a `reproducible-build-manifest.json` with the expected SHA-256 of
+each artifact, and CI proves cross-OS reproducibility on every pull request.
+
+To confirm a published release was built from source — and to publish your own
+independent verification attestation — follow the step-by-step guide in
+[REPRODUCIBLE-BUILD.md](REPRODUCIBLE-BUILD.md).
+
+---
+
 ## Contributing
 
 Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for code quality standards, build instructions, and pull request guidelines.

@@ -1,0 +1,118 @@
+name: Shadow Testing
+
+# Nightly shadow testing (issue #77). Runs the realistic consumer workloads under
+# samples/ShadowWorkloads (variable page sizes, concurrent enumeration, mixed sync/async
+# sources, bursty windows) and compares their BDN time/allocation results against a
+# committed golden baseline captured from a release. A regression beyond threshold fails
+# the run and opens/updates a tracking issue.
+#
+# Distinct from benchmarks.yaml (curated micro-perf trend) and pr-benchmarks.yaml (per-PR
+# gate): this replays production-shaped traffic against the latest commit.
+
+on:
+  schedule:
+    - cron: '0 3 * * *'  # nightly 03:00 UTC
+  workflow_dispatch:
+    inputs:
+      time_threshold:
+        description: Max % slower before a benchmark counts as regressed
+        default: '20'
+        type: string
+      alloc_threshold:
+        description: Max % more allocations before a benchmark counts as regressed
+        default: '50'
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: shadow-testing
+  cancel-in-progress: false
+
+env:
+  BENCH_DIR: samples/ShadowWorkloads
+  BASELINE_DIR: samples/shadow-baseline
+  TIME_THRESHOLD: ${{ github.event.inputs.time_threshold || '20' }}
+  ALLOC_THRESHOLD: ${{ github.event.inputs.alloc_threshold || '50' }}
+
+jobs:
+  shadow:
+    name: Replay shadow workloads
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write  # Open/update the regression tracking issue
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          persist-credentials: false
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Run shadow workloads
+        working-directory: ${{ env.BENCH_DIR }}
+        run: dotnet run -c Release -- --filter "*" --job short --memory --exporters json
+
+      - name: Compare against baseline
+        id: compare
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/compare-benchmarks.py \
+            --base-dir "$BASELINE_DIR" \
+            --head-dir "$BENCH_DIR/BenchmarkDotNet.Artifacts/results" \
+            --time-threshold "$TIME_THRESHOLD" \
+            --alloc-threshold "$ALLOC_THRESHOLD" \
+            --out "$RUNNER_TEMP/shadow-report.md" | tee -a "$GITHUB_OUTPUT"
+
+      - name: Upload shadow results
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: shadow-results
+          path: |
+            ${{ env.BENCH_DIR }}/BenchmarkDotNet.Artifacts/results/
+            ${{ runner.temp }}/shadow-report.md
+          if-no-files-found: warn
+
+      - name: Open or update regression issue
+        if: steps.compare.outputs.regressed == 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          marker='<!-- shadow-regression -->'
+          title='Shadow-test regression detected'
+          {
+            echo "$marker"
+            echo "The nightly shadow workloads regressed beyond threshold on \`${{ github.sha }}\`."
+            echo ""
+            cat "$RUNNER_TEMP/shadow-report.md"
+            echo ""
+            echo "[Workflow run]($RUN_URL)"
+          } > "$RUNNER_TEMP/issue-body.md"
+
+          existing=$(gh issue list --repo "$REPO" --state open --search "$marker in:body" \
+            --json number --jq '.[0].number // empty')
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --repo "$REPO" --body-file "$RUNNER_TEMP/issue-body.md"
+            echo "Commented on existing issue #$existing"
+          else
+            gh issue create --repo "$REPO" --title "$title" \
+              --body-file "$RUNNER_TEMP/issue-body.md" \
+              --label "maintenance - performance"
+          fi
+
+      - name: Fail on regression
+        if: steps.compare.outputs.regressed == 'true'
+        run: |
+          echo "::error::Shadow workloads regressed beyond threshold (time > ${TIME_THRESHOLD}% or alloc > ${ALLOC_THRESHOLD}%). See the tracking issue and artifact."
+          exit 1

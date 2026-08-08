@@ -41,13 +41,22 @@
     <Project Path="examples/BufferedPipeline/BufferedPipeline.csproj" />
     <Project Path="examples/LinqOps/LinqOps.csproj" />
   </Folder>
+  <Folder Name="/profiling/">
+    <Project Path="profiling/Wolfgang.Etl.Transformers.Profiling/Wolfgang.Etl.Transformers.Profiling.csproj" />
+  </Folder>
+  <Folder Name="/samples/">
+    <Project Path="samples/ShadowWorkloads/ShadowWorkloads.csproj" />
+  </Folder>
   <Folder Name="/src/">
     <Project Path="src/Wolfgang.Etl.Transformers/Wolfgang.Etl.Transformers.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/Wolfgang.Etl.Transformers.Tests.Concurrency/Wolfgang.Etl.Transformers.Tests.Concurrency.csproj" />
     <Project Path="tests/Wolfgang.Etl.Transformers.Tests.Allocation/Wolfgang.Etl.Transformers.Tests.Allocation.csproj" />
     <Project Path="tests/Wolfgang.Etl.Transformers.Tests.DocExamples/Wolfgang.Etl.Transformers.Tests.DocExamples.csproj" />
+    <Project Path="tests/Wolfgang.Etl.Transformers.Tests.Fuzz/Wolfgang.Etl.Transformers.Tests.Fuzz.csproj" />
     <Project Path="tests/Wolfgang.Etl.Transformers.Tests.Integration/Wolfgang.Etl.Transformers.Tests.Integration.csproj" />
+    <Project Path="tests/Wolfgang.Etl.Transformers.Tests.Snapshots/Wolfgang.Etl.Transformers.Tests.Snapshots.csproj" />
     <Project Path="tests/Wolfgang.Etl.Transformers.Tests.Unit/Wolfgang.Etl.Transformers.Tests.Unit.csproj" />
   </Folder>
 </Solution>

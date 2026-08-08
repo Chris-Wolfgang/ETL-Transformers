@@ -1,0 +1,87 @@
+name: Fuzz
+
+# Continuous property-based fuzzing. The same properties in
+# tests/Wolfgang.Etl.Transformers.Tests.Fuzz run a small case count in the normal
+# PR pass (seconds); here CsCheck_Iter drives a large budget (100k cases per
+# property) to surface edge cases the short pass misses. A failing property
+# prints a reproducible seed; the run's results are uploaded and an issue is filed.
+
+on:
+  schedule:
+    - cron: '0 4 * * 0'   # Sundays 04:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fuzz-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # CsCheck honours this: 100,000 randomized cases per property (the #76 target).
+  CsCheck_Iter: '100000'
+
+jobs:
+  fuzz:
+    name: Property fuzzing
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      issues: write   # auto-file an issue when a property fails
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Detect fuzz project
+        id: detect
+        run: |
+          if git ls-files 'tests/**/*.Tests.Fuzz.csproj' | grep -q .; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No fuzz project found — skipping."
+            echo "found=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup .NET
+        if: steps.detect.outputs.found == 'true'
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Run property fuzzing
+        if: steps.detect.outputs.found == 'true'
+        run: |
+          proj="$(git ls-files 'tests/**/*.Tests.Fuzz.csproj' | head -n1)"
+          dotnet test "$proj" -c Release \
+            --logger "trx;LogFileName=fuzz.trx" \
+            --results-directory ./fuzz-results
+
+      # The .trx captures the failing property and CsCheck's reproducible seed,
+      # so the next short-pass run can be pinned to it as a deterministic regression.
+      - name: Upload fuzz results
+        if: always() && steps.detect.outputs.found == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: fuzz-results
+          path: ./fuzz-results
+          if-no-files-found: ignore
+
+      - name: File an issue on failure
+        if: failure() && steps.detect.outputs.found == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          title="Fuzz: property counter-example ($(date -u +%Y-%m-%d))"
+          # Avoid duplicate spam — only open a new issue if none is already open.
+          if gh issue list --state open --search "in:title Fuzz: property counter-example" --json number --jq 'length' | grep -qx 0; then
+            gh issue create \
+              --title "$title" \
+              --label thorough-review \
+              --body "A property in the Fuzz suite failed on the scheduled run [${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}). Download the \`fuzz-results\` artifact for the failing property and CsCheck's reproducible seed, then reproduce locally with \`CsCheck_Seed=<seed> dotnet test tests/Wolfgang.Etl.Transformers.Tests.Fuzz\`."
+          else
+            echo "An open fuzz counter-example issue already exists — not filing a duplicate."
+          fi
