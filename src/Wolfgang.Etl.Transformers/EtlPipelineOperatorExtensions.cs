@@ -433,6 +433,33 @@ public static class EtlPipelineOperatorExtensions
 
 
 
+    /// <summary>
+    /// Paces the pipeline so successive items are yielded at least <paramref name="minInterval"/> apart,
+    /// without changing the stream's shape or order — rate-limiting for a downstream sink that must not be
+    /// hit too fast. The first item is not delayed; pacing is adaptive (a consumer that was already slow is
+    /// not delayed further) and observes the pipeline's cancellation token.
+    /// </summary>
+    /// <typeparam name="T">The item type. Must be non-null.</typeparam>
+    /// <param name="pipeline">The pipeline to pace.</param>
+    /// <param name="minInterval">The minimum time between successive items. <see cref="TimeSpan.Zero"/> is a pass-through.</param>
+    /// <returns>A pipeline yielding the same items, in the same order, paced apart.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="pipeline"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="minInterval"/> is negative.</exception>
+    /// <example>
+    /// <code>
+    ///     .Throttle(TimeSpan.FromMilliseconds(200))   // at most ~5 items/second
+    /// </code>
+    /// </example>
+    public static IEtlPipeline<T> Throttle<T>(this IEtlPipeline<T> pipeline, TimeSpan minInterval)
+        where T : notnull
+    {
+        ThrowIfNull(pipeline, nameof(pipeline));
+
+        return pipeline.Through(new ThrottleTransformer<T>(minInterval));
+    }
+
+
+
     private static void ThrowIfNull(object? argument, string paramName)
     {
         if (argument is null)

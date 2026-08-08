@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Observability pipeline operator `Log` on `IEtlPipeline<T>`: `Log(format, sink)` writes one
   formatted message per item (via a delegate sink — no `Microsoft.Extensions.Logging`
   dependency) and passes items through unchanged. A thin wrapper over `Tap`. ([#174](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/174))
+- Observability pipeline operator `Throttle` on `IEtlPipeline<T>` + `ThrottleTransformer<T>`:
+  paces successive items at least a minimum `TimeSpan` apart (adaptive — a slow consumer isn't
+  delayed further; first item not delayed; honours the cancellation token) for rate-limiting a
+  downstream sink. ([#174](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/174))
 - Property-based fuzzing: a CsCheck suite asserts each transformer is equivalent to its
   `System.Linq` counterpart on randomised input, plus a scheduled `fuzz.yaml` (high iteration
   count, uploads results and auto-files an issue on failure). ([#76](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/76))

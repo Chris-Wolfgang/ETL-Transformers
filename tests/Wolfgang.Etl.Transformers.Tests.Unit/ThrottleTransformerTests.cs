@@ -1,0 +1,93 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
+using Xunit;
+using static Wolfgang.Etl.Transformers.Tests.Unit.TestHelpers;
+
+namespace Wolfgang.Etl.Transformers.Tests.Unit;
+
+/// <summary>
+/// Tests <see cref="ThrottleTransformer{T}"/> pacing deterministically via its internal test seam
+/// (an injected delay recorder and a fixed timestamp source), so no real time passes.
+/// </summary>
+public class ThrottleTransformerTests
+{
+    [Fact]
+    public async Task TransformAsync_yields_all_items_in_order()
+    {
+        var sut = new ThrottleTransformer<int>(TimeSpan.FromMilliseconds(1));
+
+        var result = await CollectAsync(sut.TransformAsync(ToAsync(new[] { 1, 2, 3 })));
+
+        Assert.Equal(new[] { 1, 2, 3 }, result);
+    }
+
+
+    [Fact]
+    public async Task TransformAsync_delays_each_item_after_the_first_by_the_min_interval()
+    {
+        var waits = new List<TimeSpan>();
+        var interval = TimeSpan.FromMilliseconds(250);
+        // Fixed timestamp => measured elapsed is always 0 => a full-interval wait is requested each time.
+        var sut = new ThrottleTransformer<int>(interval, (delay, _) => { waits.Add(delay); return Task.CompletedTask; }, () => 0L);
+
+        var result = await CollectAsync(sut.TransformAsync(ToAsync(new[] { 1, 2, 3 })));
+
+        Assert.Equal(new[] { 1, 2, 3 }, result);
+        Assert.Equal(2, waits.Count);          // the first item is never delayed
+        Assert.All(waits, w => Assert.Equal(interval, w));
+    }
+
+
+    [Fact]
+    public async Task TransformAsync_when_consumer_is_already_slower_than_the_interval_adds_no_delay()
+    {
+        var waits = new List<TimeSpan>();
+        long clock = 0;
+        // Advance a full second per timestamp read — always >= the 250 ms interval, so the measured
+        // elapsed already exceeds it and no additional wait should be requested (the adaptive path).
+        var step = Stopwatch.Frequency;
+        var sut = new ThrottleTransformer<int>(
+            TimeSpan.FromMilliseconds(250),
+            (delay, _) => { waits.Add(delay); return Task.CompletedTask; },
+            () => { clock += step; return clock; });
+
+        var result = await CollectAsync(sut.TransformAsync(ToAsync(new[] { 1, 2, 3 })));
+
+        Assert.Equal(new[] { 1, 2, 3 }, result);
+        Assert.Empty(waits);
+    }
+
+
+    [Fact]
+    public void Internal_ctor_when_delay_or_timestamp_is_null_throws_ArgumentNullException()
+    {
+        Assert.Throws<ArgumentNullException>(() => new ThrottleTransformer<int>(TimeSpan.Zero, null!, () => 0L));
+        Assert.Throws<ArgumentNullException>(() => new ThrottleTransformer<int>(TimeSpan.Zero, (_, _) => Task.CompletedTask, null!));
+    }
+
+
+    [Fact]
+    public async Task TransformAsync_when_min_interval_is_zero_never_delays()
+    {
+        var waits = new List<TimeSpan>();
+        var sut = new ThrottleTransformer<int>(TimeSpan.Zero, (delay, _) => { waits.Add(delay); return Task.CompletedTask; }, () => 0L);
+
+        var result = await CollectAsync(sut.TransformAsync(ToAsync(new[] { 1, 2, 3 })));
+
+        Assert.Equal(new[] { 1, 2, 3 }, result);
+        Assert.Empty(waits);
+    }
+
+
+    [Fact]
+    public void Ctor_when_min_interval_is_negative_throws_ArgumentOutOfRangeException()
+        => Assert.Throws<ArgumentOutOfRangeException>(() => new ThrottleTransformer<int>(TimeSpan.FromMilliseconds(-1)));
+
+
+    [Fact]
+    public void TransformAsync_when_items_is_null_throws_ArgumentNullException()
+        => Assert.Throws<ArgumentNullException>(() => new ThrottleTransformer<int>(TimeSpan.Zero).TransformAsync(null!));
+}
