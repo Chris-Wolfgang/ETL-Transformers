@@ -197,6 +197,17 @@ public class EtlPipelineOperatorExtensionsTests
     }
 
     [Fact]
+    public async Task Log_writes_a_formatted_message_per_item_and_passes_items_through()
+    {
+        var lines = new List<string>();
+
+        var result = await CollectAsync(Pipe(1, 2, 3).Log(x => $"item {x}", lines.Add).AsAsyncEnumerable());
+
+        Assert.Equal(new[] { 1, 2, 3 }, result);
+        Assert.Equal(new[] { "item 1", "item 2", "item 3" }, lines);
+    }
+
+    [Fact]
     public void Operators_when_pipeline_is_null_throw_ArgumentNullException()
     {
         IEtlPipeline<int> nullPipeline = null!;
@@ -221,6 +232,7 @@ public class EtlPipelineOperatorExtensionsTests
         Assert.Throws<ArgumentNullException>(() => nullPipeline.OfType<int, object>());
         Assert.Throws<ArgumentNullException>(() => nullPipeline.Tap(_ => { }));
         Assert.Throws<ArgumentNullException>(() => nullPipeline.Tap(_ => default));
+        Assert.Throws<ArgumentNullException>(() => nullPipeline.Log(x => x.ToString(), _ => { }));
     }
 
     [Fact]
@@ -241,5 +253,7 @@ public class EtlPipelineOperatorExtensionsTests
         Assert.Throws<ArgumentNullException>(() => pipeline.SkipWhile((Func<int, ValueTask<bool>>)null!));
         Assert.Throws<ArgumentNullException>(() => pipeline.Tap((Action<int>)null!));
         Assert.Throws<ArgumentNullException>(() => pipeline.Tap((Func<int, ValueTask>)null!));
+        Assert.Throws<ArgumentNullException>(() => pipeline.Log(null!, _ => { }));
+        Assert.Throws<ArgumentNullException>(() => pipeline.Log(x => x.ToString(), null!));
     }
 }
