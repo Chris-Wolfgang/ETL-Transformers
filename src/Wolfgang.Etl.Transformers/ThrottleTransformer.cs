@@ -65,8 +65,8 @@ public sealed class ThrottleTransformer<T> : ITransformAsync<T, T>
         }
 
         _minInterval = minInterval;
-        _delayAsync = delayAsync;
-        _getTimestamp = getTimestamp;
+        _delayAsync = delayAsync ?? throw new ArgumentNullException(nameof(delayAsync));
+        _getTimestamp = getTimestamp ?? throw new ArgumentNullException(nameof(getTimestamp));
     }
 
 
