@@ -44,6 +44,9 @@
   <Folder Name="/profiling/">
     <Project Path="profiling/Wolfgang.Etl.Transformers.Profiling/Wolfgang.Etl.Transformers.Profiling.csproj" />
   </Folder>
+  <Folder Name="/samples/">
+    <Project Path="samples/ShadowWorkloads/ShadowWorkloads.csproj" />
+  </Folder>
   <Folder Name="/src/">
     <Project Path="src/Wolfgang.Etl.Transformers/Wolfgang.Etl.Transformers.csproj" />
   </Folder>
