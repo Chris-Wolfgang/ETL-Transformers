@@ -1,23 +1,23 @@
 Summary
-  Generated on: 7/12/2026 - 1:03:46 PM
-  Coverage date: 7/12/2026 - 1:03:42 PM
+  Generated on: 8/8/2026 - 11:57:16 AM
+  Coverage date: 8/8/2026 - 11:57:09 AM - 8/8/2026 - 11:57:10 AM
   Parser: MultiReport (2x Cobertura)
   Assemblies: 1
-  Classes: 18
-  Files: 18
+  Classes: 19
+  Files: 19
   Line coverage: 100%
-  Covered lines: 312
+  Covered lines: 362
   Uncovered lines: 0
-  Coverable lines: 312
-  Total lines: 2575
-  Branch coverage: 100% (100 of 100)
-  Covered branches: 100
-  Total branches: 100
-  Method coverage: 100% (75 of 75)
-  Full method coverage: 100% (75 of 75)
-  Covered methods: 75
-  Fully covered methods: 75
-  Total methods: 75
+  Coverable lines: 362
+  Total lines: 2940
+  Branch coverage: 100% (102 of 102)
+  Covered branches: 102
+  Total branches: 102
+  Method coverage: 100% (94 of 94)
+  Full method coverage: 100% (94 of 94)
+  Covered methods: 94
+  Fully covered methods: 94
+  Total methods: 94
 
 Wolfgang.Etl.Transformers                                                   100%
   Wolfgang.Etl.Transformers.BufferedTransformer<T>                          100%
@@ -27,6 +27,7 @@ Wolfgang.Etl.Transformers                                                   100%
   Wolfgang.Etl.Transformers.ChunkTransformer<T>                             100%
   Wolfgang.Etl.Transformers.DistinctByTransformer<T1, T2>                   100%
   Wolfgang.Etl.Transformers.DistinctTransformer<T>                          100%
+  Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions                   100%
   Wolfgang.Etl.Transformers.OfTypeTransformer<T1, T2>                       100%
   Wolfgang.Etl.Transformers.PassThroughTransformer<T>                       100%
   Wolfgang.Etl.Transformers.ProgressReportingTransformer<T>                 100%

@@ -128,6 +128,14 @@ duplicates.</p>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html">EtlPipelineOperatorExtensions</a></dt>
+      <dd><p>LINQ-flavored operator extension methods on <span class="xref">Wolfgang.Etl.Abstractions.IEtlPipeline&lt;T&gt;</span>. Each operator is a
+thin wrapper that appends one of this package's transformers to the pipeline via the core's
+<span class="xref">Wolfgang.Etl.Abstractions.IEtlPipeline&lt;T&gt;.Through&lt;TOut&gt;(Wolfgang.Etl.Abstractions.ITransformAsync&lt;T, TOut&gt;)</span> primitive —
+no iteration logic is re-implemented here.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Wolfgang.Etl.Transformers.OfTypeTransformer-2.html">OfTypeTransformer&lt;TSource, TDestination&gt;</a></dt>
       <dd><p>A transformer that yields each input item that is of type <code class="typeparamref">TDestination</code>,
 silently skipping items of any other type.</p>

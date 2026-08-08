@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class EtlPipelineOperatorExtensions | Wolfgang.Etl.Transformers Documentation </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class EtlPipelineOperatorExtensions | Wolfgang.Etl.Transformers Documentation ">
+      
+      <meta name="description" content="LINQ-flavored operator extension methods on . Each operator is a thin wrapper that appends one of this package&#39;s transformers to the pipeline via the core&#39;s  primitive — no iteration logic is re-implemented here.">
+      <link rel="icon" href="../favicon.svg">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/ETL-Transformers/new/v0.3.0/apiSpec/new?filename=Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions.md&amp;value=---%0Auid%3A%20Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="Wolfgang.Etl.Transformers">
+            Wolfgang.Etl.Transformers
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+
+      <div class="content">
+        <div class="actionbar">
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions">
+
+
+
+  <h1 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions" class="text-break">
+Class EtlPipelineOperatorExtensions  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.3.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L35"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Wolfgang.html">Wolfgang</a>.<a class="xref" href="Wolfgang.Etl.html">Etl</a>.<a class="xref" href="Wolfgang.Etl.Transformers.html">Transformers</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Wolfgang.Etl.Transformers.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>LINQ-flavored operator extension methods on <span class="xref">Wolfgang.Etl.Abstractions.IEtlPipeline&lt;T&gt;</span>. Each operator is a
+thin wrapper that appends one of this package's transformers to the pipeline via the core's
+<span class="xref">Wolfgang.Etl.Abstractions.IEtlPipeline&lt;T&gt;.Through&lt;TOut&gt;(Wolfgang.Etl.Abstractions.ITransformAsync&lt;T, TOut&gt;)</span> primitive —
+no iteration logic is re-implemented here.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static class EtlPipelineOperatorExtensions</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">EtlPipelineOperatorExtensions</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+  <h2 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>
+The pipeline core in <code>Wolfgang.Etl.Abstractions</code> is deliberately minimal and does not depend
+on this package, so the operator surface lives here. Add a <code>using Wolfgang.Etl.Transformers;</code>
+to light these up between the source (<code>From(...)</code>) and sink (<code>To(...)</code>) stages of a
+pipeline:
+</p>
+<example>
+<pre><code class="lang-csharp">await EtlPipeline
+    .Create()
+    .From(records)
+    .Where(r =&gt; r.Amount &gt; 0)
+    .Select(r =&gt; r.Id)
+    .To(loader)
+    .RunAsync();</code></pre>
+</example>
+</div>
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Buffered_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Buffered*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Buffered__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Int32_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Buffered``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Int32)">
+  Buffered&lt;T&gt;(IEtlPipeline&lt;T&gt;, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.3.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L314"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Inserts a decoupling buffer so the upstream producer and downstream consumer run concurrently.
+The item type is unchanged; this batches nothing.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;T&gt; Buffered&lt;T&gt;(this IEtlPipeline&lt;T&gt; pipeline, int capacity) where T : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>The pipeline to buffer.</p>
+</dd>
+    <dt><code>capacity</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The maximum number of items held in the buffer. Must be at least 1.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>A pipeline of the same items, produced concurrently with consumption.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>The item type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Cast_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Cast*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Cast__2_Wolfgang_Etl_Abstractions_IEtlPipeline___0__" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Cast``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0})">
+  Cast&lt;TSource, TDestination&gt;(IEtlPipeline&lt;TSource&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.3.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L330"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Casts each item to <code class="typeparamref">TDestination</code>, throwing on an incompatible item.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;TDestination&gt; Cast&lt;TSource, TDestination&gt;(this IEtlPipeline&lt;TSource&gt; pipeline) where TSource : notnull where TDestination : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;TSource&gt;</dt>
+    <dd><p>The pipeline to cast.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;TDestination&gt;</dt>
+    <dd><p>A pipeline of the cast items.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TSource</code></dt>
+    <dd><p>The input item type. Must be non-null.</p>
+</dd>
+    <dt><code>TDestination</code></dt>
+    <dd><p>The target type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Chunk_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Chunk*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Chunk__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Int32_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Chunk``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Int32)">
+  Chunk&lt;T&gt;(IEtlPipeline&lt;T&gt;, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.3.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L295"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Batches items into fixed-size chunks.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;IReadOnlyList&lt;T&gt;&gt; Chunk&lt;T&gt;(this IEtlPipeline&lt;T&gt; pipeline, int size) where T : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>The pipeline to batch.</p>
+</dd>
+    <dt><code>size</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The number of items per chunk. Must be at least 1.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;T&gt;&gt;</dt>
+    <dd><p>A pipeline of chunks; the final chunk may hold fewer than <code class="paramref">size</code> items.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>The item type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_DistinctBy_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.DistinctBy*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_DistinctBy__2_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0___1__System_Collections_Generic_IEqualityComparer___1__" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.DistinctBy``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,``1},System.Collections.Generic.IEqualityComparer{``1})">
+  DistinctBy&lt;TSource, TKey&gt;(IEtlPipeline&lt;TSource&gt;, Func&lt;TSource, TKey&gt;, IEqualityComparer&lt;TKey&gt;?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.3.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L177"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Removes items with duplicate keys, optionally using a supplied key <code class="paramref">comparer</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;TSource&gt; DistinctBy&lt;TSource, TKey&gt;(this IEtlPipeline&lt;TSource&gt; pipeline, Func&lt;TSource, TKey&gt; keySelector, IEqualityComparer&lt;TKey&gt;? comparer = null) where TSource : notnull where TKey : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;TSource&gt;</dt>
+    <dd><p>The pipeline to deduplicate.</p>
+</dd>
+    <dt><code>keySelector</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TSource, TKey&gt;</dt>
+    <dd><p>Extracts the key each item is deduplicated by.</p>
+</dd>
+    <dt><code>comparer</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iequalitycomparer-1">IEqualityComparer</a>&lt;TKey&gt;</dt>
+    <dd><p>The comparer used to determine key equality, or <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a> to use
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.equalitycomparer-1.default">Default</a>.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;TSource&gt;</dt>
+    <dd><p>A pipeline keeping the first item seen for each distinct key.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TSource</code></dt>
+    <dd><p>The item type. Must be non-null.</p>
+</dd>
+    <dt><code>TKey</code></dt>
+    <dd><p>The key type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> or <code class="paramref">keySelector</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Distinct_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Distinct*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Distinct__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Collections_Generic_IEqualityComparer___0__" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Distinct``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Collections.Generic.IEqualityComparer{``0})">
+  Distinct&lt;T&gt;(IEtlPipeline&lt;T&gt;, IEqualityComparer&lt;T&gt;?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.3.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L156"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Removes duplicate items, optionally using a supplied <code class="paramref">comparer</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;T&gt; Distinct&lt;T&gt;(this IEtlPipeline&lt;T&gt; pipeline, IEqualityComparer&lt;T&gt;? comparer = null) where T : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>The pipeline to deduplicate.</p>
+</dd>
+    <dt><code>comparer</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iequalitycomparer-1">IEqualityComparer</a>&lt;T&gt;</dt>
+    <dd><p>The comparer used to determine equality, or <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a> to use
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.equalitycomparer-1.default">Default</a>.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>A pipeline with duplicate items removed, preserving first-seen order.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>The item type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_OfType_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.OfType*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_OfType__2_Wolfgang_Etl_Abstractions_IEtlPipeline___0__" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.OfType``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0})">
+  OfType&lt;TSource, TDestination&gt;(IEtlPipeline&lt;TSource&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.3.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L347"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Passes through only the items assignable to <code class="typeparamref">TDestination</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;TDestination&gt; OfType&lt;TSource, TDestination&gt;(this IEtlPipeline&lt;TSource&gt; pipeline) where TSource : notnull where TDestination : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;TSource&gt;</dt>
+    <dd><p>The pipeline to filter by type.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;TDestination&gt;</dt>
+    <dd><p>A pipeline of the items that are of type <code class="typeparamref">TDestination</code>.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TSource</code></dt>
+    <dd><p>The input item type. Must be non-null.</p>
+</dd>
+    <dt><code>TDestination</code></dt>
+    <dd><p>The type to filter to. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_SelectMany_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SelectMany*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_SelectMany__2_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Collections_Generic_IAsyncEnumerable___1___" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SelectMany``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Collections.Generic.IAsyncEnumerable{``1}})">
+  SelectMany&lt;TSource, TDestination&gt;(IEtlPipeline&lt;TSource&gt;, Func&lt;TSource, IAsyncEnumerable&lt;TDestination&gt;&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.3.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L135"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Fans each item out to an asynchronous sequence and flattens the results.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;TDestination&gt; SelectMany&lt;TSource, TDestination&gt;(this IEtlPipeline&lt;TSource&gt; pipeline, Func&lt;TSource, IAsyncEnumerable&lt;TDestination&gt;&gt; selector) where TSource : notnull where TDestination : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;TSource&gt;</dt>
+    <dd><p>The pipeline to fan out.</p>
+</dd>
+    <dt><code>selector</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TSource, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iasyncenumerable-1">IAsyncEnumerable</a>&lt;TDestination&gt;&gt;</dt>
+    <dd><p>Maps each item to an asynchronous sequence of results.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;TDestination&gt;</dt>
+    <dd><p>A pipeline of the flattened items.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TSource</code></dt>
+    <dd><p>The input item type. Must be non-null.</p>
+</dd>
+    <dt><code>TDestination</code></dt>
+    <dd><p>The flattened item type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> or <code class="paramref">selector</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_SelectMany_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SelectMany*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_SelectMany__2_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Collections_Generic_IEnumerable___1___" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SelectMany``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Collections.Generic.IEnumerable{``1}})">
+  SelectMany&lt;TSource, TDestination&gt;(IEtlPipeline&lt;TSource&gt;, Func&lt;TSource, IEnumerable&lt;TDestination&gt;&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.3.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L116"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Fans each item out to a synchronous sequence and flattens the results.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;TDestination&gt; SelectMany&lt;TSource, TDestination&gt;(this IEtlPipeline&lt;TSource&gt; pipeline, Func&lt;TSource, IEnumerable&lt;TDestination&gt;&gt; selector) where TSource : notnull where TDestination : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;TSource&gt;</dt>
+    <dd><p>The pipeline to fan out.</p>
+</dd>
+    <dt><code>selector</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TSource, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;TDestination&gt;&gt;</dt>
+    <dd><p>Maps each item to a sequence of results.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;TDestination&gt;</dt>
+    <dd><p>A pipeline of the flattened items.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TSource</code></dt>
+    <dd><p>The input item type. Must be non-null.</p>
+</dd>
+    <dt><code>TDestination</code></dt>
+    <dd><p>The flattened item type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> or <code class="paramref">selector</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Select_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Select*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Select__2_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Threading_Tasks_ValueTask___1___" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Select``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Threading.Tasks.ValueTask{``1}})">
+  Select&lt;TSource, TDestination&gt;(IEtlPipeline&lt;TSource&gt;, Func&lt;TSource, ValueTask&lt;TDestination&gt;&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.3.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L97"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Projects each item with an asynchronous <code class="paramref">selector</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;TDestination&gt; Select&lt;TSource, TDestination&gt;(this IEtlPipeline&lt;TSource&gt; pipeline, Func&lt;TSource, ValueTask&lt;TDestination&gt;&gt; selector) where TSource : notnull where TDestination : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;TSource&gt;</dt>
+    <dd><p>The pipeline to project.</p>
+</dd>
+    <dt><code>selector</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TSource, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.valuetask-1">ValueTask</a>&lt;TDestination&gt;&gt;</dt>
+    <dd><p>The asynchronous projection applied to each item.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;TDestination&gt;</dt>
+    <dd><p>A pipeline of the projected items.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TSource</code></dt>
+    <dd><p>The input item type. Must be non-null.</p>
+</dd>
+    <dt><code>TDestination</code></dt>
+    <dd><p>The projected item type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> or <code class="paramref">selector</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Select_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Select*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Select__2_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0___1__" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Select``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,``1})">
+  Select&lt;TSource, TDestination&gt;(IEtlPipeline&lt;TSource&gt;, Func&lt;TSource, TDestination&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.3.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L78"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Projects each item with a synchronous <code class="paramref">selector</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;TDestination&gt; Select&lt;TSource, TDestination&gt;(this IEtlPipeline&lt;TSource&gt; pipeline, Func&lt;TSource, TDestination&gt; selector) where TSource : notnull where TDestination : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;TSource&gt;</dt>
+    <dd><p>The pipeline to project.</p>
+</dd>
+    <dt><code>selector</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TSource, TDestination&gt;</dt>
+    <dd><p>The projection applied to each item.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;TDestination&gt;</dt>
+    <dd><p>A pipeline of the projected items.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TSource</code></dt>
+    <dd><p>The input item type. Must be non-null.</p>
+</dd>
+    <dt><code>TDestination</code></dt>
+    <dd><p>The projected item type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> or <code class="paramref">selector</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_SkipWhile_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SkipWhile*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_SkipWhile__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Boolean__" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SkipWhile``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Boolean})">
+  SkipWhile&lt;T&gt;(IEtlPipeline&lt;T&gt;, Func&lt;T, bool&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.3.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L261"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Skips items while a synchronous <code class="paramref">predicate</code> holds, then yields the rest.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;T&gt; SkipWhile&lt;T&gt;(this IEtlPipeline&lt;T&gt; pipeline, Func&lt;T, bool&gt; predicate) where T : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>The pipeline to skip within.</p>
+</dd>
+    <dt><code>predicate</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;T, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;</dt>
+    <dd><p>Skipping continues while this returns <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a>.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>A pipeline yielding everything from the first item that fails <code class="paramref">predicate</code> onward.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>The item type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> or <code class="paramref">predicate</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_SkipWhile_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SkipWhile*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_SkipWhile__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Threading_Tasks_ValueTask_System_Boolean___" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SkipWhile``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Threading.Tasks.ValueTask{System.Boolean}})">
+  SkipWhile&lt;T&gt;(IEtlPipeline&lt;T&gt;, Func&lt;T, ValueTask&lt;bool&gt;&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.3.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L278"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Skips items while an asynchronous <code class="paramref">predicate</code> holds, then yields the rest.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;T&gt; SkipWhile&lt;T&gt;(this IEtlPipeline&lt;T&gt; pipeline, Func&lt;T, ValueTask&lt;bool&gt;&gt; predicate) where T : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>The pipeline to skip within.</p>
+</dd>
+    <dt><code>predicate</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;T, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.valuetask-1">ValueTask</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;&gt;</dt>
+    <dd><p>Skipping continues while this returns <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a>.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>A pipeline yielding everything from the first item that fails <code class="paramref">predicate</code> onward.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>The item type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> or <code class="paramref">predicate</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Skip_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Skip*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Skip__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Int32_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Skip``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Int32)">
+  Skip&lt;T&gt;(IEtlPipeline&lt;T&gt;, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.3.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L211"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Skips the first <code class="paramref">count</code> items, then yields the rest.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;T&gt; Skip&lt;T&gt;(this IEtlPipeline&lt;T&gt; pipeline, int count) where T : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>The pipeline to skip within.</p>
+</dd>
+    <dt><code>count</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The number of leading items to skip. Must be non-negative.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>A pipeline yielding the items after the first <code class="paramref">count</code>.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>The item type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_TakeWhile_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.TakeWhile*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_TakeWhile__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Boolean__" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.TakeWhile``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Boolean})">
+  TakeWhile&lt;T&gt;(IEtlPipeline&lt;T&gt;, Func&lt;T, bool&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.3.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L227"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Yields items while a synchronous <code class="paramref">predicate</code> holds, then stops.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;T&gt; TakeWhile&lt;T&gt;(this IEtlPipeline&lt;T&gt; pipeline, Func&lt;T, bool&gt; predicate) where T : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>The pipeline to truncate.</p>
+</dd>
+    <dt><code>predicate</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;T, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;</dt>
+    <dd><p>Yielding continues while this returns <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a>.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>A pipeline yielding the leading run of items satisfying <code class="paramref">predicate</code>.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>The item type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> or <code class="paramref">predicate</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_TakeWhile_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.TakeWhile*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_TakeWhile__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Threading_Tasks_ValueTask_System_Boolean___" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.TakeWhile``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Threading.Tasks.ValueTask{System.Boolean}})">
+  TakeWhile&lt;T&gt;(IEtlPipeline&lt;T&gt;, Func&lt;T, ValueTask&lt;bool&gt;&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.3.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L244"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Yields items while an asynchronous <code class="paramref">predicate</code> holds, then stops.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;T&gt; TakeWhile&lt;T&gt;(this IEtlPipeline&lt;T&gt; pipeline, Func&lt;T, ValueTask&lt;bool&gt;&gt; predicate) where T : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>The pipeline to truncate.</p>
+</dd>
+    <dt><code>predicate</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;T, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.valuetask-1">ValueTask</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;&gt;</dt>
+    <dd><p>Yielding continues while this returns <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a>.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>A pipeline yielding the leading run of items satisfying <code class="paramref">predicate</code>.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>The item type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> or <code class="paramref">predicate</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Take_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Take*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Take__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Int32_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Take``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Int32)">
+  Take&lt;T&gt;(IEtlPipeline&lt;T&gt;, int)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.3.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L195"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Yields only the first <code class="paramref">count</code> items, then stops.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;T&gt; Take&lt;T&gt;(this IEtlPipeline&lt;T&gt; pipeline, int count) where T : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>The pipeline to truncate.</p>
+</dd>
+    <dt><code>count</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The maximum number of items to yield. Must be non-negative.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>A pipeline yielding at most <code class="paramref">count</code> items.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>The item type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Where_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Where*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Where__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Boolean__" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Where``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Boolean})">
+  Where&lt;T&gt;(IEtlPipeline&lt;T&gt;, Func&lt;T, bool&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.3.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L43"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Filters the pipeline to items that satisfy a synchronous <code class="paramref">predicate</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;T&gt; Where&lt;T&gt;(this IEtlPipeline&lt;T&gt; pipeline, Func&lt;T, bool&gt; predicate) where T : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>The pipeline to filter.</p>
+</dd>
+    <dt><code>predicate</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;T, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;</dt>
+    <dd><p>The predicate an item must satisfy to be kept.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>A pipeline yielding only the items for which <code class="paramref">predicate</code> returns <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a>.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>The item type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> or <code class="paramref">predicate</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Where_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Where*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Where__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Threading_Tasks_ValueTask_System_Boolean___" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Where``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Threading.Tasks.ValueTask{System.Boolean}})">
+  Where&lt;T&gt;(IEtlPipeline&lt;T&gt;, Func&lt;T, ValueTask&lt;bool&gt;&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.3.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L60"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Filters the pipeline to items that satisfy an asynchronous <code class="paramref">predicate</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;T&gt; Where&lt;T&gt;(this IEtlPipeline&lt;T&gt; pipeline, Func&lt;T, ValueTask&lt;bool&gt;&gt; predicate) where T : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>The pipeline to filter.</p>
+</dd>
+    <dt><code>predicate</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;T, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.valuetask-1">ValueTask</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;&gt;</dt>
+    <dd><p>The asynchronous predicate an item must satisfy to be kept.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>A pipeline yielding only the items for which <code class="paramref">predicate</code> returns <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a>.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>The item type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> or <code class="paramref">predicate</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.3.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L35" class="edit-link">Edit this page</a>
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Made with DocFX <script>(function(){var r='/';if(window.location.hostname.endsWith('.github.io')){var s=window.location.pathname.split('/').filter(Boolean);if(s.length)r='/'+s[0]+'/';}var t=document.createElement('script');t.src=r+'public/version-picker.js';t.async=true;document.head.appendChild(t);})();</script>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -120,6 +120,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions",
+      "Summary": "<p sourcefile=\"api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.yml\" sourcestartlinenumber=\"1\">LINQ-flavored operator extension methods on <xref href=\"Wolfgang.Etl.Abstractions.IEtlPipeline%601\" data-throw-if-not-resolved=\"false\"></xref>. Each operator is a\nthin wrapper that appends one of this package's transformers to the pipeline via the core's\n<xref href=\"Wolfgang.Etl.Abstractions.IEtlPipeline%601.Through%60%601(Wolfgang.Etl.Abstractions.ITransformAsync%7b%600%2c%60%600%7d)\" data-throw-if-not-resolved=\"false\"></xref> primitive —\nno iteration logic is re-implemented here.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Wolfgang.Etl.Transformers.OfTypeTransformer-2.yml",
       "output": {
         ".html": {

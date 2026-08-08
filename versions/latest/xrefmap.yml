@@ -399,6 +399,265 @@ references:
   fullName.vb: Wolfgang.Etl.Transformers.DistinctTransformer(Of T).TransformAsync
   nameWithType: DistinctTransformer<T>.TransformAsync
   nameWithType.vb: DistinctTransformer(Of T).TransformAsync
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions
+  name: EtlPipelineOperatorExtensions
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html
+  commentId: T:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions
+  nameWithType: EtlPipelineOperatorExtensions
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Buffered*
+  name: Buffered
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Buffered_
+  commentId: Overload:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Buffered
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Buffered
+  nameWithType: EtlPipelineOperatorExtensions.Buffered
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Buffered``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Int32)
+  name: Buffered<T>(IEtlPipeline<T>, int)
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Buffered__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Int32_
+  commentId: M:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Buffered``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Int32)
+  name.vb: Buffered(Of T)(IEtlPipeline(Of T), Integer)
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Buffered<T>(Wolfgang.Etl.Abstractions.IEtlPipeline<T>, int)
+  fullName.vb: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Buffered(Of T)(Wolfgang.Etl.Abstractions.IEtlPipeline(Of T), Integer)
+  nameWithType: EtlPipelineOperatorExtensions.Buffered<T>(IEtlPipeline<T>, int)
+  nameWithType.vb: EtlPipelineOperatorExtensions.Buffered(Of T)(IEtlPipeline(Of T), Integer)
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Cast*
+  name: Cast
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Cast_
+  commentId: Overload:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Cast
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Cast
+  nameWithType: EtlPipelineOperatorExtensions.Cast
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Cast``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0})
+  name: Cast<TSource, TDestination>(IEtlPipeline<TSource>)
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Cast__2_Wolfgang_Etl_Abstractions_IEtlPipeline___0__
+  commentId: M:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Cast``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0})
+  name.vb: Cast(Of TSource, TDestination)(IEtlPipeline(Of TSource))
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Cast<TSource, TDestination>(Wolfgang.Etl.Abstractions.IEtlPipeline<TSource>)
+  fullName.vb: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Cast(Of TSource, TDestination)(Wolfgang.Etl.Abstractions.IEtlPipeline(Of TSource))
+  nameWithType: EtlPipelineOperatorExtensions.Cast<TSource, TDestination>(IEtlPipeline<TSource>)
+  nameWithType.vb: EtlPipelineOperatorExtensions.Cast(Of TSource, TDestination)(IEtlPipeline(Of TSource))
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Chunk*
+  name: Chunk
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Chunk_
+  commentId: Overload:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Chunk
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Chunk
+  nameWithType: EtlPipelineOperatorExtensions.Chunk
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Chunk``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Int32)
+  name: Chunk<T>(IEtlPipeline<T>, int)
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Chunk__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Int32_
+  commentId: M:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Chunk``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Int32)
+  name.vb: Chunk(Of T)(IEtlPipeline(Of T), Integer)
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Chunk<T>(Wolfgang.Etl.Abstractions.IEtlPipeline<T>, int)
+  fullName.vb: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Chunk(Of T)(Wolfgang.Etl.Abstractions.IEtlPipeline(Of T), Integer)
+  nameWithType: EtlPipelineOperatorExtensions.Chunk<T>(IEtlPipeline<T>, int)
+  nameWithType.vb: EtlPipelineOperatorExtensions.Chunk(Of T)(IEtlPipeline(Of T), Integer)
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Distinct*
+  name: Distinct
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Distinct_
+  commentId: Overload:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Distinct
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Distinct
+  nameWithType: EtlPipelineOperatorExtensions.Distinct
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.DistinctBy*
+  name: DistinctBy
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_DistinctBy_
+  commentId: Overload:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.DistinctBy
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.DistinctBy
+  nameWithType: EtlPipelineOperatorExtensions.DistinctBy
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.DistinctBy``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,``1},System.Collections.Generic.IEqualityComparer{``1})
+  name: DistinctBy<TSource, TKey>(IEtlPipeline<TSource>, Func<TSource, TKey>, IEqualityComparer<TKey>?)
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_DistinctBy__2_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0___1__System_Collections_Generic_IEqualityComparer___1__
+  commentId: M:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.DistinctBy``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,``1},System.Collections.Generic.IEqualityComparer{``1})
+  name.vb: DistinctBy(Of TSource, TKey)(IEtlPipeline(Of TSource), Func(Of TSource, TKey), IEqualityComparer(Of TKey))
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.DistinctBy<TSource, TKey>(Wolfgang.Etl.Abstractions.IEtlPipeline<TSource>, System.Func<TSource, TKey>, System.Collections.Generic.IEqualityComparer<TKey>?)
+  fullName.vb: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.DistinctBy(Of TSource, TKey)(Wolfgang.Etl.Abstractions.IEtlPipeline(Of TSource), System.Func(Of TSource, TKey), System.Collections.Generic.IEqualityComparer(Of TKey))
+  nameWithType: EtlPipelineOperatorExtensions.DistinctBy<TSource, TKey>(IEtlPipeline<TSource>, Func<TSource, TKey>, IEqualityComparer<TKey>?)
+  nameWithType.vb: EtlPipelineOperatorExtensions.DistinctBy(Of TSource, TKey)(IEtlPipeline(Of TSource), Func(Of TSource, TKey), IEqualityComparer(Of TKey))
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Distinct``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Collections.Generic.IEqualityComparer{``0})
+  name: Distinct<T>(IEtlPipeline<T>, IEqualityComparer<T>?)
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Distinct__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Collections_Generic_IEqualityComparer___0__
+  commentId: M:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Distinct``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Collections.Generic.IEqualityComparer{``0})
+  name.vb: Distinct(Of T)(IEtlPipeline(Of T), IEqualityComparer(Of T))
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Distinct<T>(Wolfgang.Etl.Abstractions.IEtlPipeline<T>, System.Collections.Generic.IEqualityComparer<T>?)
+  fullName.vb: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Distinct(Of T)(Wolfgang.Etl.Abstractions.IEtlPipeline(Of T), System.Collections.Generic.IEqualityComparer(Of T))
+  nameWithType: EtlPipelineOperatorExtensions.Distinct<T>(IEtlPipeline<T>, IEqualityComparer<T>?)
+  nameWithType.vb: EtlPipelineOperatorExtensions.Distinct(Of T)(IEtlPipeline(Of T), IEqualityComparer(Of T))
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.OfType*
+  name: OfType
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_OfType_
+  commentId: Overload:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.OfType
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.OfType
+  nameWithType: EtlPipelineOperatorExtensions.OfType
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.OfType``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0})
+  name: OfType<TSource, TDestination>(IEtlPipeline<TSource>)
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_OfType__2_Wolfgang_Etl_Abstractions_IEtlPipeline___0__
+  commentId: M:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.OfType``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0})
+  name.vb: OfType(Of TSource, TDestination)(IEtlPipeline(Of TSource))
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.OfType<TSource, TDestination>(Wolfgang.Etl.Abstractions.IEtlPipeline<TSource>)
+  fullName.vb: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.OfType(Of TSource, TDestination)(Wolfgang.Etl.Abstractions.IEtlPipeline(Of TSource))
+  nameWithType: EtlPipelineOperatorExtensions.OfType<TSource, TDestination>(IEtlPipeline<TSource>)
+  nameWithType.vb: EtlPipelineOperatorExtensions.OfType(Of TSource, TDestination)(IEtlPipeline(Of TSource))
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Select*
+  name: Select
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Select_
+  commentId: Overload:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Select
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Select
+  nameWithType: EtlPipelineOperatorExtensions.Select
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SelectMany*
+  name: SelectMany
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_SelectMany_
+  commentId: Overload:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SelectMany
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SelectMany
+  nameWithType: EtlPipelineOperatorExtensions.SelectMany
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SelectMany``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Collections.Generic.IAsyncEnumerable{``1}})
+  name: SelectMany<TSource, TDestination>(IEtlPipeline<TSource>, Func<TSource, IAsyncEnumerable<TDestination>>)
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_SelectMany__2_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Collections_Generic_IAsyncEnumerable___1___
+  commentId: M:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SelectMany``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Collections.Generic.IAsyncEnumerable{``1}})
+  name.vb: SelectMany(Of TSource, TDestination)(IEtlPipeline(Of TSource), Func(Of TSource, IAsyncEnumerable(Of TDestination)))
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SelectMany<TSource, TDestination>(Wolfgang.Etl.Abstractions.IEtlPipeline<TSource>, System.Func<TSource, System.Collections.Generic.IAsyncEnumerable<TDestination>>)
+  fullName.vb: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SelectMany(Of TSource, TDestination)(Wolfgang.Etl.Abstractions.IEtlPipeline(Of TSource), System.Func(Of TSource, System.Collections.Generic.IAsyncEnumerable(Of TDestination)))
+  nameWithType: EtlPipelineOperatorExtensions.SelectMany<TSource, TDestination>(IEtlPipeline<TSource>, Func<TSource, IAsyncEnumerable<TDestination>>)
+  nameWithType.vb: EtlPipelineOperatorExtensions.SelectMany(Of TSource, TDestination)(IEtlPipeline(Of TSource), Func(Of TSource, IAsyncEnumerable(Of TDestination)))
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SelectMany``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Collections.Generic.IEnumerable{``1}})
+  name: SelectMany<TSource, TDestination>(IEtlPipeline<TSource>, Func<TSource, IEnumerable<TDestination>>)
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_SelectMany__2_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Collections_Generic_IEnumerable___1___
+  commentId: M:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SelectMany``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Collections.Generic.IEnumerable{``1}})
+  name.vb: SelectMany(Of TSource, TDestination)(IEtlPipeline(Of TSource), Func(Of TSource, IEnumerable(Of TDestination)))
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SelectMany<TSource, TDestination>(Wolfgang.Etl.Abstractions.IEtlPipeline<TSource>, System.Func<TSource, System.Collections.Generic.IEnumerable<TDestination>>)
+  fullName.vb: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SelectMany(Of TSource, TDestination)(Wolfgang.Etl.Abstractions.IEtlPipeline(Of TSource), System.Func(Of TSource, System.Collections.Generic.IEnumerable(Of TDestination)))
+  nameWithType: EtlPipelineOperatorExtensions.SelectMany<TSource, TDestination>(IEtlPipeline<TSource>, Func<TSource, IEnumerable<TDestination>>)
+  nameWithType.vb: EtlPipelineOperatorExtensions.SelectMany(Of TSource, TDestination)(IEtlPipeline(Of TSource), Func(Of TSource, IEnumerable(Of TDestination)))
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Select``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Threading.Tasks.ValueTask{``1}})
+  name: Select<TSource, TDestination>(IEtlPipeline<TSource>, Func<TSource, ValueTask<TDestination>>)
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Select__2_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Threading_Tasks_ValueTask___1___
+  commentId: M:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Select``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Threading.Tasks.ValueTask{``1}})
+  name.vb: Select(Of TSource, TDestination)(IEtlPipeline(Of TSource), Func(Of TSource, ValueTask(Of TDestination)))
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Select<TSource, TDestination>(Wolfgang.Etl.Abstractions.IEtlPipeline<TSource>, System.Func<TSource, System.Threading.Tasks.ValueTask<TDestination>>)
+  fullName.vb: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Select(Of TSource, TDestination)(Wolfgang.Etl.Abstractions.IEtlPipeline(Of TSource), System.Func(Of TSource, System.Threading.Tasks.ValueTask(Of TDestination)))
+  nameWithType: EtlPipelineOperatorExtensions.Select<TSource, TDestination>(IEtlPipeline<TSource>, Func<TSource, ValueTask<TDestination>>)
+  nameWithType.vb: EtlPipelineOperatorExtensions.Select(Of TSource, TDestination)(IEtlPipeline(Of TSource), Func(Of TSource, ValueTask(Of TDestination)))
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Select``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,``1})
+  name: Select<TSource, TDestination>(IEtlPipeline<TSource>, Func<TSource, TDestination>)
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Select__2_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0___1__
+  commentId: M:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Select``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,``1})
+  name.vb: Select(Of TSource, TDestination)(IEtlPipeline(Of TSource), Func(Of TSource, TDestination))
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Select<TSource, TDestination>(Wolfgang.Etl.Abstractions.IEtlPipeline<TSource>, System.Func<TSource, TDestination>)
+  fullName.vb: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Select(Of TSource, TDestination)(Wolfgang.Etl.Abstractions.IEtlPipeline(Of TSource), System.Func(Of TSource, TDestination))
+  nameWithType: EtlPipelineOperatorExtensions.Select<TSource, TDestination>(IEtlPipeline<TSource>, Func<TSource, TDestination>)
+  nameWithType.vb: EtlPipelineOperatorExtensions.Select(Of TSource, TDestination)(IEtlPipeline(Of TSource), Func(Of TSource, TDestination))
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Skip*
+  name: Skip
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Skip_
+  commentId: Overload:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Skip
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Skip
+  nameWithType: EtlPipelineOperatorExtensions.Skip
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SkipWhile*
+  name: SkipWhile
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_SkipWhile_
+  commentId: Overload:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SkipWhile
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SkipWhile
+  nameWithType: EtlPipelineOperatorExtensions.SkipWhile
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SkipWhile``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Boolean})
+  name: SkipWhile<T>(IEtlPipeline<T>, Func<T, bool>)
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_SkipWhile__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Boolean__
+  commentId: M:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SkipWhile``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Boolean})
+  name.vb: SkipWhile(Of T)(IEtlPipeline(Of T), Func(Of T, Boolean))
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SkipWhile<T>(Wolfgang.Etl.Abstractions.IEtlPipeline<T>, System.Func<T, bool>)
+  fullName.vb: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SkipWhile(Of T)(Wolfgang.Etl.Abstractions.IEtlPipeline(Of T), System.Func(Of T, Boolean))
+  nameWithType: EtlPipelineOperatorExtensions.SkipWhile<T>(IEtlPipeline<T>, Func<T, bool>)
+  nameWithType.vb: EtlPipelineOperatorExtensions.SkipWhile(Of T)(IEtlPipeline(Of T), Func(Of T, Boolean))
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SkipWhile``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Threading.Tasks.ValueTask{System.Boolean}})
+  name: SkipWhile<T>(IEtlPipeline<T>, Func<T, ValueTask<bool>>)
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_SkipWhile__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Threading_Tasks_ValueTask_System_Boolean___
+  commentId: M:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SkipWhile``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Threading.Tasks.ValueTask{System.Boolean}})
+  name.vb: SkipWhile(Of T)(IEtlPipeline(Of T), Func(Of T, ValueTask(Of Boolean)))
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SkipWhile<T>(Wolfgang.Etl.Abstractions.IEtlPipeline<T>, System.Func<T, System.Threading.Tasks.ValueTask<bool>>)
+  fullName.vb: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SkipWhile(Of T)(Wolfgang.Etl.Abstractions.IEtlPipeline(Of T), System.Func(Of T, System.Threading.Tasks.ValueTask(Of Boolean)))
+  nameWithType: EtlPipelineOperatorExtensions.SkipWhile<T>(IEtlPipeline<T>, Func<T, ValueTask<bool>>)
+  nameWithType.vb: EtlPipelineOperatorExtensions.SkipWhile(Of T)(IEtlPipeline(Of T), Func(Of T, ValueTask(Of Boolean)))
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Skip``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Int32)
+  name: Skip<T>(IEtlPipeline<T>, int)
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Skip__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Int32_
+  commentId: M:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Skip``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Int32)
+  name.vb: Skip(Of T)(IEtlPipeline(Of T), Integer)
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Skip<T>(Wolfgang.Etl.Abstractions.IEtlPipeline<T>, int)
+  fullName.vb: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Skip(Of T)(Wolfgang.Etl.Abstractions.IEtlPipeline(Of T), Integer)
+  nameWithType: EtlPipelineOperatorExtensions.Skip<T>(IEtlPipeline<T>, int)
+  nameWithType.vb: EtlPipelineOperatorExtensions.Skip(Of T)(IEtlPipeline(Of T), Integer)
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Take*
+  name: Take
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Take_
+  commentId: Overload:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Take
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Take
+  nameWithType: EtlPipelineOperatorExtensions.Take
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.TakeWhile*
+  name: TakeWhile
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_TakeWhile_
+  commentId: Overload:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.TakeWhile
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.TakeWhile
+  nameWithType: EtlPipelineOperatorExtensions.TakeWhile
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.TakeWhile``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Boolean})
+  name: TakeWhile<T>(IEtlPipeline<T>, Func<T, bool>)
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_TakeWhile__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Boolean__
+  commentId: M:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.TakeWhile``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Boolean})
+  name.vb: TakeWhile(Of T)(IEtlPipeline(Of T), Func(Of T, Boolean))
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.TakeWhile<T>(Wolfgang.Etl.Abstractions.IEtlPipeline<T>, System.Func<T, bool>)
+  fullName.vb: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.TakeWhile(Of T)(Wolfgang.Etl.Abstractions.IEtlPipeline(Of T), System.Func(Of T, Boolean))
+  nameWithType: EtlPipelineOperatorExtensions.TakeWhile<T>(IEtlPipeline<T>, Func<T, bool>)
+  nameWithType.vb: EtlPipelineOperatorExtensions.TakeWhile(Of T)(IEtlPipeline(Of T), Func(Of T, Boolean))
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.TakeWhile``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Threading.Tasks.ValueTask{System.Boolean}})
+  name: TakeWhile<T>(IEtlPipeline<T>, Func<T, ValueTask<bool>>)
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_TakeWhile__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Threading_Tasks_ValueTask_System_Boolean___
+  commentId: M:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.TakeWhile``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Threading.Tasks.ValueTask{System.Boolean}})
+  name.vb: TakeWhile(Of T)(IEtlPipeline(Of T), Func(Of T, ValueTask(Of Boolean)))
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.TakeWhile<T>(Wolfgang.Etl.Abstractions.IEtlPipeline<T>, System.Func<T, System.Threading.Tasks.ValueTask<bool>>)
+  fullName.vb: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.TakeWhile(Of T)(Wolfgang.Etl.Abstractions.IEtlPipeline(Of T), System.Func(Of T, System.Threading.Tasks.ValueTask(Of Boolean)))
+  nameWithType: EtlPipelineOperatorExtensions.TakeWhile<T>(IEtlPipeline<T>, Func<T, ValueTask<bool>>)
+  nameWithType.vb: EtlPipelineOperatorExtensions.TakeWhile(Of T)(IEtlPipeline(Of T), Func(Of T, ValueTask(Of Boolean)))
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Take``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Int32)
+  name: Take<T>(IEtlPipeline<T>, int)
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Take__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Int32_
+  commentId: M:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Take``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Int32)
+  name.vb: Take(Of T)(IEtlPipeline(Of T), Integer)
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Take<T>(Wolfgang.Etl.Abstractions.IEtlPipeline<T>, int)
+  fullName.vb: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Take(Of T)(Wolfgang.Etl.Abstractions.IEtlPipeline(Of T), Integer)
+  nameWithType: EtlPipelineOperatorExtensions.Take<T>(IEtlPipeline<T>, int)
+  nameWithType.vb: EtlPipelineOperatorExtensions.Take(Of T)(IEtlPipeline(Of T), Integer)
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Where*
+  name: Where
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Where_
+  commentId: Overload:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Where
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Where
+  nameWithType: EtlPipelineOperatorExtensions.Where
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Where``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Boolean})
+  name: Where<T>(IEtlPipeline<T>, Func<T, bool>)
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Where__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Boolean__
+  commentId: M:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Where``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Boolean})
+  name.vb: Where(Of T)(IEtlPipeline(Of T), Func(Of T, Boolean))
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Where<T>(Wolfgang.Etl.Abstractions.IEtlPipeline<T>, System.Func<T, bool>)
+  fullName.vb: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Where(Of T)(Wolfgang.Etl.Abstractions.IEtlPipeline(Of T), System.Func(Of T, Boolean))
+  nameWithType: EtlPipelineOperatorExtensions.Where<T>(IEtlPipeline<T>, Func<T, bool>)
+  nameWithType.vb: EtlPipelineOperatorExtensions.Where(Of T)(IEtlPipeline(Of T), Func(Of T, Boolean))
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Where``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Threading.Tasks.ValueTask{System.Boolean}})
+  name: Where<T>(IEtlPipeline<T>, Func<T, ValueTask<bool>>)
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Where__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Threading_Tasks_ValueTask_System_Boolean___
+  commentId: M:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Where``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Threading.Tasks.ValueTask{System.Boolean}})
+  name.vb: Where(Of T)(IEtlPipeline(Of T), Func(Of T, ValueTask(Of Boolean)))
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Where<T>(Wolfgang.Etl.Abstractions.IEtlPipeline<T>, System.Func<T, System.Threading.Tasks.ValueTask<bool>>)
+  fullName.vb: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Where(Of T)(Wolfgang.Etl.Abstractions.IEtlPipeline(Of T), System.Func(Of T, System.Threading.Tasks.ValueTask(Of Boolean)))
+  nameWithType: EtlPipelineOperatorExtensions.Where<T>(IEtlPipeline<T>, Func<T, ValueTask<bool>>)
+  nameWithType.vb: EtlPipelineOperatorExtensions.Where(Of T)(IEtlPipeline(Of T), Func(Of T, ValueTask(Of Boolean)))
 - uid: Wolfgang.Etl.Transformers.OfTypeTransformer`2
   name: OfTypeTransformer<TSource, TDestination>
   href: api/Wolfgang.Etl.Transformers.OfTypeTransformer-2.html
