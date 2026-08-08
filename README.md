@@ -105,7 +105,9 @@ await EtlPipeline
     .RunAsync();
 ```
 
-Available operators: `Where`, `Select`, `SelectMany` (each with sync and async overloads), `Distinct`, `DistinctBy`, `Take`, `Skip`, `TakeWhile`, `SkipWhile`, `Chunk`, `Buffered`, `Cast`, and `OfType`.
+**Data-shape operators:** `Where`, `Select`, `SelectMany` (each with sync and async overloads), `Distinct`, `DistinctBy`, `Take`, `Skip`, `TakeWhile`, `SkipWhile`, `Chunk`, `Buffered`, `Cast`, and `OfType`.
+
+**Observability operators** (watch or pace the stream without changing its shape): `Tap` (sync/async side effect per item, passed through unchanged).
 
 ---
 

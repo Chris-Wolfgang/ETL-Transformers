@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Observability pipeline operator `Tap` on `IEtlPipeline<T>` (sync `Action<T>` and async
+  `Func<T, ValueTask>`): runs a side effect per item and passes the item through unchanged,
+  layered over `Through` (no core changes, no new dependencies). First of the observability
+  operator set. ([#174](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/174))
 - Property-based fuzzing: a CsCheck suite asserts each transformer is equivalent to its
   `System.Linq` counterpart on randomised input, plus a scheduled `fuzz.yaml` (high iteration
   count, uploads results and auto-files an issue on failure). ([#76](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/76))
