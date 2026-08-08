@@ -405,6 +405,34 @@ public static class EtlPipelineOperatorExtensions
 
 
 
+    /// <summary>
+    /// Writes a log line per item and passes the item through unchanged — a <see cref="Tap{T}(IEtlPipeline{T}, Action{T})"/>
+    /// bound to a formatter and a sink. Deliberately dependency-free: it takes a delegate sink rather than
+    /// referencing <c>Microsoft.Extensions.Logging</c>, so bridge to an <c>ILogger</c> at the call site if desired.
+    /// </summary>
+    /// <typeparam name="T">The item type. Must be non-null.</typeparam>
+    /// <param name="pipeline">The pipeline to observe.</param>
+    /// <param name="format">Produces the log message for an item.</param>
+    /// <param name="sink">Receives each formatted message (e.g. <c>Console.WriteLine</c> or <c>msg =&gt; logger.LogInformation(msg)</c>).</param>
+    /// <returns>A pipeline yielding the same items, in the same order, logging one message per item.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="pipeline"/>, <paramref name="format"/>, or <paramref name="sink"/> is <see langword="null"/>.</exception>
+    /// <example>
+    /// <code>
+    ///     .Log(r =&gt; $"processing {r.Id}", Console.WriteLine)
+    /// </code>
+    /// </example>
+    public static IEtlPipeline<T> Log<T>(this IEtlPipeline<T> pipeline, Func<T, string> format, Action<string> sink)
+        where T : notnull
+    {
+        ThrowIfNull(pipeline, nameof(pipeline));
+        ThrowIfNull(format, nameof(format));
+        ThrowIfNull(sink, nameof(sink));
+
+        return pipeline.Tap(item => sink(format(item)));
+    }
+
+
+
     private static void ThrowIfNull(object? argument, string paramName)
     {
         if (argument is null)

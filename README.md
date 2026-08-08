@@ -107,7 +107,7 @@ await EtlPipeline
 
 **Data-shape operators:** `Where`, `Select`, `SelectMany` (each with sync and async overloads), `Distinct`, `DistinctBy`, `Take`, `Skip`, `TakeWhile`, `SkipWhile`, `Chunk`, `Buffered`, `Cast`, and `OfType`.
 
-**Observability operators** (watch or pace the stream without changing its shape): `Tap` (sync/async side effect per item, passed through unchanged).
+**Observability operators** (watch or pace the stream without changing its shape): `Tap` (sync/async side effect per item, passed through unchanged); `Log` (`Log(format, sink)` — one formatted message per item via a delegate sink, no logging-framework dependency).
 
 ---
 
