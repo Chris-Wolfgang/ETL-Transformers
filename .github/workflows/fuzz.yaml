@@ -74,14 +74,18 @@ jobs:
         if: failure() && steps.detect.outputs.found == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.run_id }}
+          SERVER_URL: ${{ github.server_url }}
+          REPO: ${{ github.repository }}
         run: |
           title="Fuzz: property counter-example ($(date -u +%Y-%m-%d))"
+          run_url="${SERVER_URL}/${REPO}/actions/runs/${RUN_ID}"
           # Avoid duplicate spam — only open a new issue if none is already open.
           if gh issue list --state open --search "in:title Fuzz: property counter-example" --json number --jq 'length' | grep -qx 0; then
             gh issue create \
               --title "$title" \
               --label thorough-review \
-              --body "A property in the Fuzz suite failed on the scheduled run [${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}). Download the \`fuzz-results\` artifact for the failing property and CsCheck's reproducible seed, then reproduce locally with \`CsCheck_Seed=<seed> dotnet test tests/Wolfgang.Etl.Transformers.Tests.Fuzz\`."
+              --body "A property in the Fuzz suite failed on the scheduled run [${RUN_ID}](${run_url}). Download the \`fuzz-results\` artifact for the failing property and CsCheck's reproducible seed, then reproduce locally with \`CsCheck_Seed=<seed> dotnet test tests/Wolfgang.Etl.Transformers.Tests.Fuzz\`."
           else
             echo "An open fuzz counter-example issue already exists — not filing a duplicate."
           fi

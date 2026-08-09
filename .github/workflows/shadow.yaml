@@ -45,7 +45,7 @@ jobs:
       issues: write  # Open/update the regression tracking issue
     steps:
       - name: Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
 
@@ -87,13 +87,14 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
           marker='<!-- shadow-regression -->'
           title='Shadow-test regression detected'
           {
             echo "$marker"
-            echo "The nightly shadow workloads regressed beyond threshold on \`${{ github.sha }}\`."
+            echo "The nightly shadow workloads regressed beyond threshold on \`${SHA}\`."
             echo ""
             cat "$RUNNER_TEMP/shadow-report.md"
             echo ""

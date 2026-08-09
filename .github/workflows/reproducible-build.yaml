@@ -31,7 +31,7 @@ jobs:
       CI: 'true'
     steps:
       - name: Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
 
@@ -50,6 +50,8 @@ jobs:
 
       - name: Hash outputs
         shell: bash
+        env:
+          RUNNER_OS_NAME: ${{ matrix.os }}
         run: |
           set -euo pipefail
           manifest="manifest.txt"
@@ -68,7 +70,7 @@ jobs:
           done < <(find "$base" -type f \( -name 'Wolfgang.Etl.Transformers.dll' -o -name 'Wolfgang.Etl.Transformers.pdb' \) | sort)
 
           sort -k2 "$manifest" -o "$manifest"
-          echo "--- ${{ matrix.os }} output hashes ---"
+          echo "--- ${RUNNER_OS_NAME} output hashes ---"
           cat "$manifest"
 
       - name: Upload manifest

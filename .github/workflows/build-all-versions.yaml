@@ -15,6 +15,11 @@ on:
 permissions:
   contents: read  # Default to read-only; the build-and-deploy job overrides with write
 
+concurrency:
+  # A re-dispatch supersedes an in-flight manual run.
+  group: build-all-versions-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-and-deploy:
     name: Build & Deploy All Versioned Docs

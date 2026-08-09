@@ -15,6 +15,9 @@ Usage:
 from __future__ import annotations
 
 import sys
+# nosemgrep: use-defused-xml — input is a VSTest .trx produced by our own CI run
+# (dotnet test on trusted source), never attacker-supplied, so XXE/entity-expansion
+# is not a threat here and adding a defusedxml dependency to the CI image is not warranted.
 import xml.etree.ElementTree as ET
 
 TRX_NS = "{http://microsoft.com/schemas/VisualStudio/TeamTest/2010}"

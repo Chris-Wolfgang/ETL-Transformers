@@ -50,6 +50,11 @@ on:
 permissions:
   contents: read  # Default to read-only; the build-and-deploy job overrides with write
 
+concurrency:
+  # Serialize Pages deploys; never cancel an in-flight deploy mid-publish.
+  group: docfx-deploy
+  cancel-in-progress: false
+
 jobs:
   build-and-deploy:
     name: Build & Deploy Documentation
@@ -382,8 +387,9 @@ jobs:
             Write-Host "::error::Newly-generated docfx_project/_site/versions.json is missing — docfx generation is broken. Refusing to deploy without a verified version manifest."
             exit 1
           }
+          $repoOwner = ($env:GITHUB_REPOSITORY -split '/')[0]
           $repoName = ($env:GITHUB_REPOSITORY -split '/')[-1]
-          $existingUrl = "https://${{ github.repository_owner }}.github.io/$repoName/versions.json"
+          $existingUrl = "https://$repoOwner.github.io/$repoName/versions.json"
           try {
             # -UseBasicParsing is a Windows-PowerShell-5.1 flag; pwsh (PowerShell 7+)
             # treats it as unsupported and would error. Omit it.

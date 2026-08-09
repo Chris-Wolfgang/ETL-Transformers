@@ -16,8 +16,7 @@ on:
       - 'benchmarks/**'
 
 permissions:
-  contents: read
-  pull-requests: write
+  contents: read  # Checkout the PR head and base for the delta comparison
 
 concurrency:
   # One run per PR; a new push cancels the in-flight comparison so the sticky
@@ -36,9 +35,12 @@ jobs:
   benchmark:
     name: Compare BDN delta vs base
     runs-on: ubuntu-latest
+    permissions:
+      contents: read         # Checkout the PR head and base commit
+      pull-requests: write   # Post/replace the sticky delta comment on the PR
     steps:
       - name: Checkout PR head
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           # Full history so the base commit can be checked out into a worktree.
           fetch-depth: 0
@@ -141,9 +143,10 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
           PR: ${{ github.event.pull_request.number }}
+          REGRESSED: ${{ steps.delta.outputs.regressed }}
         run: |
           set -euo pipefail
-          if [ "${{ steps.delta.outputs.regressed }}" != "true" ]; then
+          if [ "$REGRESSED" != "true" ]; then
             echo "✅ No benchmark regression beyond threshold."
             exit 0
           fi

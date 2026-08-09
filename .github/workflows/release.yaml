@@ -578,8 +578,21 @@ jobs:
       # NUGET_SIGN_CERT_BASE64 secret is absent, so the pipeline keeps working until a
       # certificate is provisioned. (NuGet.org additionally applies its own repository
       # signature on publish, verifiable via `nuget verify --signatures` regardless.)
+      # Probe for the signing certificate here (in a step's env) rather than testing
+      # `secrets.*` directly in the next step's `if:` — the secrets context is not
+      # available in `if` conditions, only in env/with. This surfaces a boolean output.
+      - name: Check signing certificate availability
+        id: check-cert
+        if: steps.check-packages.outputs.has-packages == 'true'
+        shell: pwsh
+        env:
+          SIGN_CERT_BASE64: ${{ secrets.NUGET_SIGN_CERT_BASE64 }}
+        run: |
+          $has = if ([string]::IsNullOrEmpty($env:SIGN_CERT_BASE64)) { 'false' } else { 'true' }
+          "has-cert=$has" >> $env:GITHUB_OUTPUT
+
       - name: Sign NuGet packages
-        if: steps.check-packages.outputs.has-packages == 'true' && secrets.NUGET_SIGN_CERT_BASE64 != ''
+        if: steps.check-packages.outputs.has-packages == 'true' && steps.check-cert.outputs.has-cert == 'true'
         shell: pwsh
         env:
           SIGN_CERT_BASE64: ${{ secrets.NUGET_SIGN_CERT_BASE64 }}
@@ -803,7 +816,7 @@ jobs:
       # run before the artifacts are downloaded. Provides scripts/generate-repro-manifest.py
       # at the released tag.
       - name: Checkout code at release tag
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ github.event.release.tag_name }}
           persist-credentials: false
