@@ -1,8 +1,1 @@
 #nullable enable
-static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Log<T>(this Wolfgang.Etl.Abstractions.IEtlPipeline<T>! pipeline, System.Func<T, string!>! format, System.Action<string!>! sink) -> Wolfgang.Etl.Abstractions.IEtlPipeline<T>!
-static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Tap<T>(this Wolfgang.Etl.Abstractions.IEtlPipeline<T>! pipeline, System.Action<T>! onItem) -> Wolfgang.Etl.Abstractions.IEtlPipeline<T>!
-static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Tap<T>(this Wolfgang.Etl.Abstractions.IEtlPipeline<T>! pipeline, System.Func<T, System.Threading.Tasks.ValueTask>! onItem) -> Wolfgang.Etl.Abstractions.IEtlPipeline<T>!
-static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Throttle<T>(this Wolfgang.Etl.Abstractions.IEtlPipeline<T>! pipeline, System.TimeSpan minInterval) -> Wolfgang.Etl.Abstractions.IEtlPipeline<T>!
-Wolfgang.Etl.Transformers.ThrottleTransformer<T>
-Wolfgang.Etl.Transformers.ThrottleTransformer<T>.ThrottleTransformer(System.TimeSpan minInterval) -> void
-Wolfgang.Etl.Transformers.ThrottleTransformer<T>.TransformAsync(System.Collections.Generic.IAsyncEnumerable<T>! items) -> System.Collections.Generic.IAsyncEnumerable<T>!

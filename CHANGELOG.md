@@ -9,6 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [0.4.0] - 2026-08-09
+
+### Added
+
 - Observability pipeline operator `Tap` on `IEtlPipeline<T>` (sync `Action<T>` and async
   `Func<T, ValueTask>`): runs a side effect per item and passes the item through unchanged,
   layered over `Through` (no core changes, no new dependencies). First of the observability
@@ -167,7 +181,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `ETL-Transformers.slnx`: removed references to 6 files that were never created after template setup
 
-[Unreleased]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.1.1...v0.2.0

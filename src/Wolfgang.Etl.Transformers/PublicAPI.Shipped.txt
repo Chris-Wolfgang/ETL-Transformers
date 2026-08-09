@@ -1,25 +1,4 @@
 #nullable enable
-static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Buffered<T>(this Wolfgang.Etl.Abstractions.IEtlPipeline<T>! pipeline, int capacity) -> Wolfgang.Etl.Abstractions.IEtlPipeline<T>!
-static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Cast<TSource, TDestination>(this Wolfgang.Etl.Abstractions.IEtlPipeline<TSource>! pipeline) -> Wolfgang.Etl.Abstractions.IEtlPipeline<TDestination>!
-static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Chunk<T>(this Wolfgang.Etl.Abstractions.IEtlPipeline<T>! pipeline, int size) -> Wolfgang.Etl.Abstractions.IEtlPipeline<System.Collections.Generic.IReadOnlyList<T>!>!
-static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Distinct<T>(this Wolfgang.Etl.Abstractions.IEtlPipeline<T>! pipeline, System.Collections.Generic.IEqualityComparer<T>? comparer = null) -> Wolfgang.Etl.Abstractions.IEtlPipeline<T>!
-static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.DistinctBy<TSource, TKey>(this Wolfgang.Etl.Abstractions.IEtlPipeline<TSource>! pipeline, System.Func<TSource, TKey>! keySelector, System.Collections.Generic.IEqualityComparer<TKey>? comparer = null) -> Wolfgang.Etl.Abstractions.IEtlPipeline<TSource>!
-static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.OfType<TSource, TDestination>(this Wolfgang.Etl.Abstractions.IEtlPipeline<TSource>! pipeline) -> Wolfgang.Etl.Abstractions.IEtlPipeline<TDestination>!
-static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Select<TSource, TDestination>(this Wolfgang.Etl.Abstractions.IEtlPipeline<TSource>! pipeline, System.Func<TSource, System.Threading.Tasks.ValueTask<TDestination>>! selector) -> Wolfgang.Etl.Abstractions.IEtlPipeline<TDestination>!
-static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Select<TSource, TDestination>(this Wolfgang.Etl.Abstractions.IEtlPipeline<TSource>! pipeline, System.Func<TSource, TDestination>! selector) -> Wolfgang.Etl.Abstractions.IEtlPipeline<TDestination>!
-static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SelectMany<TSource, TDestination>(this Wolfgang.Etl.Abstractions.IEtlPipeline<TSource>! pipeline, System.Func<TSource, System.Collections.Generic.IAsyncEnumerable<TDestination>!>! selector) -> Wolfgang.Etl.Abstractions.IEtlPipeline<TDestination>!
-static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SelectMany<TSource, TDestination>(this Wolfgang.Etl.Abstractions.IEtlPipeline<TSource>! pipeline, System.Func<TSource, System.Collections.Generic.IEnumerable<TDestination>!>! selector) -> Wolfgang.Etl.Abstractions.IEtlPipeline<TDestination>!
-static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Skip<T>(this Wolfgang.Etl.Abstractions.IEtlPipeline<T>! pipeline, int count) -> Wolfgang.Etl.Abstractions.IEtlPipeline<T>!
-static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SkipWhile<T>(this Wolfgang.Etl.Abstractions.IEtlPipeline<T>! pipeline, System.Func<T, bool>! predicate) -> Wolfgang.Etl.Abstractions.IEtlPipeline<T>!
-static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SkipWhile<T>(this Wolfgang.Etl.Abstractions.IEtlPipeline<T>! pipeline, System.Func<T, System.Threading.Tasks.ValueTask<bool>>! predicate) -> Wolfgang.Etl.Abstractions.IEtlPipeline<T>!
-static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Take<T>(this Wolfgang.Etl.Abstractions.IEtlPipeline<T>! pipeline, int count) -> Wolfgang.Etl.Abstractions.IEtlPipeline<T>!
-static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.TakeWhile<T>(this Wolfgang.Etl.Abstractions.IEtlPipeline<T>! pipeline, System.Func<T, bool>! predicate) -> Wolfgang.Etl.Abstractions.IEtlPipeline<T>!
-static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.TakeWhile<T>(this Wolfgang.Etl.Abstractions.IEtlPipeline<T>! pipeline, System.Func<T, System.Threading.Tasks.ValueTask<bool>>! predicate) -> Wolfgang.Etl.Abstractions.IEtlPipeline<T>!
-static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Where<T>(this Wolfgang.Etl.Abstractions.IEtlPipeline<T>! pipeline, System.Func<T, bool>! predicate) -> Wolfgang.Etl.Abstractions.IEtlPipeline<T>!
-static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Where<T>(this Wolfgang.Etl.Abstractions.IEtlPipeline<T>! pipeline, System.Func<T, System.Threading.Tasks.ValueTask<bool>>! predicate) -> Wolfgang.Etl.Abstractions.IEtlPipeline<T>!
-static Wolfgang.Etl.Transformers.TransformerExtensions.Buffered<T>(this System.Collections.Generic.IAsyncEnumerable<T>! source, int capacity) -> System.Collections.Generic.IAsyncEnumerable<T>!
-static Wolfgang.Etl.Transformers.TransformerExtensions.Then<TSource, TIntermediate, TDestination>(this Wolfgang.Etl.Abstractions.ITransformAsync<TSource, TIntermediate>! first, Wolfgang.Etl.Abstractions.ITransformAsync<TIntermediate, TDestination>! next) -> Wolfgang.Etl.Abstractions.ITransformAsync<TSource, TDestination>!
-static Wolfgang.Etl.Transformers.TransformerExtensions.Then<TSource, TIntermediate, TDestination>(this Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync<TSource, TIntermediate>! first, Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync<TIntermediate, TDestination>! next) -> Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync<TSource, TDestination>!
 Wolfgang.Etl.Transformers.BufferedTransformer<T>
 Wolfgang.Etl.Transformers.BufferedTransformer<T>.BufferedTransformer(int capacity) -> void
 Wolfgang.Etl.Transformers.BufferedTransformer<T>.Capacity.get -> int
@@ -72,19 +51,47 @@ Wolfgang.Etl.Transformers.SkipTransformer<T>.Count.get -> int
 Wolfgang.Etl.Transformers.SkipTransformer<T>.SkipTransformer(int count) -> void
 Wolfgang.Etl.Transformers.SkipTransformer<T>.TransformAsync(System.Collections.Generic.IAsyncEnumerable<T>! items) -> System.Collections.Generic.IAsyncEnumerable<T>!
 Wolfgang.Etl.Transformers.SkipWhileTransformer<T>
-Wolfgang.Etl.Transformers.SkipWhileTransformer<T>.SkipWhileTransformer(System.Func<T, bool>! predicate) -> void
 Wolfgang.Etl.Transformers.SkipWhileTransformer<T>.SkipWhileTransformer(System.Func<T, System.Threading.Tasks.ValueTask<bool>>! predicate) -> void
+Wolfgang.Etl.Transformers.SkipWhileTransformer<T>.SkipWhileTransformer(System.Func<T, bool>! predicate) -> void
 Wolfgang.Etl.Transformers.SkipWhileTransformer<T>.TransformAsync(System.Collections.Generic.IAsyncEnumerable<T>! items) -> System.Collections.Generic.IAsyncEnumerable<T>!
 Wolfgang.Etl.Transformers.TakeTransformer<T>
 Wolfgang.Etl.Transformers.TakeTransformer<T>.Count.get -> int
 Wolfgang.Etl.Transformers.TakeTransformer<T>.TakeTransformer(int count) -> void
 Wolfgang.Etl.Transformers.TakeTransformer<T>.TransformAsync(System.Collections.Generic.IAsyncEnumerable<T>! items) -> System.Collections.Generic.IAsyncEnumerable<T>!
 Wolfgang.Etl.Transformers.TakeWhileTransformer<T>
-Wolfgang.Etl.Transformers.TakeWhileTransformer<T>.TakeWhileTransformer(System.Func<T, bool>! predicate) -> void
 Wolfgang.Etl.Transformers.TakeWhileTransformer<T>.TakeWhileTransformer(System.Func<T, System.Threading.Tasks.ValueTask<bool>>! predicate) -> void
+Wolfgang.Etl.Transformers.TakeWhileTransformer<T>.TakeWhileTransformer(System.Func<T, bool>! predicate) -> void
 Wolfgang.Etl.Transformers.TakeWhileTransformer<T>.TransformAsync(System.Collections.Generic.IAsyncEnumerable<T>! items) -> System.Collections.Generic.IAsyncEnumerable<T>!
+Wolfgang.Etl.Transformers.ThrottleTransformer<T>
+Wolfgang.Etl.Transformers.ThrottleTransformer<T>.ThrottleTransformer(System.TimeSpan minInterval) -> void
+Wolfgang.Etl.Transformers.ThrottleTransformer<T>.TransformAsync(System.Collections.Generic.IAsyncEnumerable<T>! items) -> System.Collections.Generic.IAsyncEnumerable<T>!
 Wolfgang.Etl.Transformers.TransformerExtensions
 Wolfgang.Etl.Transformers.WhereTransformer<T>
 Wolfgang.Etl.Transformers.WhereTransformer<T>.TransformAsync(System.Collections.Generic.IAsyncEnumerable<T>! items) -> System.Collections.Generic.IAsyncEnumerable<T>!
-Wolfgang.Etl.Transformers.WhereTransformer<T>.WhereTransformer(System.Func<T, bool>! predicate) -> void
 Wolfgang.Etl.Transformers.WhereTransformer<T>.WhereTransformer(System.Func<T, System.Threading.Tasks.ValueTask<bool>>! predicate) -> void
+Wolfgang.Etl.Transformers.WhereTransformer<T>.WhereTransformer(System.Func<T, bool>! predicate) -> void
+static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Buffered<T>(this Wolfgang.Etl.Abstractions.IEtlPipeline<T>! pipeline, int capacity) -> Wolfgang.Etl.Abstractions.IEtlPipeline<T>!
+static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Cast<TSource, TDestination>(this Wolfgang.Etl.Abstractions.IEtlPipeline<TSource>! pipeline) -> Wolfgang.Etl.Abstractions.IEtlPipeline<TDestination>!
+static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Chunk<T>(this Wolfgang.Etl.Abstractions.IEtlPipeline<T>! pipeline, int size) -> Wolfgang.Etl.Abstractions.IEtlPipeline<System.Collections.Generic.IReadOnlyList<T>!>!
+static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Distinct<T>(this Wolfgang.Etl.Abstractions.IEtlPipeline<T>! pipeline, System.Collections.Generic.IEqualityComparer<T>? comparer = null) -> Wolfgang.Etl.Abstractions.IEtlPipeline<T>!
+static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.DistinctBy<TSource, TKey>(this Wolfgang.Etl.Abstractions.IEtlPipeline<TSource>! pipeline, System.Func<TSource, TKey>! keySelector, System.Collections.Generic.IEqualityComparer<TKey>? comparer = null) -> Wolfgang.Etl.Abstractions.IEtlPipeline<TSource>!
+static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Log<T>(this Wolfgang.Etl.Abstractions.IEtlPipeline<T>! pipeline, System.Func<T, string!>! format, System.Action<string!>! sink) -> Wolfgang.Etl.Abstractions.IEtlPipeline<T>!
+static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.OfType<TSource, TDestination>(this Wolfgang.Etl.Abstractions.IEtlPipeline<TSource>! pipeline) -> Wolfgang.Etl.Abstractions.IEtlPipeline<TDestination>!
+static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Select<TSource, TDestination>(this Wolfgang.Etl.Abstractions.IEtlPipeline<TSource>! pipeline, System.Func<TSource, System.Threading.Tasks.ValueTask<TDestination>>! selector) -> Wolfgang.Etl.Abstractions.IEtlPipeline<TDestination>!
+static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Select<TSource, TDestination>(this Wolfgang.Etl.Abstractions.IEtlPipeline<TSource>! pipeline, System.Func<TSource, TDestination>! selector) -> Wolfgang.Etl.Abstractions.IEtlPipeline<TDestination>!
+static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SelectMany<TSource, TDestination>(this Wolfgang.Etl.Abstractions.IEtlPipeline<TSource>! pipeline, System.Func<TSource, System.Collections.Generic.IAsyncEnumerable<TDestination>!>! selector) -> Wolfgang.Etl.Abstractions.IEtlPipeline<TDestination>!
+static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SelectMany<TSource, TDestination>(this Wolfgang.Etl.Abstractions.IEtlPipeline<TSource>! pipeline, System.Func<TSource, System.Collections.Generic.IEnumerable<TDestination>!>! selector) -> Wolfgang.Etl.Abstractions.IEtlPipeline<TDestination>!
+static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Skip<T>(this Wolfgang.Etl.Abstractions.IEtlPipeline<T>! pipeline, int count) -> Wolfgang.Etl.Abstractions.IEtlPipeline<T>!
+static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SkipWhile<T>(this Wolfgang.Etl.Abstractions.IEtlPipeline<T>! pipeline, System.Func<T, System.Threading.Tasks.ValueTask<bool>>! predicate) -> Wolfgang.Etl.Abstractions.IEtlPipeline<T>!
+static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SkipWhile<T>(this Wolfgang.Etl.Abstractions.IEtlPipeline<T>! pipeline, System.Func<T, bool>! predicate) -> Wolfgang.Etl.Abstractions.IEtlPipeline<T>!
+static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Take<T>(this Wolfgang.Etl.Abstractions.IEtlPipeline<T>! pipeline, int count) -> Wolfgang.Etl.Abstractions.IEtlPipeline<T>!
+static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.TakeWhile<T>(this Wolfgang.Etl.Abstractions.IEtlPipeline<T>! pipeline, System.Func<T, System.Threading.Tasks.ValueTask<bool>>! predicate) -> Wolfgang.Etl.Abstractions.IEtlPipeline<T>!
+static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.TakeWhile<T>(this Wolfgang.Etl.Abstractions.IEtlPipeline<T>! pipeline, System.Func<T, bool>! predicate) -> Wolfgang.Etl.Abstractions.IEtlPipeline<T>!
+static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Tap<T>(this Wolfgang.Etl.Abstractions.IEtlPipeline<T>! pipeline, System.Action<T>! onItem) -> Wolfgang.Etl.Abstractions.IEtlPipeline<T>!
+static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Tap<T>(this Wolfgang.Etl.Abstractions.IEtlPipeline<T>! pipeline, System.Func<T, System.Threading.Tasks.ValueTask>! onItem) -> Wolfgang.Etl.Abstractions.IEtlPipeline<T>!
+static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Throttle<T>(this Wolfgang.Etl.Abstractions.IEtlPipeline<T>! pipeline, System.TimeSpan minInterval) -> Wolfgang.Etl.Abstractions.IEtlPipeline<T>!
+static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Where<T>(this Wolfgang.Etl.Abstractions.IEtlPipeline<T>! pipeline, System.Func<T, System.Threading.Tasks.ValueTask<bool>>! predicate) -> Wolfgang.Etl.Abstractions.IEtlPipeline<T>!
+static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Where<T>(this Wolfgang.Etl.Abstractions.IEtlPipeline<T>! pipeline, System.Func<T, bool>! predicate) -> Wolfgang.Etl.Abstractions.IEtlPipeline<T>!
+static Wolfgang.Etl.Transformers.TransformerExtensions.Buffered<T>(this System.Collections.Generic.IAsyncEnumerable<T>! source, int capacity) -> System.Collections.Generic.IAsyncEnumerable<T>!
+static Wolfgang.Etl.Transformers.TransformerExtensions.Then<TSource, TIntermediate, TDestination>(this Wolfgang.Etl.Abstractions.ITransformAsync<TSource, TIntermediate>! first, Wolfgang.Etl.Abstractions.ITransformAsync<TIntermediate, TDestination>! next) -> Wolfgang.Etl.Abstractions.ITransformAsync<TSource, TDestination>!
+static Wolfgang.Etl.Transformers.TransformerExtensions.Then<TSource, TIntermediate, TDestination>(this Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync<TSource, TIntermediate>! first, Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync<TIntermediate, TDestination>! next) -> Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync<TSource, TDestination>!
