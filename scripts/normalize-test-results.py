@@ -7,7 +7,7 @@ directly. Any divergence — a test that passes on one platform and fails on ano
 theory whose parameter rendering differs because of a culture-sensitive conversion —
 shows up as a line difference.
 
-Used by ``.github/workflows/cross-platform-differential.yaml``. Pure standard library.
+Used by ``.github/workflows/cross-platform-differential.yaml``. Requires ``defusedxml``.
 
 Usage:
     normalize-test-results.py <results.trx> [more.trx ...]
@@ -16,11 +16,11 @@ from __future__ import annotations
 
 import sys
 
-# The input is a VSTest .trx produced by our own CI run (dotnet test on a trusted
-# source), never attacker-supplied, so XXE / entity-expansion is not a threat here and
-# adding a defusedxml dependency to the CI image is not warranted. Suppress inline (the
-# nosemgrep marker must sit on the offending line for Semgrep to honor it).
-import xml.etree.ElementTree as ET  # nosemgrep: python.lang.security.use-defused-xml.use-defused-xml
+# Parse with defusedxml (hardened against XXE / entity-expansion) rather than the stdlib
+# xml.etree. The .trx input is our own CI output and thus trusted, but defusedxml is the
+# recommended parser and keeps static analysis (Semgrep use-defused-xml) satisfied without
+# relying on inline suppressions, whose matching varies across Semgrep versions.
+import defusedxml.ElementTree as ET
 
 TRX_NS = "{http://microsoft.com/schemas/VisualStudio/TeamTest/2010}"
 
