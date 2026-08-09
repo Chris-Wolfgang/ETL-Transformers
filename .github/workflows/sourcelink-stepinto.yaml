@@ -36,6 +36,10 @@ concurrency:
 
 env:
   NETCOREDBG_VERSION: 3.1.2-1054
+  # SHA-256 of netcoredbg-linux-amd64.tar.gz for the pinned version. Verified before extraction
+  # so a replaced/compromised release asset can't execute arbitrary code in CI (#198). Update
+  # this whenever NETCOREDBG_VERSION changes.
+  NETCOREDBG_SHA256: 4f58ae90aacbccdf85dc7d6a0d8893796dd3750d6867fe31396a6b7bee09c9cb
   # Reduce tiered-JIT reordering so the step-into target stays stable.
   DOTNET_TieredCompilation: '0'
 
@@ -82,6 +86,7 @@ jobs:
         run: |
           url="https://github.com/Samsung/netcoredbg/releases/download/${NETCOREDBG_VERSION}/netcoredbg-linux-amd64.tar.gz"
           curl -sSfL "$url" -o netcoredbg.tar.gz
+          echo "${NETCOREDBG_SHA256}  netcoredbg.tar.gz" | sha256sum -c -
           tar -xzf netcoredbg.tar.gz
           echo "NETCOREDBG=$PWD/netcoredbg/netcoredbg" >> "$GITHUB_ENV"
 
