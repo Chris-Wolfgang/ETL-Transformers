@@ -572,6 +572,26 @@ jobs:
           }
 
 
+      # Hash the packages for the reproducible-build manifest BEFORE signing. NuGet
+      # author-signing embeds a signature + RFC 3161 timestamp (invocation-specific data)
+      # into the .nupkg, so a hash taken after signing could never be reproduced by an
+      # independent `dotnet pack` — the consumer reproducibility check (#102) would be
+      # guaranteed to fail once a certificate is provisioned. Recording the pre-signing
+      # hash keeps it meaningful. The manifest .json lands in ./nuget-packages/ (the
+      # generator only reads *.nupkg/*.snupkg, so it ignores the manifest itself) and so
+      # rides the existing artifact upload to the release-attach job.
+      - name: Generate reproducible-build manifest (pre-signing)
+        if: steps.check-packages.outputs.has-packages == 'true'
+        shell: bash
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+          SDK: ${{ steps.build-sdk.outputs.version }}
+        run: |
+          python3 scripts/generate-repro-manifest.py \
+            --packages ./nuget-packages \
+            --out ./nuget-packages/reproducible-build-manifest.json \
+            --tag "$TAG" --sdk "$SDK"
+
       # Author-sign the packages if a code-signing certificate is configured. This
       # runs before the artifact is uploaded, so the SAME signed .nupkg is both
       # pushed to NuGet.org and attached to the Release. The step is skipped when the
@@ -836,15 +856,10 @@ jobs:
       - name: Zip coverage report
         run: zip -r release-coverage.zip ./release-coverage
 
-      - name: Generate reproducible-build manifest
-        env:
-          TAG: ${{ github.event.release.tag_name }}
-          SDK: ${{ needs.pack-and-validate.outputs.build-sdk }}
-        run: |
-          python3 scripts/generate-repro-manifest.py \
-            --packages ./nuget-packages \
-            --out reproducible-build-manifest.json \
-            --tag "$TAG" --sdk "$SDK"
+      # The reproducible-build manifest is generated in the pack-and-validate job
+      # BEFORE signing (so its hashes stay reproducible) and travels inside the
+      # nuget-packages artifact as reproducible-build-manifest.json — no regeneration
+      # here, which would hash the signed (non-reproducible) packages.
 
       # SLSA build-provenance attestation (Sigstore-backed, keyless). Proves the
       # packages were produced by this workflow from this repo. Consumers verify with
@@ -864,6 +879,7 @@ jobs:
             ./nuget-packages/*.nupkg
             ./nuget-packages/*.snupkg
             ./nuget-packages/*.bom.json
+            ./nuget-packages/reproducible-build-manifest.json
             reproducible-build-manifest.json
             release-coverage.zip
 

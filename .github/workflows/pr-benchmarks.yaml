@@ -6,6 +6,12 @@ name: PR Benchmarks
 # regresses past the threshold unless the PR carries the `perf-impact-acknowledged`
 # label.
 #
+# Split into two jobs on a privilege boundary: `benchmark` runs the PR-controlled
+# benchmark code with a READ-ONLY token, and `report` holds the pull-requests: write
+# token but runs no PR code — it only consumes the delta artifact and calls the API.
+# So a malicious PR can at most skew its own perf numbers; it can never reach the
+# write token, and the gate verdict is computed with the base branch's comparator.
+#
 # Complements benchmarks.yaml (which graphs the post-merge trend on main); this one
 # catches a regression before it merges.
 
@@ -32,12 +38,17 @@ env:
   ACK_LABEL: perf-impact-acknowledged
 
 jobs:
+  # Runs PR-controlled benchmark code with a read-only token and no comment/label
+  # ability. The delta is computed with the BASE branch's trusted copy of
+  # compare-benchmarks.py, so a PR cannot doctor the comparator to force regressed=false.
   benchmark:
     name: Compare BDN delta vs base
     runs-on: ubuntu-latest
     permissions:
-      contents: read         # Checkout the PR head and base commit
-      pull-requests: write   # Post/replace the sticky delta comment on the PR
+      contents: read
+    outputs:
+      run: ${{ steps.guard.outputs.run }}
+      regressed: ${{ steps.delta.outputs.regressed }}
     steps:
       - name: Checkout PR head
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -106,17 +117,47 @@ jobs:
         id: delta
         if: steps.guard.outputs.run == 'true'
         shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
           set -euo pipefail
-          python3 scripts/compare-benchmarks.py \
+          # Use the BASE branch's comparator, not the PR's copy, so a PR cannot alter the
+          # script to always report regressed=false and slip a regression past the gate.
+          git show "${BASE_SHA}:scripts/compare-benchmarks.py" > "$RUNNER_TEMP/compare-trusted.py"
+          python3 "$RUNNER_TEMP/compare-trusted.py" \
             --base-dir "$RUNNER_TEMP/base-results" \
             --head-dir "$RUNNER_TEMP/head-results" \
             --time-threshold "$TIME_THRESHOLD" \
             --alloc-threshold "$ALLOC_THRESHOLD" \
             --out "$RUNNER_TEMP/comment.md" | tee -a "$GITHUB_OUTPUT"
 
-      - name: Post or update sticky comment
+      - name: Upload delta comment
         if: steps.guard.outputs.run == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: pr-benchmark-comment
+          path: ${{ runner.temp }}/comment.md
+          if-no-files-found: error
+
+  # Holds the pull-requests: write token but runs NO PR-controlled code — it only
+  # consumes the artifact from `benchmark` and calls the GitHub API. This is the
+  # privilege boundary the split exists to create.
+  report:
+    name: Publish delta + enforce gate
+    needs: benchmark
+    if: needs.benchmark.outputs.run == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read         # No checkout needed, but keep the default read scope explicit
+      pull-requests: write   # Post/replace the sticky delta comment on the PR
+    steps:
+      - name: Download delta comment
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: pr-benchmark-comment
+          path: comment
+
+      - name: Post or update sticky comment
         shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -125,25 +166,24 @@ jobs:
         run: |
           set -euo pipefail
           marker='<!-- pr-benchmarks -->'
-          { printf '%s\n\n' "$marker"; cat "$RUNNER_TEMP/comment.md"; } > "$RUNNER_TEMP/body.md"
+          { printf '%s\n\n' "$marker"; cat comment/comment.md; } > body.md
           existing=$(gh api "repos/$REPO/issues/$PR/comments" --paginate \
             --jq "[.[] | select(.body | startswith(\"$marker\")) | .id] | first // empty")
           if [ -n "$existing" ]; then
-            gh api -X PATCH "repos/$REPO/issues/comments/$existing" -F body=@"$RUNNER_TEMP/body.md" >/dev/null
+            gh api -X PATCH "repos/$REPO/issues/comments/$existing" -F body=@body.md >/dev/null
             echo "Updated comment $existing"
           else
-            gh api -X POST "repos/$REPO/issues/$PR/comments" -F body=@"$RUNNER_TEMP/body.md" >/dev/null
+            gh api -X POST "repos/$REPO/issues/$PR/comments" -F body=@body.md >/dev/null
             echo "Created new comment"
           fi
 
       - name: Enforce threshold
-        if: steps.guard.outputs.run == 'true'
         shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
           PR: ${{ github.event.pull_request.number }}
-          REGRESSED: ${{ steps.delta.outputs.regressed }}
+          REGRESSED: ${{ needs.benchmark.outputs.regressed }}
         run: |
           set -euo pipefail
           if [ "$REGRESSED" != "true" ]; then

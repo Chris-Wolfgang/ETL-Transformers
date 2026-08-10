@@ -63,6 +63,15 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          # Fail loudly when no baseline is committed: compare-benchmarks.py treats an
+          # empty base/head intersection as "no regression", so without this guard every
+          # nightly run would pass green and the gate could never fire (issue #77).
+          shopt -s nullglob
+          baseline_results=("$BASELINE_DIR"/*.json)
+          if [ ${#baseline_results[@]} -eq 0 ]; then
+            echo "::error::No BenchmarkDotNet baseline (*.json) in '$BASELINE_DIR' — the shadow gate cannot detect regressions. Commit a baseline captured from a release run (see $BASELINE_DIR/README.md)."
+            exit 1
+          fi
           python3 scripts/compare-benchmarks.py \
             --base-dir "$BASELINE_DIR" \
             --head-dir "$BENCH_DIR/BenchmarkDotNet.Artifacts/results" \
