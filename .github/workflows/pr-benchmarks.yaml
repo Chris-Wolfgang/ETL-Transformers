@@ -121,10 +121,20 @@ jobs:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
           set -euo pipefail
-          # Use the BASE branch's comparator, not the PR's copy, so a PR cannot alter the
-          # script to always report regressed=false and slip a regression past the gate.
-          git show "${BASE_SHA}:scripts/compare-benchmarks.py" > "$RUNNER_TEMP/compare-trusted.py"
-          python3 "$RUNNER_TEMP/compare-trusted.py" \
+          # Prefer the BASE branch's comparator so a PR can't alter the script to always
+          # report regressed=false. Fall back to the in-tree copy when the base doesn't
+          # have it yet — e.g. the PR that first adds or moves the script — since those
+          # changes are exactly what review covers, and this job holds only a read-only
+          # token either way (the write token lives in the separate `report` job).
+          if git cat-file -e "${BASE_SHA}:scripts/compare-benchmarks.py" 2>/dev/null; then
+            git show "${BASE_SHA}:scripts/compare-benchmarks.py" > "$RUNNER_TEMP/compare-trusted.py"
+            comparator="$RUNNER_TEMP/compare-trusted.py"
+            echo "Using base-branch comparator (${BASE_SHA})."
+          else
+            comparator="scripts/compare-benchmarks.py"
+            echo "::notice::compare-benchmarks.py absent on base; using the PR's copy (this job is read-only)."
+          fi
+          python3 "$comparator" \
             --base-dir "$RUNNER_TEMP/base-results" \
             --head-dir "$RUNNER_TEMP/head-results" \
             --time-threshold "$TIME_THRESHOLD" \
