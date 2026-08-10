@@ -24,8 +24,9 @@ permissions:
   contents: write   # required to push to gh-pages
 
 concurrency:
-  # Serialize gh-pages publishes; never cancel an in-flight coverage upload.
-  group: coverage-report-${{ github.ref }}
+  # Join the repo-wide gh-pages lock (see benchmarks.yaml) so all gh-pages
+  # publishes serialize; never cancel an in-flight coverage upload.
+  group: gh-pages
   cancel-in-progress: false
 
 jobs:
