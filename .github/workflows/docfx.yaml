@@ -51,8 +51,10 @@ permissions:
   contents: read  # Default to read-only; the build-and-deploy job overrides with write
 
 concurrency:
-  # Serialize Pages deploys; never cancel an in-flight deploy mid-publish.
-  group: docfx-deploy
+  # Join the repo-wide gh-pages lock (see benchmarks.yaml) so DocFX, coverage,
+  # versioned-docs, and benchmark publishes never push gh-pages concurrently and
+  # clobber each other. Never cancel an in-flight deploy mid-publish.
+  group: gh-pages
   cancel-in-progress: false
 
 jobs:
