@@ -1,0 +1,119 @@
+name: Reproducible Build
+
+# Verifies Wolfgang.Etl.Transformers is a deterministic build: the same commit packed on
+# Ubuntu and on Windows is hashed (.dll/.pdb/.nupkg) and the manifests compared.
+# Same-OS/SDK determinism is the guarantee; cross-OS byte-identity is reported ADVISORY
+# (a warning, not a failure) because .NET does not guarantee it and this project currently
+# diverges cross-OS (tracked as a follow-up). See REPRODUCIBLE-BUILD.md.
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: reproducible-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Pack (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      # Turns on ContinuousIntegrationBuild in Directory.Build.props, which
+      # enables DeterministicSourcePaths + normalized (SourceLink) path mapping.
+      CI: 'true'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Pack (deterministic)
+        run: >
+          dotnet pack src/Wolfgang.Etl.Transformers/Wolfgang.Etl.Transformers.csproj
+          -c Release
+          -p:ContinuousIntegrationBuild=true
+          -p:Deterministic=true
+          -o artifacts
+
+      - name: Hash outputs
+        shell: bash
+        env:
+          RUNNER_OS_NAME: ${{ matrix.os }}
+        run: |
+          set -euo pipefail
+          manifest="manifest.txt"
+          : > "$manifest"
+
+          # Packed package(s): key by file name (identical across OS).
+          while IFS= read -r f; do
+            printf '%s  %s\n' "$(sha256sum "$f" | cut -d' ' -f1)" "${f##*/}" >> "$manifest"
+          done < <(find artifacts -type f \( -name '*.nupkg' -o -name '*.snupkg' \) | sort)
+
+          # Compiled library, one per TFM: key by TFM-relative path.
+          base="src/Wolfgang.Etl.Transformers/bin/Release"
+          while IFS= read -r f; do
+            rel="${f#"$base"/}"
+            printf '%s  %s\n' "$(sha256sum "$f" | cut -d' ' -f1)" "$rel" >> "$manifest"
+          done < <(find "$base" -type f \( -name 'Wolfgang.Etl.Transformers.dll' -o -name 'Wolfgang.Etl.Transformers.pdb' \) | sort)
+
+          sort -k2 "$manifest" -o "$manifest"
+          echo "--- ${RUNNER_OS_NAME} output hashes ---"
+          cat "$manifest"
+
+      - name: Upload manifest
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: repro-manifest-${{ matrix.os }}
+          path: manifest.txt
+          if-no-files-found: error
+
+  compare:
+    name: Compare hashes
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Ubuntu manifest
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: repro-manifest-ubuntu-latest
+          path: ubuntu
+
+      - name: Download Windows manifest
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: repro-manifest-windows-latest
+          path: windows
+
+      - name: Compare
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Ubuntu manifest:"
+          cat ubuntu/manifest.txt
+          echo
+          echo "Windows manifest:"
+          cat windows/manifest.txt
+          echo
+          # Advisory, not a hard failure. Same-OS/SDK determinism holds, but .NET does not
+          # guarantee cross-OS byte-identity (embedded source order, SourceLink/path
+          # normalization, ref-pack differences can leak). Cross-OS divergence is reported as
+          # a warning and tracked in a follow-up issue; flip this to `exit 1` once the gap is
+          # closed. Matches the fleet reference (ETL-SqlBulkCopy #176 / Etl-DbClient #255).
+          if diff -u ubuntu/manifest.txt windows/manifest.txt; then
+            echo "Reproducible: Ubuntu and Windows produced byte-identical outputs."
+          else
+            echo "::warning::Outputs differ across runners - the build is not byte-identical cross-OS. This is advisory; tracked in issue #193."
+          fi

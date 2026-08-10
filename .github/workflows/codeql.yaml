@@ -20,9 +20,9 @@ jobs:
     name: "Security Scan (CodeQL)"
     runs-on: windows-latest
     permissions:
-      actions: read
-      contents: read
-      security-events: write
+      actions: read           # Read workflow run metadata for the CodeQL analysis context
+      contents: read          # Checkout the repository to build the CodeQL database
+      security-events: write  # Upload the CodeQL SARIF results to code scanning
 
     strategy:
       fail-fast: false

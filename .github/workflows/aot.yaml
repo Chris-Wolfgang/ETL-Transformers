@@ -1,0 +1,77 @@
+name: AOT Smoke
+
+# Publishes a console consumer that roots the whole public surface with
+# Native AOT + trimming. Fails on any IL2xxx/IL3xxx trim/AOT warning (the library
+# must not rely on reflection the trimmer can't see, dynamic generic
+# instantiation, or runtime codegen) and asserts the native binary runs the
+# surface correctly. Runs on PRs so AOT regressions block before merge.
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aot-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  aot-smoke:
+    name: Native-AOT publish + run
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Detect src + AOT consumer projects
+        id: detect
+        run: |
+          # Require BOTH a library under src/ AND the AOT consumer harness the
+          # publish step actually builds. Guarding on the consumer too lets the
+          # job skip cleanly when it is absent (e.g. a workflow-only PR) instead
+          # of passing the guard and then failing at publish.
+          if git ls-files 'src/**/*.csproj' 'src/*.csproj' | grep -q . \
+             && git ls-files '.github/aot/AotConsumer.csproj' | grep -q .; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No src/**/*.csproj and/or .github/aot/AotConsumer.csproj — skipping."
+            echo "found=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup .NET
+        if: steps.detect.outputs.found == 'true'
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Install AOT prerequisites
+        if: steps.detect.outputs.found == 'true'
+        run: sudo apt-get update && sudo apt-get install -y clang zlib1g-dev
+
+      # IlcTreatWarningsAsErrors already fails the publish on AOT (IL3xxx)
+      # warnings; the grep additionally catches trimmer (IL2xxx) warnings.
+      - name: Publish Native-AOT + trimmed
+        if: steps.detect.outputs.found == 'true'
+        run: |
+          set -o pipefail
+          dotnet publish .github/aot/AotConsumer.csproj -c Release -r linux-x64 2>&1 | tee aot-publish.log
+          if grep -qE ': (warning|error) IL[0-9]' aot-publish.log; then
+            echo "::error::Trim/AOT (ILxxxx) diagnostics found — the library is not AOT/trim-clean. See log."
+            exit 1
+          fi
+
+      - name: Run the native binary
+        if: steps.detect.outputs.found == 'true'
+        run: |
+          binary="$(find .github/aot/bin -type f -name AotConsumer ! -name '*.dll' | head -n1)"
+          if [ -z "$binary" ] || [ ! -x "$binary" ]; then
+            echo "::error::Native AotConsumer binary not found under .github/aot/bin."
+            exit 1
+          fi
+          echo "Running native binary: $binary"
+          "$binary"

@@ -15,6 +15,14 @@ on:
 permissions:
   contents: read  # Default to read-only; the build-and-deploy job overrides with write
 
+concurrency:
+  # Join the repo-wide gh-pages lock (see benchmarks.yaml): this workflow deploys
+  # versioned docs to gh-pages, so it must serialize with the other publishers and
+  # must NOT cancel in-progress — a manual re-dispatch cancelling an unrelated
+  # deploy could corrupt gh-pages.
+  group: gh-pages
+  cancel-in-progress: false
+
 jobs:
   build-and-deploy:
     name: Build & Deploy All Versioned Docs

@@ -1,0 +1,115 @@
+name: GC Profiling
+
+# Sustained-load GC / allocation profiling (issue #89). BDN benchmarks measure single-method
+# micro-perf; this drives a realistic transformer pipeline under continuous load for ~10 min
+# and captures the metrics that only surface over long-running ETL workloads: gen0/1/2
+# collection counts, gen2 & LOH high-water marks, allocation rate, GC pause time.
+#
+# Captures cross-platform EventPipe data (dotnet-counters CSV + dotnet-gcdump heap snapshot +
+# dotnet-trace GC trace) rather than Windows-only ETW/PerfView, so it runs on hosted Linux.
+#
+# Regression gate: scripts/gc-profile-report.py compares the counters against a committed
+# baseline (profiling/gc-baseline.<scenario>.json) and fails on growth beyond tolerance.
+# Until a baseline is committed the run is report-only; commit the first green run's metrics.
+
+on:
+  schedule:
+    - cron: '0 5 * * 1'  # Mondays 05:00 UTC
+  workflow_dispatch:
+    inputs:
+      scenario:
+        description: Pipeline scenario (mixed | linq | buffered)
+        default: mixed
+        type: string
+      duration_seconds:
+        description: Sustained-load duration per scenario (>= 600 recommended)
+        default: '600'
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gc-profiling
+  cancel-in-progress: false
+
+jobs:
+  profile:
+    name: Sustained-load GC profile (${{ matrix.scenario }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      # Scheduled events carry no inputs, so the weekly cron profiles every supported
+      # scenario; a manual dispatch profiles just the requested one (issue #89).
+      matrix:
+        scenario: ${{ github.event_name == 'workflow_dispatch' && fromJSON(format('["{0}"]', github.event.inputs.scenario)) || fromJSON('["mixed","linq","buffered"]') }}
+    env:
+      SCENARIO: ${{ matrix.scenario }}
+      DURATION: ${{ github.event.inputs.duration_seconds || '600' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Install diagnostics tools
+        run: |
+          dotnet tool install -g dotnet-counters
+          dotnet tool install -g dotnet-gcdump
+          dotnet tool install -g dotnet-trace
+          echo "$HOME/.dotnet/tools" >> "$GITHUB_PATH"
+
+      - name: Build profiling harness
+        run: dotnet build profiling/Wolfgang.Etl.Transformers.Profiling/Wolfgang.Etl.Transformers.Profiling.csproj -c Release
+
+      - name: Run sustained load + capture traces
+        run: |
+          set -euo pipefail
+          exe=profiling/Wolfgang.Etl.Transformers.Profiling/bin/Release/net10.0/Wolfgang.Etl.Transformers.Profiling
+          mkdir -p artifacts
+
+          # Launch the harness; capture its PID for the diagnostics tools to attach to.
+          "$exe" --duration-seconds "$DURATION" --scenario "$SCENARIO" &
+          pid=$!
+          echo "Harness PID=$pid scenario=$SCENARIO duration=${DURATION}s"
+          sleep 3  # let the diagnostics IPC endpoint come up
+
+          # Collect System.Runtime counters for the whole run.
+          counters_dur=$(printf '%02d:%02d:%02d' $((DURATION/3600)) $(((DURATION%3600)/60)) $((DURATION%60)))
+          dotnet-counters collect -p "$pid" --format csv -o artifacts/counters.csv \
+            --refresh-interval 5 --counters System.Runtime --duration "$counters_dur" &
+          counters_pid=$!
+
+          # ~2 min before the end, grab a heap snapshot (top object types) and a short GC trace
+          # (allocation-tick events -> top allocation sites). Best-effort; never fail the run.
+          if [ "$DURATION" -gt 150 ]; then sleep $((DURATION - 120)); else sleep 5; fi
+          dotnet-gcdump collect -p "$pid" -o artifacts/heap.gcdump || echo "gcdump skipped"
+          dotnet-trace collect -p "$pid" --duration 00:01:00 --profile gc-verbose \
+            -o artifacts/gc.nettrace || echo "trace skipped"
+
+          wait "$counters_pid" || true
+          wait "$pid"
+          echo "Harness exited."
+
+      - name: Report metrics + regression gate
+        run: |
+          set -euo pipefail
+          baseline="profiling/gc-baseline.${SCENARIO}.json"
+          python3 scripts/gc-profile-report.py \
+            --csv artifacts/counters.csv \
+            --out "artifacts/gc-metrics.${SCENARIO}.json" \
+            --baseline "$baseline" \
+            --scenario "$SCENARIO"
+
+      - name: Upload profiling artifacts
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: gc-profile-${{ env.SCENARIO }}
+          path: artifacts/
+          if-no-files-found: warn

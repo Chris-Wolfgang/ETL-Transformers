@@ -23,6 +23,12 @@ on:
 permissions:
   contents: write   # required to push to gh-pages
 
+concurrency:
+  # Join the repo-wide gh-pages lock (see benchmarks.yaml) so all gh-pages
+  # publishes serialize; never cancel an in-flight coverage upload.
+  group: gh-pages
+  cancel-in-progress: false
+
 jobs:
   coverage-report:
     name: Generate & Publish Coverage Report
