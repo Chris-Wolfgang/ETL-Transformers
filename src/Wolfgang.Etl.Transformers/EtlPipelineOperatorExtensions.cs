@@ -418,7 +418,12 @@ public static class EtlPipelineOperatorExtensions
     /// <exception cref="ArgumentNullException"><paramref name="pipeline"/>, <paramref name="format"/>, or <paramref name="sink"/> is <see langword="null"/>.</exception>
     /// <example>
     /// <code>
-    ///     .Log(r =&gt; $"processing {r.Id}", Console.WriteLine)
+    ///     await EtlPipeline
+    ///         .Create()
+    ///         .From(records)
+    ///         .Log(r =&gt; $"processing {r.Id}", Console.WriteLine)
+    ///         .To(loader)
+    ///         .RunAsync();
     /// </code>
     /// </example>
     public static IEtlPipeline<T> Log<T>(this IEtlPipeline<T> pipeline, Func<T, string> format, Action<string> sink)
@@ -447,7 +452,12 @@ public static class EtlPipelineOperatorExtensions
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="minInterval"/> is negative.</exception>
     /// <example>
     /// <code>
-    ///     .Throttle(TimeSpan.FromMilliseconds(200))   // at most ~5 items/second
+    ///     await EtlPipeline
+    ///         .Create()
+    ///         .From(records)
+    ///         .Throttle(TimeSpan.FromMilliseconds(200))   // at most ~5 items/second
+    ///         .To(loader)
+    ///         .RunAsync();
     /// </code>
     /// </example>
     public static IEtlPipeline<T> Throttle<T>(this IEtlPipeline<T> pipeline, TimeSpan minInterval)
