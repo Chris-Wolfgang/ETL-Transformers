@@ -56,7 +56,15 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
+      # continue-on-error: a FAILING test must not abort this leg — the .trx (which
+      # dotnet test writes regardless of pass/fail) still has to reach the compare job.
+      # Otherwise the exact case this workflow exists to catch — a test that passes on
+      # one platform and fails on another — would kill the leg before upload and skip
+      # the diff entirely. A universally-failing test is caught by pr.yaml's Stage 1/2/3;
+      # this workflow only judges cross-platform *consistency* of outcomes.
       - name: Run tests
+        id: test
+        continue-on-error: true
         shell: bash
         # Exclude PlatformSpecific-tagged tests; they are allowed to differ by platform.
         run: >
@@ -67,7 +75,11 @@ jobs:
           --logger "trx;LogFileName=results.trx"
           --results-directory trx-out
 
+      # always(): upload even when the test step reported failure, so the failing
+      # platform's outcomes are available to the diff. if-no-files-found stays `error`
+      # so a build break (no .trx produced at all) still fails the leg.
       - name: Upload raw results
+        if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: trx-${{ matrix.label }}
