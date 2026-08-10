@@ -81,6 +81,7 @@ await Check("PassThrough(ct)", 5, Box(new PassThroughTransformer<int>().Transfor
 await Check("Buffered", 5, Box(new BufferedTransformer<int>(2).TransformAsync(ToAsync(ints))));
 await Check("ProgressReporting", 5, Box(new ProgressReportingTransformer<int>(_ => { }).TransformAsync(ToAsync(ints))));
 await Check("ProgressReporting(async)", 5, Box(new ProgressReportingTransformer<int>(_ => default).TransformAsync(ToAsync(ints))));
+await Check("ThrottleTransformer", 5, Box(new ThrottleTransformer<int>(TimeSpan.Zero).TransformAsync(ToAsync(ints))));
 
 Console.WriteLine("Composition:");
 var chain = new ChainTransformer<int, int, string>(new WhereTransformer<int>(x => x > 1), new SelectTransformer<int, string>(x => x.ToString()));
@@ -112,6 +113,12 @@ await Check("op Chunk", 3, Box(EtlPipeline.Create().From(ToAsync(ints)).Chunk(2)
 await Check("op Buffered", 5, Box(EtlPipeline.Create().From(ToAsync(ints)).Buffered(2).AsAsyncEnumerable()));
 await Check("op Cast", 4, Box(EtlPipeline.Create().From(ToAsync(objects)).Cast<object, object>().AsAsyncEnumerable()));
 await Check("op OfType", 2, Box(EtlPipeline.Create().From(ToAsync(objects)).OfType<object, string>().AsAsyncEnumerable()));
+
+Console.WriteLine("Observability operators (0.4.0):");
+await Check("op Tap", 5, Box(EtlPipeline.Create().From(ToAsync(ints)).Tap(_ => { }).AsAsyncEnumerable()));
+await Check("op Tap(async)", 5, Box(EtlPipeline.Create().From(ToAsync(ints)).Tap(_ => default).AsAsyncEnumerable()));
+await Check("op Log", 5, Box(EtlPipeline.Create().From(ToAsync(ints)).Log(x => x.ToString(), _ => { }).AsAsyncEnumerable()));
+await Check("op Throttle", 5, Box(EtlPipeline.Create().From(ToAsync(ints)).Throttle(TimeSpan.Zero).AsAsyncEnumerable()));
 
 if (failures.Count > 0)
 {
