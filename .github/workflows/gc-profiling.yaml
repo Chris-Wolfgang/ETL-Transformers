@@ -35,10 +35,16 @@ concurrency:
 
 jobs:
   profile:
-    name: Sustained-load GC profile
+    name: Sustained-load GC profile (${{ matrix.scenario }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      # Scheduled events carry no inputs, so the weekly cron profiles every supported
+      # scenario; a manual dispatch profiles just the requested one (issue #89).
+      matrix:
+        scenario: ${{ github.event_name == 'workflow_dispatch' && fromJSON(format('["{0}"]', github.event.inputs.scenario)) || fromJSON('["mixed","linq","buffered"]') }}
     env:
-      SCENARIO: ${{ github.event.inputs.scenario || 'mixed' }}
+      SCENARIO: ${{ matrix.scenario }}
       DURATION: ${{ github.event.inputs.duration_seconds || '600' }}
     steps:
       - name: Checkout
