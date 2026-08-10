@@ -17,6 +17,11 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  # Let a long mutation run finish; queue rather than cancel overlapping triggers.
+  group: stryker-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   stryker:
     name: Run Stryker

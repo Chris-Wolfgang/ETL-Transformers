@@ -23,6 +23,11 @@ on:
 permissions:
   contents: write   # required to push to gh-pages
 
+concurrency:
+  # Serialize gh-pages publishes; never cancel an in-flight coverage upload.
+  group: coverage-report-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   coverage-report:
     name: Generate & Publish Coverage Report

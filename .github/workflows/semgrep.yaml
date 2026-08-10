@@ -1,0 +1,68 @@
+name: SAST (Semgrep)
+
+# Additive static analysis beyond CodeQL (codeql.yaml) and DevSkim (in pr.yaml).
+# Semgrep's OSS engine + registry rulesets are free and need no account. Results
+# upload to Security -> Code scanning alongside CodeQL; on PRs the scan is
+# diff-aware (--baseline-commit) so only findings NEW vs the merge base report.
+# Paid-tier SAST (Snyk Code / Veracode / Fortify / SonarQube Cloud / Checkmarx)
+# remains a project-level budget decision — see docs/sast.md.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: semgrep-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  semgrep:
+    name: Semgrep scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      security-events: write   # upload SARIF to code scanning
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+          fetch-depth: 0   # needed so the PR baseline diff has the merge base
+
+      - name: Setup Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.12'
+
+      - name: Install Semgrep
+        run: python -m pip install --disable-pip-version-check semgrep
+
+      - name: Semgrep scan
+        env:
+          GITHUB_BASE_REF: ${{ github.base_ref }}
+        run: |
+          rulesets=(--config=p/csharp --config=p/security-audit --config=p/secrets)
+          baseline=()
+          if [ -n "$GITHUB_BASE_REF" ]; then
+            git fetch --no-tags --depth=0 origin "$GITHUB_BASE_REF" || true
+            base="$(git merge-base "origin/$GITHUB_BASE_REF" HEAD || true)"
+            if [ -n "$base" ]; then
+              baseline=(--baseline-commit "$base")
+              echo "Diff-aware scan against baseline $base"
+            fi
+          fi
+          # --error would fail the job on findings; here we surface via SARIF and
+          # let code scanning gate. Exit 0 on findings so the SARIF still uploads.
+          semgrep scan "${rulesets[@]}" "${baseline[@]}" --sarif --output=semgrep.sarif . || true
+
+      - name: Upload SARIF to code scanning
+        uses: github/codeql-action/upload-sarif@7188fc363630916deb702c7fdcf4e481b751f97a # v4.37.1
+        with:
+          sarif_file: semgrep.sarif
+          category: semgrep
