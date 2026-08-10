@@ -28,13 +28,18 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Detect src project
+      - name: Detect src + AOT consumer projects
         id: detect
         run: |
-          if git ls-files 'src/**/*.csproj' 'src/*.csproj' | grep -q .; then
+          # Require BOTH a library under src/ AND the AOT consumer harness the
+          # publish step actually builds. Guarding on the consumer too lets the
+          # job skip cleanly when it is absent (e.g. a workflow-only PR) instead
+          # of passing the guard and then failing at publish.
+          if git ls-files 'src/**/*.csproj' 'src/*.csproj' | grep -q . \
+             && git ls-files '.github/aot/AotConsumer.csproj' | grep -q .; then
             echo "found=true" >> "$GITHUB_OUTPUT"
           else
-            echo "No src/**/*.csproj found — skipping."
+            echo "No src/**/*.csproj and/or .github/aot/AotConsumer.csproj — skipping."
             echo "found=false" >> "$GITHUB_OUTPUT"
           fi
 

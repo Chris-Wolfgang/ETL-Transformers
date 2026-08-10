@@ -1,7 +1,0 @@
-<!--
-  Isolation stub. MSBuild imports only the nearest Directory.Build.props, so this
-  empty project stops the repo-root one (analyzers, BannedSymbols, multi-TFM,
-  PublicAPI, PackageValidation) from applying to the throwaway AOT smoke consumer.
--->
-<Project>
-</Project>
