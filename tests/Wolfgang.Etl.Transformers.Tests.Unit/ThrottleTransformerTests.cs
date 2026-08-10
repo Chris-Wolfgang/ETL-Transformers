@@ -62,6 +62,33 @@ public class ThrottleTransformerTests
 
 
     [Fact]
+    public async Task TransformAsync_measures_the_interval_from_delivery_so_consumer_time_counts()
+    {
+        var waits = new List<TimeSpan>();
+        var interval = TimeSpan.FromMilliseconds(250);
+        var oneInterval = (long)(Stopwatch.Frequency * interval.TotalSeconds);
+        long clock = 0;
+        // Timestamp advances only when the consumer (below) spends time between items — not on
+        // every read — so this isolates the "interval measured from delivery, not from when the
+        // consumer returns" contract: recording after the yield would restart elapsed at 0 and
+        // wrongly request a full delay each time.
+        var sut = new ThrottleTransformer<int>(
+            interval,
+            (delay, _) => { waits.Add(delay); return Task.CompletedTask; },
+            () => clock);
+
+        await foreach (var _ in sut.TransformAsync(ToAsync(new[] { 1, 2, 3 })))
+        {
+            // The consumer spends a full interval processing each item.
+            clock += oneInterval;
+        }
+
+        // Elapsed since delivery already covers the interval, so no throttle delay is needed.
+        Assert.Empty(waits);
+    }
+
+
+    [Fact]
     public void Internal_ctor_when_delay_or_timestamp_is_null_throws_ArgumentNullException()
     {
         Assert.Throws<ArgumentNullException>(() => new ThrottleTransformer<int>(TimeSpan.Zero, null!, () => 0L));

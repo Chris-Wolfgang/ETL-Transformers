@@ -114,10 +114,17 @@ public sealed class ThrottleTransformer<T> : ITransformAsync<T, T>
                 }
             }
 
-            yield return item;
-
-            hasPrevious = true;
+            // Record the delivery time BEFORE yielding. `yield return` suspends here until the
+            // consumer requests the next item, so recording afterwards would start the interval
+            // clock only when the consumer comes back — excluding the consumer's own processing
+            // time and imposing a full extra delay even when the consumer already spent longer
+            // than the interval. Measuring from delivery makes the pacing adaptive: successive
+            // items are at least _minInterval apart, with no wait when the consumer is already
+            // the slower party.
             previousTimestamp = _getTimestamp();
+            hasPrevious = true;
+
+            yield return item;
         }
     }
 }

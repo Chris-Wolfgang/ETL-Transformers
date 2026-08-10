@@ -109,9 +109,12 @@ internal static class Scenarios
     {
         for (var i = 0; i < count; i++)
         {
+            // A real suspension point per item so MoveNextAsync completes asynchronously:
+            // the concurrent consumers actually interleave and Coyote can schedule between
+            // yields. Without it every yield completes synchronously and the "concurrent"
+            // enumerations just run one after another, exploring no overlap.
+            await Task.Yield();
             yield return i;
         }
-
-        await Task.CompletedTask.ConfigureAwait(false);
     }
 }
