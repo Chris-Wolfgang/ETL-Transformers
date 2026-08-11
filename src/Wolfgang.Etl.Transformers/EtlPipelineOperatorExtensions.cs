@@ -355,6 +355,121 @@ public static class EtlPipelineOperatorExtensions
 
 
 
+    /// <summary>
+    /// Runs a synchronous side effect on each item and passes the item through unchanged — an
+    /// observability "tap" point (logging, metrics, debugging) that does not alter the stream's shape.
+    /// </summary>
+    /// <typeparam name="T">The item type. Must be non-null.</typeparam>
+    /// <param name="pipeline">The pipeline to observe.</param>
+    /// <param name="onItem">The side effect to run for each item before it flows on.</param>
+    /// <returns>A pipeline yielding the same items, in the same order, with <paramref name="onItem"/> invoked per item.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="pipeline"/> or <paramref name="onItem"/> is <see langword="null"/>.</exception>
+    /// <example>
+    /// <code>
+    ///     await EtlPipeline
+    ///         .Create()
+    ///         .From(records)
+    ///         .Tap(r =&gt; Console.WriteLine($"seen {r.Id}"))
+    ///         .To(loader)
+    ///         .RunAsync();
+    /// </code>
+    /// </example>
+    public static IEtlPipeline<T> Tap<T>(this IEtlPipeline<T> pipeline, Action<T> onItem)
+        where T : notnull
+    {
+        ThrowIfNull(pipeline, nameof(pipeline));
+        ThrowIfNull(onItem, nameof(onItem));
+
+        return pipeline.Through(new ProgressReportingTransformer<T>(onItem));
+    }
+
+
+
+    /// <summary>
+    /// Runs an asynchronous side effect on each item and passes the item through unchanged — an
+    /// observability "tap" point that does not alter the stream's shape.
+    /// </summary>
+    /// <typeparam name="T">The item type. Must be non-null.</typeparam>
+    /// <param name="pipeline">The pipeline to observe.</param>
+    /// <param name="onItem">The asynchronous side effect to run for each item before it flows on.</param>
+    /// <returns>A pipeline yielding the same items, in the same order, with <paramref name="onItem"/> awaited per item.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="pipeline"/> or <paramref name="onItem"/> is <see langword="null"/>.</exception>
+    public static IEtlPipeline<T> Tap<T>(this IEtlPipeline<T> pipeline, Func<T, ValueTask> onItem)
+        where T : notnull
+    {
+        ThrowIfNull(pipeline, nameof(pipeline));
+        ThrowIfNull(onItem, nameof(onItem));
+
+        return pipeline.Through(new ProgressReportingTransformer<T>(onItem));
+    }
+
+
+
+    /// <summary>
+    /// Writes a log line per item and passes the item through unchanged — a <see cref="Tap{T}(IEtlPipeline{T}, Action{T})"/>
+    /// bound to a formatter and a sink. Deliberately dependency-free: it takes a delegate sink rather than
+    /// referencing <c>Microsoft.Extensions.Logging</c>, so bridge to an <c>ILogger</c> at the call site if desired.
+    /// </summary>
+    /// <typeparam name="T">The item type. Must be non-null.</typeparam>
+    /// <param name="pipeline">The pipeline to observe.</param>
+    /// <param name="format">Produces the log message for an item.</param>
+    /// <param name="sink">Receives each formatted message (e.g. <c>Console.WriteLine</c> or <c>msg =&gt; logger.LogInformation(msg)</c>).</param>
+    /// <returns>A pipeline yielding the same items, in the same order, logging one message per item.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="pipeline"/>, <paramref name="format"/>, or <paramref name="sink"/> is <see langword="null"/>.</exception>
+    /// <example>
+    /// <code>
+    ///     await EtlPipeline
+    ///         .Create()
+    ///         .From(records)
+    ///         .Log(r =&gt; $"processing {r.Id}", Console.WriteLine)
+    ///         .To(loader)
+    ///         .RunAsync();
+    /// </code>
+    /// </example>
+    public static IEtlPipeline<T> Log<T>(this IEtlPipeline<T> pipeline, Func<T, string> format, Action<string> sink)
+        where T : notnull
+    {
+        ThrowIfNull(pipeline, nameof(pipeline));
+        ThrowIfNull(format, nameof(format));
+        ThrowIfNull(sink, nameof(sink));
+
+        return pipeline.Tap(item => sink(format(item)));
+    }
+
+
+
+    /// <summary>
+    /// Paces the pipeline so successive items are yielded at least <paramref name="minInterval"/> apart,
+    /// without changing the stream's shape or order — rate-limiting for a downstream sink that must not be
+    /// hit too fast. The first item is not delayed; pacing is adaptive (a consumer that was already slow is
+    /// not delayed further) and observes the pipeline's cancellation token.
+    /// </summary>
+    /// <typeparam name="T">The item type. Must be non-null.</typeparam>
+    /// <param name="pipeline">The pipeline to pace.</param>
+    /// <param name="minInterval">The minimum time between successive items. <see cref="TimeSpan.Zero"/> is a pass-through.</param>
+    /// <returns>A pipeline yielding the same items, in the same order, paced apart.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="pipeline"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="minInterval"/> is negative.</exception>
+    /// <example>
+    /// <code>
+    ///     await EtlPipeline
+    ///         .Create()
+    ///         .From(records)
+    ///         .Throttle(TimeSpan.FromMilliseconds(200))   // at most ~5 items/second
+    ///         .To(loader)
+    ///         .RunAsync();
+    /// </code>
+    /// </example>
+    public static IEtlPipeline<T> Throttle<T>(this IEtlPipeline<T> pipeline, TimeSpan minInterval)
+        where T : notnull
+    {
+        ThrowIfNull(pipeline, nameof(pipeline));
+
+        return pipeline.Through(new ThrottleTransformer<T>(minInterval));
+    }
+
+
+
     private static void ThrowIfNull(object? argument, string paramName)
     {
         if (argument is null)

@@ -18,6 +18,7 @@
     - maintenance - docs       (blue)   — category: XML docs, README, CHANGELOG, samples
     - maintenance - API        (orange) — category: public/internal surface audit
     - maintenance - CI/CD      (pink)   — category: Docker, CI workflow, build/publish pipeline
+    - perf-impact-acknowledged (gold)   — overrides the PR Benchmarks perf gate for an intentional regression
 
 .PARAMETER Repository
     The repository in owner/repo format. If not provided, uses the current repository.
@@ -100,7 +101,10 @@ $labels = @(
     @{ name = "maintenance - cleanup";     color = "a2845e"; description = "Maintenance: refactor for reuse, quality, efficiency" },
     @{ name = "maintenance - docs";        color = "0075ca"; description = "Maintenance: XML doc coverage, README, CHANGELOG, samples" },
     @{ name = "maintenance - API";         color = "ed7d31"; description = "Maintenance: public/internal surface audit, breaking-change vigilance" },
-    @{ name = "maintenance - CI/CD";       color = "ec6cb9"; description = "Maintenance: Docker, CI workflow, build/publish pipeline" }
+    @{ name = "maintenance - CI/CD";       color = "ec6cb9"; description = "Maintenance: Docker, CI workflow, build/publish pipeline" },
+
+    # PR-benchmarks perf gate — apply to a PR to accept an intentional benchmark regression
+    @{ name = "perf-impact-acknowledged"; color = "fbca04"; description = "Intentional benchmark regression; overrides the PR Benchmarks perf gate" }
 )
 
 $created = 0

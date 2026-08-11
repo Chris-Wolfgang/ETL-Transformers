@@ -75,6 +75,7 @@ await foreach (var row in projected.TransformAsync(filtered.TransformAsync(buffe
 | `PassThroughTransformer<T>` | Identity pass-through; also implements `ITransformWithCancellationAsync<T, T>` |
 | `BufferedTransformer<T>` | Decouples producer from consumer via a `System.Threading.Channels` buffer |
 | `ProgressReportingTransformer<T>` | Calls a sync or async callback per item without altering the stream |
+| `ThrottleTransformer<T>` | Paces items at least a minimum `TimeSpan` apart (adaptive; honours cancellation) without altering the stream |
 
 ### Composition
 
@@ -105,7 +106,9 @@ await EtlPipeline
     .RunAsync();
 ```
 
-Available operators: `Where`, `Select`, `SelectMany` (each with sync and async overloads), `Distinct`, `DistinctBy`, `Take`, `Skip`, `TakeWhile`, `SkipWhile`, `Chunk`, `Buffered`, `Cast`, and `OfType`.
+**Data-shape operators:** `Where`, `Select`, `SelectMany` (each with sync and async overloads), `Distinct`, `DistinctBy`, `Take`, `Skip`, `TakeWhile`, `SkipWhile`, `Chunk`, `Buffered`, `Cast`, and `OfType`.
+
+**Observability operators** (watch or pace the stream without changing its shape): `Tap` (sync/async side effect per item, passed through unchanged); `Log` (`Log(format, sink)` — one formatted message per item via a delegate sink, no logging-framework dependency); `Throttle` (`Throttle(minInterval)` — paces items at least a `TimeSpan` apart to rate-limit a downstream sink).
 
 ---
 
@@ -193,6 +196,19 @@ docfx build --serve
 Documentation is automatically built and deployed to GitHub Pages when a GitHub Release is published.
 
 **Documentation:** [https://Chris-Wolfgang.github.io/ETL-Transformers/](https://Chris-Wolfgang.github.io/ETL-Transformers/)
+
+---
+
+## Verify the build
+
+This package is built [**reproducibly**](REPRODUCIBLE-BUILD.md): rebuilding a tagged
+release with the pinned SDK produces byte-for-byte identical assemblies and packages.
+Every release attaches a `reproducible-build-manifest.json` with the expected SHA-256 of
+each artifact, and CI proves cross-OS reproducibility on every pull request.
+
+To confirm a published release was built from source — and to publish your own
+independent verification attestation — follow the step-by-step guide in
+[REPRODUCIBLE-BUILD.md](REPRODUCIBLE-BUILD.md).
 
 ---
 

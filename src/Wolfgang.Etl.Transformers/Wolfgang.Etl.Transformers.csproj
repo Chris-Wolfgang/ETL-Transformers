@@ -5,8 +5,8 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
-    <Version>0.3.0</Version>
-    <AssemblyVersion>0.3.0.0</AssemblyVersion>
+    <Version>0.4.0</Version>
+    <AssemblyVersion>0.4.0.0</AssemblyVersion>
     <FileVersion>$([System.Text.RegularExpressions.Regex]::Replace("$(Version)", "[-+].*$", "")).0</FileVersion>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <Title>Wolfgang.Etl.Transformers</Title>
@@ -23,6 +23,17 @@
     <PackageTags>ETL;Extract-Transform-Load;Transformer;PassThrough;Identity;NoOp;Data-Pipeline;IAsyncEnumerable;Streaming;dotnet;Wolfgang-ETL;Wolfgang.Etl.Abstractions</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+    <!--
+      Package validation (Microsoft.DotNet.ApiCompat): every pack compares the
+      built package against the last published release and fails on an ABI break
+      that SemVer forbids for a non-major bump (removed/changed signatures,
+      nullability flips, layout shifts) — beyond what PublicAPI.*.txt diffs catch.
+      Keep the baseline at the LAST PUBLISHED version; bump it after each release.
+      Intentional breaks in a MAJOR release are recorded in
+      CompatibilitySuppressions.xml so they don't recur silently.
+    -->
+    <EnablePackageValidation>true</EnablePackageValidation>
+    <PackageValidationBaselineVersion>0.3.0</PackageValidationBaselineVersion>
   </PropertyGroup>
 
   <ItemGroup>
