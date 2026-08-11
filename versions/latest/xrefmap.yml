@@ -485,6 +485,22 @@ references:
   fullName.vb: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Distinct(Of T)(Wolfgang.Etl.Abstractions.IEtlPipeline(Of T), System.Collections.Generic.IEqualityComparer(Of T))
   nameWithType: EtlPipelineOperatorExtensions.Distinct<T>(IEtlPipeline<T>, IEqualityComparer<T>?)
   nameWithType.vb: EtlPipelineOperatorExtensions.Distinct(Of T)(IEtlPipeline(Of T), IEqualityComparer(Of T))
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Log*
+  name: Log
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Log_
+  commentId: Overload:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Log
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Log
+  nameWithType: EtlPipelineOperatorExtensions.Log
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Log``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.String},System.Action{System.String})
+  name: Log<T>(IEtlPipeline<T>, Func<T, string>, Action<string>)
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Log__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_String__System_Action_System_String__
+  commentId: M:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Log``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.String},System.Action{System.String})
+  name.vb: Log(Of T)(IEtlPipeline(Of T), Func(Of T, String), Action(Of String))
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Log<T>(Wolfgang.Etl.Abstractions.IEtlPipeline<T>, System.Func<T, string>, System.Action<string>)
+  fullName.vb: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Log(Of T)(Wolfgang.Etl.Abstractions.IEtlPipeline(Of T), System.Func(Of T, String), System.Action(Of String))
+  nameWithType: EtlPipelineOperatorExtensions.Log<T>(IEtlPipeline<T>, Func<T, string>, Action<string>)
+  nameWithType.vb: EtlPipelineOperatorExtensions.Log(Of T)(IEtlPipeline(Of T), Func(Of T, String), Action(Of String))
 - uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.OfType*
   name: OfType
   href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_OfType_
@@ -633,6 +649,47 @@ references:
   fullName.vb: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Take(Of T)(Wolfgang.Etl.Abstractions.IEtlPipeline(Of T), Integer)
   nameWithType: EtlPipelineOperatorExtensions.Take<T>(IEtlPipeline<T>, int)
   nameWithType.vb: EtlPipelineOperatorExtensions.Take(Of T)(IEtlPipeline(Of T), Integer)
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Tap*
+  name: Tap
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Tap_
+  commentId: Overload:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Tap
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Tap
+  nameWithType: EtlPipelineOperatorExtensions.Tap
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Tap``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Action{``0})
+  name: Tap<T>(IEtlPipeline<T>, Action<T>)
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Tap__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Action___0__
+  commentId: M:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Tap``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Action{``0})
+  name.vb: Tap(Of T)(IEtlPipeline(Of T), Action(Of T))
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Tap<T>(Wolfgang.Etl.Abstractions.IEtlPipeline<T>, System.Action<T>)
+  fullName.vb: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Tap(Of T)(Wolfgang.Etl.Abstractions.IEtlPipeline(Of T), System.Action(Of T))
+  nameWithType: EtlPipelineOperatorExtensions.Tap<T>(IEtlPipeline<T>, Action<T>)
+  nameWithType.vb: EtlPipelineOperatorExtensions.Tap(Of T)(IEtlPipeline(Of T), Action(Of T))
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Tap``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Threading.Tasks.ValueTask})
+  name: Tap<T>(IEtlPipeline<T>, Func<T, ValueTask>)
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Tap__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Threading_Tasks_ValueTask__
+  commentId: M:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Tap``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Threading.Tasks.ValueTask})
+  name.vb: Tap(Of T)(IEtlPipeline(Of T), Func(Of T, ValueTask))
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Tap<T>(Wolfgang.Etl.Abstractions.IEtlPipeline<T>, System.Func<T, System.Threading.Tasks.ValueTask>)
+  fullName.vb: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Tap(Of T)(Wolfgang.Etl.Abstractions.IEtlPipeline(Of T), System.Func(Of T, System.Threading.Tasks.ValueTask))
+  nameWithType: EtlPipelineOperatorExtensions.Tap<T>(IEtlPipeline<T>, Func<T, ValueTask>)
+  nameWithType.vb: EtlPipelineOperatorExtensions.Tap(Of T)(IEtlPipeline(Of T), Func(Of T, ValueTask))
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Throttle*
+  name: Throttle
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Throttle_
+  commentId: Overload:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Throttle
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Throttle
+  nameWithType: EtlPipelineOperatorExtensions.Throttle
+- uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Throttle``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.TimeSpan)
+  name: Throttle<T>(IEtlPipeline<T>, TimeSpan)
+  href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Throttle__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_TimeSpan_
+  commentId: M:Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Throttle``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.TimeSpan)
+  name.vb: Throttle(Of T)(IEtlPipeline(Of T), TimeSpan)
+  fullName: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Throttle<T>(Wolfgang.Etl.Abstractions.IEtlPipeline<T>, System.TimeSpan)
+  fullName.vb: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Throttle(Of T)(Wolfgang.Etl.Abstractions.IEtlPipeline(Of T), System.TimeSpan)
+  nameWithType: EtlPipelineOperatorExtensions.Throttle<T>(IEtlPipeline<T>, TimeSpan)
+  nameWithType.vb: EtlPipelineOperatorExtensions.Throttle(Of T)(IEtlPipeline(Of T), TimeSpan)
 - uid: Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Where*
   name: Where
   href: api/Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Where_
@@ -1160,6 +1217,52 @@ references:
   fullName.vb: Wolfgang.Etl.Transformers.TakeWhileTransformer(Of T).TransformAsync
   nameWithType: TakeWhileTransformer<T>.TransformAsync
   nameWithType.vb: TakeWhileTransformer(Of T).TransformAsync
+- uid: Wolfgang.Etl.Transformers.ThrottleTransformer`1
+  name: ThrottleTransformer<T>
+  href: api/Wolfgang.Etl.Transformers.ThrottleTransformer-1.html
+  commentId: T:Wolfgang.Etl.Transformers.ThrottleTransformer`1
+  name.vb: ThrottleTransformer(Of T)
+  fullName: Wolfgang.Etl.Transformers.ThrottleTransformer<T>
+  fullName.vb: Wolfgang.Etl.Transformers.ThrottleTransformer(Of T)
+  nameWithType: ThrottleTransformer<T>
+  nameWithType.vb: ThrottleTransformer(Of T)
+- uid: Wolfgang.Etl.Transformers.ThrottleTransformer`1.#ctor(System.TimeSpan)
+  name: ThrottleTransformer(TimeSpan)
+  href: api/Wolfgang.Etl.Transformers.ThrottleTransformer-1.html#Wolfgang_Etl_Transformers_ThrottleTransformer_1__ctor_System_TimeSpan_
+  commentId: M:Wolfgang.Etl.Transformers.ThrottleTransformer`1.#ctor(System.TimeSpan)
+  name.vb: New(TimeSpan)
+  fullName: Wolfgang.Etl.Transformers.ThrottleTransformer<T>.ThrottleTransformer(System.TimeSpan)
+  fullName.vb: Wolfgang.Etl.Transformers.ThrottleTransformer(Of T).New(System.TimeSpan)
+  nameWithType: ThrottleTransformer<T>.ThrottleTransformer(TimeSpan)
+  nameWithType.vb: ThrottleTransformer(Of T).New(TimeSpan)
+- uid: Wolfgang.Etl.Transformers.ThrottleTransformer`1.#ctor*
+  name: ThrottleTransformer
+  href: api/Wolfgang.Etl.Transformers.ThrottleTransformer-1.html#Wolfgang_Etl_Transformers_ThrottleTransformer_1__ctor_
+  commentId: Overload:Wolfgang.Etl.Transformers.ThrottleTransformer`1.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Wolfgang.Etl.Transformers.ThrottleTransformer<T>.ThrottleTransformer
+  fullName.vb: Wolfgang.Etl.Transformers.ThrottleTransformer(Of T).New
+  nameWithType: ThrottleTransformer<T>.ThrottleTransformer
+  nameWithType.vb: ThrottleTransformer(Of T).New
+- uid: Wolfgang.Etl.Transformers.ThrottleTransformer`1.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name: TransformAsync(IAsyncEnumerable<T>)
+  href: api/Wolfgang.Etl.Transformers.ThrottleTransformer-1.html#Wolfgang_Etl_Transformers_ThrottleTransformer_1_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__
+  commentId: M:Wolfgang.Etl.Transformers.ThrottleTransformer`1.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})
+  name.vb: TransformAsync(IAsyncEnumerable(Of T))
+  fullName: Wolfgang.Etl.Transformers.ThrottleTransformer<T>.TransformAsync(System.Collections.Generic.IAsyncEnumerable<T>)
+  fullName.vb: Wolfgang.Etl.Transformers.ThrottleTransformer(Of T).TransformAsync(System.Collections.Generic.IAsyncEnumerable(Of T))
+  nameWithType: ThrottleTransformer<T>.TransformAsync(IAsyncEnumerable<T>)
+  nameWithType.vb: ThrottleTransformer(Of T).TransformAsync(IAsyncEnumerable(Of T))
+- uid: Wolfgang.Etl.Transformers.ThrottleTransformer`1.TransformAsync*
+  name: TransformAsync
+  href: api/Wolfgang.Etl.Transformers.ThrottleTransformer-1.html#Wolfgang_Etl_Transformers_ThrottleTransformer_1_TransformAsync_
+  commentId: Overload:Wolfgang.Etl.Transformers.ThrottleTransformer`1.TransformAsync
+  isSpec: "True"
+  fullName: Wolfgang.Etl.Transformers.ThrottleTransformer<T>.TransformAsync
+  fullName.vb: Wolfgang.Etl.Transformers.ThrottleTransformer(Of T).TransformAsync
+  nameWithType: ThrottleTransformer<T>.TransformAsync
+  nameWithType.vb: ThrottleTransformer(Of T).TransformAsync
 - uid: Wolfgang.Etl.Transformers.TransformerExtensions
   name: TransformerExtensions
   href: api/Wolfgang.Etl.Transformers.TransformerExtensions.html

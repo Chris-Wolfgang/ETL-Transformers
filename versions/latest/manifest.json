@@ -260,6 +260,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Wolfgang.Etl.Transformers.ThrottleTransformer-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Wolfgang.Etl.Transformers.ThrottleTransformer-1.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Wolfgang.Etl.Transformers.ThrottleTransformer<T>",
+      "Summary": "<p sourcefile=\"api/Wolfgang.Etl.Transformers.ThrottleTransformer-1.yml\" sourcestartlinenumber=\"1\">Paces an asynchronous sequence so that successive items are yielded no closer together than a\nminimum interval, without changing the stream's shape or order. Useful for rate-limiting a\ndownstream sink (an API, a database) that must not be hit too fast.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Wolfgang.Etl.Transformers.TransformerExtensions.yml",
       "output": {
         ".html": {

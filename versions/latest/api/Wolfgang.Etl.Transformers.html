@@ -193,6 +193,13 @@ the predicate stops enumeration immediately and is not yielded.</p>
 </dd>
     </dl>
     <dl class="jumplist">
+      <dt><a class="xref" href="Wolfgang.Etl.Transformers.ThrottleTransformer-1.html">ThrottleTransformer&lt;T&gt;</a></dt>
+      <dd><p>Paces an asynchronous sequence so that successive items are yielded no closer together than a
+minimum interval, without changing the stream's shape or order. Useful for rate-limiting a
+downstream sink (an API, a database) that must not be hit too fast.</p>
+</dd>
+    </dl>
+    <dl class="jumplist">
       <dt><a class="xref" href="Wolfgang.Etl.Transformers.TransformerExtensions.html">TransformerExtensions</a></dt>
       <dd><p>Extension methods that compose transformers and wrap sequences with pipeline infrastructure.</p>
 </dd>
