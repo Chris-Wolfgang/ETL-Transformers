@@ -1,0 +1,28 @@
+# Analyzer rules relaxed for shadow-workload / sample harness projects.
+# Stacks on top of the root .editorconfig — no `root = true`.
+
+[*.cs]
+
+# -----------------------------------------------------------------------
+# InspectCode-only suppressions. Sample projects mirror the shape of
+# benchmarks — they're not shipped, don't declare a public API surface,
+# and use BDN-style [Params] properties.
+# -----------------------------------------------------------------------
+
+# RS0016 / RS0037: PublicApiAnalyzer — sample projects have no
+# PublicAPI.Shipped.txt. Directory.Build.props Conditions the AdditionalFiles
+# out, but InspectCode doesn't honor the Condition.
+dotnet_diagnostic.RS0016.severity = none
+dotnet_diagnostic.RS0037.severity = none
+
+# UnusedAutoPropertyAccessor.Global: BenchmarkDotNet [Params] properties
+# expose public setters that BDN sets via reflection.
+resharper_unused_auto_property_accessor_global_highlighting = none
+
+# CheckNamespace: samples/ShadowWorkloads deliberately uses the
+# top-level `ShadowWorkloads` namespace rather than a rooted one, to
+# keep benchmark class names short in BDN output.
+resharper_check_namespace_highlighting = none
+
+# RedundantCast: sample fixtures cast to disambiguate between overloads.
+resharper_redundant_cast_highlighting = none

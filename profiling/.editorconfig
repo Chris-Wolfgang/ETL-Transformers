@@ -1,0 +1,22 @@
+# Analyzer rules relaxed for profiling harness projects.
+# Stacks on top of the root .editorconfig — no `root = true`.
+
+[*.cs]
+
+# -----------------------------------------------------------------------
+# InspectCode-only suppressions. Profiling harnesses are not shipped, don't
+# declare a public API surface, and use ad-hoc arg-parsing helpers where
+# nullable-flow analysis diverges from actual runtime behavior.
+# -----------------------------------------------------------------------
+
+# RS0016 / RS0037: PublicApiAnalyzer — profiling projects have no
+# PublicAPI.Shipped.txt. Directory.Build.props Conditions the AdditionalFiles
+# out, but InspectCode doesn't honor the Condition.
+dotnet_diagnostic.RS0016.severity = none
+dotnet_diagnostic.RS0037.severity = none
+
+# ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract: the arg-parsing
+# helper (GetString) declares a non-null return but uses `!` to force the
+# fallback path. The caller's `raw is not null` guard is semantically correct
+# — R# only sees the declared signature and flags it as always-true.
+resharper_condition_is_always_true_or_false_according_to_nullable_api_contract_highlighting = none

@@ -46,3 +46,80 @@ dotnet_diagnostic.S1144.severity = none
 
 # xUnit2013: Use Assert.Single instead of Assert.Equal for collection size
 dotnet_diagnostic.xUnit2013.severity = none
+
+# -----------------------------------------------------------------------
+# InspectCode-only suppressions (rules the MSBuild analyzer stack either
+# already suppresses in tests via csproj <NoWarn> or Directory.Build.props
+# Conditions, but InspectCode doesn't honor those). Duplicating here so
+# both MSBuild-time analyzers and InspectCode agree on the test scope.
+# -----------------------------------------------------------------------
+
+# RS0016 / RS0037: PublicApiAnalyzer — the analyzer is opt-in per project
+# via <AdditionalFiles Condition="Exists('PublicAPI.Shipped.txt')" /> in
+# Directory.Build.props. Test projects have no PublicAPI.Shipped.txt and
+# should not be tracked as a public surface. MSBuild honors the Condition;
+# InspectCode doesn't, so we silence explicitly here.
+dotnet_diagnostic.RS0016.severity = none
+dotnet_diagnostic.RS0037.severity = none
+
+# S2190: Iterators / loops without termination — false positive on tests
+# that throw to exit an iterator (see cancellation-token tests).
+dotnet_diagnostic.S2190.severity = none
+
+# S2325: Make method static — test helper methods are instance methods
+# by xunit convention.
+dotnet_diagnostic.S2325.severity = none
+
+# xUnit1030: Test methods shouldn't call ConfigureAwait(false) — the
+# DocExamples test compiles Roslyn workloads where ConfigureAwait is
+# required to avoid VSTHRD.
+dotnet_diagnostic.xUnit1030.severity = none
+
+# -----------------------------------------------------------------------
+# ReSharper-native inspections (no dotnet_diagnostic ID). These fire from
+# R#'s own rule engine, not from a Roslyn analyzer package, so they take
+# the `resharper_<snake_rule>_highlighting` form.
+# -----------------------------------------------------------------------
+
+# UnusedAutoPropertyAccessor.Local: test POCOs expose Value.get for the
+# type contract but the test only asserts on Value.set (or vice-versa).
+resharper_unused_auto_property_accessor_local_highlighting = none
+
+# PossibleMultipleEnumeration: allocation-budget tests deliberately enumerate
+# a captured IEnumerable twice to compare snapshots.
+resharper_possible_multiple_enumeration_highlighting = none
+
+# AccessToDisposedClosure: cancellation-token tests capture a CTS in a
+# local function that is guaranteed to complete before the `using` block
+# exits. R# can't see that ordering; the finding is a false positive.
+resharper_access_to_disposed_closure_highlighting = none
+
+# AccessToModifiedClosure: throttle-timing tests deliberately mutate the
+# captured variable to record intermediate observations.
+resharper_access_to_modified_closure_highlighting = none
+
+# RedundantCast: many test fixtures cast to disambiguate between overloads
+# (e.g. IAsyncEnumerable<T> vs IEnumerable<T>). R# can't see the
+# disambiguation intent.
+resharper_redundant_cast_highlighting = none
+
+# RedundantExplicitArrayCreation: test data uses explicit `new T[] { ... }`
+# for readability even when the type is inferrable.
+resharper_redundant_explicit_array_creation_highlighting = none
+
+# RedundantArgumentDefaultValue: DocExamples passes documentationMode
+# explicitly for clarity even when it matches the default.
+resharper_redundant_argument_default_value_highlighting = none
+
+# IteratorNeverReturns: infinite-iterator test fixtures (used to verify
+# consumer-side cancellation) intentionally never yield-break.
+resharper_iterator_never_returns_highlighting = none
+
+# InvalidXmlDocComment: concurrency scenario doc-comments reference
+# helper types with overload ambiguity that R# can't resolve. Not
+# user-facing.
+resharper_invalid_xml_doc_comment_highlighting = none
+
+# CheckNamespace: Snapshots subfolder deliberately nests test types under
+# a non-matching namespace to keep Verify snapshots colocated.
+resharper_check_namespace_highlighting = none
