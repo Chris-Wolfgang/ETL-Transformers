@@ -45,7 +45,7 @@ jobs:
       issues: write  # Open/update the regression tracking issue
     steps:
       - name: Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
 
@@ -63,6 +63,15 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          # Fail loudly when no baseline is committed: compare-benchmarks.py treats an
+          # empty base/head intersection as "no regression", so without this guard every
+          # nightly run would pass green and the gate could never fire (issue #77).
+          shopt -s nullglob
+          baseline_results=("$BASELINE_DIR"/*.json)
+          if [ ${#baseline_results[@]} -eq 0 ]; then
+            echo "::error::No BenchmarkDotNet baseline (*.json) in '$BASELINE_DIR' — the shadow gate cannot detect regressions. Commit a baseline captured from a release run (see $BASELINE_DIR/README.md)."
+            exit 1
+          fi
           python3 scripts/compare-benchmarks.py \
             --base-dir "$BASELINE_DIR" \
             --head-dir "$BENCH_DIR/BenchmarkDotNet.Artifacts/results" \
@@ -72,7 +81,7 @@ jobs:
 
       - name: Upload shadow results
         if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: shadow-results
           path: |
@@ -87,13 +96,14 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
           marker='<!-- shadow-regression -->'
           title='Shadow-test regression detected'
           {
             echo "$marker"
-            echo "The nightly shadow workloads regressed beyond threshold on \`${{ github.sha }}\`."
+            echo "The nightly shadow workloads regressed beyond threshold on \`${SHA}\`."
             echo ""
             cat "$RUNNER_TEMP/shadow-report.md"
             echo ""

@@ -50,6 +50,13 @@ on:
 permissions:
   contents: read  # Default to read-only; the build-and-deploy job overrides with write
 
+concurrency:
+  # Join the repo-wide gh-pages lock (see benchmarks.yaml) so DocFX, coverage,
+  # versioned-docs, and benchmark publishes never push gh-pages concurrently and
+  # clobber each other. Never cancel an in-flight deploy mid-publish.
+  group: gh-pages
+  cancel-in-progress: false
+
 jobs:
   build-and-deploy:
     name: Build & Deploy Documentation
@@ -60,7 +67,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0  # Full history needed to enumerate all v* tags
           persist-credentials: false
@@ -127,7 +134,7 @@ jobs:
           }
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v6
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: |
             5.0.x
@@ -382,8 +389,9 @@ jobs:
             Write-Host "::error::Newly-generated docfx_project/_site/versions.json is missing — docfx generation is broken. Refusing to deploy without a verified version manifest."
             exit 1
           }
+          $repoOwner = ($env:GITHUB_REPOSITORY -split '/')[0]
           $repoName = ($env:GITHUB_REPOSITORY -split '/')[-1]
-          $existingUrl = "https://${{ github.repository_owner }}.github.io/$repoName/versions.json"
+          $existingUrl = "https://$repoOwner.github.io/$repoName/versions.json"
           try {
             # -UseBasicParsing is a Windows-PowerShell-5.1 flag; pwsh (PowerShell 7+)
             # treats it as unsupported and would error. Omit it.

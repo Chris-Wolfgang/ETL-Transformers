@@ -47,7 +47,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
 
@@ -56,7 +56,15 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
+      # continue-on-error: a FAILING test must not abort this leg — the .trx (which
+      # dotnet test writes regardless of pass/fail) still has to reach the compare job.
+      # Otherwise the exact case this workflow exists to catch — a test that passes on
+      # one platform and fails on another — would kill the leg before upload and skip
+      # the diff entirely. A universally-failing test is caught by pr.yaml's Stage 1/2/3;
+      # this workflow only judges cross-platform *consistency* of outcomes.
       - name: Run tests
+        id: test
+        continue-on-error: true
         shell: bash
         # Exclude PlatformSpecific-tagged tests; they are allowed to differ by platform.
         run: >
@@ -67,8 +75,12 @@ jobs:
           --logger "trx;LogFileName=results.trx"
           --results-directory trx-out
 
+      # always(): upload even when the test step reported failure, so the failing
+      # platform's outcomes are available to the diff. if-no-files-found stays `error`
+      # so a build break (no .trx produced at all) still fails the leg.
       - name: Upload raw results
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: trx-${{ matrix.label }}
           path: trx-out/results.trx
@@ -80,15 +92,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
 
       - name: Download all results
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           pattern: trx-*
           path: trx
+
+      - name: Setup Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+
+      - name: Install defusedxml
+        run: python3 -m pip install --quiet --disable-pip-version-check defusedxml
 
       - name: Normalize and diff
         shell: bash

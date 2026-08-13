@@ -26,7 +26,7 @@ jobs:
     if: github.repository != 'Chris-Wolfgang/repo-template'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
 
@@ -85,7 +85,7 @@ jobs:
           }
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v6
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: |
             3.1.x
@@ -340,7 +340,7 @@ jobs:
 
       - name: Upload coverage report
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: release-coverage
           path: CoverageReport/
@@ -355,12 +355,12 @@ jobs:
       build-sdk: ${{ steps.build-sdk.outputs.version }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v6
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: |
             3.1.x
@@ -572,14 +572,47 @@ jobs:
           }
 
 
+      # Hash the packages for the reproducible-build manifest BEFORE signing. NuGet
+      # author-signing embeds a signature + RFC 3161 timestamp (invocation-specific data)
+      # into the .nupkg, so a hash taken after signing could never be reproduced by an
+      # independent `dotnet pack` — the consumer reproducibility check (#102) would be
+      # guaranteed to fail once a certificate is provisioned. Recording the pre-signing
+      # hash keeps it meaningful. The manifest .json lands in ./nuget-packages/ (the
+      # generator only reads *.nupkg/*.snupkg, so it ignores the manifest itself) and so
+      # rides the existing artifact upload to the release-attach job.
+      - name: Generate reproducible-build manifest (pre-signing)
+        if: steps.check-packages.outputs.has-packages == 'true'
+        shell: bash
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+          SDK: ${{ steps.build-sdk.outputs.version }}
+        run: |
+          python3 scripts/generate-repro-manifest.py \
+            --packages ./nuget-packages \
+            --out ./nuget-packages/reproducible-build-manifest.json \
+            --tag "$TAG" --sdk "$SDK"
+
       # Author-sign the packages if a code-signing certificate is configured. This
       # runs before the artifact is uploaded, so the SAME signed .nupkg is both
       # pushed to NuGet.org and attached to the Release. The step is skipped when the
       # NUGET_SIGN_CERT_BASE64 secret is absent, so the pipeline keeps working until a
       # certificate is provisioned. (NuGet.org additionally applies its own repository
       # signature on publish, verifiable via `nuget verify --signatures` regardless.)
+      # Probe for the signing certificate here (in a step's env) rather than testing
+      # `secrets.*` directly in the next step's `if:` — the secrets context is not
+      # available in `if` conditions, only in env/with. This surfaces a boolean output.
+      - name: Check signing certificate availability
+        id: check-cert
+        if: steps.check-packages.outputs.has-packages == 'true'
+        shell: pwsh
+        env:
+          SIGN_CERT_BASE64: ${{ secrets.NUGET_SIGN_CERT_BASE64 }}
+        run: |
+          $has = if ([string]::IsNullOrEmpty($env:SIGN_CERT_BASE64)) { 'false' } else { 'true' }
+          "has-cert=$has" >> $env:GITHUB_OUTPUT
+
       - name: Sign NuGet packages
-        if: steps.check-packages.outputs.has-packages == 'true' && secrets.NUGET_SIGN_CERT_BASE64 != ''
+        if: steps.check-packages.outputs.has-packages == 'true' && steps.check-cert.outputs.has-cert == 'true'
         shell: pwsh
         env:
           SIGN_CERT_BASE64: ${{ secrets.NUGET_SIGN_CERT_BASE64 }}
@@ -600,7 +633,7 @@ jobs:
           Remove-Item $certPath -Force
 
       - name: Upload NuGet packages
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: nuget-packages
           path: ./nuget-packages/
@@ -619,7 +652,7 @@ jobs:
     if: github.repository != 'Chris-Wolfgang/repo-template'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
 
@@ -636,7 +669,7 @@ jobs:
 
       - name: Setup .NET
         if: steps.check.outputs.found == 'true'
-        uses: actions/setup-dotnet@v6
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           # Install the same SDK set as validate-release so dotnet build can
           # compile every TFM the solution targets (some test projects span
@@ -720,7 +753,7 @@ jobs:
       contents: read
     steps:
       - name: Setup .NET
-        uses: actions/setup-dotnet@v6
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: |
             3.1.x
@@ -732,7 +765,7 @@ jobs:
             10.0.x
 
       - name: Download packages
-        uses: actions/download-artifact@v8.0.1
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: nuget-packages
           path: ./packages
@@ -803,19 +836,19 @@ jobs:
       # run before the artifacts are downloaded. Provides scripts/generate-repro-manifest.py
       # at the released tag.
       - name: Checkout code at release tag
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ github.event.release.tag_name }}
           persist-credentials: false
 
       - name: Download NuGet packages artifact
-        uses: actions/download-artifact@v8.0.1
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: nuget-packages
           path: ./nuget-packages
 
       - name: Download coverage report artifact
-        uses: actions/download-artifact@v8.0.1
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: release-coverage
           path: ./release-coverage
@@ -823,21 +856,16 @@ jobs:
       - name: Zip coverage report
         run: zip -r release-coverage.zip ./release-coverage
 
-      - name: Generate reproducible-build manifest
-        env:
-          TAG: ${{ github.event.release.tag_name }}
-          SDK: ${{ needs.pack-and-validate.outputs.build-sdk }}
-        run: |
-          python3 scripts/generate-repro-manifest.py \
-            --packages ./nuget-packages \
-            --out reproducible-build-manifest.json \
-            --tag "$TAG" --sdk "$SDK"
+      # The reproducible-build manifest is generated in the pack-and-validate job
+      # BEFORE signing (so its hashes stay reproducible) and travels inside the
+      # nuget-packages artifact as reproducible-build-manifest.json — no regeneration
+      # here, which would hash the signed (non-reproducible) packages.
 
       # SLSA build-provenance attestation (Sigstore-backed, keyless). Proves the
       # packages were produced by this workflow from this repo. Consumers verify with
       # `gh attestation verify <pkg> --repo Chris-Wolfgang/ETL-Transformers`.
       - name: Attest build provenance (SLSA)
-        uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3.0.0
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
         with:
           subject-path: |
             ./nuget-packages/*.nupkg
@@ -851,6 +879,7 @@ jobs:
             ./nuget-packages/*.nupkg
             ./nuget-packages/*.snupkg
             ./nuget-packages/*.bom.json
+            ./nuget-packages/reproducible-build-manifest.json
             reproducible-build-manifest.json
             release-coverage.zip
 

@@ -23,6 +23,12 @@ on:
 permissions:
   contents: write   # required to push to gh-pages
 
+concurrency:
+  # Join the repo-wide gh-pages lock (see benchmarks.yaml) so all gh-pages
+  # publishes serialize; never cancel an in-flight coverage upload.
+  group: gh-pages
+  cancel-in-progress: false
+
 jobs:
   coverage-report:
     name: Generate & Publish Coverage Report
@@ -32,13 +38,13 @@ jobs:
 
     steps:
       - name: Check out repo
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
           ref: ${{ github.event.inputs.ref || github.ref }}
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v6
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
           dotnet-version: 10.0.x
 
@@ -80,7 +86,7 @@ jobs:
           fi
 
       - name: Check out gh-pages
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: gh-pages
           path: gh-pages
