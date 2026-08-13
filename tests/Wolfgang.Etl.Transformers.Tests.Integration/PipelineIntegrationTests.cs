@@ -211,6 +211,7 @@ public class PipelineIntegrationTests
 
         // PassThroughTransformer.TransformAsync(source, token) calls source.WithCancellation(token)
         // internally, which propagates the token into SlowSource via [EnumeratorCancellation].
+        // ReSharper disable once AccessToDisposedClosure — the callback is invoked by SlowSource during the `await foreach` below, which completes before `using var cts` exits scope.
         var slowSource = SlowSource(100, () =>
         {
             yielded++;

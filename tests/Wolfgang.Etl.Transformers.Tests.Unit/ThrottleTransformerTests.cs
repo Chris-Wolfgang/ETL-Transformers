@@ -75,6 +75,7 @@ public class ThrottleTransformerTests
         var sut = new ThrottleTransformer<int>(
             interval,
             (delay, _) => { waits.Add(delay); return Task.CompletedTask; },
+            // ReSharper disable once AccessToModifiedClosure — deliberately reads the current `clock`; the test mutates it between items to model consumer processing time and verify the throttle measures FROM delivery.
             () => clock);
 
         await foreach (var _ in sut.TransformAsync(ToAsync(new[] { 1, 2, 3 })))

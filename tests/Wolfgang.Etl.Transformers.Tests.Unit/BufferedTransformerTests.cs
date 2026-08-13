@@ -126,9 +126,9 @@ public class BufferedTransformerTests
     [Fact]
     public async Task TransformAsync_preserves_reference_identity_of_yielded_items()
     {
-        var a = new Box(1);
-        var b = new Box(2);
-        var c = new Box(3);
+        var a = new Box();
+        var b = new Box();
+        var c = new Box();
 
         var sut = new BufferedTransformer<Box>(capacity: 8);
         var result = await CollectAsync(sut.TransformAsync(ToAsync(new[] { a, b, c })));
@@ -359,11 +359,13 @@ public class BufferedTransformerTests
         var i = 0;
         try
         {
+#pragma warning disable S2190 // deliberate: infinite source; termination comes from consumer disposal / cancellation, verified via disposalSignal
             while (true)
             {
                 await Task.Yield();
                 yield return i++;
             }
+#pragma warning restore S2190
         }
         finally
         {
@@ -373,15 +375,5 @@ public class BufferedTransformerTests
 
 
 
-    private sealed class Box
-    {
-        public Box(int value)
-        {
-            Value = value;
-        }
-
-
-
-        public int Value { get; }
-    }
+    private sealed class Box;
 }

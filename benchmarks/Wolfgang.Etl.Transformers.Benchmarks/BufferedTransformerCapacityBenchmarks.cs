@@ -35,6 +35,8 @@ namespace Wolfgang.Etl.Transformers.Benchmarks;
 [MemoryDiagnoser]
 public class BufferedTransformerCapacityBenchmarks
 {
+    // ReSharper disable UnusedAutoPropertyAccessor.Global — all four setters are called by BenchmarkDotNet via reflection when it enumerates [Params].
+
     /// <summary>Number of items flowing through the pipeline per iteration.</summary>
     [Params(100)]
     public int ItemCount { get; set; }
@@ -54,6 +56,8 @@ public class BufferedTransformerCapacityBenchmarks
     /// <summary>Channel capacity values to benchmark.</summary>
     [Params(1, 8, 64, 256, 1024, 8192)]
     public int Capacity { get; set; }
+
+    // ReSharper restore UnusedAutoPropertyAccessor.Global
 
 
 

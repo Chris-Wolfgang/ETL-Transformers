@@ -12,6 +12,7 @@ namespace Wolfgang.Etl.Transformers.ShadowWorkloads;
 [MemoryDiagnoser]
 public class BurstyWindowBenchmarks
 {
+    // ReSharper disable once UnusedAutoPropertyAccessor.Global — set by BenchmarkDotNet via reflection when it enumerates [Params].
     [Params(50_000)]
     public int ItemCount { get; set; }
 

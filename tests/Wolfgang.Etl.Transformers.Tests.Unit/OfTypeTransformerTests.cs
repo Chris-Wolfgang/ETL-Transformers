@@ -153,6 +153,7 @@ public class OfTypeTransformerTests
     public async Task TransformAsync_does_not_throw_when_items_are_not_of_destination_type()
     {
         var sut = new OfTypeTransformer<object, string>();
+        // ReSharper disable once RedundantExplicitArrayCreation — the elements are heterogeneous value + reference types (int / double / bool / object) and the `object[]` type is what OfTypeTransformer<object, string> is being asked to filter.
         var source = new object[] { 1, 2.5, true, new object() };
 
         // Should not throw even though no items can be cast to string

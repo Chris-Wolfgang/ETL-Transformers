@@ -81,7 +81,7 @@ public sealed class DocExampleCompilationTests
                 continue;
             }
 
-            var source = await File.ReadAllTextAsync(file).ConfigureAwait(false);
+            var source = await File.ReadAllTextAsync(file);
 
             foreach (var (line, code) in ExtractExampleCode(source))
             {
@@ -177,7 +177,7 @@ public sealed class DocExampleCompilationTests
         var tree = CSharpSyntaxTree.ParseText
         (
             source,
-            new CSharpParseOptions(LanguageVersion.Latest, DocumentationMode.Parse)
+            new CSharpParseOptions(LanguageVersion.Latest)
         );
 
         var docComments = tree.GetRoot()

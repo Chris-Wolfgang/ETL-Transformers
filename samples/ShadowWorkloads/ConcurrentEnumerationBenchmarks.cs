@@ -11,12 +11,14 @@ namespace Wolfgang.Etl.Transformers.ShadowWorkloads;
 [MemoryDiagnoser]
 public class ConcurrentEnumerationBenchmarks
 {
+    // ReSharper disable UnusedAutoPropertyAccessor.Global — set by BenchmarkDotNet via reflection when it enumerates [Params].
     [Params(8)]
     public int Concurrency { get; set; }
 
 
     [Params(20_000)]
     public int ItemsPerWorker { get; set; }
+    // ReSharper restore UnusedAutoPropertyAccessor.Global
 
 
     [Benchmark]

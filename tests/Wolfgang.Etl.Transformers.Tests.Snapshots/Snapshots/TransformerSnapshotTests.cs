@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Xunit;
 using static VerifyXunit.Verifier;
 
-namespace Wolfgang.Etl.Transformers.Tests.Snapshots;
+namespace Wolfgang.Etl.Transformers.Tests.Snapshots.Snapshots;
 
 /// <summary>
 /// Snapshot (approval) tests over representative complex-shaped transformer
