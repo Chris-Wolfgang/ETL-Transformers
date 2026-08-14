@@ -10,7 +10,7 @@ namespace Wolfgang.Etl.Transformers.Tests.Concurrency;
 /// Concurrency scenarios shared by the Coyote systematic entry points
 /// (<see cref="CoyoteEntryPoints"/>) and the xunit stress wrappers
 /// (<c>ConcurrencyStressTests</c>). Each asserts its invariant with
-/// <see cref="Specification.Assert(bool, string)"/>, which fails both under Coyote's
+/// <see cref="Specification"/>'s Assert helper, which fails both under Coyote's
 /// model checker and on the real scheduler.
 /// </summary>
 internal static class Scenarios
@@ -85,6 +85,7 @@ internal static class Scenarios
         {
             try
             {
+                // ReSharper disable once AccessToDisposedClosure — consumer is awaited before `using var cts` exits, so cts is alive for the closure's full lifetime.
                 await foreach (var _ in buffered.TransformAsync(RangeAsync(ItemCount))
                     .WithCancellation(cts.Token)
                     .ConfigureAwait(false))

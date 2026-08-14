@@ -320,7 +320,7 @@ public class ChainTransformerWithCancellationTests
 
 
 
-        private async IAsyncEnumerable<int> Iterate(IAsyncEnumerable<int> items, [EnumeratorCancellation] CancellationToken token)
+        private static async IAsyncEnumerable<int> Iterate(IAsyncEnumerable<int> items, [EnumeratorCancellation] CancellationToken token)
         {
             await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
             {

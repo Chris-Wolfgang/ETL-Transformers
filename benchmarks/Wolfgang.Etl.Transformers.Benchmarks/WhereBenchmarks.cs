@@ -21,6 +21,7 @@ public class WhereBenchmarks
 
 
 
+    // ReSharper disable UnusedAutoPropertyAccessor.Global — both setters are called by BenchmarkDotNet via reflection when it enumerates [Params].
     [Params(1_000, 100_000, 1_000_000)]
     public int ItemCount { get; set; }
 
@@ -28,6 +29,7 @@ public class WhereBenchmarks
 
     [Params(0.1, 0.5, 0.9)]
     public double PassRate { get; set; }
+    // ReSharper restore UnusedAutoPropertyAccessor.Global
 
 
 

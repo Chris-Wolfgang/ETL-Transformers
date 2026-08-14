@@ -53,6 +53,8 @@ public sealed class AllocationBudgetTests
         var transformer = new PassThroughTransformer<int>();
         var source = RangeAsync(4);
 
+        // ReSharper disable PossibleMultipleEnumeration — TransformAsync is a non-enumerating wrapper (`return items;`); the result is discarded. Re-using `source` across iterations is what the zero-alloc contract requires.
+
         // Warm up: JIT the call, resolve the interface dispatch, tier up.
         for (var i = 0; i < WarmupIterations; i++)
         {
@@ -65,6 +67,8 @@ public sealed class AllocationBudgetTests
         {
             _ = transformer.TransformAsync(source);
         }
+
+        // ReSharper restore PossibleMultipleEnumeration
 
         var delta = GC.GetAllocatedBytesForCurrentThread() - before;
 
@@ -108,6 +112,7 @@ public sealed class AllocationBudgetTests
         var transformer = new PassThroughTransformer<int>();
         var source = RangeAsync(4);
 
+        // ReSharper disable PossibleMultipleEnumeration — TransformAsync returns a wrapping iterator (never enumerated here); the result is discarded. We're measuring allocations of the *wrap*, not of consuming `source`.
         for (var i = 0; i < WarmupIterations; i++)
         {
             _ = transformer.TransformAsync(source, CancellationToken.None);
@@ -119,6 +124,7 @@ public sealed class AllocationBudgetTests
         {
             _ = transformer.TransformAsync(source, CancellationToken.None);
         }
+        // ReSharper restore PossibleMultipleEnumeration
 
         var delta = GC.GetAllocatedBytesForCurrentThread() - before;
 

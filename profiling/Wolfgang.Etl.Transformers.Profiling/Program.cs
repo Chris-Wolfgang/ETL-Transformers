@@ -129,14 +129,20 @@ internal static class Program
 
     private static int GetInt(string[] args, string name, int fallback)
     {
-        var raw = GetString(args, name, fallback: null);
+        var raw = GetStringOrNull(args, name);
         return raw is not null && int.TryParse(raw, NumberStyles.Integer, CultureInfo.InvariantCulture, out var value)
             ? value
             : fallback;
     }
 
 
-    private static string GetString(string[] args, string name, string? fallback)
+    private static string GetString(string[] args, string name, string fallback)
+    {
+        return GetStringOrNull(args, name) ?? fallback;
+    }
+
+
+    private static string? GetStringOrNull(string[] args, string name)
     {
         for (var i = 0; i < args.Length - 1; i++)
         {
@@ -146,6 +152,6 @@ internal static class Program
             }
         }
 
-        return fallback!;
+        return null;
     }
 }

@@ -265,6 +265,7 @@ public class EtlPipelineOperatorExtensionsTests
         Assert.Throws<ArgumentNullException>(() => pipeline.SkipWhile((Func<int, bool>)null!));
         Assert.Throws<ArgumentNullException>(() => pipeline.SkipWhile((Func<int, ValueTask<bool>>)null!));
         Assert.Throws<ArgumentNullException>(() => pipeline.Tap((Action<int>)null!));
+        // ReSharper disable once RedundantCast — Tap has two same-arity overloads (Action<T> and Func<T, ValueTask>) with the same parameter name; the cast is required to pick the async overload.
         Assert.Throws<ArgumentNullException>(() => pipeline.Tap((Func<int, ValueTask>)null!));
         Assert.Throws<ArgumentNullException>(() => pipeline.Log(null!, _ => { }));
         Assert.Throws<ArgumentNullException>(() => pipeline.Log(x => x.ToString(), null!));

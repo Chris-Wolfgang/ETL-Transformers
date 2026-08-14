@@ -41,10 +41,10 @@ public class PassThroughTransformerTests
     [Fact]
     public async Task TransformAsync_preserves_reference_identity_for_each_item()
     {
-        var item1 = new Box<int>(1);
-        var item2 = new Box<int>(2);
+        var item1 = new Box();
+        var item2 = new Box();
         var source = new[] { item1, item2 };
-        var sut = new PassThroughTransformer<Box<int>>();
+        var sut = new PassThroughTransformer<Box>();
 
         var result = await CollectAsync(sut.TransformAsync(ToAsync(source)));
 
@@ -192,26 +192,19 @@ public class PassThroughTransformerTests
 
     // ---------- helpers ----------
 
+    // ReSharper disable once IteratorNeverReturns — deliberate infinite source. Test fixtures pair this with a Take/cancellation to bound consumption; the never-returning shape IS the scenario under test.
     private static IEnumerable<int> InfiniteSource()
     {
         var i = 0;
+#pragma warning disable S2190 // deliberate: see comment above
         while (true)
         {
             yield return i++;
         }
+#pragma warning restore S2190
     }
 
 
 
-    private sealed class Box<T>
-    {
-        public Box(T value)
-        {
-            Value = value;
-        }
-
-
-
-        public T Value { get; }
-    }
+    private sealed class Box;
 }

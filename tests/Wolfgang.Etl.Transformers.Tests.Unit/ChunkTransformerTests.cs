@@ -228,9 +228,9 @@ public class ChunkTransformerTests
     [Fact]
     public async Task TransformAsync_preserves_reference_identity_of_items_within_chunks()
     {
-        var a = new Box(1);
-        var b = new Box(2);
-        var c = new Box(3);
+        var a = new Box();
+        var b = new Box();
+        var c = new Box();
 
         var sut = new ChunkTransformer<Box>(size: 2);
         var result = await CollectAsync(sut.TransformAsync(ToAsync(new[] { a, b, c })));
@@ -347,15 +347,5 @@ public class ChunkTransformerTests
 
 
 
-    private sealed class Box
-    {
-        public Box(int value)
-        {
-            Value = value;
-        }
-
-
-
-        public int Value { get; }
-    }
+    private sealed class Box;
 }

@@ -62,8 +62,8 @@ public class CastTransformerTests
     [Fact]
     public async Task TransformAsync_downcasts_subtypes_in_an_inheritance_hierarchy()
     {
-        var rex = new Dog("Rex");
-        var buddy = new Dog("Buddy");
+        var rex = new Dog();
+        var buddy = new Dog();
         var sut = new CastTransformer<Animal, Dog>();
 
         var result = await CollectAsync(sut.TransformAsync(ToAsync(new Animal[] { rex, buddy })));
@@ -119,7 +119,7 @@ public class CastTransformerTests
     public async Task TransformAsync_when_subtype_downcast_encounters_wrong_subtype_throws()
     {
         var sut = new CastTransformer<Animal, Dog>();
-        var source = new Animal[] { new Dog("Rex"), new Cat("Whiskers") };
+        var source = new Animal[] { new Dog(), new Cat() };
 
         await Assert.ThrowsAsync<InvalidCastException>
         (
@@ -134,8 +134,8 @@ public class CastTransformerTests
     [Fact]
     public async Task TransformAsync_preserves_reference_identity_for_yielded_items()
     {
-        var rex = new Dog("Rex");
-        var buddy = new Dog("Buddy");
+        var rex = new Dog();
+        var buddy = new Dog();
         var sut = new CastTransformer<Animal, Dog>();
 
         var result = await CollectAsync(sut.TransformAsync(ToAsync(new Animal[] { rex, buddy })));
@@ -194,33 +194,13 @@ public class CastTransformerTests
 
     // test fixtures
 
-    private abstract class Animal
-    {
-        protected Animal(string name)
-        {
-            Name = name;
-        }
+    private abstract class Animal;
 
 
 
-        public string Name { get; }
-    }
+    private sealed class Dog : Animal;
 
 
 
-    private sealed class Dog : Animal
-    {
-        public Dog(string name) : base(name)
-        {
-        }
-    }
-
-
-
-    private sealed class Cat : Animal
-    {
-        public Cat(string name) : base(name)
-        {
-        }
-    }
+    private sealed class Cat : Animal;
 }

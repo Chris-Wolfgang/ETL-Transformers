@@ -31,6 +31,7 @@ public class ProgressReportingTransformerTests
     {
         var ex = Assert.Throws<ArgumentNullException>
         (
+            // ReSharper disable once RedundantCast — ProgressReportingTransformer<T> has two same-arity ctors (Action<T> and Func<T, ValueTask>) with the same parameter name; the cast is required to pick the async overload.
             () => new ProgressReportingTransformer<int>((Func<int, ValueTask>)null!)
         );
 
@@ -239,8 +240,8 @@ public class ProgressReportingTransformerTests
     [Fact]
     public async Task TransformAsync_preserves_reference_identity_of_yielded_items()
     {
-        var a = new Box(1);
-        var b = new Box(2);
+        var a = new Box();
+        var b = new Box();
 
         var sut = new ProgressReportingTransformer<Box>(_ => { });
 
@@ -288,15 +289,5 @@ public class ProgressReportingTransformerTests
 
 
 
-    private sealed class Box
-    {
-        public Box(int value)
-        {
-            Value = value;
-        }
-
-
-
-        public int Value { get; }
-    }
+    private sealed class Box;
 }

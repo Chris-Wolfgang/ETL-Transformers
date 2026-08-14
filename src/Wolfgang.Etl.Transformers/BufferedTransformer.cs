@@ -137,6 +137,10 @@ public sealed class BufferedTransformer<T> : ITransformAsync<T, T>
             }
         );
 
+        // ReSharper disable once AccessToDisposedClosure — the producer Task is awaited
+        // in the finally block below (before `using var cts` exits its scope), so cts is
+        // guaranteed to be alive for the entire lifetime of the closure. R# can't see
+        // the ordering across the yield-return / finally boundary.
         var producer = Task.Run(() => PumpAsync(items, channel, cts.Token), cts.Token);
 
         try

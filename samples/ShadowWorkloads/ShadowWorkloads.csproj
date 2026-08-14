@@ -13,6 +13,10 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
+    <!-- Files here live under `Wolfgang.Etl.Transformers.ShadowWorkloads`; setting
+         RootNamespace teaches R# / InspectCode the expected namespace so
+         CheckNamespace stops firing on every file. -->
+    <RootNamespace>Wolfgang.Etl.Transformers.ShadowWorkloads</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

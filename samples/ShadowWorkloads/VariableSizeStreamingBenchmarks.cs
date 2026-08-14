@@ -15,6 +15,7 @@ public class VariableSizeStreamingBenchmarks
     private int[] _pageSizes = Array.Empty<int>();
 
 
+    // ReSharper disable once UnusedAutoPropertyAccessor.Global — set by BenchmarkDotNet via reflection when it enumerates [Params].
     [Params(50)]
     public int PageCount { get; set; }
 
@@ -38,7 +39,7 @@ public class VariableSizeStreamingBenchmarks
         foreach (var size in _pageSizes)
         {
             var where = new WhereTransformer<int>(i => (i & 1) == 0);
-            var select = new SelectTransformer<int, long>(i => (long)i);
+            var select = new SelectTransformer<int, long>(i => i);
             var chunk = new ChunkTransformer<long>(256);
 
             var pipeline = chunk.TransformAsync(select.TransformAsync(where.TransformAsync(Sources.Range(size))));
