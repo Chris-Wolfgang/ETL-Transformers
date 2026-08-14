@@ -240,10 +240,10 @@ public class ProgressReportingTransformerTests
     [Fact]
     public async Task TransformAsync_preserves_reference_identity_of_yielded_items()
     {
-        var a = new Box();
-        var b = new Box();
+        var a = new object();
+        var b = new object();
 
-        var sut = new ProgressReportingTransformer<Box>(_ => { });
+        var sut = new ProgressReportingTransformer<object>(_ => { });
 
         var result = await CollectAsync(sut.TransformAsync(ToAsync(new[] { a, b })));
 
@@ -289,5 +289,4 @@ public class ProgressReportingTransformerTests
 
 
 
-    private sealed class Box;
 }

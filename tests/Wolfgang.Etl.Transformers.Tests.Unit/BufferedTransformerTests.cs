@@ -126,11 +126,11 @@ public class BufferedTransformerTests
     [Fact]
     public async Task TransformAsync_preserves_reference_identity_of_yielded_items()
     {
-        var a = new Box();
-        var b = new Box();
-        var c = new Box();
+        var a = new object();
+        var b = new object();
+        var c = new object();
 
-        var sut = new BufferedTransformer<Box>(capacity: 8);
+        var sut = new BufferedTransformer<object>(capacity: 8);
         var result = await CollectAsync(sut.TransformAsync(ToAsync(new[] { a, b, c })));
 
         Assert.Collection
@@ -354,26 +354,22 @@ public class BufferedTransformerTests
     /// when its iterator is disposed - used to verify the BufferedTransformer cleans up the
     /// upstream when the consumer abandons or cancels.
     /// </summary>
+#pragma warning disable S2190 // deliberate: infinite source; termination comes from consumer disposal / cancellation, verified via disposalSignal
     private static async IAsyncEnumerable<int> InfiniteSource(TaskCompletionSource<bool> disposalSignal)
     {
         var i = 0;
         try
         {
-#pragma warning disable S2190 // deliberate: infinite source; termination comes from consumer disposal / cancellation, verified via disposalSignal
             while (true)
             {
                 await Task.Yield();
                 yield return i++;
             }
-#pragma warning restore S2190
         }
         finally
         {
             disposalSignal.TrySetResult(true);
         }
     }
-
-
-
-    private sealed class Box;
+#pragma warning restore S2190
 }
