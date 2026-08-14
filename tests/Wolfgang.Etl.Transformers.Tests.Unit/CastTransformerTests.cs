@@ -64,9 +64,9 @@ public class CastTransformerTests
     {
         var rex = new Dog();
         var buddy = new Dog();
-        var sut = new CastTransformer<Animal, Dog>();
+        var sut = new CastTransformer<IAnimal, Dog>();
 
-        var result = await CollectAsync(sut.TransformAsync(ToAsync(new Animal[] { rex, buddy })));
+        var result = await CollectAsync(sut.TransformAsync(ToAsync(new IAnimal[] { rex, buddy })));
 
         Assert.Same(rex, result[0]);
         Assert.Same(buddy, result[1]);
@@ -118,8 +118,8 @@ public class CastTransformerTests
     [Fact]
     public async Task TransformAsync_when_subtype_downcast_encounters_wrong_subtype_throws()
     {
-        var sut = new CastTransformer<Animal, Dog>();
-        var source = new Animal[] { new Dog(), new Cat() };
+        var sut = new CastTransformer<IAnimal, Dog>();
+        var source = new IAnimal[] { new Dog(), new Cat() };
 
         await Assert.ThrowsAsync<InvalidCastException>
         (
@@ -136,9 +136,9 @@ public class CastTransformerTests
     {
         var rex = new Dog();
         var buddy = new Dog();
-        var sut = new CastTransformer<Animal, Dog>();
+        var sut = new CastTransformer<IAnimal, Dog>();
 
-        var result = await CollectAsync(sut.TransformAsync(ToAsync(new Animal[] { rex, buddy })));
+        var result = await CollectAsync(sut.TransformAsync(ToAsync(new IAnimal[] { rex, buddy })));
 
         Assert.Collection
         (
@@ -194,13 +194,17 @@ public class CastTransformerTests
 
     // test fixtures
 
-    private abstract class Animal;
+    // Marker interface + two implementing sealed classes model a small polymorphic
+    // hierarchy for the subtype-downcast tests above. Using an interface (rather than
+    // an empty abstract class) sidesteps S2094 "empty class" without pulling in any
+    // real behavior the tests would otherwise have to ignore.
+    private interface IAnimal;
 
 
 
-    private sealed class Dog : Animal;
+    private sealed class Dog : IAnimal;
 
 
 
-    private sealed class Cat : Animal;
+    private sealed class Cat : IAnimal;
 }
