@@ -67,13 +67,20 @@
 
   <ItemGroup>
     <!-- A1: PublicApiAnalyzers — track public API surface for breaking-change
-         detection. AdditionalFiles below are opt-in PER PROJECT via Exists():
-         drop PublicAPI.Shipped.txt + PublicAPI.Unshipped.txt into a src
-         project directory and the analyzer activates for that project only.
-         Library projects under src/ should opt in; test / example /
-         benchmark projects should not. Per-repo enablement is tracked as a
-         follow-up maintenance issue. -->
-    <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="5.6.0">
+         detection. Opt-in PER PROJECT via Exists(): drop PublicAPI.Shipped.txt +
+         PublicAPI.Unshipped.txt into a src project directory and the analyzer
+         activates for that project only. Library projects under src/ should opt
+         in; test / example / benchmark projects should not.
+
+         Both the PackageReference AND the AdditionalFiles are gated on the same
+         Exists() check. MSBuild honors the Condition on AdditionalFiles, so
+         gating just those was enough for the compiler-driven build. InspectCode
+         doesn't honor the Condition on AdditionalFiles — it loads the analyzer
+         via the PackageReference and then flags RS0016/RS0037 on every public
+         API because it can't find the tracking file. Gating the PackageReference
+         itself removes the analyzer entirely from non-src projects, which is
+         the correct behavior everywhere. -->
+    <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="5.6.0" Condition="Exists('PublicAPI.Shipped.txt')">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
