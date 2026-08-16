@@ -8,5 +8,13 @@
   -->
   <PropertyGroup>
     <NoWarn>$(NoWarn);MA0048;S3903;CA2007</NoWarn>
+
+    <!--
+      Examples are demonstrations, not shippable packages. Without this,
+      solution-scope `dotnet pack` emits stray .nupkg files under each
+      examples/*/bin/Release/, which release / attest jobs that glob
+      **/*.nupkg would treat as real artifacts (issue #216).
+    -->
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 </Project>
