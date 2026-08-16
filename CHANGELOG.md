@@ -19,6 +19,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+- **Code-scanning noise floor** ([#208](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/208)):
+  gated the `Microsoft.CodeAnalysis.PublicApiAnalyzers` PackageReference on
+  `Exists('PublicAPI.Shipped.txt')` in `Directory.Build.props` so it no longer loads in
+  test / benchmark / sample / profiling projects. This eliminates ~664 recurring
+  RS0016/RS0037 alerts from InspectCode against non-src projects that don't declare a
+  public API surface. No consumer-visible change.
+
 ## [0.5.0] - 2026-08-13
 
 ### Changed
