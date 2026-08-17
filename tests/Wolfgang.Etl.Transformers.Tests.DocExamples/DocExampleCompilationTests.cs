@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -261,12 +262,17 @@ public sealed class DocExampleCompilationTests
             directory = directory.Parent;
         }
 
-        throw new DirectoryNotFoundException
-        (
-            "Could not locate 'src/Wolfgang.Etl.Transformers' by walking up from " + AppContext.BaseDirectory
-        );
+        return ThrowSrcDirectoryNotFound();
     }
 
+
+    [ExcludeFromCodeCoverage(Justification = "Defensive throw for a shape the CI layout doesn't produce — tests always run from within the repo, so the walk always finds src/. Extracted so the surrounding walk stays measured while this arm is legitimately unreachable.")]
+    private static string ThrowSrcDirectoryNotFound()
+        => throw new DirectoryNotFoundException(
+            "Could not locate 'src/Wolfgang.Etl.Transformers' by walking up from " + AppContext.BaseDirectory);
+
+
+    [ExcludeFromCodeCoverage(Justification = "Diagnostics formatter for the failure path. When examples pass — as they must for CI to be green — this helper is unreached. It's tested implicitly the first time a doc example fails to compile.")]
     private static string FormatFailure(string file, int line, string code, IEnumerable<Diagnostic> diagnostics)
     {
         var indentedCode = string.Join
