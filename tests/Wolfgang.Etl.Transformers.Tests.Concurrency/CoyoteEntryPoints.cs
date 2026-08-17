@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.Coyote.SystematicTesting;
 
@@ -9,6 +10,7 @@ namespace Wolfgang.Etl.Transformers.Tests.Concurrency;
 /// iteration budget (<c>coyote test ... -m &lt;method&gt; -i 10000</c>), exploring thousands
 /// of schedule interleavings to surface races and deadlocks.
 /// </summary>
+[ExcludeFromCodeCoverage(Justification = "Coyote-only entry points — invoked by `coyote test`, not by xunit. The scenarios these delegate to are exercised (and covered) via ConcurrencyStressTests.")]
 public static class CoyoteEntryPoints
 {
     [Test]
