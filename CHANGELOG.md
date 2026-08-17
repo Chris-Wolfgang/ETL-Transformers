@@ -19,12 +19,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
+## [0.5.1] - 2026-08-17
+
+### Fixed
+
+- **Pre-cancelled `CancellationToken` no longer drains one item from the source**
+  ([#209](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/209)):
+  `BufferedTransformer<T>`, `PassThroughTransformer<T>`, and `ThrottleTransformer<T>`
+  now observe cancellation before entering their `await foreach` on the source.
+  Previously, `.WithCancellation(alreadyCancelledToken)` would pull one element
+  before the token was checked — silently lost between the source and the consumer
+  on a non-replayable source (network stream, DB cursor, queue). For
+  `BufferedTransformer<T>` the check is added both at the outer `BufferAsync`
+  iterator (before the linked CTS / channel is allocated) and inside `PumpAsync`
+  (before the `await foreach` begins).
+
+### Security
+
 - **Code-scanning noise floor** ([#208](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/208)):
   gated the `Microsoft.CodeAnalysis.PublicApiAnalyzers` PackageReference on
   `Exists('PublicAPI.Shipped.txt')` in `Directory.Build.props` so it no longer loads in
-  test / benchmark / sample / profiling projects. This eliminates ~664 recurring
+  test / benchmark / sample / profiling projects. Eliminated ~664 recurring
   RS0016/RS0037 alerts from InspectCode against non-src projects that don't declare a
   public API surface. No consumer-visible change.
+
+### Build / Test infrastructure
+
+- `examples/*` projects marked `<IsPackable>false</IsPackable>` — solution-scope
+  `dotnet pack` no longer emits stray `BasicChain.nupkg` / `LinqOps.nupkg` /
+  `BufferedPipeline.nupkg` alongside the real
+  `Wolfgang.Etl.Transformers.<Version>.nupkg`
+  ([#216](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/216)).
+- `coverlet.collector` added to `Tests.DocExamples` / `Tests.Allocation` /
+  `Tests.Concurrency` / `Tests.Fuzz` / `Tests.Snapshots`; the `Coverage Report`
+  workflow no longer errors with *"Unable to find a datacollector with friendly
+  name 'XPlat Code Coverage'"*
+  ([#217](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/217)).
+- Coverlet configured with `<IncludeTestAssembly>true</IncludeTestAssembly>`;
+  Tests.Unit test-code line coverage brought to 100.00% and the specialty suites
+  raised to 97.87–100%
+  ([#218](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/218)).
 
 ## [0.5.0] - 2026-08-13
 

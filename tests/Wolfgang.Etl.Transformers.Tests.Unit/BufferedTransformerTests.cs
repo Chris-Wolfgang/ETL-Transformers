@@ -394,7 +394,8 @@ public class BufferedTransformerTests
     // (rather than a local static function) so `[ExcludeFromCodeCoverage]` can attach — the
     // compiler-generated state-machine cleanup after an UNCONDITIONAL throw is unreachable
     // by design and cannot be exercised. Same reason ThrowingAfterFive below is class-level.
-    [ExcludeFromCodeCoverage(Justification = "Async state-machine cleanup after unconditional throw is unreachable by design.")]
+    // Justification: async state-machine cleanup after an unconditional throw is unreachable by design.
+    [ExcludeFromCodeCoverage]
     private static async IAsyncEnumerable<int> ThrowingSource()
     {
         yield return 1;
@@ -404,7 +405,8 @@ public class BufferedTransformerTests
     }
 
 
-    [ExcludeFromCodeCoverage(Justification = "Async state-machine cleanup after unconditional throw is unreachable by design.")]
+    // Justification: async state-machine cleanup after an unconditional throw is unreachable by design.
+    [ExcludeFromCodeCoverage]
     private static async IAsyncEnumerable<int> ThrowingAfterFive()
     {
         for (var i = 1; i <= 5; i++)
