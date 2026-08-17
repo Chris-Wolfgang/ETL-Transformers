@@ -29,4 +29,34 @@ internal static class TestHelpers
         }
         return list;
     }
+
+
+
+    // Async source that increments PullCount for every element MoveNextAsync actually reaches.
+    // Used by the pre-cancelled-token regression tests (#209) to assert that the transformer
+    // observes cancellation before pulling anything from the source.
+    internal sealed class CountingSource
+    {
+        private readonly int _itemCount;
+
+
+        public CountingSource(int itemCount)
+        {
+            _itemCount = itemCount;
+        }
+
+
+        public int PullCount { get; private set; }
+
+
+        public async IAsyncEnumerable<int> Enumerate()
+        {
+            for (var i = 0; i < _itemCount; i++)
+            {
+                PullCount++;
+                yield return i;
+                await Task.Yield();
+            }
+        }
+    }
 }

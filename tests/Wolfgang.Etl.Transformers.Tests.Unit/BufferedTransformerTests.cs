@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -157,14 +158,6 @@ public class BufferedTransformerTests
         );
 
         Assert.Equal("source-boom", ex.Message);
-
-        static async IAsyncEnumerable<int> ThrowingSource()
-        {
-            yield return 1;
-            yield return 2;
-            await Task.Yield();
-            throw new InvalidOperationException("source-boom");
-        }
     }
 
 
@@ -188,16 +181,6 @@ public class BufferedTransformerTests
 
         // The first 5 items must have been delivered before the exception surfaced.
         Assert.Equal(new[] { 1, 2, 3, 4, 5 }, collected);
-
-        static async IAsyncEnumerable<int> ThrowingAfterFive()
-        {
-            for (var i = 1; i <= 5; i++)
-            {
-                yield return i;
-                await Task.Yield();
-            }
-            throw new InvalidOperationException("after-five-boom");
-        }
     }
 
 
@@ -302,7 +285,7 @@ public class BufferedTransformerTests
     {
         using var cts = new CancellationTokenSource();
         cts.Cancel();
-        var source = new CountingSource(4);
+        var source = new TestHelpers.CountingSource(4);
         var sut = new BufferedTransformer<int>(capacity: 4);
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>
@@ -407,30 +390,28 @@ public class BufferedTransformerTests
 #pragma warning restore S2190
 
 
-    // Async source that increments PullCount for every element MoveNextAsync actually reaches.
-    // The token pre-check under test must throw before any pull is observed.
-    private sealed class CountingSource
+    // Async source that yields two items then throws. Extracted to a class-level method
+    // (rather than a local static function) so `[ExcludeFromCodeCoverage]` can attach — the
+    // compiler-generated state-machine cleanup after an UNCONDITIONAL throw is unreachable
+    // by design and cannot be exercised. Same reason ThrowingAfterFive below is class-level.
+    [ExcludeFromCodeCoverage(Justification = "Async state-machine cleanup after unconditional throw is unreachable by design.")]
+    private static async IAsyncEnumerable<int> ThrowingSource()
     {
-        private readonly int _itemCount;
+        yield return 1;
+        yield return 2;
+        await Task.Yield();
+        throw new InvalidOperationException("source-boom");
+    }
 
 
-        public CountingSource(int itemCount)
+    [ExcludeFromCodeCoverage(Justification = "Async state-machine cleanup after unconditional throw is unreachable by design.")]
+    private static async IAsyncEnumerable<int> ThrowingAfterFive()
+    {
+        for (var i = 1; i <= 5; i++)
         {
-            _itemCount = itemCount;
+            yield return i;
+            await Task.Yield();
         }
-
-
-        public int PullCount { get; private set; }
-
-
-        public async IAsyncEnumerable<int> Enumerate()
-        {
-            for (var i = 0; i < _itemCount; i++)
-            {
-                PullCount++;
-                yield return i;
-                await Task.Yield();
-            }
-        }
+        throw new InvalidOperationException("after-five-boom");
     }
 }

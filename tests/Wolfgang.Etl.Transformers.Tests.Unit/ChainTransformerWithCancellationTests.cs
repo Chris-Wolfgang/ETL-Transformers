@@ -160,6 +160,24 @@ public class ChainTransformerWithCancellationTests
 
 
 
+    // The single-arg overload path — TransformAsync(items) with no token — cascades into
+    // the wrapped transformers' single-arg overloads, which record CancellationToken.None.
+    [Fact]
+    public async Task TransformAsync_without_token_passes_no_token_through_both_stages()
+    {
+        var first = new TokenCapturingPassThrough();
+        var second = new TokenCapturingPassThrough();
+        var sut = new ChainTransformerWithCancellation<int, int, int>(first, second);
+
+        var result = await CollectAsync(sut.TransformAsync(ToAsync(new[] { 1, 2, 3 })));
+
+        Assert.Equal(new[] { 1, 2, 3 }, result);
+        Assert.Equal(CancellationToken.None, first.LastSeenToken);
+        Assert.Equal(CancellationToken.None, second.LastSeenToken);
+    }
+
+
+
     [Fact]
     public async Task TransformAsync_with_pre_cancelled_token_throws_OperationCanceledException()
     {
