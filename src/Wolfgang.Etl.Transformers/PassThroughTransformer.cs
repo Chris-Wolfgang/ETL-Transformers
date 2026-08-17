@@ -117,6 +117,13 @@ public sealed class PassThroughTransformer<T> : ITransformWithCancellationAsync<
         [EnumeratorCancellation] CancellationToken token
     )
     {
+        // Observe cancellation BEFORE MoveNextAsync — see issue #209.
+        // `items.WithCancellation(token)` only offers the token to the source's enumerator; a plain
+        // sequence-backed source will still yield its first element before honoring it. Without this
+        // pre-check one item is silently pulled from a non-replayable source (network stream, DB
+        // cursor, queue) when the caller hands us an already-cancelled token.
+        token.ThrowIfCancellationRequested();
+
         await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
         {
             token.ThrowIfCancellationRequested();

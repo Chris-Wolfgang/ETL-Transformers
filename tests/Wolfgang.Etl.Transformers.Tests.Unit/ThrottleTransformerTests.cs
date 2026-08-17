@@ -118,4 +118,61 @@ public class ThrottleTransformerTests
     [Fact]
     public void TransformAsync_when_items_is_null_throws_ArgumentNullException()
         => Assert.Throws<ArgumentNullException>(() => new ThrottleTransformer<int>(TimeSpan.Zero).TransformAsync(null!));
+
+
+
+    // ---------- pre-cancelled token (#209) ----------
+
+    // Guards the "no item is drained before observing an already-cancelled token" contract.
+    // Regression: revert the pre-check at the top of ThrottleTransformer.TransformAsyncCore
+    // and this test fails — CountingSource.PullCount becomes 1.
+    [Fact]
+    public async Task TransformAsync_when_token_is_pre_cancelled_pulls_zero_items_from_source()
+    {
+        using var cts = new CancellationTokenSource();
+        cts.Cancel();
+        var source = new CountingSource(4);
+        var sut = new ThrottleTransformer<int>(TimeSpan.FromMilliseconds(1));
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>
+        (
+            async () =>
+            {
+                await foreach (var _ in sut.TransformAsync(source.Enumerate()).WithCancellation(cts.Token))
+                {
+                }
+            }
+        );
+
+        Assert.Equal(0, source.PullCount);
+    }
+
+
+
+    // Async source that increments PullCount for every element MoveNextAsync actually reaches.
+    // The token pre-check under test must throw before any pull is observed.
+    private sealed class CountingSource
+    {
+        private readonly int _itemCount;
+
+
+        public CountingSource(int itemCount)
+        {
+            _itemCount = itemCount;
+        }
+
+
+        public int PullCount { get; private set; }
+
+
+        public async IAsyncEnumerable<int> Enumerate()
+        {
+            for (var i = 0; i < _itemCount; i++)
+            {
+                PullCount++;
+                yield return i;
+                await Task.Yield();
+            }
+        }
+    }
 }
