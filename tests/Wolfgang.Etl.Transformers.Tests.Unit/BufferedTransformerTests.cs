@@ -292,6 +292,39 @@ public class BufferedTransformerTests
 
 
 
+    // Guards the "no item is drained before observing an already-cancelled token" contract
+    // (#209). BufferedTransformer is the highest-risk site because it pumps into a Channel:
+    // an item pulled before cancellation is observed can be silently lost between the source
+    // and the consumer. Regression: revert the pre-check at the top of PumpAsync AND at the
+    // top of BufferAsync and this test fails — PullCount becomes 1.
+    [Fact]
+    public async Task TransformAsync_when_token_is_pre_cancelled_pulls_zero_items_from_source()
+    {
+        using var cts = new CancellationTokenSource();
+        cts.Cancel();
+        var source = new CountingSource(4);
+        var sut = new BufferedTransformer<int>(capacity: 4);
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>
+        (
+            async () =>
+            {
+                await foreach (var _ in sut.TransformAsync(source.Enumerate()).WithCancellation(cts.Token))
+                {
+                }
+            }
+        );
+
+        // Give the producer Task (spawned via Task.Run inside BufferAsync) a scheduling window
+        // in case it started concurrently; the assertion is that it never advanced past its
+        // token pre-check.
+        await Task.Delay(50);
+
+        Assert.Equal(0, source.PullCount);
+    }
+
+
+
     // ---------- backpressure sanity ----------
 
     [Fact]
@@ -372,4 +405,32 @@ public class BufferedTransformerTests
         }
     }
 #pragma warning restore S2190
+
+
+    // Async source that increments PullCount for every element MoveNextAsync actually reaches.
+    // The token pre-check under test must throw before any pull is observed.
+    private sealed class CountingSource
+    {
+        private readonly int _itemCount;
+
+
+        public CountingSource(int itemCount)
+        {
+            _itemCount = itemCount;
+        }
+
+
+        public int PullCount { get; private set; }
+
+
+        public async IAsyncEnumerable<int> Enumerate()
+        {
+            for (var i = 0; i < _itemCount; i++)
+            {
+                PullCount++;
+                yield return i;
+                await Task.Yield();
+            }
+        }
+    }
 }

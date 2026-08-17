@@ -99,6 +99,13 @@ public sealed class ThrottleTransformer<T> : ITransformAsync<T, T>
         [EnumeratorCancellation] CancellationToken token = default
     )
     {
+        // Observe cancellation BEFORE MoveNextAsync — see issue #209.
+        // `items.WithCancellation(token)` only offers the token to the source's enumerator; a plain
+        // sequence-backed source still yields its first element regardless. Without this pre-check
+        // one item is pulled from a non-replayable source when the caller hands us an already-
+        // cancelled token.
+        token.ThrowIfCancellationRequested();
+
         var hasPrevious = false;
         long previousTimestamp = 0;
 
