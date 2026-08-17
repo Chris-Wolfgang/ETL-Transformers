@@ -28,10 +28,11 @@ public class ThrottleTransformerTests
     [Fact]
     public async Task TransformAsync_delays_each_item_after_the_first_by_the_min_interval()
     {
-        var waits = new List<TimeSpan>();
+        var recorder = new DelayRecorder();
         var interval = TimeSpan.FromMilliseconds(250);
         // Fixed timestamp => measured elapsed is always 0 => a full-interval wait is requested each time.
-        var sut = new ThrottleTransformer<int>(interval, (delay, _) => { waits.Add(delay); return Task.CompletedTask; }, () => 0L);
+        var sut = new ThrottleTransformer<int>(interval, recorder.Record, () => 0L);
+        var waits = recorder.Waits;
 
         var result = await CollectAsync(sut.TransformAsync(ToAsync(new[] { 1, 2, 3 })));
 
@@ -44,15 +45,16 @@ public class ThrottleTransformerTests
     [Fact]
     public async Task TransformAsync_when_consumer_is_already_slower_than_the_interval_adds_no_delay()
     {
-        var waits = new List<TimeSpan>();
+        var recorder = new DelayRecorder();
         long clock = 0;
         // Advance a full second per timestamp read — always >= the 250 ms interval, so the measured
         // elapsed already exceeds it and no additional wait should be requested (the adaptive path).
         var step = Stopwatch.Frequency;
         var sut = new ThrottleTransformer<int>(
             TimeSpan.FromMilliseconds(250),
-            (delay, _) => { waits.Add(delay); return Task.CompletedTask; },
+            recorder.Record,
             () => { clock += step; return clock; });
+        var waits = recorder.Waits;
 
         var result = await CollectAsync(sut.TransformAsync(ToAsync(new[] { 1, 2, 3 })));
 
@@ -64,7 +66,7 @@ public class ThrottleTransformerTests
     [Fact]
     public async Task TransformAsync_measures_the_interval_from_delivery_so_consumer_time_counts()
     {
-        var waits = new List<TimeSpan>();
+        var recorder = new DelayRecorder();
         var interval = TimeSpan.FromMilliseconds(250);
         var oneInterval = (long)(Stopwatch.Frequency * interval.TotalSeconds);
         long clock = 0;
@@ -74,9 +76,10 @@ public class ThrottleTransformerTests
         // wrongly request a full delay each time.
         var sut = new ThrottleTransformer<int>(
             interval,
-            (delay, _) => { waits.Add(delay); return Task.CompletedTask; },
+            recorder.Record,
             // ReSharper disable once AccessToModifiedClosure — deliberately reads the current `clock`; the test mutates it between items to model consumer processing time and verify the throttle measures FROM delivery.
             () => clock);
+        var waits = recorder.Waits;
 
         await foreach (var _ in sut.TransformAsync(ToAsync(new[] { 1, 2, 3 })))
         {
@@ -100,8 +103,9 @@ public class ThrottleTransformerTests
     [Fact]
     public async Task TransformAsync_when_min_interval_is_zero_never_delays()
     {
-        var waits = new List<TimeSpan>();
-        var sut = new ThrottleTransformer<int>(TimeSpan.Zero, (delay, _) => { waits.Add(delay); return Task.CompletedTask; }, () => 0L);
+        var recorder = new DelayRecorder();
+        var sut = new ThrottleTransformer<int>(TimeSpan.Zero, recorder.Record, () => 0L);
+        var waits = recorder.Waits;
 
         var result = await CollectAsync(sut.TransformAsync(ToAsync(new[] { 1, 2, 3 })));
 
@@ -131,7 +135,7 @@ public class ThrottleTransformerTests
     {
         using var cts = new CancellationTokenSource();
         cts.Cancel();
-        var source = new CountingSource(4);
+        var source = new TestHelpers.CountingSource(4);
         var sut = new ThrottleTransformer<int>(TimeSpan.FromMilliseconds(1));
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>
@@ -149,30 +153,19 @@ public class ThrottleTransformerTests
 
 
 
-    // Async source that increments PullCount for every element MoveNextAsync actually reaches.
-    // The token pre-check under test must throw before any pull is observed.
-    private sealed class CountingSource
+    // Shared delay-request recorder. Using an instance-method group (`recorder.Record`)
+    // instead of an inline lambda per test means every test SHARES this method's coverage —
+    // tests where the throttle DOES request a delay cover `Record`, and the tests where it
+    // doesn't don't create their own uncovered closure.
+    private sealed class DelayRecorder
     {
-        private readonly int _itemCount;
+        public List<TimeSpan> Waits { get; } = new();
 
 
-        public CountingSource(int itemCount)
+        public Task Record(TimeSpan delay, CancellationToken _)
         {
-            _itemCount = itemCount;
-        }
-
-
-        public int PullCount { get; private set; }
-
-
-        public async IAsyncEnumerable<int> Enumerate()
-        {
-            for (var i = 0; i < _itemCount; i++)
-            {
-                PullCount++;
-                yield return i;
-                await Task.Yield();
-            }
+            Waits.Add(delay);
+            return Task.CompletedTask;
         }
     }
 }

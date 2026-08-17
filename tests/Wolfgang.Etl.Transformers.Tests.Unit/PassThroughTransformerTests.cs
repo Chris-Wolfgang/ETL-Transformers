@@ -200,7 +200,7 @@ public class PassThroughTransformerTests
     {
         using var cts = new CancellationTokenSource();
         cts.Cancel();
-        var source = new CountingSource(4);
+        var source = new TestHelpers.CountingSource(4);
         var sut = new PassThroughTransformer<int>();
 
         await Assert.ThrowsAnyAsync<OperationCanceledException>
@@ -231,32 +231,4 @@ public class PassThroughTransformerTests
         }
     }
 #pragma warning restore S2190
-
-
-    // Async source that increments PullCount for every element MoveNextAsync actually reaches.
-    // The token pre-check under test must throw before any pull is observed.
-    private sealed class CountingSource
-    {
-        private readonly int _itemCount;
-
-
-        public CountingSource(int itemCount)
-        {
-            _itemCount = itemCount;
-        }
-
-
-        public int PullCount { get; private set; }
-
-
-        public async IAsyncEnumerable<int> Enumerate()
-        {
-            for (var i = 0; i < _itemCount; i++)
-            {
-                PullCount++;
-                yield return i;
-                await Task.Yield();
-            }
-        }
-    }
 }
