@@ -103,16 +103,13 @@ public class TakeTransformerTests
     [Fact]
     public async Task TransformAsync_when_count_is_zero_does_not_enumerate_source()
     {
-        var enumerated = 0;
+        var source = new TestHelpers.CountingSource(3);
         var sut = new TakeTransformer<int>(count: 0);
 
-        var result = await CollectAsync
-        (
-            sut.TransformAsync(CountingSource(new[] { 1, 2, 3 }, () => Interlocked.Increment(ref enumerated)))
-        );
+        var result = await CollectAsync(sut.TransformAsync(source.Enumerate()));
 
         Assert.Empty(result);
-        Assert.Equal(0, enumerated);
+        Assert.Equal(0, source.PullCount);
     }
 
 
@@ -134,16 +131,13 @@ public class TakeTransformerTests
     [Fact]
     public async Task TransformAsync_when_count_is_negative_does_not_enumerate_source()
     {
-        var enumerated = 0;
+        var source = new TestHelpers.CountingSource(3);
         var sut = new TakeTransformer<int>(count: -5);
 
-        var result = await CollectAsync
-        (
-            sut.TransformAsync(CountingSource(new[] { 1, 2, 3 }, () => Interlocked.Increment(ref enumerated)))
-        );
+        var result = await CollectAsync(sut.TransformAsync(source.Enumerate()));
 
         Assert.Empty(result);
-        Assert.Equal(0, enumerated);
+        Assert.Equal(0, source.PullCount);
     }
 
 

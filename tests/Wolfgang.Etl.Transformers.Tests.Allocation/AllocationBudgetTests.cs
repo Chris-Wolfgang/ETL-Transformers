@@ -42,6 +42,23 @@ public sealed class AllocationBudgetTests
     }
 
 
+    // Sanity: none of the allocation-budget tests above ENUMERATE `source`, they just measure
+    // the wrap. That means the RangeAsync iterator's state machine is never advanced by those
+    // tests, so this companion happy-path test both proves the source works and exercises the
+    // iterator body for coverage.
+    [Fact]
+    public async Task RangeAsync_helper_yields_expected_sequence()
+    {
+        var items = new List<int>();
+        await foreach (var i in RangeAsync(4))
+        {
+            items.Add(i);
+        }
+
+        Assert.Equal(new[] { 0, 1, 2, 3 }, items);
+    }
+
+
     /// <summary>
     /// The single-argument <see cref="PassThroughTransformer{T}.TransformAsync(IAsyncEnumerable{T})"/>
     /// overload is documented to return the source sequence directly, without allocating a

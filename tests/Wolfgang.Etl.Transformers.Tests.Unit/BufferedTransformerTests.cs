@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -157,14 +158,6 @@ public class BufferedTransformerTests
         );
 
         Assert.Equal("source-boom", ex.Message);
-
-        static async IAsyncEnumerable<int> ThrowingSource()
-        {
-            yield return 1;
-            yield return 2;
-            await Task.Yield();
-            throw new InvalidOperationException("source-boom");
-        }
     }
 
 
@@ -188,16 +181,6 @@ public class BufferedTransformerTests
 
         // The first 5 items must have been delivered before the exception surfaced.
         Assert.Equal(new[] { 1, 2, 3, 4, 5 }, collected);
-
-        static async IAsyncEnumerable<int> ThrowingAfterFive()
-        {
-            for (var i = 1; i <= 5; i++)
-            {
-                yield return i;
-                await Task.Yield();
-            }
-            throw new InvalidOperationException("after-five-boom");
-        }
     }
 
 
@@ -292,6 +275,39 @@ public class BufferedTransformerTests
 
 
 
+    // Guards the "no item is drained before observing an already-cancelled token" contract
+    // (#209). BufferedTransformer is the highest-risk site because it pumps into a Channel:
+    // an item pulled before cancellation is observed can be silently lost between the source
+    // and the consumer. Regression: revert the pre-check at the top of PumpAsync AND at the
+    // top of BufferAsync and this test fails — PullCount becomes 1.
+    [Fact]
+    public async Task TransformAsync_when_token_is_pre_cancelled_pulls_zero_items_from_source()
+    {
+        using var cts = new CancellationTokenSource();
+        cts.Cancel();
+        var source = new TestHelpers.CountingSource(4);
+        var sut = new BufferedTransformer<int>(capacity: 4);
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>
+        (
+            async () =>
+            {
+                await foreach (var _ in sut.TransformAsync(source.Enumerate()).WithCancellation(cts.Token))
+                {
+                }
+            }
+        );
+
+        // Give the producer Task (spawned via Task.Run inside BufferAsync) a scheduling window
+        // in case it started concurrently; the assertion is that it never advanced past its
+        // token pre-check.
+        await Task.Delay(50);
+
+        Assert.Equal(0, source.PullCount);
+    }
+
+
+
     // ---------- backpressure sanity ----------
 
     [Fact]
@@ -372,4 +388,32 @@ public class BufferedTransformerTests
         }
     }
 #pragma warning restore S2190
+
+
+    // Async source that yields two items then throws. Extracted to a class-level method
+    // (rather than a local static function) so `[ExcludeFromCodeCoverage]` can attach — the
+    // compiler-generated state-machine cleanup after an UNCONDITIONAL throw is unreachable
+    // by design and cannot be exercised. Same reason ThrowingAfterFive below is class-level.
+    // Justification: async state-machine cleanup after an unconditional throw is unreachable by design.
+    [ExcludeFromCodeCoverage]
+    private static async IAsyncEnumerable<int> ThrowingSource()
+    {
+        yield return 1;
+        yield return 2;
+        await Task.Yield();
+        throw new InvalidOperationException("source-boom");
+    }
+
+
+    // Justification: async state-machine cleanup after an unconditional throw is unreachable by design.
+    [ExcludeFromCodeCoverage]
+    private static async IAsyncEnumerable<int> ThrowingAfterFive()
+    {
+        for (var i = 1; i <= 5; i++)
+        {
+            yield return i;
+            await Task.Yield();
+        }
+        throw new InvalidOperationException("after-five-boom");
+    }
 }

@@ -81,26 +81,27 @@ internal static class Scenarios
         using var cts = new CancellationTokenSource();
         var buffered = new BufferedTransformer<int>(4);
 
+        // ReSharper disable once AccessToDisposedClosure — consumer is awaited below before `using var cts` exits, so cts is alive for the closure's full lifetime.
         async Task ConsumeAsync()
         {
-            try
+            await foreach (var _ in buffered.TransformAsync(RangeAsync(ItemCount))
+                .WithCancellation(cts.Token)
+                .ConfigureAwait(false))
             {
-                // ReSharper disable once AccessToDisposedClosure — consumer is awaited before `using var cts` exits, so cts is alive for the closure's full lifetime.
-                await foreach (var _ in buffered.TransformAsync(RangeAsync(ItemCount))
-                    .WithCancellation(cts.Token)
-                    .ConfigureAwait(false))
-                {
-                }
-            }
-            catch (System.OperationCanceledException)
-            {
-                // Expected when cancellation wins the race.
             }
         }
 
         var consumer = ConsumeAsync();
         cts.Cancel();
-        await consumer.ConfigureAwait(false);
+        try
+        {
+            await consumer.ConfigureAwait(false);
+        }
+        catch (System.OperationCanceledException)
+        {
+            // Expected when cancellation wins the race — the scenario asserts the pipeline doesn't
+            // deadlock; whether OCE surfaces or the enumeration finishes first is fine.
+        }
 
         Specification.Assert(true, "Cancellation during buffered enumeration must not deadlock.");
     }
