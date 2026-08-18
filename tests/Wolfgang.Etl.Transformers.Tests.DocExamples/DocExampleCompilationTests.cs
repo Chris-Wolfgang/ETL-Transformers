@@ -83,29 +83,9 @@ public sealed class DocExampleCompilationTests
             }
 
             var source = await File.ReadAllTextAsync(file);
-
-            foreach (var (line, code) in ExtractExampleCode(source))
-            {
-                if (ContainsElision(code))
-                {
-                    continue;
-                }
-
-                examplesChecked++;
-
-                var errors = Compile(code);
-                var hasPlaceholder = errors.Any(d => PlaceholderErrorCodes.Contains(d.Id));
-
-                var rot = errors
-                    .Where(d => !PlaceholderErrorCodes.Contains(d.Id)
-                             && !(hasPlaceholder && PlaceholderCascadeCodes.Contains(d.Id)))
-                    .ToList();
-
-                if (rot.Count > 0)
-                {
-                    failures.Add(FormatFailure(file, line, code, rot));
-                }
-            }
+            var (checkedInFile, failuresInFile) = ExtractFailures(source, file);
+            examplesChecked += checkedInFile;
+            failures.AddRange(failuresInFile);
         }
 
         Assert.True
@@ -121,6 +101,42 @@ public sealed class DocExampleCompilationTests
             + Environment.NewLine + Environment.NewLine
             + string.Join(Environment.NewLine + Environment.NewLine, failures)
         );
+    }
+
+
+    // Extracted from the main test so the "rot detected → format failure" branch can be
+    // covered by a direct unit test (#225). The main test's real-source loop always finds
+    // green code, so the failure-reporting path is dead in green CI; passing a
+    // hand-authored broken snippet through this method exercises it in isolation.
+    internal static (int ExamplesChecked, IReadOnlyList<string> Failures) ExtractFailures(string source, string file)
+    {
+        var failures = new List<string>();
+        var examplesChecked = 0;
+
+        foreach (var (line, code) in ExtractExampleCode(source))
+        {
+            if (ContainsElision(code))
+            {
+                continue;
+            }
+
+            examplesChecked++;
+
+            var errors = Compile(code);
+            var hasPlaceholder = errors.Any(d => PlaceholderErrorCodes.Contains(d.Id));
+
+            var rot = errors
+                .Where(d => !PlaceholderErrorCodes.Contains(d.Id)
+                         && !(hasPlaceholder && PlaceholderCascadeCodes.Contains(d.Id)))
+                .ToList();
+
+            if (rot.Count > 0)
+            {
+                failures.Add(FormatFailure(file, line, code, rot));
+            }
+        }
+
+        return (examplesChecked, failures);
     }
 
     private static IReadOnlyList<Diagnostic> Compile(string snippet)
@@ -247,9 +263,15 @@ public sealed class DocExampleCompilationTests
             || path.EndsWith(".Designer.cs", StringComparison.OrdinalIgnoreCase);
     }
 
-    private static string FindSourceDirectory()
+    private static string FindSourceDirectory() => FindSourceDirectory(AppContext.BaseDirectory);
+
+
+    // Overload takes an explicit starting directory so the walk (including its fallthrough
+    // fail-arm) can be exercised by a unit test with a path that doesn't contain src/
+    // anywhere in its ancestor chain (#225).
+    internal static string FindSourceDirectory(string startingDirectory)
     {
-        var directory = new DirectoryInfo(AppContext.BaseDirectory);
+        var directory = new DirectoryInfo(startingDirectory);
 
         while (directory is not null)
         {
@@ -262,17 +284,11 @@ public sealed class DocExampleCompilationTests
             directory = directory.Parent;
         }
 
-        return ThrowSrcDirectoryNotFound();
+        throw new DirectoryNotFoundException(
+            "Could not locate 'src/Wolfgang.Etl.Transformers' by walking up from " + startingDirectory);
     }
 
 
-    [ExcludeFromCodeCoverage(Justification = "Defensive throw for a shape the CI layout doesn't produce — tests always run from within the repo, so the walk always finds src/. Extracted so the surrounding walk stays measured while this arm is legitimately unreachable.")]
-    private static string ThrowSrcDirectoryNotFound()
-        => throw new DirectoryNotFoundException(
-            "Could not locate 'src/Wolfgang.Etl.Transformers' by walking up from " + AppContext.BaseDirectory);
-
-
-    [ExcludeFromCodeCoverage(Justification = "Diagnostics formatter for the failure path. When examples pass — as they must for CI to be green — this helper is unreached. It's tested implicitly the first time a doc example fails to compile.")]
     private static string FormatFailure(string file, int line, string code, IEnumerable<Diagnostic> diagnostics)
     {
         var indentedCode = string.Join

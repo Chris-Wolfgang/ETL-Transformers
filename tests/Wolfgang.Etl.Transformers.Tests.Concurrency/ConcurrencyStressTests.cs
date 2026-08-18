@@ -43,4 +43,18 @@ public sealed class ConcurrencyStressTests
             await Scenarios.CancellationDuringEnumerationAsync();
         }
     }
+
+
+    // Companion to the above. Covers the race outcome where cancellation LOSES —
+    // consumer completes before Cancel() runs. Same shared implementation as the
+    // wins-the-race scenario, so the pair jointly exercises both branches of the
+    // try/catch that swallows OCE (#225).
+    [Fact]
+    public async Task EnumerationBeforeLateCancellation_completes_normally_without_deadlock()
+    {
+        for (var i = 0; i < Repetitions; i++)
+        {
+            await Scenarios.EnumerationBeforeLateCancellationAsync();
+        }
+    }
 }
