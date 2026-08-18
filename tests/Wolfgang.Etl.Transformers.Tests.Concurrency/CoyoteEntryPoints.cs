@@ -23,4 +23,8 @@ public static class CoyoteEntryPoints
 
     [Test]
     public static Task CancellationDuringEnumeration() => Scenarios.CancellationDuringEnumerationAsync();
+
+
+    [Test]
+    public static Task EnumerationBeforeLateCancellation() => Scenarios.EnumerationBeforeLateCancellationAsync();
 }
