@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -162,6 +163,7 @@ public class ThrottleTransformerTests
         public List<TimeSpan> Waits { get; } = new();
 
 
+        [SuppressMessage("Major Code Smell", "S1172:Unused method parameters should be removed", Justification = "The CancellationToken is required by the Func<TimeSpan, CancellationToken, Task> delegate signature this method binds to via method-group conversion. `_` marks the intentional discard, but Sonar 10.32+ no longer exempts it.")]
         public Task Record(TimeSpan delay, CancellationToken _)
         {
             Waits.Add(delay);

@@ -66,7 +66,13 @@ public sealed class WhereTransformerWithBase<T> : TransformerBase<T, T, Report>
             }
             else
             {
+                // Sonar S8969 claims the compiler already knows _asyncPredicate is non-null here
+                // via the outer `if (_syncPredicate is not null) ... else ...` branch. It doesn't:
+                // C# nullable flow analysis doesn't correlate two independent field states, and
+                // removing the `!` produces CS8602. Suppressing Sonar with the pragma below.
+#pragma warning disable S8969
                 passed = await _asyncPredicate!(item).ConfigureAwait(continueOnCapturedContext: false);
+#pragma warning restore S8969
             }
 
             if (!passed)
