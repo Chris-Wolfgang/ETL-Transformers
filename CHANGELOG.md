@@ -21,6 +21,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.5.1] - 2026-08-17
 
+### Changed
+
+- Bumped **`Wolfgang.Etl.Abstractions` 0.23.1 → 0.23.2** (patch — see the Abstractions
+  release notes for the specific change). Test-only `Wolfgang.Etl.TestKit` reference
+  in the two `examples/` projects bumped to match. No consumer-visible change to this
+  repo's public API surface.
+
 ### Fixed
 
 - **Pre-cancelled `CancellationToken` no longer drains one item from the source**
