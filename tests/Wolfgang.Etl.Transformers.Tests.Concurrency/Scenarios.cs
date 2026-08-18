@@ -76,7 +76,24 @@ internal static class Scenarios
     /// <see cref="System.OperationCanceledException"/>) rather than deadlock — Coyote's
     /// deadlock detector fails the test if the producer/consumer hangs.
     /// </summary>
-    public static async Task CancellationDuringEnumerationAsync()
+    public static Task CancellationDuringEnumerationAsync()
+        => RunBufferedConsumeSwallowingOceAsync(cancelBeforeAwait: true);
+
+
+    /// <summary>
+    /// Companion to <see cref="CancellationDuringEnumerationAsync"/> for the race outcome
+    /// where cancellation LOSES — the enumeration completes before <c>cts.Cancel()</c> fires
+    /// and the try body's normal-completion path runs. Same shape; the pair jointly asserts
+    /// "cancellation during buffered enumeration doesn't deadlock in either race outcome".
+    /// </summary>
+    public static Task EnumerationBeforeLateCancellationAsync()
+        => RunBufferedConsumeSwallowingOceAsync(cancelBeforeAwait: false);
+
+
+    // Shared body for the two cancellation-race scenarios above. Extracted so both race outcomes
+    // (cancel-wins-race and cancel-loses-race) cover the same try/catch structure — the
+    // cancel-loses variant is what reaches the try body's normal-completion path.
+    private static async Task RunBufferedConsumeSwallowingOceAsync(bool cancelBeforeAwait)
     {
         using var cts = new CancellationTokenSource();
         var buffered = new BufferedTransformer<int>(4);
@@ -92,7 +109,11 @@ internal static class Scenarios
         }
 
         var consumer = ConsumeAsync();
-        cts.Cancel();
+        if (cancelBeforeAwait)
+        {
+            cts.Cancel();
+        }
+
         try
         {
             await consumer.ConfigureAwait(false);
