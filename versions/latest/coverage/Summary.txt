@@ -1,42 +1,83 @@
 Summary
-  Generated on: 8/13/2026 - 6:26:05 PM
-  Coverage date: 8/13/2026 - 6:26:02 PM
-  Parser: MultiReport (2x Cobertura)
-  Assemblies: 1
-  Classes: 20
-  Files: 20
-  Line coverage: 100%
-  Covered lines: 398
-  Uncovered lines: 0
-  Coverable lines: 398
-  Total lines: 3185
-  Branch coverage: 100% (120 of 120)
-  Covered branches: 120
-  Total branches: 120
-  Method coverage: 100% (102 of 102)
-  Full method coverage: 100% (102 of 102)
-  Covered methods: 102
-  Fully covered methods: 102
-  Total methods: 102
+  Generated on: 8/19/2026 - 1:08:24 AM
+  Coverage date: 8/19/2026 - 1:08:13 AM - 8/19/2026 - 1:08:19 AM
+  Parser: MultiReport (6x Cobertura)
+  Assemblies: 7
+  Classes: 49
+  Files: 49
+  Line coverage: 99.9%
+  Covered lines: 3042
+  Uncovered lines: 2
+  Coverable lines: 3044
+  Total lines: 9917
+  Branch coverage: 80.3% (307 of 382)
+  Covered branches: 307
+  Total branches: 382
+  Method coverage: 100% (565 of 565)
+  Full method coverage: 99.8% (564 of 565)
+  Covered methods: 565
+  Fully covered methods: 564
+  Total methods: 565
 
-Wolfgang.Etl.Transformers                                                   100%
-  Wolfgang.Etl.Transformers.BufferedTransformer<T>                          100%
-  Wolfgang.Etl.Transformers.CastTransformer<T1, T2>                         100%
-  Wolfgang.Etl.Transformers.ChainTransformer<T1, T2, T3>                    100%
-  Wolfgang.Etl.Transformers.ChainTransformerWithCancellation<T1, T2, T3>    100%
-  Wolfgang.Etl.Transformers.ChunkTransformer<T>                             100%
-  Wolfgang.Etl.Transformers.DistinctByTransformer<T1, T2>                   100%
-  Wolfgang.Etl.Transformers.DistinctTransformer<T>                          100%
-  Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions                   100%
-  Wolfgang.Etl.Transformers.OfTypeTransformer<T1, T2>                       100%
-  Wolfgang.Etl.Transformers.PassThroughTransformer<T>                       100%
-  Wolfgang.Etl.Transformers.ProgressReportingTransformer<T>                 100%
-  Wolfgang.Etl.Transformers.SelectManyTransformer<T1, T2>                   100%
-  Wolfgang.Etl.Transformers.SelectTransformer<T1, T2>                       100%
-  Wolfgang.Etl.Transformers.SkipTransformer<T>                              100%
-  Wolfgang.Etl.Transformers.SkipWhileTransformer<T>                         100%
-  Wolfgang.Etl.Transformers.TakeTransformer<T>                              100%
-  Wolfgang.Etl.Transformers.TakeWhileTransformer<T>                         100%
-  Wolfgang.Etl.Transformers.ThrottleTransformer<T>                          100%
-  Wolfgang.Etl.Transformers.TransformerExtensions                           100%
-  Wolfgang.Etl.Transformers.WhereTransformer<T>                             100%
+Wolfgang.Etl.Transformers                                                           99.5%
+  Wolfgang.Etl.Transformers.BufferedTransformer<T>                                  94.8%
+  Wolfgang.Etl.Transformers.CastTransformer<T1, T2>                                  100%
+  Wolfgang.Etl.Transformers.ChainTransformer<T1, T2, T3>                             100%
+  Wolfgang.Etl.Transformers.ChainTransformerWithCancellation<T1, T2, T3>             100%
+  Wolfgang.Etl.Transformers.ChunkTransformer<T>                                      100%
+  Wolfgang.Etl.Transformers.DistinctByTransformer<T1, T2>                            100%
+  Wolfgang.Etl.Transformers.DistinctTransformer<T>                                   100%
+  Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions                            100%
+  Wolfgang.Etl.Transformers.OfTypeTransformer<T1, T2>                                100%
+  Wolfgang.Etl.Transformers.PassThroughTransformer<T>                                100%
+  Wolfgang.Etl.Transformers.ProgressReportingTransformer<T>                          100%
+  Wolfgang.Etl.Transformers.SelectManyTransformer<T1, T2>                            100%
+  Wolfgang.Etl.Transformers.SelectTransformer<T1, T2>                                100%
+  Wolfgang.Etl.Transformers.SkipTransformer<T>                                       100%
+  Wolfgang.Etl.Transformers.SkipWhileTransformer<T>                                  100%
+  Wolfgang.Etl.Transformers.TakeTransformer<T>                                       100%
+  Wolfgang.Etl.Transformers.TakeWhileTransformer<T>                                  100%
+  Wolfgang.Etl.Transformers.ThrottleTransformer<T>                                   100%
+  Wolfgang.Etl.Transformers.TransformerExtensions                                    100%
+  Wolfgang.Etl.Transformers.WhereTransformer<T>                                      100%
+
+Wolfgang.Etl.Transformers.Tests.Allocation                                           100%
+  Wolfgang.Etl.Transformers.Tests.Allocation.AllocationBudgetTests                   100%
+
+Wolfgang.Etl.Transformers.Tests.DocExamples                                          100%
+  Wolfgang.Etl.Transformers.Tests.DocExamples.DocExampleCompilationTests             100%
+  Wolfgang.Etl.Transformers.Tests.DocExamples.ExtractFailuresTests                   100%
+
+Wolfgang.Etl.Transformers.Tests.Fuzz                                                 100%
+  Wolfgang.Etl.Transformers.Tests.Fuzz.TransformerEquivalenceProperties              100%
+
+Wolfgang.Etl.Transformers.Tests.Integration                                          100%
+  Wolfgang.Etl.Transformers.Tests.Integration.PipelineIntegrationTests               100%
+
+Wolfgang.Etl.Transformers.Tests.Snapshots                                            100%
+  Wolfgang.Etl.Transformers.Tests.Snapshots.Snapshots.TransformerSnapshotTests       100%
+
+Wolfgang.Etl.Transformers.Tests.Unit                                                 100%
+  Wolfgang.Etl.Transformers.Tests.Unit.BufferedTransformerTests                      100%
+  Wolfgang.Etl.Transformers.Tests.Unit.CastTransformerTests                          100%
+  Wolfgang.Etl.Transformers.Tests.Unit.ChainTransformerTests                         100%
+  Wolfgang.Etl.Transformers.Tests.Unit.ChainTransformerWithCancellationTests         100%
+  Wolfgang.Etl.Transformers.Tests.Unit.ChunkTransformerTests                         100%
+  Wolfgang.Etl.Transformers.Tests.Unit.DistinctByTransformerTests                    100%
+  Wolfgang.Etl.Transformers.Tests.Unit.DistinctTransformerTests                      100%
+  Wolfgang.Etl.Transformers.Tests.Unit.EtlPipelineOperatorExtensionsTests            100%
+  Wolfgang.Etl.Transformers.Tests.Unit.Globalization.GlobalizationInvarianceTests    100%
+  Wolfgang.Etl.Transformers.Tests.Unit.OfTypeTransformerTests                        100%
+  Wolfgang.Etl.Transformers.Tests.Unit.PassThroughTransformerTests                   100%
+  Wolfgang.Etl.Transformers.Tests.Unit.ProgressReportingTransformerTests             100%
+  Wolfgang.Etl.Transformers.Tests.Unit.SelectManyTransformerTests                    100%
+  Wolfgang.Etl.Transformers.Tests.Unit.SelectTransformerTests                        100%
+  Wolfgang.Etl.Transformers.Tests.Unit.SkipTransformerTests                          100%
+  Wolfgang.Etl.Transformers.Tests.Unit.SkipWhileTransformerTests                     100%
+  Wolfgang.Etl.Transformers.Tests.Unit.TakeTransformerTests                          100%
+  Wolfgang.Etl.Transformers.Tests.Unit.TakeWhileTransformerTests                     100%
+  Wolfgang.Etl.Transformers.Tests.Unit.TestHelpers                                   100%
+  Wolfgang.Etl.Transformers.Tests.Unit.TestHelpersTests                              100%
+  Wolfgang.Etl.Transformers.Tests.Unit.ThrottleTransformerTests                      100%
+  Wolfgang.Etl.Transformers.Tests.Unit.TransformerExtensionsTests                    100%
+  Wolfgang.Etl.Transformers.Tests.Unit.WhereTransformerTests                         100%
