@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Wolfgang.Etl.TestKit" Version="0.23.1" />
+    <PackageReference Include="Wolfgang.Etl.TestKit" Version="0.23.2" />
   </ItemGroup>
 
 </Project>
