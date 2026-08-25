@@ -57,7 +57,7 @@
 
   <ItemGroup>
     <PackageReference Include="System.Threading.Channels" Version="10.0.11" />
-    <PackageReference Include="Wolfgang.Etl.Abstractions" Version="0.23.2" />
+    <PackageReference Include="Wolfgang.Etl.Abstractions" Version="0.23.3" />
   </ItemGroup>
 
 </Project>
