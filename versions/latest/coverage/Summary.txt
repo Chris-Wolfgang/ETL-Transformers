@@ -1,23 +1,23 @@
 Summary
-  Generated on: 8/19/2026 - 1:08:24 AM
-  Coverage date: 8/19/2026 - 1:08:13 AM - 8/19/2026 - 1:08:19 AM
+  Generated on: 9/15/2026 - 3:44:34 PM
+  Coverage date: 9/15/2026 - 3:44:25 PM - 9/15/2026 - 3:44:30 PM
   Parser: MultiReport (6x Cobertura)
   Assemblies: 7
-  Classes: 49
-  Files: 49
+  Classes: 50
+  Files: 50
   Line coverage: 99.9%
-  Covered lines: 3042
+  Covered lines: 3066
   Uncovered lines: 2
-  Coverable lines: 3044
-  Total lines: 9917
-  Branch coverage: 80.3% (307 of 382)
-  Covered branches: 307
-  Total branches: 382
-  Method coverage: 100% (565 of 565)
-  Full method coverage: 99.8% (564 of 565)
-  Covered methods: 565
-  Fully covered methods: 564
-  Total methods: 565
+  Coverable lines: 3068
+  Total lines: 9662
+  Branch coverage: 80.2% (308 of 384)
+  Covered branches: 308
+  Total branches: 384
+  Method coverage: 100% (570 of 570)
+  Full method coverage: 99.8% (569 of 570)
+  Covered methods: 570
+  Fully covered methods: 569
+  Total methods: 570
 
 Wolfgang.Etl.Transformers                                                           99.5%
   Wolfgang.Etl.Transformers.BufferedTransformer<T>                                  94.8%
@@ -67,6 +67,7 @@ Wolfgang.Etl.Transformers.Tests.Unit                                            
   Wolfgang.Etl.Transformers.Tests.Unit.DistinctTransformerTests                      100%
   Wolfgang.Etl.Transformers.Tests.Unit.EtlPipelineOperatorExtensionsTests            100%
   Wolfgang.Etl.Transformers.Tests.Unit.Globalization.GlobalizationInvarianceTests    100%
+  Wolfgang.Etl.Transformers.Tests.Unit.GuardParityTests                              100%
   Wolfgang.Etl.Transformers.Tests.Unit.OfTypeTransformerTests                        100%
   Wolfgang.Etl.Transformers.Tests.Unit.PassThroughTransformerTests                   100%
   Wolfgang.Etl.Transformers.Tests.Unit.ProgressReportingTransformerTests             100%
