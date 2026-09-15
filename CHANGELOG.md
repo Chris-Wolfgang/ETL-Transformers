@@ -242,13 +242,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `ETL-Transformers.slnx`: removed references to 6 files that were never created after template setup
 
-[Unreleased]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.4.0...HEAD
-[0.4.0]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.3.0...v0.4.0
-[0.3.0]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.2.1...v0.3.0
-[0.2.1]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.2.0...v0.2.1
-[0.2.0]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.1.1...v0.2.0
-[0.1.1]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.1.0...v0.1.1
-
 ## [0.1.0] - 2026-06-20
 
 ### Added
@@ -269,4 +262,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - BenchmarkDotNet project for baseline performance measurement
 - Full DocFX API documentation site
 
+[Unreleased]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.5.1...HEAD
+[0.5.1]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.5.0...v0.5.1
+[0.5.0]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.4.0...v0.5.0
+[0.4.0]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.3.0...v0.4.0
+[0.3.0]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.2.1...v0.3.0
+[0.2.1]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.2.0...v0.2.1
+[0.2.0]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.1.1...v0.2.0
+[0.1.1]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/Chris-Wolfgang/ETL-Transformers/releases/tag/v0.1.0
