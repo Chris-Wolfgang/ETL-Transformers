@@ -84,14 +84,7 @@ public sealed class DistinctByTransformer<TSource, TKey> : ITransformAsync<TSour
     /// <exception cref="ArgumentNullException"><paramref name="keySelector"/> is <see langword="null"/>.</exception>
     public DistinctByTransformer(Func<TSource, TKey> keySelector, IEqualityComparer<TKey>? comparer)
     {
-#if NET6_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(keySelector);
-#else
-        if (keySelector == null)
-        {
-            throw new ArgumentNullException(nameof(keySelector));
-        }
-#endif
 
         _keySelector = keySelector;
         _comparer = comparer;
@@ -108,16 +101,7 @@ public sealed class DistinctByTransformer<TSource, TKey> : ITransformAsync<TSour
     /// <exception cref="ArgumentNullException"><paramref name="items"/> is <see langword="null"/>.</exception>
     public IAsyncEnumerable<TSource> TransformAsync(IAsyncEnumerable<TSource> items)
     {
-#if NET6_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(items);
-#else
-#pragma warning disable RCS1140 // Roslynator does not associate throw inside #else block with method XML doc
-        if (items == null)
-        {
-            throw new ArgumentNullException(nameof(items));
-        }
-#pragma warning restore RCS1140
-#endif
 
         return DistinctByAsync(items, _keySelector, _comparer);
     }

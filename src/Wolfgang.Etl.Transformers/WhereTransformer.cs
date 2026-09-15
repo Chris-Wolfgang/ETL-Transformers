@@ -63,14 +63,7 @@ public sealed class WhereTransformer<T> : ITransformAsync<T, T>
     /// <exception cref="ArgumentNullException"><paramref name="predicate"/> is <see langword="null"/>.</exception>
     public WhereTransformer(Func<T, bool> predicate)
     {
-#if NET6_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(predicate);
-#else
-        if (predicate == null)
-        {
-            throw new ArgumentNullException(nameof(predicate));
-        }
-#endif
 
         _syncPredicate = predicate;
     }
@@ -87,14 +80,7 @@ public sealed class WhereTransformer<T> : ITransformAsync<T, T>
     /// <exception cref="ArgumentNullException"><paramref name="predicate"/> is <see langword="null"/>.</exception>
     public WhereTransformer(Func<T, ValueTask<bool>> predicate)
     {
-#if NET6_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(predicate);
-#else
-        if (predicate == null)
-        {
-            throw new ArgumentNullException(nameof(predicate));
-        }
-#endif
 
         _asyncPredicate = predicate;
     }
@@ -110,16 +96,7 @@ public sealed class WhereTransformer<T> : ITransformAsync<T, T>
     /// <exception cref="ArgumentNullException"><paramref name="items"/> is <see langword="null"/>.</exception>
     public IAsyncEnumerable<T> TransformAsync(IAsyncEnumerable<T> items)
     {
-#if NET6_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(items);
-#else
-#pragma warning disable RCS1140 // Roslynator does not associate throw inside #else block with method XML doc
-        if (items == null)
-        {
-            throw new ArgumentNullException(nameof(items));
-        }
-#pragma warning restore RCS1140
-#endif
 
         return _syncPredicate is not null
             ? FilterWithSyncPredicateAsync(items, _syncPredicate)

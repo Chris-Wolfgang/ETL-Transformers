@@ -79,16 +79,7 @@ public sealed class ThrottleTransformer<T> : ITransformAsync<T, T>
     /// <exception cref="ArgumentNullException"><paramref name="items"/> is <see langword="null"/>.</exception>
     public IAsyncEnumerable<T> TransformAsync(IAsyncEnumerable<T> items)
     {
-#if NET6_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(items);
-#else
-#pragma warning disable RCS1140
-        if (items == null)
-        {
-            throw new ArgumentNullException(nameof(items));
-        }
-#pragma warning restore RCS1140
-#endif
         return TransformAsyncCore(items);
     }
 

@@ -73,14 +73,7 @@ public sealed class BufferedTransformer<T> : ITransformAsync<T, T>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="capacity"/> is less than 1.</exception>
     public BufferedTransformer(int capacity)
     {
-#if NET8_0_OR_GREATER
         ArgumentOutOfRangeException.ThrowIfLessThan(capacity, 1);
-#else
-        if (capacity < 1)
-        {
-            throw new ArgumentOutOfRangeException(nameof(capacity), "Buffer capacity must be greater than 0.");
-        }
-#endif
 
         _capacity = capacity;
     }
@@ -103,16 +96,7 @@ public sealed class BufferedTransformer<T> : ITransformAsync<T, T>
     /// <exception cref="ArgumentNullException"><paramref name="items"/> is <see langword="null"/>.</exception>
     public IAsyncEnumerable<T> TransformAsync(IAsyncEnumerable<T> items)
     {
-#if NET6_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(items);
-#else
-#pragma warning disable RCS1140 // Roslynator does not associate throw inside #else block with method XML doc
-        if (items == null)
-        {
-            throw new ArgumentNullException(nameof(items));
-        }
-#pragma warning restore RCS1140
-#endif
 
         return BufferAsync(items, _capacity);
     }

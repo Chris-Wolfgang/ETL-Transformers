@@ -68,19 +68,8 @@ public sealed class ChainTransformer<TSource, TIntermediate, TDestination>
         ITransformAsync<TIntermediate, TDestination> second
     )
     {
-#if NET6_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(first);
         ArgumentNullException.ThrowIfNull(second);
-#else
-        if (first == null)
-        {
-            throw new ArgumentNullException(nameof(first));
-        }
-        if (second == null)
-        {
-            throw new ArgumentNullException(nameof(second));
-        }
-#endif
 
         _first = first;
         _second = second;
@@ -97,16 +86,7 @@ public sealed class ChainTransformer<TSource, TIntermediate, TDestination>
     /// <exception cref="ArgumentNullException"><paramref name="items"/> is <see langword="null"/>.</exception>
     public IAsyncEnumerable<TDestination> TransformAsync(IAsyncEnumerable<TSource> items)
     {
-#if NET6_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(items);
-#else
-#pragma warning disable RCS1140 // Roslynator does not associate throw inside #else block with method XML doc
-        if (items == null)
-        {
-            throw new ArgumentNullException(nameof(items));
-        }
-#pragma warning restore RCS1140
-#endif
 
         // No wrapping iterator - returns the inner pipeline directly. Each inner transformer
         // handles its own iteration and any state-machine cost; the chain itself is a thin
