@@ -62,14 +62,7 @@ public sealed class ProgressReportingTransformer<T> : ITransformAsync<T, T>
     /// <exception cref="ArgumentNullException"><paramref name="callback"/> is <see langword="null"/>.</exception>
     public ProgressReportingTransformer(Action<T> callback)
     {
-#if NET6_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(callback);
-#else
-        if (callback == null)
-        {
-            throw new ArgumentNullException(nameof(callback));
-        }
-#endif
 
         _syncCallback = callback;
     }
@@ -86,14 +79,7 @@ public sealed class ProgressReportingTransformer<T> : ITransformAsync<T, T>
     /// <exception cref="ArgumentNullException"><paramref name="callback"/> is <see langword="null"/>.</exception>
     public ProgressReportingTransformer(Func<T, ValueTask> callback)
     {
-#if NET6_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(callback);
-#else
-        if (callback == null)
-        {
-            throw new ArgumentNullException(nameof(callback));
-        }
-#endif
 
         _asyncCallback = callback;
     }
@@ -112,16 +98,7 @@ public sealed class ProgressReportingTransformer<T> : ITransformAsync<T, T>
     /// <exception cref="ArgumentNullException"><paramref name="items"/> is <see langword="null"/>.</exception>
     public IAsyncEnumerable<T> TransformAsync(IAsyncEnumerable<T> items)
     {
-#if NET6_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(items);
-#else
-#pragma warning disable RCS1140 // Roslynator does not associate throw inside #else block with method XML doc
-        if (items == null)
-        {
-            throw new ArgumentNullException(nameof(items));
-        }
-#pragma warning restore RCS1140
-#endif
 
         return _asyncCallback != null
             ? ReportAsync(items, _asyncCallback)

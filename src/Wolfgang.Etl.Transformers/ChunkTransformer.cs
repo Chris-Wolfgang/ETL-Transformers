@@ -60,14 +60,7 @@ public sealed class ChunkTransformer<T> : ITransformAsync<T, IReadOnlyList<T>>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="size"/> is less than 1.</exception>
     public ChunkTransformer(int size)
     {
-#if NET8_0_OR_GREATER
         ArgumentOutOfRangeException.ThrowIfLessThan(size, 1);
-#else
-        if (size < 1)
-        {
-            throw new ArgumentOutOfRangeException(nameof(size), "Chunk size must be greater than 0.");
-        }
-#endif
 
         _size = size;
     }
@@ -102,16 +95,7 @@ public sealed class ChunkTransformer<T> : ITransformAsync<T, IReadOnlyList<T>>
     /// <exception cref="ArgumentNullException"><paramref name="items"/> is <see langword="null"/>.</exception>
     public IAsyncEnumerable<IReadOnlyList<T>> TransformAsync(IAsyncEnumerable<T> items)
     {
-#if NET6_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(items);
-#else
-#pragma warning disable RCS1140 // Roslynator does not associate throw inside #else block with method XML doc
-        if (items == null)
-        {
-            throw new ArgumentNullException(nameof(items));
-        }
-#pragma warning restore RCS1140
-#endif
 
         return ChunkAsync(items, _size, _progress);
     }
