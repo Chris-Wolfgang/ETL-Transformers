@@ -11,6 +11,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [0.5.2] - 2026-09-15
+
+### Added
+
+### Changed
+
 - Argument guards across the operators now throw the same exception on every target framework.
   Before, targets older than .NET 8.0 threw `ArgumentOutOfRangeException` (`ChunkTransformer` size,
   `BufferedTransformer` capacity) with a bespoke message and no `ActualValue`; now every target
@@ -18,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `#if NET6_0_OR_GREATER` / `#if NET8_0_OR_GREATER` guard blocks are gone: `ThrowIfNull` and
   `ThrowIfLessThan` are polyfilled as C# 14 static extension members on the targets that lack them
   (the same three internal files as ETL-Abstractions #463). No public API change. (#244)
+- `Wolfgang.Etl.Abstractions` dependency 0.23.2 → 0.23.4 (#241).
 
 ### Deprecated
 
@@ -270,7 +285,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - BenchmarkDotNet project for baseline performance measurement
 - Full DocFX API documentation site
 
-[Unreleased]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.5.1...HEAD
+[Unreleased]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.5.2...HEAD
+[0.5.2]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.5.1...v0.5.2
 [0.5.1]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.3.0...v0.4.0
