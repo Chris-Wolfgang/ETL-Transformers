@@ -71,14 +71,7 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
     /// <exception cref="ArgumentNullException"><paramref name="selector"/> is <see langword="null"/>.</exception>
     public SelectManyTransformer(Func<TSource, IEnumerable<TDestination>> selector)
     {
-#if NET6_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(selector);
-#else
-        if (selector == null)
-        {
-            throw new ArgumentNullException(nameof(selector));
-        }
-#endif
 
         _syncSelector = selector;
     }
@@ -96,14 +89,7 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
     /// <exception cref="ArgumentNullException"><paramref name="selector"/> is <see langword="null"/>.</exception>
     public SelectManyTransformer(Func<TSource, IAsyncEnumerable<TDestination>> selector)
     {
-#if NET6_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(selector);
-#else
-        if (selector == null)
-        {
-            throw new ArgumentNullException(nameof(selector));
-        }
-#endif
 
         _asyncSelector = selector;
     }
@@ -119,16 +105,7 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
     /// <exception cref="ArgumentNullException"><paramref name="items"/> is <see langword="null"/>.</exception>
     public IAsyncEnumerable<TDestination> TransformAsync(IAsyncEnumerable<TSource> items)
     {
-#if NET6_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(items);
-#else
-#pragma warning disable RCS1140 // Roslynator does not associate throw inside #else block with method XML doc
-        if (items == null)
-        {
-            throw new ArgumentNullException(nameof(items));
-        }
-#pragma warning restore RCS1140
-#endif
 
         return _syncSelector is not null
             ? FlattenWithSyncSelectorAsync(items, _syncSelector)

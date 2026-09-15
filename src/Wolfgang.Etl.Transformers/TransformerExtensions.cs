@@ -47,14 +47,7 @@ public static class TransformerExtensions
     )
         where T : notnull
     {
-#if NET6_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(source);
-#else
-        if (source == null)
-        {
-            throw new ArgumentNullException(nameof(source));
-        }
-#endif
 
         return new BufferedTransformer<T>(capacity).TransformAsync(source);
     }
@@ -105,19 +98,8 @@ public static class TransformerExtensions
         where TIntermediate : notnull
         where TDestination : notnull
     {
-#if NET6_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(first);
         ArgumentNullException.ThrowIfNull(next);
-#else
-        if (first == null)
-        {
-            throw new ArgumentNullException(nameof(first));
-        }
-        if (next == null)
-        {
-            throw new ArgumentNullException(nameof(next));
-        }
-#endif
 
         return new ChainTransformer<TSource, TIntermediate, TDestination>(first, next);
     }
@@ -158,19 +140,8 @@ public static class TransformerExtensions
         where TIntermediate : notnull
         where TDestination : notnull
     {
-#if NET6_0_OR_GREATER
         ArgumentNullException.ThrowIfNull(first);
         ArgumentNullException.ThrowIfNull(next);
-#else
-        if (first == null)
-        {
-            throw new ArgumentNullException(nameof(first));
-        }
-        if (next == null)
-        {
-            throw new ArgumentNullException(nameof(next));
-        }
-#endif
 
         return new ChainTransformerWithCancellation<TSource, TIntermediate, TDestination>(first, next);
     }
