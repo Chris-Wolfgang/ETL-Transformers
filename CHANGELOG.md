@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Wolfgang.Etl.Abstractions (and the examples' TestKit) 0.23.4 → 0.24.0. No source change: this package has no
+  extractor or loader stage, so ADR-0009's options records do not apply here.
+
 ### Deprecated
 
 ### Removed
