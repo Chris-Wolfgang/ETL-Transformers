@@ -11,9 +11,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Wolfgang.Etl.Abstractions (and the examples' TestKit) 0.23.4 → 0.24.0. No source change: this package has no
-  extractor or loader stage, so ADR-0009's options records do not apply here.
-
 ### Deprecated
 
 ### Removed
@@ -21,6 +18,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 ### Security
+
+
+## [0.6.0] - 2026-09-16
+
+### Changed
+
+- Wolfgang.Etl.Abstractions (and the examples' TestKit) 0.23.4 → 0.24.0. No source change: this package has no
+  extractor or loader stage, so ADR-0009's options records do not apply here.
 
 ## [0.5.2] - 2026-09-15
 
@@ -288,7 +293,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - BenchmarkDotNet project for baseline performance measurement
 - Full DocFX API documentation site
 
-[Unreleased]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.5.2...HEAD
+[Unreleased]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.5.2...v0.6.0
 [0.5.2]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.5.1...v0.5.2
 [0.5.1]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.4.0...v0.5.0
