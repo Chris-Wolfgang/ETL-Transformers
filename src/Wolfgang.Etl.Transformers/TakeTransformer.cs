@@ -74,9 +74,7 @@ public sealed class TakeTransformer<T> : ITransformAsync<T, T>
     {
         ArgumentNullException.ThrowIfNull(items);
 
-        return _count <= 0
-            ? EmptyAsync()
-            : TakeAsync(items, _count);
+        return TakeAsync(items, _count);
     }
 
 
@@ -88,16 +86,14 @@ public sealed class TakeTransformer<T> : ITransformAsync<T, T>
 
 
 
-    private static async IAsyncEnumerable<T> EmptyAsync()
-    {
-        await Task.CompletedTask.ConfigureAwait(continueOnCapturedContext: false);
-        yield break;
-    }
-
-
-
     private static async IAsyncEnumerable<T> TakeAsync(IAsyncEnumerable<T> items, int count)
     {
+        if (count <= 0)
+        {
+            // Nothing to take: return without ever touching the source.
+            yield break;
+        }
+
         var taken = 0;
         await foreach (var item in items.ConfigureAwait(continueOnCapturedContext: false))
         {
