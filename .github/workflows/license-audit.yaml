@@ -49,7 +49,7 @@ jobs:
 
       - name: Install nuget-license
         if: steps.detect.outputs.found == 'true'
-        run: dotnet tool install --global nuget-license
+        run: dotnet tool restore
 
       - name: Restore
         if: steps.detect.outputs.found == 'true'
@@ -69,7 +69,7 @@ jobs:
           export PATH="$PATH:$HOME/.dotnet/tools"
           while IFS= read -r proj; do
             echo "== license check $proj =="
-            nuget-license \
+            dotnet nuget-license \
               --input "$proj" \
               --include-transitive \
               --allowed-license-types .github/license-audit/allowed-licenses.json \
@@ -86,7 +86,7 @@ jobs:
         run: |
           export PATH="$PATH:$HOME/.dotnet/tools"
           proj="$(git ls-files 'src/**/*.csproj' 'src/*.csproj' | head -n1)"
-          nuget-license \
+          dotnet nuget-license \
             --input "$proj" \
             --include-transitive \
             --licenseurl-to-license-mappings .github/license-audit/license-url-mappings.json \
