@@ -348,6 +348,22 @@ public class ChainTransformerWithCancellationTests
     }
 
 
+    [Fact]
+    public async Task LazyGuardTransformer_defers_its_null_check_to_enumeration()
+    {
+        var sut = new LazyGuardTransformer();
+
+        // Calling with null must NOT throw - that is what makes the double useful above.
+        var deferred = sut.TransformAsync(null!);
+        var deferredWithToken = sut.TransformAsync(null!, CancellationToken.None);
+
+        await Assert.ThrowsAsync<ArgumentNullException>(async () => await CollectAsync(deferred));
+        await Assert.ThrowsAsync<ArgumentNullException>(async () => await CollectAsync(deferredWithToken));
+        Assert.Equal(new[] { 1, 2 }, await CollectAsync(sut.TransformAsync(ToAsync(new[] { 1, 2 }), CancellationToken.None)));
+    }
+
+
+
     /// <summary>
     /// An inner stage whose null check only fires on enumeration, so any eager
     /// <see cref="ArgumentNullException"/> can only have come from the chain itself.
