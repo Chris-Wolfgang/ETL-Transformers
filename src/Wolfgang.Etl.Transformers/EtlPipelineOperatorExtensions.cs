@@ -34,6 +34,10 @@ namespace Wolfgang.Etl.Transformers;
 /// </remarks>
 public static class EtlPipelineOperatorExtensions
 {
+    // Each operator guards only `pipeline`: the transformer constructor it wires in validates the
+    // delegate (or key) argument under the same parameter name, so a second guard here would be
+    // unobservable dead code. `Log` composes through `Tap`, which guards `pipeline` for it.
+
     /// <summary>Filters the pipeline to items that satisfy a synchronous <paramref name="predicate"/>.</summary>
     /// <typeparam name="T">The item type. Must be non-null.</typeparam>
     /// <param name="pipeline">The pipeline to filter.</param>
@@ -44,7 +48,6 @@ public static class EtlPipelineOperatorExtensions
         where T : notnull
     {
         ThrowIfNull(pipeline, nameof(pipeline));
-        ThrowIfNull(predicate, nameof(predicate));
 
         return pipeline.Through(new WhereTransformer<T>(predicate));
     }
@@ -61,7 +64,6 @@ public static class EtlPipelineOperatorExtensions
         where T : notnull
     {
         ThrowIfNull(pipeline, nameof(pipeline));
-        ThrowIfNull(predicate, nameof(predicate));
 
         return pipeline.Through(new WhereTransformer<T>(predicate));
     }
@@ -80,7 +82,6 @@ public static class EtlPipelineOperatorExtensions
         where TDestination : notnull
     {
         ThrowIfNull(pipeline, nameof(pipeline));
-        ThrowIfNull(selector, nameof(selector));
 
         return pipeline.Through(new SelectTransformer<TSource, TDestination>(selector));
     }
@@ -99,7 +100,6 @@ public static class EtlPipelineOperatorExtensions
         where TDestination : notnull
     {
         ThrowIfNull(pipeline, nameof(pipeline));
-        ThrowIfNull(selector, nameof(selector));
 
         return pipeline.Through(new SelectTransformer<TSource, TDestination>(selector));
     }
@@ -118,7 +118,6 @@ public static class EtlPipelineOperatorExtensions
         where TDestination : notnull
     {
         ThrowIfNull(pipeline, nameof(pipeline));
-        ThrowIfNull(selector, nameof(selector));
 
         return pipeline.Through(new SelectManyTransformer<TSource, TDestination>(selector));
     }
@@ -137,7 +136,6 @@ public static class EtlPipelineOperatorExtensions
         where TDestination : notnull
     {
         ThrowIfNull(pipeline, nameof(pipeline));
-        ThrowIfNull(selector, nameof(selector));
 
         return pipeline.Through(new SelectManyTransformer<TSource, TDestination>(selector));
     }
@@ -179,7 +177,6 @@ public static class EtlPipelineOperatorExtensions
         where TKey : notnull
     {
         ThrowIfNull(pipeline, nameof(pipeline));
-        ThrowIfNull(keySelector, nameof(keySelector));
 
         return pipeline.Through(new DistinctByTransformer<TSource, TKey>(keySelector, comparer));
     }
@@ -228,7 +225,6 @@ public static class EtlPipelineOperatorExtensions
         where T : notnull
     {
         ThrowIfNull(pipeline, nameof(pipeline));
-        ThrowIfNull(predicate, nameof(predicate));
 
         return pipeline.Through(new TakeWhileTransformer<T>(predicate));
     }
@@ -245,7 +241,6 @@ public static class EtlPipelineOperatorExtensions
         where T : notnull
     {
         ThrowIfNull(pipeline, nameof(pipeline));
-        ThrowIfNull(predicate, nameof(predicate));
 
         return pipeline.Through(new TakeWhileTransformer<T>(predicate));
     }
@@ -262,7 +257,6 @@ public static class EtlPipelineOperatorExtensions
         where T : notnull
     {
         ThrowIfNull(pipeline, nameof(pipeline));
-        ThrowIfNull(predicate, nameof(predicate));
 
         return pipeline.Through(new SkipWhileTransformer<T>(predicate));
     }
@@ -279,7 +273,6 @@ public static class EtlPipelineOperatorExtensions
         where T : notnull
     {
         ThrowIfNull(pipeline, nameof(pipeline));
-        ThrowIfNull(predicate, nameof(predicate));
 
         return pipeline.Through(new SkipWhileTransformer<T>(predicate));
     }
@@ -378,7 +371,6 @@ public static class EtlPipelineOperatorExtensions
         where T : notnull
     {
         ThrowIfNull(pipeline, nameof(pipeline));
-        ThrowIfNull(onItem, nameof(onItem));
 
         return pipeline.Through(new ProgressReportingTransformer<T>(onItem));
     }
@@ -398,7 +390,6 @@ public static class EtlPipelineOperatorExtensions
         where T : notnull
     {
         ThrowIfNull(pipeline, nameof(pipeline));
-        ThrowIfNull(onItem, nameof(onItem));
 
         return pipeline.Through(new ProgressReportingTransformer<T>(onItem));
     }
@@ -429,7 +420,6 @@ public static class EtlPipelineOperatorExtensions
     public static IEtlPipeline<T> Log<T>(this IEtlPipeline<T> pipeline, Func<T, string> format, Action<string> sink)
         where T : notnull
     {
-        ThrowIfNull(pipeline, nameof(pipeline));
         ThrowIfNull(format, nameof(format));
         ThrowIfNull(sink, nameof(sink));
 

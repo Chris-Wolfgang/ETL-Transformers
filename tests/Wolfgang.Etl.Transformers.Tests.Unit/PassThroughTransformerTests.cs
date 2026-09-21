@@ -132,6 +132,33 @@ public class PassThroughTransformerTests
 
 
     [Fact]
+    public async Task TransformAsync_when_cancelled_mid_enumeration_and_source_ignores_the_token_stops_before_the_next_item()
+    {
+        using var cts = new CancellationTokenSource();
+        // CountingSource.Enumerate takes no token, so WithCancellation cannot stop it; only the
+        // per-item check in the transformer can.
+        var source = new CountingSource(3);
+        var sut = new PassThroughTransformer<int>();
+        var yielded = 0;
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>
+        (
+            async () =>
+            {
+                await foreach (var _ in sut.TransformAsync(source.Enumerate(), cts.Token))
+                {
+                    yielded++;
+                    cts.Cancel();
+                }
+            }
+        );
+
+        Assert.Equal(1, yielded);
+    }
+
+
+
+    [Fact]
     public async Task TransformAsync_without_cancellation_completes_normally()
     {
         var source = new[] { "a", "b", "c" };

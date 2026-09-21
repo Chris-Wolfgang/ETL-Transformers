@@ -98,7 +98,8 @@ public static class TransformerExtensions
         where TIntermediate : notnull
         where TDestination : notnull
     {
-        ArgumentNullException.ThrowIfNull(first);
+        // The chain constructor guards `first` under the same name; `next` is guarded here so the
+        // exception names this method's parameter rather than the constructor's `second`.
         ArgumentNullException.ThrowIfNull(next);
 
         return new ChainTransformer<TSource, TIntermediate, TDestination>(first, next);
@@ -140,7 +141,8 @@ public static class TransformerExtensions
         where TIntermediate : notnull
         where TDestination : notnull
     {
-        ArgumentNullException.ThrowIfNull(first);
+        // The chain constructor guards `first` under the same name; `next` is guarded here so the
+        // exception names this method's parameter rather than the constructor's `second`.
         ArgumentNullException.ThrowIfNull(next);
 
         return new ChainTransformerWithCancellation<TSource, TIntermediate, TDestination>(first, next);
