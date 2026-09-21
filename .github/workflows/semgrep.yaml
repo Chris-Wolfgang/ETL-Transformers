@@ -1,11 +1,15 @@
 name: SAST (Semgrep)
 
-# Additive static analysis beyond CodeQL (codeql.yaml) and DevSkim (in pr.yaml).
-# Semgrep's OSS engine + registry rulesets are free and need no account. Results
-# upload to Security -> Code scanning alongside CodeQL; on PRs the scan is
-# diff-aware (--baseline-commit) so only findings NEW vs the merge base report.
-# Paid-tier SAST (Snyk Code / Veracode / Fortify / SonarQube Cloud / Checkmarx)
-# remains a project-level budget decision — see docs/sast.md.
+# Security-grade static analysis beyond CodeQL (#164).
+#
+# Semgrep runs a different engine and ruleset from CodeQL (pattern/dataflow
+# rules for C#, a general security-audit pack, and a secrets pack), so it
+# surfaces issues CodeQL's queries don't. Findings upload to Code Scanning
+# (Security tab) as an additional signal; report-only for now (`|| true`) so a
+# noisy new ruleset can't block merges — promote to a gate once the baseline is
+# clean.
+#
+# Uses the public Semgrep registry packs, which need no account/login.
 
 on:
   pull_request:
@@ -22,47 +26,58 @@ concurrency:
 
 jobs:
   semgrep:
-    name: Semgrep scan
+    name: Semgrep
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
       contents: read
-      security-events: write   # upload SARIF to code scanning
+      security-events: write
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-          fetch-depth: 0   # needed so the PR baseline diff has the merge base
 
       - name: Setup Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
-          python-version: '3.12'
+          python-version: '3.x'
 
       - name: Install Semgrep
-        run: python -m pip install --disable-pip-version-check semgrep
+        # Hash-pinned rather than a bare `pip install semgrep` (OSSF Scorecard
+        # Pinned-Dependencies: "pipCommand not pinned by hash"). --require-hashes
+        # makes pip verify every wheel it downloads and refuse anything not
+        # listed, so the transitive tree is pinned too. Regenerate with the uv
+        # command recorded in the header of the requirements file; the resolution
+        # is universal, so it covers every runner platform and Python version.
+        run: pip install --require-hashes -r .github/requirements/semgrep.txt
 
-      - name: Semgrep scan
-        env:
-          GITHUB_BASE_REF: ${{ github.base_ref }}
+      - name: Run Semgrep
+        # --error makes findings exit 1; they are reported through the SARIF upload, so
+        # 0 and 1 both continue. Anything else (bad config, crash, network) fails the job
+        # instead of silently uploading nothing.
         run: |
-          rulesets=(--config=p/csharp --config=p/security-audit --config=p/secrets)
-          baseline=()
-          if [ -n "$GITHUB_BASE_REF" ]; then
-            git fetch --no-tags --depth=0 origin "$GITHUB_BASE_REF" || true
-            base="$(git merge-base "origin/$GITHUB_BASE_REF" HEAD || true)"
-            if [ -n "$base" ]; then
-              baseline=(--baseline-commit "$base")
-              echo "Diff-aware scan against baseline $base"
-            fi
-          fi
-          # --error would fail the job on findings; here we surface via SARIF and
-          # let code scanning gate. Exit 0 on findings so the SARIF still uploads.
-          semgrep scan "${rulesets[@]}" "${baseline[@]}" --sarif --output=semgrep.sarif . || true
+          set +e
+          semgrep scan \
+            --config p/csharp \
+            --config p/security-audit \
+            --config p/secrets \
+            --sarif --output semgrep.sarif \
+            --error
+          rc=$?
+          set -e
+          case "$rc" in
+            0) echo "semgrep: no findings" ;;
+            1) echo "semgrep: findings reported (see the Security tab after upload)" ;;
+            *) echo "::error::semgrep failed with exit code $rc (not a findings result)"; exit "$rc" ;;
+          esac
 
-      - name: Upload SARIF to code scanning
+      - name: Upload Semgrep SARIF
+        # A fork's pull_request token cannot write Code Scanning (security-events: write is
+        # not granted), so the upload would fail after a successful scan. Skip it there; the
+        # scan step above still runs (report-only, as documented) and its SARIF is available
+        # once the change lands in this repository.
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
         uses: github/codeql-action/upload-sarif@b96794f015dfd88f77b49b1c93e0fa7110f94c63 # v4.38.0
         with:
           sarif_file: semgrep.sarif
-          category: semgrep
