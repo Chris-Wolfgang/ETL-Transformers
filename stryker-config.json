@@ -5,6 +5,9 @@
       "tests/Wolfgang.Etl.Transformers.Tests.Unit/Wolfgang.Etl.Transformers.Tests.Unit.csproj"
     ],
     "target-framework": "net10.0",
+    "ignore-methods": [
+      "ConfigureAwait"
+    ],
     "thresholds": {
       "high": 90,
       "low": 80,

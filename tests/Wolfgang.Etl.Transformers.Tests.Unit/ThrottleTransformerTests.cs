@@ -32,7 +32,8 @@ public class ThrottleTransformerTests
         var recorder = new DelayRecorder();
         var interval = TimeSpan.FromMilliseconds(250);
         // Fixed timestamp => measured elapsed is always 0 => a full-interval wait is requested each time.
-        var sut = new ThrottleTransformer<int>(interval, recorder.Record, () => 0L);
+        // A non-zero fixed reading: elapsed must be computed as now - previous, not now + previous.
+        var sut = new ThrottleTransformer<int>(interval, recorder.Record, () => 100 * Stopwatch.Frequency);
         var waits = recorder.Waits;
 
         var result = await CollectAsync(sut.TransformAsync(ToAsync(new[] { 1, 2, 3 })));
@@ -117,7 +118,15 @@ public class ThrottleTransformerTests
 
     [Fact]
     public void Ctor_when_min_interval_is_negative_throws_ArgumentOutOfRangeException()
-        => Assert.Throws<ArgumentOutOfRangeException>(() => new ThrottleTransformer<int>(TimeSpan.FromMilliseconds(-1)));
+    {
+        var minInterval = TimeSpan.FromMilliseconds(-1);
+
+        var ex = Assert.Throws<ArgumentOutOfRangeException>(() => new ThrottleTransformer<int>(minInterval));
+
+        Assert.Equal("minInterval", ex.ParamName);
+        Assert.Equal(minInterval, ex.ActualValue);
+        Assert.Contains("must not be negative", ex.Message, StringComparison.Ordinal);
+    }
 
 
     [Fact]

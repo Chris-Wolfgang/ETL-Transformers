@@ -48,8 +48,8 @@ public class ChainTransformerTests
     {
         var sut = new ChainTransformer<int, int, int>
         (
-            new PassThroughTransformer<int>(),
-            new PassThroughTransformer<int>()
+            new LazyGuardTransformer(),
+            new LazyGuardTransformer()
         );
 
         var ex = Assert.Throws<ArgumentNullException>
@@ -284,4 +284,22 @@ public class ChainTransformerTests
 
 
 
+
+
+    /// <summary>
+    /// An inner stage whose null check only fires on enumeration, so any eager
+    /// <see cref="ArgumentNullException"/> can only have come from the chain itself.
+    /// </summary>
+    private sealed class LazyGuardTransformer : ITransformAsync<int, int>
+    {
+        public async IAsyncEnumerable<int> TransformAsync(IAsyncEnumerable<int> items)
+        {
+            ArgumentNullException.ThrowIfNull(items);
+
+            await foreach (var item in items.ConfigureAwait(false))
+            {
+                yield return item;
+            }
+        }
+    }
 }

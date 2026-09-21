@@ -58,8 +58,8 @@ public class ChainTransformerWithCancellationTests
     {
         var sut = new ChainTransformerWithCancellation<int, int, int>
         (
-            new PassThroughTransformer<int>(),
-            new PassThroughTransformer<int>()
+            new LazyGuardTransformer(),
+            new LazyGuardTransformer()
         );
 
         var ex = Assert.Throws<ArgumentNullException>
@@ -77,8 +77,8 @@ public class ChainTransformerWithCancellationTests
     {
         var sut = new ChainTransformerWithCancellation<int, int, int>
         (
-            new PassThroughTransformer<int>(),
-            new PassThroughTransformer<int>()
+            new LazyGuardTransformer(),
+            new LazyGuardTransformer()
         );
 
         var ex = Assert.Throws<ArgumentNullException>
@@ -341,6 +341,27 @@ public class ChainTransformerWithCancellationTests
         private static async IAsyncEnumerable<int> Iterate(IAsyncEnumerable<int> items, [EnumeratorCancellation] CancellationToken token)
         {
             await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
+            {
+                yield return item;
+            }
+        }
+    }
+
+
+    /// <summary>
+    /// An inner stage whose null check only fires on enumeration, so any eager
+    /// <see cref="ArgumentNullException"/> can only have come from the chain itself.
+    /// </summary>
+    private sealed class LazyGuardTransformer : ITransformWithCancellationAsync<int, int>
+    {
+        public IAsyncEnumerable<int> TransformAsync(IAsyncEnumerable<int> items) => TransformAsync(items, CancellationToken.None);
+
+
+        public async IAsyncEnumerable<int> TransformAsync(IAsyncEnumerable<int> items, [EnumeratorCancellation] CancellationToken token = default)
+        {
+            ArgumentNullException.ThrowIfNull(items);
+
+            await foreach (var item in items.WithCancellation(token).ConfigureAwait(false))
             {
                 yield return item;
             }
