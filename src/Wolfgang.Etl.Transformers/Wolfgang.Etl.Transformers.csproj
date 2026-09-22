@@ -6,7 +6,12 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
     <Version>0.6.0</Version>
-    <AssemblyVersion>0.4.0.0</AssemblyVersion>
+    <!-- AssemblyVersion is derived from <Version> as 0.{Minor}.0.0 (ADR-0011 in
+         ETL-Abstractions): the minor is SemVer's breaking position pre-1.0 and
+         AssemblyVersion is bind-time identity on .NET Framework, so it must move
+         with every minor. Deriving it means a release-prep PR cannot forget it,
+         and PATCH bumps keep the same identity (no binding-redirect churn). -->
+    <AssemblyVersion>0.$([System.Version]::Parse($(Version.Split('-')[0])).Minor).0.0</AssemblyVersion>
     <FileVersion>$([System.Text.RegularExpressions.Regex]::Replace("$(Version)", "[-+].*$", "")).0</FileVersion>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <Title>Wolfgang.Etl.Transformers</Title>
