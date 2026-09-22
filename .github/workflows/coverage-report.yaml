@@ -20,8 +20,11 @@ on:
         required: false
         default: 'main'
 
+# No workflow-level write: Scorecard's Token-Permissions check scores a top-level
+# write as 0 and then reports every job-level write in the repository as well. The
+# one job that publishes to gh-pages declares it for itself below.
 permissions:
-  contents: write   # required to push to gh-pages
+  contents: read
 
 concurrency:
   # Join the repo-wide gh-pages lock (see benchmarks.yaml) so all gh-pages
@@ -34,6 +37,8 @@ jobs:
     name: Generate & Publish Coverage Report
     runs-on: ubuntu-latest
     if: github.repository != 'Chris-Wolfgang/repo-template'
+    permissions:
+      contents: write   # required to push the report to gh-pages
     timeout-minutes: 20
 
     steps:
