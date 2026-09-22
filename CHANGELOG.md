@@ -20,6 +20,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 
 
+## [0.7.0] - 2026-09-22
+
+### Added
+
+- Built against `Wolfgang.Etl.Abstractions` 0.25.0 (and TestKit / TestKit.Xunit 0.25.0): the base-stage `ReportingInterval` / `MaximumItemCount` / `SkipItemCount` setters are deprecated fleet-wide in favour of the options record, and `IncrementCurrentItemCount(int)` / `IncrementCurrentSkippedItemCount(int)` are available to derived stages. No change to this package's own API. (#277)
+
+### Fixed
+
+- `AssemblyVersion` now moves with the minor as ADR-0011 requires (this release binds as `0.7.0.0`); v0.5.0 and v0.6.0 shipped with a stale `0.4.0.0` identity. It is derived from `<Version>` from now on so it cannot fall behind again.
+
+### Internal
+
+- Built against Wolfgang.Etl.Abstractions / ErrorPolicies / TestKit / TestKit.Xunit 0.26.0 (trim- and native-AOT-compatible on net8.0+; no API change from 0.25.0), so the package now requires Abstractions 0.26.0 or later. (#300)
+- Code-scanning clean-up: the `CallerArgumentExpressionAttribute` polyfill carries a documented `ReSharper disable once CheckNamespace` (it must live in `System.Runtime.CompilerServices`). No behaviour change. (#280)
+- Mutation-test hardening: redundant argument guards in the pipeline operators and `Then` removed, `Take` with a count of zero never touches the source, and new tests pin the throttle clock arithmetic, per-item cancellation and the chain's eager null check. (#290)
+
 ## [0.6.0] - 2026-09-16
 
 ### Changed
