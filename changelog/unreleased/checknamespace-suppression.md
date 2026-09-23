@@ -1,3 +1,3 @@
 type: internal
 
-The `CheckNamespace` suppression on the `CallerArgumentExpressionAttribute` polyfill is split onto its own line; the justification following `--` on the directive line stopped ReSharper matching it, so the inspection kept firing.
+The `CheckNamespace` suppression on the `CallerArgumentExpressionAttribute` polyfill moves onto its own line, with the justification above it, which is the form ReSharper documents for `disable once`.
