@@ -1,25 +1,25 @@
 Summary
-  Generated on: 9/17/2026 - 4:53:34 PM
-  Coverage date: 9/17/2026 - 4:53:21 PM - 9/17/2026 - 4:53:29 PM
+  Generated on: 9/23/2026 - 1:13:21 AM
+  Coverage date: 9/23/2026 - 1:13:09 AM - 9/23/2026 - 1:13:18 AM
   Parser: MultiReport (6x Cobertura)
   Assemblies: 7
   Classes: 50
   Files: 50
   Line coverage: 99.9%
-  Covered lines: 3066
+  Covered lines: 3090
   Uncovered lines: 2
-  Coverable lines: 3068
-  Total lines: 9662
-  Branch coverage: 80.2% (308 of 384)
-  Covered branches: 308
-  Total branches: 384
-  Method coverage: 100% (570 of 570)
-  Full method coverage: 99.8% (569 of 570)
-  Covered methods: 570
-  Fully covered methods: 569
-  Total methods: 570
+  Coverable lines: 3092
+  Total lines: 9755
+  Branch coverage: 80.3% (315 of 392)
+  Covered branches: 315
+  Total branches: 392
+  Method coverage: 100% (579 of 579)
+  Full method coverage: 99.8% (578 of 579)
+  Covered methods: 579
+  Fully covered methods: 578
+  Total methods: 579
 
-Wolfgang.Etl.Transformers                                                           99.5%
+Wolfgang.Etl.Transformers                                                           99.4%
   Wolfgang.Etl.Transformers.BufferedTransformer<T>                                  94.8%
   Wolfgang.Etl.Transformers.CastTransformer<T1, T2>                                  100%
   Wolfgang.Etl.Transformers.ChainTransformer<T1, T2, T3>                             100%
