@@ -108,7 +108,9 @@ jobs:
           python-version: '3.12'
 
       - name: Install defusedxml
-        run: python3 -m pip install --quiet --disable-pip-version-check defusedxml
+        # Hash-pinned install: Scorecard's Pinned-Dependencies check reports a bare
+        # `pip install <name>` as unpinned. The hashes live in the requirements file.
+        run: python3 -m pip install --quiet --disable-pip-version-check --require-hashes -r .github/requirements/defusedxml.txt
 
       - name: Normalize and diff
         shell: bash
