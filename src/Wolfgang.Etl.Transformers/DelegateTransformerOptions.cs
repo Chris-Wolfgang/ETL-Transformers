@@ -1,0 +1,70 @@
+using System;
+using Wolfgang.Etl.Abstractions;
+
+
+
+namespace Wolfgang.Etl.Transformers;
+
+/// <summary>
+/// Configuration for the transformers that invoke a caller-supplied delegate, controlling what
+/// happens when that delegate throws for a single item.
+/// </summary>
+/// <remarks>
+/// <para>
+/// Per ADR-0009, stage configuration is supplied as a record passed to the constructor rather than
+/// set through mutable properties, so a transformer is configured once and not reconfigured during a
+/// run. This record is shared by every delegate-invoking transformer in this library
+/// (<see cref="SelectTransformer{TSource, TDestination}"/>,
+/// <see cref="SelectManyTransformer{TSource, TDestination}"/>,
+/// <see cref="WhereTransformer{T}"/>, <see cref="DistinctByTransformer{TSource, TKey}"/> and
+/// <see cref="CastTransformer{TSource, TDestination}"/>) because the one setting they need is the
+/// same. It is left unsealed so a transformer that later grows its own settings can derive from it.
+/// </para>
+/// <para>
+/// It deliberately does <b>not</b> derive from
+/// <see cref="TransformerOptions"/>. That record also carries
+/// <c>SkipItemCount</c>, <c>MaximumItemCount</c> and <c>ReportingInterval</c>, which the
+/// transformers in this library do not implement - they carry no counters by design - and which are
+/// already expressed here by the dedicated <see cref="SkipTransformer{T}"/> and
+/// <see cref="TakeTransformer{T}"/> stages. Inheriting them would advertise settings that are
+/// silently ignored and give the same concept two spellings.
+/// </para>
+/// <para>
+/// The pass-through and windowing transformers (<see cref="PassThroughTransformer{T}"/>,
+/// <see cref="TakeTransformer{T}"/>, <see cref="SkipTransformer{T}"/>,
+/// <see cref="ChunkTransformer{T}"/>, <see cref="BufferedTransformer{T}"/> and
+/// <see cref="ProgressReportingTransformer{T}"/>) invoke no caller delegate, so they have nothing to
+/// apply a policy to and do not accept this record.
+/// </para>
+/// </remarks>
+/// <example>
+/// <code>
+///     // Drop the items whose projection throws, and count them.
+///     var options = new DelegateTransformerOptions { ErrorPolicy = ItemErrorPolicy.Skip };
+///     var transformer = new SelectTransformer&lt;string, int&gt;(int.Parse, options);
+/// </code>
+/// </example>
+public record DelegateTransformerOptions
+{
+    /// <summary>
+    /// The policy applied when the caller-supplied delegate throws while handling one item.
+    /// </summary>
+    /// <value>
+    /// A function receiving an <see cref="ItemErrorContext"/> describing the failure and returning
+    /// <see cref="ItemErrorAction.Skip"/> to drop the item and continue, or
+    /// <see cref="ItemErrorAction.Abort"/> to re-throw. Defaults to a policy that always returns
+    /// <see cref="ItemErrorAction.Abort"/>, which is the behaviour of a transformer constructed
+    /// without this record: the exception propagates to the caller unchanged.
+    /// </value>
+    /// <remarks>
+    /// Ready-made policies - including skip-and-log and skip-to-dead-letter forms - are available
+    /// from <c>ItemErrorPolicy</c> in the <c>Wolfgang.Etl.ErrorPolicies</c> package. This library
+    /// does not reference that package; the policy is just a delegate.
+    /// </remarks>
+    /// <exception cref="ArgumentNullException">The value being assigned is <see langword="null"/>.</exception>
+    public Func<ItemErrorContext, ItemErrorAction> ErrorPolicy
+    {
+        get;
+        init => field = value ?? throw new ArgumentNullException(nameof(value));
+    } = static _ => ItemErrorAction.Abort;
+}
