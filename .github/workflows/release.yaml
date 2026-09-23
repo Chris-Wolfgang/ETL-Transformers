@@ -887,6 +887,6 @@ jobs:
           TAG_NAME: ${{ github.event.release.tag_name }}
         run: |
           shopt -s nullglob
-          files=(./nuget-packages/*.nupkg ./nuget-packages/*.snupkg ./nuget-packages/*.bom.json ./nuget-packages/reproducible-build-manifest.json reproducible-build-manifest.json release-coverage.zip)
+          files=(./nuget-packages/*.nupkg ./nuget-packages/*.snupkg ./nuget-packages/*.bom.json ./nuget-packages/reproducible-build-manifest.json release-coverage.zip)
           echo "Uploading ${#files[@]} asset(s) to release $TAG_NAME"
           gh release upload "$TAG_NAME" "${files[@]}" --clobber
