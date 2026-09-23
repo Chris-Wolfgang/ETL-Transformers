@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1790129051726,
+  "lastUpdate": 1790176143401,
   "repoUrl": "https://github.com/Chris-Wolfgang/ETL-Transformers",
   "entries": {
     "BenchmarkDotNet": [
@@ -7752,6 +7752,210 @@ window.BENCHMARK_DATA = {
             "value": 59659911.629629634,
             "unit": "ns",
             "range": "± 165868.61803798538"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6bfda835b4ab21d95f5e9348e9fbab9251aaecab",
+          "message": "test: clear the five LazyGuardTransformer analyzer alerts (#318)\n\nDrops the `= default` from the two-argument `TransformAsync` on the\n`ITransformWithCancellationAsync` double. The interface declares no default and\nthe one-argument overload directly above already supplies\n`CancellationToken.None`, so the default was pure overlap — it accounted for\nthree alerts at once (S1006, MA0061 and MethodOverloadWithOptionalParameter).\nEvery two-argument call site already passes a token explicitly, so no behaviour\nchanges.\n\nWaives S4456 on both doubles instead of refactoring them. The rule wants the\nparameter check split out of the iterator, which is the exact opposite of what\nthese fixtures are for: their null check must fire on enumeration so that an\nEAGER ArgumentNullException can only have come from the chain under test.\nSplitting them would make the fixture validate eagerly and defeat every test\nthat depends on it. Suppressed narrowly with a justification, matching the\nexisting S2190 waivers in this project.\n\nCo-authored-by: Claude Opus 5 <noreply@anthropic.com>",
+          "timestamp": "2026-09-23T11:02:43-04:00",
+          "tree_id": "7c01353e7969e118d11c5154a74f3bb46fb565fa",
+          "url": "https://github.com/Chris-Wolfgang/ETL-Transformers/commit/6bfda835b4ab21d95f5e9348e9fbab9251aaecab"
+        },
+        "date": 1790176139809,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.BufferedTransformerCapacityBenchmarks.NoBuffer(ItemCount: 100, SourceDelayMicroseconds: 50, SinkDelayMicroseconds: 50, Capacity: 1)",
+            "value": 10073759.033854166,
+            "unit": "ns",
+            "range": "± 788.3682952332853"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.BufferedTransformerCapacityBenchmarks.WithBuffer(ItemCount: 100, SourceDelayMicroseconds: 50, SinkDelayMicroseconds: 50, Capacity: 1)",
+            "value": 5168010.4375,
+            "unit": "ns",
+            "range": "± 8036.527645650464"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.BufferedTransformerCapacityBenchmarks.NoBuffer(ItemCount: 100, SourceDelayMicroseconds: 50, SinkDelayMicroseconds: 50, Capacity: 8)",
+            "value": 10070295.5078125,
+            "unit": "ns",
+            "range": "± 4113.865600437963"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.BufferedTransformerCapacityBenchmarks.WithBuffer(ItemCount: 100, SourceDelayMicroseconds: 50, SinkDelayMicroseconds: 50, Capacity: 8)",
+            "value": 5171792.436197917,
+            "unit": "ns",
+            "range": "± 6537.556187511243"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.BufferedTransformerCapacityBenchmarks.NoBuffer(ItemCount: 100, SourceDelayMicroseconds: 50, SinkDelayMicroseconds: 50, Capacity: 64)",
+            "value": 10072240.846354166,
+            "unit": "ns",
+            "range": "± 4442.279339792512"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.BufferedTransformerCapacityBenchmarks.WithBuffer(ItemCount: 100, SourceDelayMicroseconds: 50, SinkDelayMicroseconds: 50, Capacity: 64)",
+            "value": 5171548.153645833,
+            "unit": "ns",
+            "range": "± 5256.611093239371"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.BufferedTransformerCapacityBenchmarks.NoBuffer(ItemCount: 100, SourceDelayMicroseconds: 50, SinkDelayMicroseconds: 50, Capacity: 256)",
+            "value": 10074458.723958334,
+            "unit": "ns",
+            "range": "± 1795.7806353141439"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.BufferedTransformerCapacityBenchmarks.WithBuffer(ItemCount: 100, SourceDelayMicroseconds: 50, SinkDelayMicroseconds: 50, Capacity: 256)",
+            "value": 5174050.010416667,
+            "unit": "ns",
+            "range": "± 323.11962889309143"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.BufferedTransformerCapacityBenchmarks.NoBuffer(ItemCount: 100, SourceDelayMicroseconds: 50, SinkDelayMicroseconds: 50, Capacity: 1024)",
+            "value": 10076048.528645834,
+            "unit": "ns",
+            "range": "± 1715.1940917990353"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.BufferedTransformerCapacityBenchmarks.WithBuffer(ItemCount: 100, SourceDelayMicroseconds: 50, SinkDelayMicroseconds: 50, Capacity: 1024)",
+            "value": 5168448.486979167,
+            "unit": "ns",
+            "range": "± 2437.268246311003"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.BufferedTransformerCapacityBenchmarks.NoBuffer(ItemCount: 100, SourceDelayMicroseconds: 50, SinkDelayMicroseconds: 50, Capacity: 8192)",
+            "value": 10082532.747395834,
+            "unit": "ns",
+            "range": "± 8638.871685038497"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.BufferedTransformerCapacityBenchmarks.WithBuffer(ItemCount: 100, SourceDelayMicroseconds: 50, SinkDelayMicroseconds: 50, Capacity: 8192)",
+            "value": 5166383.686197917,
+            "unit": "ns",
+            "range": "± 2388.9423398638514"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.Lightweight(ItemCount: 1000, PassRate: 0.1)",
+            "value": 16409.06733194987,
+            "unit": "ns",
+            "range": "± 104.94015628951507"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.WithBase(ItemCount: 1000, PassRate: 0.1)",
+            "value": 24355.751708984375,
+            "unit": "ns",
+            "range": "± 322.24182623322906"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.Lightweight(ItemCount: 1000, PassRate: 0.5)",
+            "value": 24349.12201944987,
+            "unit": "ns",
+            "range": "± 121.19254807012851"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.WithBase(ItemCount: 1000, PassRate: 0.5)",
+            "value": 37389.59338378906,
+            "unit": "ns",
+            "range": "± 53.68261414249421"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.Lightweight(ItemCount: 1000, PassRate: 0.9)",
+            "value": 31145.663004557293,
+            "unit": "ns",
+            "range": "± 183.12643555630734"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.WithBase(ItemCount: 1000, PassRate: 0.9)",
+            "value": 54551.14697265625,
+            "unit": "ns",
+            "range": "± 23.10582446044597"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.Lightweight(ItemCount: 100000, PassRate: 0.1)",
+            "value": 1702407.2376302083,
+            "unit": "ns",
+            "range": "± 9279.642664878036"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.WithBase(ItemCount: 100000, PassRate: 0.1)",
+            "value": 2311126.28515625,
+            "unit": "ns",
+            "range": "± 6059.507471492495"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.Lightweight(ItemCount: 100000, PassRate: 0.5)",
+            "value": 2400663.205078125,
+            "unit": "ns",
+            "range": "± 18978.558485968377"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.WithBase(ItemCount: 100000, PassRate: 0.5)",
+            "value": 3760984.1966145835,
+            "unit": "ns",
+            "range": "± 5530.327767852846"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.Lightweight(ItemCount: 100000, PassRate: 0.9)",
+            "value": 3031001.69921875,
+            "unit": "ns",
+            "range": "± 10462.747763158486"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.WithBase(ItemCount: 100000, PassRate: 0.9)",
+            "value": 5333326.703125,
+            "unit": "ns",
+            "range": "± 25933.89739344499"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.Lightweight(ItemCount: 1000000, PassRate: 0.1)",
+            "value": 16399109.989583334,
+            "unit": "ns",
+            "range": "± 289091.3336667582"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.WithBase(ItemCount: 1000000, PassRate: 0.1)",
+            "value": 23894942.625,
+            "unit": "ns",
+            "range": "± 689442.4890238103"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.Lightweight(ItemCount: 1000000, PassRate: 0.5)",
+            "value": 22989605.447916668,
+            "unit": "ns",
+            "range": "± 50059.577095631656"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.WithBase(ItemCount: 1000000, PassRate: 0.5)",
+            "value": 36789897.4047619,
+            "unit": "ns",
+            "range": "± 310030.5033334896"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.Lightweight(ItemCount: 1000000, PassRate: 0.9)",
+            "value": 29856380.583333332,
+            "unit": "ns",
+            "range": "± 195636.63546188382"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.WithBase(ItemCount: 1000000, PassRate: 0.9)",
+            "value": 54271013.699999996,
+            "unit": "ns",
+            "range": "± 291991.6518410051"
           }
         ]
       }
