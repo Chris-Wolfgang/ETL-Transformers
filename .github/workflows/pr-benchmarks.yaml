@@ -228,5 +228,5 @@ jobs:
             echo "::warning::Perf regression detected but acknowledged via '$ACK_LABEL' label."
             exit 0
           fi
-          echo "::error::Benchmark regression exceeds the gate (time > ${TIME_THRESHOLD}% AND > ${TIME_FLOOR_NS} ns, or alloc > ${ALLOC_THRESHOLD}% AND > ${ALLOC_FLOOR_BYTES} B). Review the delta comment, or add the '$ACK_LABEL' label if the change is intentional."
+          echo "::error::Benchmark regression exceeds the gate (time > ${TIME_THRESHOLD}% AND at least ${TIME_FLOOR_NS} ns slower, or alloc > ${ALLOC_THRESHOLD}% AND at least ${ALLOC_FLOOR_BYTES} B greater). Review the delta comment, or add the '$ACK_LABEL' label if the change is intentional."
           exit 1
