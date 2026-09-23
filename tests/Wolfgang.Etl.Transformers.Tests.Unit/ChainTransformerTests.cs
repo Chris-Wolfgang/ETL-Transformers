@@ -306,6 +306,11 @@ public class ChainTransformerTests
     /// </summary>
     private sealed class LazyGuardTransformer : ITransformAsync<int, int>
     {
+        // S4456 (split parameter checks from the iterator) is deliberately waived here: this
+        // double exists precisely to defer its null check to enumeration, so that any EAGER
+        // ArgumentNullException observed by the test can only have come from the chain itself.
+        // Splitting it would make the fixture validate eagerly and defeat every test using it.
+#pragma warning disable S4456
         public async IAsyncEnumerable<int> TransformAsync(IAsyncEnumerable<int> items)
         {
             ArgumentNullException.ThrowIfNull(items);
@@ -315,5 +320,6 @@ public class ChainTransformerTests
                 yield return item;
             }
         }
+#pragma warning restore S4456
     }
 }
