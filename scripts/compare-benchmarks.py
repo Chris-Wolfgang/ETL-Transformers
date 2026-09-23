@@ -9,7 +9,10 @@ run's ``BenchmarkDotNet.Artifacts/results`` directory, joins benchmarks by their
 * ``regressed=true|false`` on stdout for ``$GITHUB_OUTPUT``.
 
 A benchmark is a regression when its mean time grows by more than ``--time-threshold``
-percent OR its allocated bytes grow by more than ``--alloc-threshold`` percent. Only
+percent AND by at least ``--time-floor-ns`` nanoseconds, or when its allocated bytes
+grow by more than ``--alloc-threshold`` percent AND by at least ``--alloc-floor-bytes``
+bytes. The absolute floors exist because a percentage alone cannot tell a real
+regression from runner noise on a fast benchmark. Only
 benchmarks present in BOTH runs are gated; added/removed benchmarks are listed but never
 trip the gate.
 
@@ -76,8 +79,20 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--base-dir", required=True, help="results dir for the base run")
     parser.add_argument("--head-dir", required=True, help="results dir for the PR-head run")
-    parser.add_argument("--time-threshold", type=float, required=True, help="max % slower")
-    parser.add_argument("--alloc-threshold", type=float, required=True, help="max % more allocations")
+    parser.add_argument("--time-threshold", type=float, required=True, help="max %% slower")
+    parser.add_argument("--alloc-threshold", type=float, required=True, help="max %% more allocations")
+    parser.add_argument(
+        "--time-floor-ns",
+        type=float,
+        default=0.0,
+        help="absolute floor: a time regression must also grow by at least this many ns",
+    )
+    parser.add_argument(
+        "--alloc-floor-bytes",
+        type=float,
+        default=0.0,
+        help="absolute floor: an allocation regression must also grow by at least this many bytes",
+    )
     parser.add_argument("--out", required=True, help="markdown comment body output path")
     args = parser.parse_args()
 
@@ -100,11 +115,22 @@ def main() -> int:
                 "h_alloc": h["alloc"],
                 "t_pct": pct(b["mean"], h["mean"], is_alloc=False),
                 "a_pct": pct(b["alloc"], h["alloc"], is_alloc=True),
+                "t_abs": h["mean"] - b["mean"],
+                "a_abs": h["alloc"] - b["alloc"],
             }
         )
 
     def is_regression(row: dict) -> bool:
-        return row["t_pct"] > args.time_threshold or row["a_pct"] > args.alloc_threshold
+        """A regression must clear BOTH the percentage threshold and the absolute floor.
+
+        A percentage on its own cannot separate a real regression from runner noise on a
+        fast benchmark: a 47us benchmark was measured moving +18.5% on a PR that changed
+        only a comment, which is an absolute move of 8.7us. Requiring the absolute delta
+        too lets the percentage stay tight for the benchmarks big enough to measure.
+        """
+        time_bad = row["t_pct"] > args.time_threshold and row["t_abs"] >= args.time_floor_ns
+        alloc_bad = row["a_pct"] > args.alloc_threshold and row["a_abs"] >= args.alloc_floor_bytes
+        return time_bad or alloc_bad
 
     regressions = [r for r in rows if is_regression(r)]
 
@@ -112,9 +138,12 @@ def main() -> int:
         "### 📊 Benchmark delta — PR vs base",
         "",
         (
-            f"Threshold: fail if **time > {args.time_threshold:g}%** slower or "
-            f"**allocations > {args.alloc_threshold:g}%** greater (per benchmark). "
-            "Time on hosted runners is noisy; allocation deltas are the reliable signal."
+            f"Threshold: fail if **time > {args.time_threshold:g}%** slower "
+            f"**and** at least {args.time_floor_ns:g} ns slower, or "
+            f"**allocations > {args.alloc_threshold:g}%** greater "
+            f"**and** at least {args.alloc_floor_bytes:g} B greater (per benchmark). "
+            "Time on hosted runners is noisy; the absolute floor keeps a fast benchmark from "
+            "failing the gate on a sub-microsecond blip. Allocation deltas are the reliable signal."
         ),
         "",
     ]
