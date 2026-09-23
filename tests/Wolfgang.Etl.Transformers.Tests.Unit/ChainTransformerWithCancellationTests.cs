@@ -373,7 +373,15 @@ public class ChainTransformerWithCancellationTests
         public IAsyncEnumerable<int> TransformAsync(IAsyncEnumerable<int> items) => TransformAsync(items, CancellationToken.None);
 
 
-        public async IAsyncEnumerable<int> TransformAsync(IAsyncEnumerable<int> items, [EnumeratorCancellation] CancellationToken token = default)
+        // S4456 (split parameter checks from the iterator) is deliberately waived here: this
+        // double exists precisely to defer its null check to enumeration, so that any EAGER
+        // ArgumentNullException observed by the test can only have come from the chain itself.
+        // Splitting it would make the fixture validate eagerly and defeat every test using it.
+        // The token carries no default value: the interface declares none and the one-argument
+        // overload above already supplies CancellationToken.None (S1006 / MA0061 /
+        // MethodOverloadWithOptionalParameter).
+#pragma warning disable S4456
+        public async IAsyncEnumerable<int> TransformAsync(IAsyncEnumerable<int> items, [EnumeratorCancellation] CancellationToken token)
         {
             ArgumentNullException.ThrowIfNull(items);
 
@@ -382,5 +390,6 @@ public class ChainTransformerWithCancellationTests
                 yield return item;
             }
         }
+#pragma warning restore S4456
     }
 }
