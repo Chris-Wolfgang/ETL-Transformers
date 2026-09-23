@@ -3,7 +3,9 @@
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 
-// ReSharper disable once CheckNamespace -- polyfill; the compiler looks the type up in this exact namespace
+// The compiler looks this type up in this exact namespace, so the polyfill must declare it
+// here regardless of the file's location.
+// ReSharper disable once CheckNamespace
 namespace System.Runtime.CompilerServices;
 
 /// <summary>
