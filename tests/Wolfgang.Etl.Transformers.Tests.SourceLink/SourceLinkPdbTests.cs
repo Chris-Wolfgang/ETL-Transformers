@@ -10,6 +10,7 @@
 //
 // Refs #91.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Http;
 using System.Reflection.Metadata;
@@ -19,6 +20,18 @@ using Xunit;
 
 namespace Wolfgang.Etl.Transformers.Tests.SourceLink;
 
+// Excluded from the test-assembly coverage gate, which requires 100%. This suite cannot reach it,
+// and not because tests are missing: its branches are mutually exclusive by environment. The
+// local-build escape hatch and the CI failure it now raises cannot both run; a probe that returns
+// 200 cannot also return 404; and the network-failure catch only executes when the network is
+// down. Any single run therefore leaves a fixed set of lines cold.
+//
+// Per the repo rule this is a last resort, and the alternative was considered: make the paths
+// reachable by extracting the probe into injectable units so the empty-mapping, unresolved-SHA,
+// 404 and offline cases can each be driven directly. That is the better long-term shape, but it is
+// a redesign of this suite rather than a fix, so it is left to a follow-up rather than folded into
+// the PR that introduces the gates.
+[ExcludeFromCodeCoverage]
 public class SourceLinkPdbTests
 {
     private const string RepoSlug = "Chris-Wolfgang/ETL-Transformers";
