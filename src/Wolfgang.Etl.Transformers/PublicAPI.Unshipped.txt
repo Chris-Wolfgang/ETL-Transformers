@@ -1,4 +1,6 @@
 #nullable enable
+Wolfgang.Etl.Transformers.CastTransformer<TSource, TDestination>.CastTransformer(Wolfgang.Etl.Transformers.DelegateTransformerOptions! options) -> void
+Wolfgang.Etl.Transformers.CastTransformer<TSource, TDestination>.CurrentErrorItemCount.get -> int
 Wolfgang.Etl.Transformers.DelegateTransformerOptions
 Wolfgang.Etl.Transformers.DelegateTransformerOptions.DelegateTransformerOptions() -> void
 Wolfgang.Etl.Transformers.DelegateTransformerOptions.DelegateTransformerOptions(Wolfgang.Etl.Transformers.DelegateTransformerOptions! original) -> void
