@@ -29,8 +29,20 @@ namespace Wolfgang.Etl.Transformers;
 /// only after a stage that bounds cardinality.
 /// </para>
 /// <para>
-/// Implements only <see cref="ITransformAsync{TSource, TDestination}"/> - no progress, no
-/// cancellation, no Skip/Max - to keep the hot loop minimal.
+/// Implements <see cref="ITransformAsync{TSource, TDestination}"/> and
+/// <see cref="IReportsItemErrors"/> - no progress, no cancellation, no Skip/Max - to keep the hot
+/// loop minimal. The one counter is the opt-in <see cref="CurrentErrorItemCount"/>, which stays at zero
+/// on the default path.
+/// </para>
+/// <para>
+/// By default an exception thrown by the caller-supplied comparer - from either
+/// <see cref="IEqualityComparer{T}.GetHashCode(T)"/> or <see cref="IEqualityComparer{T}.Equals(T, T)"/> -
+/// propagates to the caller. Pass a <see cref="DelegateTransformerOptions"/> whose
+/// <see cref="DelegateTransformerOptions.ErrorPolicy"/> returns <see cref="ItemErrorAction.Skip"/> to
+/// drop the failing item and continue instead, counting it in <see cref="CurrentErrorItemCount"/>. A
+/// skipped item never enters the set, so an equal item later in the stream is still treated as a
+/// first occurrence. An item dropped as a duplicate is the transformer doing its job, not an error,
+/// and is never counted.
 /// </para>
 /// </remarks>
 /// <example>

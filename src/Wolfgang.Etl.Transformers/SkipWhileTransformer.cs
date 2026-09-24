@@ -28,11 +28,20 @@ namespace Wolfgang.Etl.Transformers;
 /// I/O-bound start conditions such as a state-check against an external system.
 /// </para>
 /// <para>
-/// Implements only <see cref="ITransformAsync{TSource, TDestination}"/> - no progress, no
-/// cancellation, no Skip/Max - to keep the hot loop minimal.
+/// Implements <see cref="ITransformAsync{TSource, TDestination}"/> and
+/// <see cref="IReportsItemErrors"/> - no progress, no cancellation, no Skip/Max - to keep the hot
+/// loop minimal. The one counter is the opt-in <see cref="CurrentErrorItemCount"/>, which stays at zero
+/// on the default path.
 /// </para>
 /// <para>
-/// Exceptions thrown by the predicate propagate to the caller.
+/// By default an exception thrown by the predicate propagates to the caller. Pass a
+/// <see cref="DelegateTransformerOptions"/> whose <see cref="DelegateTransformerOptions.ErrorPolicy"/>
+/// returns <see cref="ItemErrorAction.Skip"/> to drop the failing item and continue instead, counting
+/// it in <see cref="CurrentErrorItemCount"/>. A skipped failure <b>stays in the leading skipping
+/// phase</b> rather than ending it: a predicate that threw returned no verdict, so treating it as the
+/// <see langword="false"/> that ends the run would let the rest of the prefix through on the strength
+/// of a failure. An item skipped because the predicate returned <see langword="true"/> is ordinary
+/// behaviour and is never counted.
 /// </para>
 /// </remarks>
 /// <example>

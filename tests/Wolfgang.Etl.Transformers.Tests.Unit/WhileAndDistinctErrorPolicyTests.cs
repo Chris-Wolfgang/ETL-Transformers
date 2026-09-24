@@ -101,6 +101,35 @@ public class WhileAndDistinctErrorPolicyTests
 
 
 
+    [Fact]
+    public async Task SkipWhile_with_async_predicate_throwing_stays_in_the_skipping_phase()
+    {
+        // The async predicate is a separate await/catch path from the synchronous one, and the
+        // state decision is the feature's key semantic choice here, so it is asserted on both.
+        var sut = new SkipWhileTransformer<int>
+        (
+            async i =>
+            {
+                await Task.Yield();
+                return i switch
+                {
+                    2 => throw new InvalidOperationException(),
+                    4 => false,
+                    _ => true
+                };
+            },
+            SkipAll()
+        );
+
+        var result = await CollectAsync(sut.TransformAsync(ToAsync(new[] { 1, 2, 3, 4, 5 })));
+
+        // 2 dropped, 3 still treated as part of the prefix, 4 ends it.
+        Assert.Equal(new[] { 4, 5 }, result);
+        Assert.Equal(1, sut.CurrentErrorItemCount);
+    }
+
+
+
     // ---------- TakeWhileTransformer ----------
 
     [Fact]
