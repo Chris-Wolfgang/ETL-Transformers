@@ -27,14 +27,19 @@ namespace Wolfgang.Etl.Transformers;
 /// <para>
 /// This type deliberately implements only <see cref="ITransformAsync{TSource, TDestination}"/> and
 /// does <b>not</b> inherit from <see cref="TransformerBase{TSource, TDestination, TProgress}"/>.
-/// It carries no progress reporting, no cancellation token, and no item counters - keeping the
-/// hot loop as small as possible for use as a building block in composed pipelines. Callers needing
+/// It carries no progress reporting and no cancellation token, and counts nothing on the default
+/// path - the only counter is the opt-in <see cref="CurrentErrorItemCount"/>, which stays at zero
+/// unless an error policy skips an item - keeping the hot loop as small as possible for use as a
+/// building block in composed pipelines. Callers needing
 /// cancellation or windowing should compose with dedicated transformers (for example a future
 /// <c>SkipTransformer</c> / <c>TakeTransformer</c> / <c>BufferedTransformer</c>).
 /// </para>
 /// <para>
-/// Exceptions thrown by the predicate propagate to the caller. Callers that need to handle errors
-/// per item should do so inside the predicate itself.
+/// By default an exception thrown by the predicate propagates to the caller. Pass a
+/// <see cref="DelegateTransformerOptions"/> whose <see cref="DelegateTransformerOptions.ErrorPolicy"/>
+/// returns <see cref="ItemErrorAction.Skip"/> to drop the failing item and continue instead; those
+/// items are counted by <see cref="CurrentErrorItemCount"/>. An item the predicate simply returns
+/// <see langword="false"/> for is ordinary filtering, not an error, and is never counted.
 /// </para>
 /// </remarks>
 /// <example>

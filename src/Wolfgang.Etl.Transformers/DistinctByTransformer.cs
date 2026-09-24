@@ -36,7 +36,16 @@ namespace Wolfgang.Etl.Transformers;
 /// </para>
 /// <para>
 /// Implements only <see cref="ITransformAsync{TSource, TDestination}"/> - no progress, no
-/// cancellation, no Skip/Max - to keep the hot loop minimal.
+/// cancellation, no Skip/Max - to keep the hot loop minimal. The one counter is the opt-in
+/// <see cref="CurrentErrorItemCount"/>, which stays at zero on the default path.
+/// </para>
+/// <para>
+/// By default an exception thrown by the key selector, or by the comparer while the key is being
+/// added, propagates to the caller. Pass a <see cref="DelegateTransformerOptions"/> whose
+/// <see cref="DelegateTransformerOptions.ErrorPolicy"/> returns <see cref="ItemErrorAction.Skip"/>
+/// to drop the failing item and continue instead; those items are counted by
+/// <see cref="CurrentErrorItemCount"/>. An item dropped because its key was already seen is the
+/// transformer doing its job, not an error, and is never counted.
 /// </para>
 /// </remarks>
 /// <example>
