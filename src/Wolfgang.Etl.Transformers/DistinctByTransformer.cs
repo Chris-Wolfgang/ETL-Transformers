@@ -95,7 +95,7 @@ public sealed class DistinctByTransformer<TSource, TKey> : ITransformAsync<TSour
     /// </param>
     /// <exception cref="ArgumentNullException"><paramref name="keySelector"/> is <see langword="null"/>.</exception>
     public DistinctByTransformer(Func<TSource, TKey> keySelector, IEqualityComparer<TKey>? comparer)
-        : this(keySelector, comparer, new DelegateTransformerOptions())
+        : this(keySelector, comparer, DelegateTransformerOptions.Default)
     {
     }
 

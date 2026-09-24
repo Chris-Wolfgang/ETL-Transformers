@@ -70,7 +70,7 @@ public sealed class WhereTransformer<T> : ITransformAsync<T, T>, IReportsItemErr
     /// <param name="predicate">A function that returns <see langword="true"/> for items to be yielded.</param>
     /// <exception cref="ArgumentNullException"><paramref name="predicate"/> is <see langword="null"/>.</exception>
     public WhereTransformer(Func<T, bool> predicate)
-        : this(predicate, new DelegateTransformerOptions())
+        : this(predicate, DelegateTransformerOptions.Default)
     {
     }
 
@@ -104,7 +104,7 @@ public sealed class WhereTransformer<T> : ITransformAsync<T, T>, IReportsItemErr
     /// </param>
     /// <exception cref="ArgumentNullException"><paramref name="predicate"/> is <see langword="null"/>.</exception>
     public WhereTransformer(Func<T, ValueTask<bool>> predicate)
-        : this(predicate, new DelegateTransformerOptions())
+        : this(predicate, DelegateTransformerOptions.Default)
     {
     }
 
