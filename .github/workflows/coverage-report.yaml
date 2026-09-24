@@ -57,13 +57,35 @@ jobs:
         run: dotnet restore
 
       - name: Run tests with coverage
+        # Per project rather than solution-wide, because this pass is pinned to net10.0 and not
+        # every test project targets it: Tests.Concurrency is deliberately net8.0, since the
+        # Coyote rewriter and model checker run on the .NET 8 runtime. A solution-wide
+        # `dotnet test --framework net10.0` fails on that project with NETSDK1005 before any
+        # test runs, which is what broke this workflow. The skip is computed from each project's
+        # own TargetFramework(s) rather than hard-coding a name, so a project added later without
+        # net10.0 is skipped with a notice instead of failing the run. Coyote has its own weekly
+        # workflow and contributes no coverage here.
         run: |
-          dotnet test \
-            --configuration Release \
-            --framework net10.0 \
-            --collect:"XPlat Code Coverage" \
-            --results-directory ./coverage-results \
-            -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
+          set -euo pipefail
+          ran=0
+          for proj in tests/*/*.csproj; do
+            if ! grep -qE '<TargetFrameworks?>[^<]*net10[.]0' "$proj"; then
+              echo "::notice::Skipping $proj - it does not target net10.0"
+              continue
+            fi
+            dotnet test "$proj" \
+              --configuration Release \
+              --framework net10.0 \
+              --collect:"XPlat Code Coverage" \
+              --results-directory ./coverage-results \
+              -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
+            ran=$((ran + 1))
+          done
+          if [ "$ran" -eq 0 ]; then
+            echo "::error::No test project targeting net10.0 was found; coverage would be empty."
+            exit 1
+          fi
+          echo "Ran coverage over $ran test project(s)."
         shell: bash
 
       - name: Install ReportGenerator
