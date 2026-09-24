@@ -35,6 +35,13 @@ indent_size = 2
 # C# files
 [*.cs]
 
+# Trim / native-AOT / single-file analyzers (IL2xxx, IL3xxx) at warning so a reflection or
+# dynamic-code use in shipped code fails the Release build rather than surfacing first as a
+# consumer's publish-time warning.
+dotnet_analyzer_diagnostic.category-Trimming.severity = warning
+dotnet_analyzer_diagnostic.category-SingleFile.severity = warning
+dotnet_analyzer_diagnostic.category-AOT.severity = warning
+
 # SA0001 - Disable XML documentation file requirement
 dotnet_diagnostic.SA0001.severity = none
 
