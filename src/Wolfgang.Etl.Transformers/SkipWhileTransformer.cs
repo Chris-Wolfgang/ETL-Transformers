@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Wolfgang.Etl.Abstractions;
 
@@ -40,11 +41,13 @@ namespace Wolfgang.Etl.Transformers;
 ///     var fromFirstReal = new SkipWhileTransformer&lt;Row&gt;(r =&gt; r.IsBlank);
 /// </code>
 /// </example>
-public sealed class SkipWhileTransformer<T> : ITransformAsync<T, T>
+public sealed class SkipWhileTransformer<T> : ITransformAsync<T, T>, IReportsItemErrors
     where T : notnull
 {
     private readonly Func<T, bool>? _syncPredicate;
     private readonly Func<T, ValueTask<bool>>? _asyncPredicate;
+    private readonly DelegateTransformerOptions _options;
+    private int _currentErrorItemCount;
 
 
 
@@ -54,10 +57,27 @@ public sealed class SkipWhileTransformer<T> : ITransformAsync<T, T>
     /// <param name="predicate">A function that returns <see langword="true"/> while items should be skipped.</param>
     /// <exception cref="ArgumentNullException"><paramref name="predicate"/> is <see langword="null"/>.</exception>
     public SkipWhileTransformer(Func<T, bool> predicate)
+        : this(predicate, DelegateTransformerOptions.Default)
+    {
+    }
+
+
+
+    /// <summary>
+    /// Initializes a new instance with a synchronous predicate and an error policy.
+    /// </summary>
+    /// <param name="predicate">The predicate evaluated for each item.</param>
+    /// <param name="options">Controls what happens when <paramref name="predicate"/> throws.</param>
+    /// <exception cref="ArgumentNullException">
+    /// <paramref name="predicate"/> or <paramref name="options"/> is <see langword="null"/>.
+    /// </exception>
+    public SkipWhileTransformer(Func<T, bool> predicate, DelegateTransformerOptions options)
     {
         ArgumentNullException.ThrowIfNull(predicate);
+        ArgumentNullException.ThrowIfNull(options);
 
         _syncPredicate = predicate;
+        _options = options;
     }
 
 
@@ -71,11 +91,39 @@ public sealed class SkipWhileTransformer<T> : ITransformAsync<T, T>
     /// </param>
     /// <exception cref="ArgumentNullException"><paramref name="predicate"/> is <see langword="null"/>.</exception>
     public SkipWhileTransformer(Func<T, ValueTask<bool>> predicate)
+        : this(predicate, DelegateTransformerOptions.Default)
+    {
+    }
+
+
+
+    /// <summary>
+    /// Initializes a new instance with an asynchronous predicate and an error policy.
+    /// </summary>
+    /// <param name="predicate">The predicate evaluated for each item.</param>
+    /// <param name="options">Controls what happens when <paramref name="predicate"/> throws.</param>
+    /// <exception cref="ArgumentNullException">
+    /// <paramref name="predicate"/> or <paramref name="options"/> is <see langword="null"/>.
+    /// </exception>
+    public SkipWhileTransformer(Func<T, ValueTask<bool>> predicate, DelegateTransformerOptions options)
     {
         ArgumentNullException.ThrowIfNull(predicate);
+        ArgumentNullException.ThrowIfNull(options);
 
         _asyncPredicate = predicate;
+        _options = options;
     }
+
+
+
+    /// <summary>
+    /// The number of items dropped so far because the predicate threw and the error policy returned
+    /// <see cref="ItemErrorAction.Skip"/>.
+    /// </summary>
+    /// <remarks>
+    /// Cumulative across every enumeration produced by this instance. Only a thrown exception counts; an item skipped because the predicate returned <see langword="true"/> is ordinary behaviour.
+    /// </remarks>
+    public int CurrentErrorItemCount => Volatile.Read(ref _currentErrorItemCount);
 
 
 
@@ -100,18 +148,40 @@ public sealed class SkipWhileTransformer<T> : ITransformAsync<T, T>
 
 
 
-    private static async IAsyncEnumerable<T> SkipWhileWithSyncPredicateAsync
+    private async IAsyncEnumerable<T> SkipWhileWithSyncPredicateAsync
     (
         IAsyncEnumerable<T> items,
         Func<T, bool> predicate
     )
     {
         var skipping = true;
+        var itemNumber = 0L;
+
         await foreach (var item in items.ConfigureAwait(continueOnCapturedContext: false))
         {
+            itemNumber++;
+
             if (skipping)
             {
-                if (predicate(item))
+                bool stillSkipping;
+                try
+                {
+                    stillSkipping = predicate(item);
+                }
+                catch (Exception exception)
+                {
+                    if (HandleItemError(itemNumber, exception) == ItemErrorAction.Skip)
+                    {
+                        // Drop the item and stay in the skipping phase: a predicate that threw says
+                        // nothing about whether the leading run has ended, so ending it here would
+                        // let the rest of the prefix through on the strength of a failure.
+                        continue;
+                    }
+
+                    throw;
+                }
+
+                if (stillSkipping)
                 {
                     continue;
                 }
@@ -125,18 +195,40 @@ public sealed class SkipWhileTransformer<T> : ITransformAsync<T, T>
 
 
 
-    private static async IAsyncEnumerable<T> SkipWhileWithAsyncPredicateAsync
+    private async IAsyncEnumerable<T> SkipWhileWithAsyncPredicateAsync
     (
         IAsyncEnumerable<T> items,
         Func<T, ValueTask<bool>> predicate
     )
     {
         var skipping = true;
+        var itemNumber = 0L;
+
         await foreach (var item in items.ConfigureAwait(continueOnCapturedContext: false))
         {
+            itemNumber++;
+
             if (skipping)
             {
-                if (await predicate(item).ConfigureAwait(continueOnCapturedContext: false))
+                bool stillSkipping;
+                try
+                {
+                    stillSkipping = await predicate(item).ConfigureAwait(continueOnCapturedContext: false);
+                }
+                catch (Exception exception)
+                {
+                    if (HandleItemError(itemNumber, exception) == ItemErrorAction.Skip)
+                    {
+                        // Drop the item and stay in the skipping phase: a predicate that threw says
+                        // nothing about whether the leading run has ended, so ending it here would
+                        // let the rest of the prefix through on the strength of a failure.
+                        continue;
+                    }
+
+                    throw;
+                }
+
+                if (stillSkipping)
                 {
                     continue;
                 }
@@ -146,5 +238,21 @@ public sealed class SkipWhileTransformer<T> : ITransformAsync<T, T>
 
             yield return item;
         }
+    }
+
+
+
+    /// <summary>
+    /// Applies the configured error policy and, when it asks to skip, records the dropped item.
+    /// </summary>
+    private ItemErrorAction HandleItemError(long itemNumber, Exception exception)
+    {
+        var action = _options.ErrorPolicy(new ItemErrorContext(itemNumber, exception));
+        if (action == ItemErrorAction.Skip)
+        {
+            _ = Interlocked.Increment(ref _currentErrorItemCount);
+        }
+
+        return action;
     }
 }
