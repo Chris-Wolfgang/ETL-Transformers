@@ -82,7 +82,7 @@ public sealed class CastTransformer<TSource, TDestination> : ITransformAsync<TSo
     /// that throws <see cref="InvalidCastException"/> on the first item that does not convert.
     /// </summary>
     public CastTransformer()
-        : this(new DelegateTransformerOptions())
+        : this(DelegateTransformerOptions.Default)
     {
     }
 
