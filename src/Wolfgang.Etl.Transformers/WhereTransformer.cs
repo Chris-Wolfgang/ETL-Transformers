@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Wolfgang.Etl.Abstractions;
 
@@ -48,11 +49,13 @@ namespace Wolfgang.Etl.Transformers;
 ///     );
 /// </code>
 /// </example>
-public sealed class WhereTransformer<T> : ITransformAsync<T, T>
+public sealed class WhereTransformer<T> : ITransformAsync<T, T>, IReportsItemErrors
     where T : notnull
 {
     private readonly Func<T, bool>? _syncPredicate;
     private readonly Func<T, ValueTask<bool>>? _asyncPredicate;
+    private readonly DelegateTransformerOptions _options;
+    private int _currentErrorItemCount;
 
 
 
@@ -62,10 +65,27 @@ public sealed class WhereTransformer<T> : ITransformAsync<T, T>
     /// <param name="predicate">A function that returns <see langword="true"/> for items to be yielded.</param>
     /// <exception cref="ArgumentNullException"><paramref name="predicate"/> is <see langword="null"/>.</exception>
     public WhereTransformer(Func<T, bool> predicate)
+        : this(predicate, new DelegateTransformerOptions())
+    {
+    }
+
+
+
+    /// <summary>
+    /// Initializes a new instance with a synchronous predicate and an error policy.
+    /// </summary>
+    /// <param name="predicate">A function deciding whether an item is kept.</param>
+    /// <param name="options">Controls what happens when <paramref name="predicate"/> throws.</param>
+    /// <exception cref="ArgumentNullException">
+    /// <paramref name="predicate"/> or <paramref name="options"/> is <see langword="null"/>.
+    /// </exception>
+    public WhereTransformer(Func<T, bool> predicate, DelegateTransformerOptions options)
     {
         ArgumentNullException.ThrowIfNull(predicate);
+        ArgumentNullException.ThrowIfNull(options);
 
         _syncPredicate = predicate;
+        _options = options;
     }
 
 
@@ -79,11 +99,41 @@ public sealed class WhereTransformer<T> : ITransformAsync<T, T>
     /// </param>
     /// <exception cref="ArgumentNullException"><paramref name="predicate"/> is <see langword="null"/>.</exception>
     public WhereTransformer(Func<T, ValueTask<bool>> predicate)
+        : this(predicate, new DelegateTransformerOptions())
+    {
+    }
+
+
+
+    /// <summary>
+    /// Initializes a new instance with an asynchronous predicate and an error policy.
+    /// </summary>
+    /// <param name="predicate">A function asynchronously deciding whether an item is kept.</param>
+    /// <param name="options">Controls what happens when <paramref name="predicate"/> throws.</param>
+    /// <exception cref="ArgumentNullException">
+    /// <paramref name="predicate"/> or <paramref name="options"/> is <see langword="null"/>.
+    /// </exception>
+    public WhereTransformer(Func<T, ValueTask<bool>> predicate, DelegateTransformerOptions options)
     {
         ArgumentNullException.ThrowIfNull(predicate);
+        ArgumentNullException.ThrowIfNull(options);
 
         _asyncPredicate = predicate;
+        _options = options;
     }
+
+
+
+    /// <summary>
+    /// The number of items dropped so far because the predicate threw and the error policy returned
+    /// <see cref="ItemErrorAction.Skip"/>.
+    /// </summary>
+    /// <remarks>
+    /// Cumulative across every enumeration produced by this instance, and counts only failures - an
+    /// item the predicate deliberately filtered out is not an error. An item whose failure aborted
+    /// the run is not counted either, because the exception is re-thrown instead.
+    /// </remarks>
+    public int CurrentErrorItemCount => Volatile.Read(ref _currentErrorItemCount);
 
 
 
@@ -105,15 +155,36 @@ public sealed class WhereTransformer<T> : ITransformAsync<T, T>
 
 
 
-    private static async IAsyncEnumerable<T> FilterWithSyncPredicateAsync
+    private async IAsyncEnumerable<T> FilterWithSyncPredicateAsync
     (
         IAsyncEnumerable<T> items,
         Func<T, bool> predicate
     )
     {
+        var itemNumber = 0L;
+
         await foreach (var item in items.ConfigureAwait(continueOnCapturedContext: false))
         {
-            if (predicate(item))
+            itemNumber++;
+
+            // The try/catch cannot wrap the yield: a C# async iterator cannot resume after it
+            // throws, so the predicate runs first and only its verdict reaches the yield.
+            bool keep;
+            try
+            {
+                keep = predicate(item);
+            }
+            catch (Exception exception)
+            {
+                if (HandleItemError(itemNumber, exception) == ItemErrorAction.Skip)
+                {
+                    continue;
+                }
+
+                throw;
+            }
+
+            if (keep)
             {
                 yield return item;
             }
@@ -122,18 +193,52 @@ public sealed class WhereTransformer<T> : ITransformAsync<T, T>
 
 
 
-    private static async IAsyncEnumerable<T> FilterWithAsyncPredicateAsync
+    private async IAsyncEnumerable<T> FilterWithAsyncPredicateAsync
     (
         IAsyncEnumerable<T> items,
         Func<T, ValueTask<bool>> predicate
     )
     {
+        var itemNumber = 0L;
+
         await foreach (var item in items.ConfigureAwait(continueOnCapturedContext: false))
         {
-            if (await predicate(item).ConfigureAwait(continueOnCapturedContext: false))
+            itemNumber++;
+
+            bool keep;
+            try
+            {
+                keep = await predicate(item).ConfigureAwait(continueOnCapturedContext: false);
+            }
+            catch (Exception exception)
+            {
+                if (HandleItemError(itemNumber, exception) == ItemErrorAction.Skip)
+                {
+                    continue;
+                }
+
+                throw;
+            }
+
+            if (keep)
             {
                 yield return item;
             }
         }
+    }
+
+
+    /// <summary>
+    /// Applies the configured error policy and, when it asks to skip, records the dropped item.
+    /// </summary>
+    private ItemErrorAction HandleItemError(long itemNumber, Exception exception)
+    {
+        var action = _options.ErrorPolicy(new ItemErrorContext(itemNumber, exception));
+        if (action == ItemErrorAction.Skip)
+        {
+            _ = Interlocked.Increment(ref _currentErrorItemCount);
+        }
+
+        return action;
     }
 }
