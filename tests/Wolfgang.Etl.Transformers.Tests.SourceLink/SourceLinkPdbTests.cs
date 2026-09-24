@@ -109,8 +109,25 @@ public class SourceLinkPdbTests
         var probeUrl = BuildProbeUrl(mappings);
         if (probeUrl is null)
         {
-            // No document matched a mapping prefix, or the URL still holds the
-            // unresolved "*" SHA placeholder — a local, unpushed build.
+            // No document matched a mapping prefix, or the URL still holds the unresolved "*" SHA
+            // placeholder. On a developer machine that is the ordinary case - a local, unpushed
+            // build - so the probe is skipped.
+            //
+            // In CI it is not. The same path is taken by a malformed local-prefix mapping, a
+            // document-table mismatch and an unresolved SHA, so returning here would let a broken
+            // PDB satisfy the two structural checks and silently skip the resolution check this
+            // test exists to perform. CI builds from a pushed commit, so there is no legitimate
+            // reason for the URL to be unbuildable.
+            if (RunningInCi)
+            {
+                Assert.Fail
+                (
+                    "No probe URL could be built from the SourceLink document table. In CI this "
+                    + "means the mapping prefix, the document paths or the commit SHA did not line "
+                    + "up - not that the build is local and unpushed."
+                );
+            }
+
             return;
         }
 
@@ -243,6 +260,15 @@ public class SourceLinkPdbTests
     /// URL that names an actual file. Returns <c>null</c> when nothing matches
     /// or the SHA is still the unresolved '*' placeholder.
     /// </summary>
+    /// <summary>
+    /// Whether the suite is running in CI, where an unbuildable probe URL is a defect rather than
+    /// the ordinary local-build case. GitHub Actions sets <c>CI</c>, as does every other common CI.
+    /// </summary>
+    private static bool RunningInCi =>
+        !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("CI"));
+
+
+
     private static string? BuildProbeUrl(List<(string LocalPrefix, string UrlPrefix)> mappings)
     {
         var pdbPath = LocateRuntimePdb();
