@@ -1,1 +1,21 @@
 #nullable enable
+Wolfgang.Etl.Transformers.DelegateTransformerOptions
+Wolfgang.Etl.Transformers.DelegateTransformerOptions.DelegateTransformerOptions() -> void
+Wolfgang.Etl.Transformers.DelegateTransformerOptions.DelegateTransformerOptions(Wolfgang.Etl.Transformers.DelegateTransformerOptions! original) -> void
+Wolfgang.Etl.Transformers.DelegateTransformerOptions.ErrorPolicy.get -> System.Func<Wolfgang.Etl.Abstractions.ItemErrorContext!, Wolfgang.Etl.Abstractions.ItemErrorAction>!
+Wolfgang.Etl.Transformers.DelegateTransformerOptions.ErrorPolicy.init -> void
+Wolfgang.Etl.Transformers.SelectManyTransformer<TSource, TDestination>.CurrentErrorItemCount.get -> int
+Wolfgang.Etl.Transformers.SelectManyTransformer<TSource, TDestination>.SelectManyTransformer(System.Func<TSource, System.Collections.Generic.IAsyncEnumerable<TDestination>!>! selector, Wolfgang.Etl.Transformers.DelegateTransformerOptions! options) -> void
+Wolfgang.Etl.Transformers.SelectManyTransformer<TSource, TDestination>.SelectManyTransformer(System.Func<TSource, System.Collections.Generic.IEnumerable<TDestination>!>! selector, Wolfgang.Etl.Transformers.DelegateTransformerOptions! options) -> void
+Wolfgang.Etl.Transformers.SelectTransformer<TSource, TDestination>.CurrentErrorItemCount.get -> int
+Wolfgang.Etl.Transformers.SelectTransformer<TSource, TDestination>.SelectTransformer(System.Func<TSource, System.Threading.Tasks.ValueTask<TDestination>>! selector, Wolfgang.Etl.Transformers.DelegateTransformerOptions! options) -> void
+Wolfgang.Etl.Transformers.SelectTransformer<TSource, TDestination>.SelectTransformer(System.Func<TSource, TDestination>! selector, Wolfgang.Etl.Transformers.DelegateTransformerOptions! options) -> void
+override Wolfgang.Etl.Transformers.DelegateTransformerOptions.Equals(object? obj) -> bool
+override Wolfgang.Etl.Transformers.DelegateTransformerOptions.GetHashCode() -> int
+override Wolfgang.Etl.Transformers.DelegateTransformerOptions.ToString() -> string!
+static Wolfgang.Etl.Transformers.DelegateTransformerOptions.operator !=(Wolfgang.Etl.Transformers.DelegateTransformerOptions? left, Wolfgang.Etl.Transformers.DelegateTransformerOptions? right) -> bool
+static Wolfgang.Etl.Transformers.DelegateTransformerOptions.operator ==(Wolfgang.Etl.Transformers.DelegateTransformerOptions? left, Wolfgang.Etl.Transformers.DelegateTransformerOptions? right) -> bool
+virtual Wolfgang.Etl.Transformers.DelegateTransformerOptions.<Clone>$() -> Wolfgang.Etl.Transformers.DelegateTransformerOptions!
+virtual Wolfgang.Etl.Transformers.DelegateTransformerOptions.EqualityContract.get -> System.Type!
+virtual Wolfgang.Etl.Transformers.DelegateTransformerOptions.Equals(Wolfgang.Etl.Transformers.DelegateTransformerOptions? other) -> bool
+virtual Wolfgang.Etl.Transformers.DelegateTransformerOptions.PrintMembers(System.Text.StringBuilder! builder) -> bool
