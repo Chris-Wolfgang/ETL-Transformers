@@ -45,6 +45,17 @@ namespace Wolfgang.Etl.Transformers;
 public record DelegateTransformerOptions
 {
     /// <summary>
+    /// The shared instance used by the constructors that take no options, so the default path does
+    /// not allocate a record per transformer.
+    /// </summary>
+    /// <remarks>
+    /// Safe to share: the record is immutable - every property is <see langword="init"/>-only - and
+    /// <see cref="ErrorPolicy"/> defaults to a cached static lambda.
+    /// </remarks>
+    internal static DelegateTransformerOptions Default { get; } = new();
+
+
+    /// <summary>
     /// The policy applied when the caller-supplied delegate throws while handling one item.
     /// </summary>
     /// <value>

@@ -72,7 +72,7 @@ public sealed class SelectTransformer<TSource, TDestination> : ITransformAsync<T
     /// <param name="selector">A function that projects each input item to an output item.</param>
     /// <exception cref="ArgumentNullException"><paramref name="selector"/> is <see langword="null"/>.</exception>
     public SelectTransformer(Func<TSource, TDestination> selector)
-        : this(selector, new DelegateTransformerOptions())
+        : this(selector, DelegateTransformerOptions.Default)
     {
     }
 
@@ -106,7 +106,7 @@ public sealed class SelectTransformer<TSource, TDestination> : ITransformAsync<T
     /// </param>
     /// <exception cref="ArgumentNullException"><paramref name="selector"/> is <see langword="null"/>.</exception>
     public SelectTransformer(Func<TSource, ValueTask<TDestination>> selector)
-        : this(selector, new DelegateTransformerOptions())
+        : this(selector, DelegateTransformerOptions.Default)
     {
     }
 

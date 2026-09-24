@@ -78,7 +78,7 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
     /// <param name="selector">A function that maps each input item to zero or more output items.</param>
     /// <exception cref="ArgumentNullException"><paramref name="selector"/> is <see langword="null"/>.</exception>
     public SelectManyTransformer(Func<TSource, IEnumerable<TDestination>> selector)
-        : this(selector, new DelegateTransformerOptions())
+        : this(selector, DelegateTransformerOptions.Default)
     {
     }
 
@@ -120,7 +120,7 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
     /// </param>
     /// <exception cref="ArgumentNullException"><paramref name="selector"/> is <see langword="null"/>.</exception>
     public SelectManyTransformer(Func<TSource, IAsyncEnumerable<TDestination>> selector)
-        : this(selector, new DelegateTransformerOptions())
+        : this(selector, DelegateTransformerOptions.Default)
     {
     }
 
