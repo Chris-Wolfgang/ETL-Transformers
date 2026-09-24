@@ -13,12 +13,10 @@ namespace Wolfgang.Etl.Transformers;
 /// <para>
 /// Per ADR-0009, stage configuration is supplied as a record passed to the constructor rather than
 /// set through mutable properties, so a transformer is configured once and not reconfigured during a
-/// run. This record is shared by every delegate-invoking transformer in this library
-/// (<see cref="SelectTransformer{TSource, TDestination}"/>,
-/// <see cref="SelectManyTransformer{TSource, TDestination}"/>,
-/// <see cref="WhereTransformer{T}"/>, <see cref="DistinctByTransformer{TSource, TKey}"/> and
-/// <see cref="CastTransformer{TSource, TDestination}"/>) because the one setting they need is the
-/// same. It is left unsealed so a transformer that later grows its own settings can derive from it.
+/// run. This record is shared by the transformers that accept it, because the one setting they
+/// need is the same; <see cref="SelectTransformer{TSource, TDestination}"/> and
+/// <see cref="SelectManyTransformer{TSource, TDestination}"/> accept it today. It is left unsealed
+/// so a transformer that later grows its own settings can derive from it.
 /// </para>
 /// <para>
 /// It deliberately does <b>not</b> derive from

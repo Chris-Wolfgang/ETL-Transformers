@@ -37,8 +37,13 @@ namespace Wolfgang.Etl.Transformers;
 /// transformers when those concerns are needed.
 /// </para>
 /// <para>
-/// Exceptions thrown by the selector or by enumerating the returned sequence propagate to the
-/// caller. If the selector returns <see langword="null"/> a <see cref="NullReferenceException"/>
+/// By default, exceptions thrown by the selector or by enumerating the returned sequence propagate
+/// to the caller. Pass a <see cref="DelegateTransformerOptions"/> whose
+/// <see cref="DelegateTransformerOptions.ErrorPolicy"/> returns <see cref="ItemErrorAction.Skip"/>
+/// to abandon the failing source item's expansion and continue with the next one instead; results
+/// already yielded from that item are kept, the item is counted once in
+/// <see cref="CurrentErrorItemCount"/>, and both the selector call and the enumeration of what it
+/// returned are covered. If the selector returns <see langword="null"/> a <see cref="NullReferenceException"/>
 /// will be raised on iteration, matching the behaviour of LINQ's
 /// <see cref="System.Linq.Enumerable.SelectMany{TSource, TResult}(System.Collections.Generic.IEnumerable{TSource}, System.Func{TSource, System.Collections.Generic.IEnumerable{TResult}})"/>.
 /// </para>
@@ -210,7 +215,8 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
                 throw;
             }
 
-            using (enumerator)
+            var failureHandled = false;
+            try
             {
                 while (true)
                 {
@@ -226,6 +232,7 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
                     }
                     catch (Exception exception)
                     {
+                        failureHandled = true;
                         if (HandleItemError(itemNumber, exception) == ItemErrorAction.Skip)
                         {
                             break;
@@ -236,6 +243,10 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
 
                     yield return current;
                 }
+            }
+            finally
+            {
+                DisposeAfterItem(enumerator, failureHandled);
             }
         }
     }
@@ -269,6 +280,7 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
                 throw;
             }
 
+            var failureHandled = false;
             try
             {
                 while (true)
@@ -285,6 +297,7 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
                     }
                     catch (Exception exception)
                     {
+                        failureHandled = true;
                         if (HandleItemError(itemNumber, exception) == ItemErrorAction.Skip)
                         {
                             break;
@@ -298,8 +311,61 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
             }
             finally
             {
-                await enumerator.DisposeAsync().ConfigureAwait(continueOnCapturedContext: false);
+                await DisposeAfterItemAsync(enumerator, failureHandled)
+                    .ConfigureAwait(continueOnCapturedContext: false);
             }
+        }
+    }
+
+
+
+    /// <summary>
+    /// Disposes the inner enumerator once a source item is finished with, deciding whether a
+    /// failure from the cleanup itself may escape.
+    /// </summary>
+    /// <param name="enumerator">The inner enumerator to dispose.</param>
+    /// <param name="failureHandled">
+    /// Whether this source item already had a failure put through the error policy.
+    /// </param>
+    /// <remarks>
+    /// When the item already failed, a cleanup error is swallowed. Letting it escape would end the
+    /// run and defeat the <see cref="ItemErrorAction.Skip"/> just honoured, or displace the
+    /// exception an <see cref="ItemErrorAction.Abort"/> is already propagating; and putting it
+    /// through the policy again would count the same source item twice. On an item that did not
+    /// fail, a disposal error is not an item-level data error and propagates unchanged.
+    /// </remarks>
+    private static void DisposeAfterItem(IEnumerator<TDestination> enumerator, bool failureHandled)
+    {
+        try
+        {
+            enumerator.Dispose();
+        }
+        catch when (failureHandled)
+        {
+        }
+    }
+
+
+
+    /// <summary>
+    /// The asynchronous counterpart of <see cref="DisposeAfterItem"/>, applying the same rule.
+    /// </summary>
+    /// <param name="enumerator">The inner enumerator to dispose.</param>
+    /// <param name="failureHandled">
+    /// Whether this source item already had a failure put through the error policy.
+    /// </param>
+    private static async ValueTask DisposeAfterItemAsync
+    (
+        IAsyncEnumerator<TDestination> enumerator,
+        bool failureHandled
+    )
+    {
+        try
+        {
+            await enumerator.DisposeAsync().ConfigureAwait(continueOnCapturedContext: false);
+        }
+        catch when (failureHandled)
+        {
         }
     }
 
