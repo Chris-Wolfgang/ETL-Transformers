@@ -20,14 +20,27 @@ that regresses a hot path. It complements
 
 ## Thresholds
 
-| Metric | Default fail threshold | Set in |
-| --- | --- | --- |
-| Mean time | more than **20%** slower | `TIME_THRESHOLD` env in the workflow |
-| Allocated bytes | more than **50%** greater (or newly allocating from zero) | `ALLOC_THRESHOLD` env in the workflow |
+A benchmark must clear **both** a percentage and an absolute floor to fail the gate. A percentage
+on its own cannot separate a real regression from runner noise on a fast benchmark.
+
+| Metric | Percentage | Absolute floor | Set in |
+| --- | --- | --- | --- |
+| Mean time | more than **20%** slower | **and** at least **15000 ns** slower | `TIME_THRESHOLD` / `TIME_FLOOR_NS` env in the workflow |
+| Allocated bytes | more than **50%** greater (or newly allocating from zero) | **and** at least **128 B** greater | `ALLOC_THRESHOLD` / `ALLOC_FLOOR_BYTES` env in the workflow |
+
+Both floors are inclusive: a regression of exactly 15000 ns or exactly 128 B does fail.
 
 Time on GitHub-hosted runners is noisy, so a double-digit time delta can be measurement
 jitter rather than a real regression. **Allocation deltas are deterministic** and are the
 reliable signal — a bump there almost always means a real change on the hot path.
+
+The floors are sized from this repo's own history rather than copied from elsewhere. Across 90
+benchmark comparisons on three pull requests that changed no runtime code, the median time delta
+was 0.3% and the p90 was 5.1% — but one 47 us benchmark moved +18.5%, an absolute move of only
+8.7 us. `TIME_FLOOR_NS` is about 1.7x that worst observed excursion. Allocations are far more
+deterministic: the largest delta across the same 90 comparisons was 25 B on a ~3 KB baseline, so
+`ALLOC_FLOOR_BYTES` only filters a percentage blow-up on a tiny baseline (376 B to 564 B is +50%
+but just 188 B) and sits far below any real leak.
 
 Only benchmarks present in *both* runs are gated. Benchmarks added or removed by the PR are
 listed in the comment but never trip the gate.
@@ -49,6 +62,7 @@ python scripts/compare-benchmarks.py \
   --base-dir path/to/base/BenchmarkDotNet.Artifacts/results \
   --head-dir path/to/head/BenchmarkDotNet.Artifacts/results \
   --time-threshold 20 --alloc-threshold 50 \
+  --time-floor-ns 15000 --alloc-floor-bytes 128 \
   --out delta.md
 ```
 
