@@ -262,16 +262,6 @@ public class SourceLinkPdbTests
 
 
     /// <summary>
-    /// Picks a source document from the PDB, matches it against a SourceLink
-    /// prefix mapping and substitutes the remainder into the URL, yielding a
-    /// URL that names an actual file. Returns <c>null</c> when nothing matches
-    /// or the SHA is still the unresolved '*' placeholder.
-    /// </summary>
-    /// <summary>
-    /// Whether the suite is running in CI, where an unbuildable probe URL is a defect rather than
-    /// the ordinary local-build case. GitHub Actions sets <c>CI</c>, as does every other common CI.
-    /// </summary>
-    /// <summary>
     /// One shared client for the whole suite. A per-call <see cref="HttpClient"/> is disposed
     /// while its socket lingers in TIME_WAIT, so repeated creation exhausts sockets; the analyser
     /// flags it for that reason. A static instance also removes the object-initialiser-inside-using
@@ -281,11 +271,21 @@ public class SourceLinkPdbTests
 
 
 
+    /// <summary>
+    /// Whether the suite is running in CI, where an unbuildable probe URL is a defect rather than
+    /// the ordinary local-build case. GitHub Actions sets <c>CI</c>, as does every other common CI.
+    /// </summary>
     private static bool RunningInCi =>
         !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("CI"));
 
 
 
+    /// <summary>
+    /// Picks a source document from the PDB, matches it against a SourceLink
+    /// prefix mapping and substitutes the remainder into the URL, yielding a
+    /// URL that names an actual file. Returns <c>null</c> when nothing matches
+    /// or the SHA is still the unresolved '*' placeholder.
+    /// </summary>
     private static string? BuildProbeUrl(List<(string LocalPrefix, string UrlPrefix)> mappings)
     {
         var pdbPath = LocateRuntimePdb();
