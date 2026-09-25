@@ -12,7 +12,6 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
-using System.Net.Http;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Text.Json;
@@ -146,14 +145,9 @@ public class SourceLinkPdbTests
 
         Assert.DoesNotContain("*", probeUrl, StringComparison.Ordinal);
 
-        using var http = new HttpClient
-        {
-            Timeout = TimeSpan.FromSeconds(15)
-        };
-
         try
         {
-            using var response = await http.GetAsync(probeUrl, HttpCompletionOption.ResponseHeadersRead);
+            using var response = await Http.GetAsync(probeUrl, HttpCompletionOption.ResponseHeadersRead);
 
             // 404 means the SHA no longer resolves (force-push, repo rename).
             // 403/429 is GitHub rate-limiting the runner, which is infra noise
@@ -198,7 +192,7 @@ public class SourceLinkPdbTests
             $"SourceLink mapping is not an absolute URI: {url}"
         );
 
-        Assert.Equal(Uri.UriSchemeHttps, uri!.Scheme);
+        Assert.Equal(Uri.UriSchemeHttps, uri.Scheme);
         Assert.Equal(RawHost, uri.Host, ignoreCase: true);
 
         Assert.True
@@ -251,9 +245,9 @@ public class SourceLinkPdbTests
             // mappings from the ones third-party packages contribute, nothing
             // more. Applying the strict host check here instead would mean a
             // mapping with the right repo but a WRONG host got silently filtered
-            // out, and the only symptom would be an empty-collection failure;
-            // selecting it loosely and asserting strictly reports the actual
-            // defect. See AssertIsOurRawGitHubUrl.
+            // out, and the only symptom would be an empty-collection failure.
+            // Selecting it loosely and asserting strictly reports the actual
+            // defect instead. See AssertIsOurRawGitHubUrl.
             if (url is null || !url.Contains(RepoSlug, StringComparison.OrdinalIgnoreCase))
             {
                 continue;
@@ -268,11 +262,15 @@ public class SourceLinkPdbTests
 
 
     /// <summary>
-    /// Picks a source document from the PDB, matches it against a SourceLink
-    /// prefix mapping and substitutes the remainder into the URL, yielding a
-    /// URL that names an actual file. Returns <c>null</c> when nothing matches
-    /// or the SHA is still the unresolved '*' placeholder.
+    /// One shared client for the whole suite. A per-call <see cref="HttpClient"/> is disposed
+    /// while its socket lingers in TIME_WAIT, so repeated creation exhausts sockets; the analyser
+    /// flags it for that reason. A static instance also removes the object-initialiser-inside-using
+    /// shape, where a throw during initialisation would leak the half-built client.
     /// </summary>
+    private static readonly HttpClient Http = new() { Timeout = TimeSpan.FromSeconds(15) };
+
+
+
     /// <summary>
     /// Whether the suite is running in CI, where an unbuildable probe URL is a defect rather than
     /// the ordinary local-build case. GitHub Actions sets <c>CI</c>, as does every other common CI.
@@ -282,6 +280,12 @@ public class SourceLinkPdbTests
 
 
 
+    /// <summary>
+    /// Picks a source document from the PDB, matches it against a SourceLink
+    /// prefix mapping and substitutes the remainder into the URL, yielding a
+    /// URL that names an actual file. Returns <c>null</c> when nothing matches
+    /// or the SHA is still the unresolved '*' placeholder.
+    /// </summary>
     private static string? BuildProbeUrl(List<(string LocalPrefix, string UrlPrefix)> mappings)
     {
         var pdbPath = LocateRuntimePdb();
