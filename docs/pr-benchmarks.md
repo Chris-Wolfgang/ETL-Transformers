@@ -39,8 +39,9 @@ benchmark comparisons on three pull requests that changed no runtime code, the m
 was 0.3% and the p90 was 5.1% — but one 47 us benchmark moved +18.5%, an absolute move of only
 8.7 us. `TIME_FLOOR_NS` is about 1.7x that worst observed excursion. Allocations are far more
 deterministic: the largest delta across the same 90 comparisons was 25 B on a ~3 KB baseline, so
-`ALLOC_FLOOR_BYTES` only filters a percentage blow-up on a tiny baseline (376 B to 564 B is +50%
-but just 188 B) and sits far below any real leak.
+`ALLOC_FLOOR_BYTES` only filters a percentage blow-up on a tiny baseline — 120 B to 200 B is
++67%, which trips the percentage test, but its 80 B delta is under the floor — and it sits far
+below any real leak.
 
 Only benchmarks present in *both* runs are gated. Benchmarks added or removed by the PR are
 listed in the comment but never trip the gate.
