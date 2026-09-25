@@ -35,6 +35,18 @@ env:
   BENCH_DIR: benchmarks/Wolfgang.Etl.Transformers.Benchmarks
   TIME_THRESHOLD: '20'
   ALLOC_THRESHOLD: '50'
+  # Absolute floors, paired with the percentages above: a benchmark must clear BOTH to fail.
+  # Sized from this repo's own history, not copied from another repo. Across 90 benchmark
+  # comparisons on three PRs that changed no runtime code (#315 comment-only, #313 csproj
+  # version bump, #280 analyzer fix) the median time delta was 0.3% and the p90 was 5.1%,
+  # but one 47us benchmark moved +18.5% - an absolute move of only 8.7us. 15000 ns is ~1.7x
+  # that worst observed excursion, so noise of that shape stops failing the gate while any
+  # benchmark large enough to measure keeps the tight 20% threshold.
+  TIME_FLOOR_NS: '15000'
+  # Allocations are deterministic: the largest delta across those same 90 comparisons was
+  # 25 B on a ~3 KB baseline. This floor only filters trivial churn on a tiny baseline
+  # (376 B -> 564 B is +50% but just 188 B); it sits far below any real leak.
+  ALLOC_FLOOR_BYTES: '128'
   ACK_LABEL: perf-impact-acknowledged
 
 jobs:
@@ -134,11 +146,21 @@ jobs:
             comparator="scripts/compare-benchmarks.py"
             echo "::notice::compare-benchmarks.py absent on base; using the PR's copy (this job is read-only)."
           fi
+          # The absolute floors are newer than the comparator itself. While a PR's base
+          # predates them the trusted copy would reject the flags, so pass them only when
+          # that copy advertises them. Once this change is on main the probe always passes.
+          floor_args=()
+          if python3 "$comparator" --help 2>/dev/null | grep -q -- --time-floor-ns; then
+            floor_args=(--time-floor-ns "$TIME_FLOOR_NS" --alloc-floor-bytes "$ALLOC_FLOOR_BYTES")
+          else
+            echo "::notice::Base comparator predates the absolute floors; gating on percentages alone."
+          fi
           python3 "$comparator" \
             --base-dir "$RUNNER_TEMP/base-results" \
             --head-dir "$RUNNER_TEMP/head-results" \
             --time-threshold "$TIME_THRESHOLD" \
             --alloc-threshold "$ALLOC_THRESHOLD" \
+            "${floor_args[@]}" \
             --out "$RUNNER_TEMP/comment.md" | tee -a "$GITHUB_OUTPUT"
 
       - name: Upload delta comment
@@ -206,5 +228,5 @@ jobs:
             echo "::warning::Perf regression detected but acknowledged via '$ACK_LABEL' label."
             exit 0
           fi
-          echo "::error::Benchmark regression exceeds the threshold (time > ${TIME_THRESHOLD}% or alloc > ${ALLOC_THRESHOLD}%). Review the delta comment, or add the '$ACK_LABEL' label if the change is intentional."
+          echo "::error::Benchmark regression exceeds the gate (time > ${TIME_THRESHOLD}% AND at least ${TIME_FLOOR_NS} ns slower, or alloc > ${ALLOC_THRESHOLD}% AND at least ${ALLOC_FLOOR_BYTES} B greater). Review the delta comment, or add the '$ACK_LABEL' label if the change is intentional."
           exit 1
