@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1790176143401,
+  "lastUpdate": 1790449624807,
   "repoUrl": "https://github.com/Chris-Wolfgang/ETL-Transformers",
   "entries": {
     "BenchmarkDotNet": [
@@ -7956,6 +7956,210 @@ window.BENCHMARK_DATA = {
             "value": 54271013.699999996,
             "unit": "ns",
             "range": "± 291991.6518410051"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com",
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9f704033ff3725ca5846ecd2b4907215edb76a9d",
+          "message": "Merge vNext into main (#342)\n\n* feat(transformers): opt-in item-error policy on Select and SelectMany (#323)\n\n* feat(transformers): opt-in item-error policy on Select and SelectMany\n\nAdopts Abstractions' item-error handling in the first group of delegate-invoking\ntransformers, per option 1 of #197. A new `DelegateTransformerOptions` record\ncarries an `ErrorPolicy`; when the caller's delegate throws for one item the\npolicy chooses `Skip` (drop it and carry on) or `Abort` (re-throw). Skipped items\nare counted and exposed through `IReportsItemErrors.CurrentErrorItemCount`.\n\nConfiguration arrives as a record passed to the constructor, per ADR-0009 and the\nrest of the fleet. The existing constructors are untouched and delegate to the new\noverloads with a default record, so a transformer built the old way behaves exactly\nas before: the exception propagates and nothing is counted.\n\nThe record deliberately does NOT derive from Abstractions' `TransformerOptions`.\nThat one also carries SkipItemCount, MaximumItemCount and ReportingInterval, which\nthese transformers do not implement - they carry no counters by design - and which\nthis library already expresses as the separate SkipTransformer and TakeTransformer\nstages. Inheriting them would advertise settings that are silently ignored and give\none concept two spellings.\n\n`SelectMany` needed more care than `Select`: its selector returns a lazy sequence,\nso a throw can surface either when the selector is called or on a later MoveNext.\nBoth are covered by driving the inner enumerator by hand, because a try/catch\ncannot wrap a `yield` - a C# async iterator cannot resume after it throws. When the\ninner sequence fails partway, `Skip` abandons the remainder of that source item's\nexpansion and moves to the next item; results already yielded from it are kept, and\nthe source item is counted once. That matches the semantics Abstractions documents\nfor formats that cannot genuinely resume, and the tests pin it.\n\nAdds an `IsExternalInit` polyfill: `init` accessors need it on net462 through\nnetstandard2.0, whose reference assemblies do not ship the type. Mirrors the copy\nin Abstractions.\n\nVerified: full solution 0 warnings / 0 errors; 31 test assemblies pass; unit tests\n335 -> 349, the 14 new ones covering default-propagates, skip-drops-and-counts,\nabort-rethrows-without-counting, one-based item numbering, cumulative counting\nacross enumerations, the async selector forms, and null-argument guards.\n\nRefs #197.\n\nCo-Authored-By: Claude Opus 5 <noreply@anthropic.com>\n\n* fix(transformers): define how disposal failures take part in the error policy\n\nAddresses all six review findings on #323.\n\nDisposal (the substantive pair). When an inner sequence's MoveNext threw and the\npolicy said Skip, the enumerator was disposed outside the catch, so a throwing\nDispose escaped and ended the run - the opposite of the continue semantics the\nskip had just chosen. The rule is now explicit and shared by both paths:\n\n  - the item already had a failure handled -> a cleanup error is swallowed.\n    Letting it escape would defeat the Skip, or displace the exception an Abort is\n    already propagating, and re-running the policy would count the item twice.\n  - the item did NOT fail -> a cleanup error is not an item-level data error and\n    still propagates unchanged.\n\nExtracted into DisposeAfterItem / DisposeAfterItemAsync, which also keeps both\niterators under the MA0051 length limit that inlining the rule broke.\n\nDocumentation. Three places contradicted the new behaviour: SelectTransformer's\nremarks claimed \"no item counters\" while adding CurrentErrorItemCount;\nSelectManyTransformer's remarks said exceptions propagate unconditionally; and\nDelegateTransformerOptions listed Where, DistinctBy and Cast as consumers, none of\nwhich accept it until the stacked PRs land. A caller could have read that last one\nand written a call that does not compile.\n\nCoverage. Adds the async-selector invocation path, which no test reached - an async\nselector that throws BEFORE returning its IAsyncEnumerable is a different path from\none that throws during enumeration - plus the sync equivalent and three tests\npinning the disposal rule, including one asserting the policy is consulted exactly\nonce when both MoveNext and Dispose throw for the same item.\n\nVerified: full solution 0 warnings / 0 errors; all 31 test assemblies pass; unit\ntests 349 -> 354 on this branch.\n\nCo-Authored-By: Claude Opus 5 <noreply@anthropic.com>\n\n* perf(transformers): share one default options instance\n\nThe constructors that take no options allocated a fresh DelegateTransformerOptions\neach time, so opting OUT of error handling still cost a record per transformer.\nMeasured with GC.GetAllocatedBytesForCurrentThread: 24 B of the 40 B construction\noverhead this feature added.\n\nThe record is immutable - every property is init-only - and ErrorPolicy defaults to\na cached static lambda, so one shared instance is safe. Internal, so no public API\nchange.\n\nCo-Authored-By: Claude Opus 5 <noreply@anthropic.com>\n\n---------\n\nCo-authored-by: Claude Opus 5 <noreply@anthropic.com>\n\n* feat(transformers): opt-in item-error policy on Where and DistinctBy (#324)\n\n* feat(transformers): opt-in item-error policy on Where and DistinctBy\n\nSecond group for #197, extending DelegateTransformerOptions to the filtering\ntransformers. Existing constructors are untouched and delegate to the new\noverloads with a default Abort policy, so nothing changes unless a caller opts in.\n\nThe filtering transformers need one distinction the projecting ones do not: an\nitem the predicate deliberately rejects, or one dropped as a duplicate key, is\nthe transformer doing its job and is NOT counted as an error. Only a thrown\nexception is. Both are pinned by tests.\n\nDistinctBy guards the whole key-and-add step rather than just the key selector,\nbecause the comparer is caller-supplied too and a throw from its GetHashCode is\nequally an item-level failure. A test uses a deliberately throwing comparer.\n\nDistinctBy gets only the three-argument (keySelector, comparer, options)\nconstructor. A two-argument (keySelector, options) overload would be ambiguous\nwith the existing (keySelector, comparer) at any call site passing a literal null\ncomparer - CS0121, a source break - so callers wanting the default comparer with a\npolicy pass `comparer: null` explicitly. The reason is recorded on the ctor.\n\nVerified: full solution 0 warnings / 0 errors; all 31 test assemblies pass; unit\ntests 349 -> 359.\n\nRefs #197.\n\nCo-Authored-By: Claude Opus 5 <noreply@anthropic.com>\n\n* docs(transformers): correct the Where and DistinctBy remarks for the error policy\n\nBoth types' XML remarks still claimed no item counters, and Where's still said\npredicate exceptions always propagate. Both now implement IReportsItemErrors and\ncan skip a failing item, so the generated API documentation contradicted the API.\n\nThe same omission was made on #323 and fixed there; this is the matching pass for\nthe filtering pair. Each now states the default (propagate), the opt-in skip, and\nthe distinction that matters here: an item the predicate merely rejects, or one\ndropped as a duplicate key, is ordinary filtering and is never counted as an error.\n\nDistinctBy's wording also covers the comparer, not just the key selector, since a\nthrow from its GetHashCode goes through the same policy.\n\nDocumentation only. Full solution 0 warnings / 0 errors; all 31 test assemblies pass.\n\nCo-Authored-By: Claude Opus 5 <noreply@anthropic.com>\n\n* perf(transformers): share the default options instance in Where and DistinctBy\n\nSame change as the Select pair: the constructors that take no options no longer\nallocate a record, so opting OUT of error handling costs nothing extra.\n\nCo-Authored-By: Claude Opus 5 <noreply@anthropic.com>\n\n---------\n\nCo-authored-by: Claude Opus 5 <noreply@anthropic.com>\n\n* feat(transformers): opt-in item-error policy on Cast (#325)\n\n* feat(transformers): opt-in item-error policy on Cast\n\nThird and last group for #197. The parameterless constructor is untouched and\ndelegates to the new overload with a default Abort policy, so the existing\nbehaviour - throw InvalidCastException at the first mismatch - is unchanged.\n\nCast is the odd one in this family: it invokes no caller-supplied delegate, so the\nfailure being handled is the cast itself and the exception handed to the policy is\nan InvalidCastException. Worth stating because the issue grouped it with the\ndelegate-invoking transformers.\n\nIt also overlaps OfTypeTransformer, which already drops mismatched items, so the\ntwo are now distinguished explicitly in the XML docs. OfType filters SILENTLY - no\nexception, no count, no record of what went missing. Cast with a Skip policy drops\nthe same items but accounts for them: each is counted in CurrentErrorItemCount and\npassed to the policy, which can log it or route it to a dead-letter collection. A\ntest asserts the two produce identical output while only the policy form reports a\ncount, so the reason both exist is pinned rather than left to the prose.\n\nOnly InvalidCastException is caught. Any other exception from the sequence is not\nan item-level conversion failure and still propagates.\n\nVerified: full solution 0 warnings / 0 errors; all 31 test assemblies pass; unit\ntests 359 -> 365.\n\nRefs #197.\n\nCo-Authored-By: Claude Opus 5 <noreply@anthropic.com>\n\n* docs(transformers): note Cast's opt-in counter in its remarks\n\nSame contradiction Copilot flagged on #323 and #324, caught here before review:\nthe remarks claimed no counters while the type now exposes CurrentErrorItemCount.\nThe three-way comparison with OfTypeTransformer already documented the behaviour;\nthis fixes the one line that still said otherwise.\n\nDocumentation only. Full solution 0 warnings / 0 errors; all 31 test assemblies\npass; unit tests 370 on this branch.\n\nCo-Authored-By: Claude Opus 5 <noreply@anthropic.com>\n\n* perf(transformers): share the default options instance in Cast\n\nCompletes the change across all five adopters: no transformer allocates an options\nrecord on the default path.\n\nCo-Authored-By: Claude Opus 5 <noreply@anthropic.com>\n\n---------\n\nCo-authored-by: Claude Opus 5 <noreply@anthropic.com>\n\n* feat(transformers): opt-in item-error policy on SkipWhile, TakeWhile and Distinct (#327)\n\n* feat(transformers): opt-in item-error policy on SkipWhile, TakeWhile and Distinct\n\nFourth group for #197, covering the three transformers the issue's scope missed.\nAll three invoke a caller-supplied delegate per item and had exactly the exposure\nthe issue describes, so without them a predicate that threw in Where would be\nskippable while the identical predicate in SkipWhile or TakeWhile still ended the\nrun.\n\nThe two While transformers needed a decision the earlier groups did not, because\ntheir predicate controls sequence state rather than just the fate of one item:\n\n  - SkipWhile stays in the skipping phase when the predicate throws. A predicate\n    that threw returned no verdict, so treating it as the `false` that ends the\n    leading run would let the rest of the prefix through on the strength of a\n    failure.\n  - TakeWhile drops the item and keeps evaluating. Ending the sequence would be a\n    stronger action than Skip asks for, and again a throw is not a `false`.\n\nBoth are documented on the type and pinned by tests, including tests that a real\n`true`/`false` still behaves normally so the skip path has not weakened either.\n\nDistinct guards the whole `seen.Add(item)` step, since the caller's comparer can\nthrow from GetHashCode or Equals. A skipped item never enters the set, so an equal\nitem later in the stream is still a first occurrence - stated on the type. Like\nDistinctBy it gets only the two-argument (comparer, options) form, because a\nsingle-argument options overload would be ambiguous with the existing (comparer)\nat any call site passing a literal null.\n\nProgressReportingTransformer is deliberately NOT included even though it invokes an\nAction<T> per item: its callback is an observer, not a data transformation, so\n\"skip the item\" has no meaning - the item is passed through regardless.\n\nVerified: full solution 0 warnings / 0 errors; all 31 test assemblies pass; unit\ntests 370 -> 382.\n\nRefs #197.\n\nCo-Authored-By: Claude Opus 5 <noreply@anthropic.com>\n\n* docs(transformers): document the error policy on the group-4 types, and cover async SkipWhile\n\nAddresses the four review findings on #327.\n\nAll three types still claimed to implement only ITransformAsync, which stopped\nbeing true when they picked up IReportsItemErrors, and SkipWhile and TakeWhile\nstill said predicate exceptions propagate unconditionally. Each now documents the\ndefault, the opt-in skip, and the counter - including the state decision that is\nspecific to each:\n\n  - SkipWhile: a skipped failure stays in the leading skipping phase rather than\n    ending it.\n  - TakeWhile: a skipped failure does not end the sequence, while a genuine false\n    still does and is not counted.\n  - Distinct: a skipped item never enters the set, so an equal item later is still\n    a first occurrence; a duplicate is not an error.\n\nThis is the fourth time this omission has shipped in this series - reactively fixed\non #323 and #324, caught before review on #325, and missed again here. Adding the\ntype-level remarks belongs in the same edit as adding the interface, not after\nsomeone points at it.\n\nAlso adds the async SkipWhile policy test. The async predicate is a separate\nawait/catch path, and the phase-state decision is the feature's key semantic choice\nfor this type, so it should not have been asserted only through the synchronous\noverload - TakeWhile already had its async case.\n\nVerified: full solution 0 warnings / 0 errors; all 31 test assemblies pass; unit\ntests 382 -> 383. (One run showed OutOfMemoryException in the DocExamples Roslyn\ncompilation tests; that is machine memory pressure from repeated builds, not this\nchange - the project passes 6/6 in isolation after a build-server shutdown.)\n\nCo-Authored-By: Claude Opus 5 <noreply@anthropic.com>\n\n---------\n\nCo-authored-by: Claude Opus 5 <noreply@anthropic.com>\n\n* docs(progress-reporting): document callback-failure behaviour (#331) (#340)\n\nA throwing callback keeps propagating and ending the run. The remarks now\nsay so explicitly, note that the failing item is never yielded downstream,\nexplain why the type does not take an ErrorPolicy (Skip would drop data\nbecause telemetry failed), and show the try/catch pattern for callers who\nwant the run to survive. A test pins the partial-yield behaviour.\n\nCo-authored-by: Claude Opus 5.5 <noreply@anthropic.com>\n\n* ci(release): gate the release on SourceLink symbol integrity (#330) (#341)\n\n* ci(release): gate the release on SourceLink symbol integrity\n\nAdds the two release-time SourceLink jobs from the ETL-SqlBulkCopy pilot, so a\nmis-packed or un-ingested symbol package fails the release instead of reaching\nconsumers as a silently broken debugging experience.\n\nsourcelink-snupkg (pre-publish, blocking) derives the expected TFM set from the\nruntime .nupkg -- every lib/<tfm>/ shipping the assembly must have a matching PDB\nin the .snupkg -- and checks each PDB is portable. Added to publish-nuget's needs,\nso a failure stops the push to NuGet rather than being found afterwards. Merely\nasserting \"at least one PDB exists\", as Etl-DbClient's original does, passes while\na single TFM is silently missing its symbols.\n\nsourcelink-symbol-server-smoke (post-publish) polls nuget.org's SSQP endpoint with\ndotnet-symbol for up to 30 minutes. Terminal job: it does not gate artifact attach,\nso slow ingestion cannot hold up the release assets.\n\ndotnet-symbol is pinned in .config/dotnet-tools.json rather than installed\nunversioned, and invoked as `dotnet dotnet-symbol` -- `dotnet tool restore`\ninstalls into the manifest and does NOT put the tool on PATH.\n\nNo emitted shell expression contains a backslash: the awk field form is used\ndeliberately, after a sed backreference lost its escape and wrote a 0x01 control\ncharacter into a workflow during the pilot.\n\nBoth files are protected, so this stays homogeneous for the guard. Verified: the\nworkflow parses and the needs wiring reads back as intended; the manifest parses\nas JSON.\n\n\n\n* ci(release): make the SourceLink jobs package-agnostic and identical fleet-wide\n\nDerives the expected symbol set from the package contents instead of a\nhard-coded package name: each lib/<tfm>/<assembly>.dll in the runtime .nupkg\nmust have a matching .pdb in the .snupkg, compared as <tfm>/<assembly> pairs.\n\nTwo reasons. It handles a repo that ships more than one package with no change,\nwhich ETL-Abstractions needs (it ships four). And with the package name gone the\ntwo job bodies are byte-identical in every repo -- verified by hashing them\nacross all six, which yields a single distinct body -- so the jobs are now\ncopy-paste uniform and trivial to keep in sync or fold into the template later.\n\nAlso strictly more thorough than the previous form: it checks every shipped\nassembly, not just the one named package, and the portable-PDB magic check now\ncovers every .pdb in the .snupkg rather than one filename.\n\nVerified on real packages: the pair form reports 8 expected and 8 present for a\nhealthy package with nothing missing.\n\n\n\n* ci(release): fix actionlint findings and probe every shipped package\n\nTwo fixes, both found after the first push.\n\nactionlint failed on all seven PRs, same root cause: shellcheck flagged the\nresult-reporting lines with SC2086 (unquoted $missing / $expected / $actual) and\nSC2116 (the useless `$(echo ...)` used to squash newlines onto one line). They\nnow echo the quoted variables directly over several lines, which is both\nlint-clean and easier to read in a log. Reproduced locally with actionlint 1.7.12\n-- CI's pinned version -- plus shellcheck 0.10.0, since actionlint only runs the\nshellcheck rules when shellcheck is on PATH; without it the workflow lints clean\nand the failure is invisible.\n\nThe post-publish smoke probed only ONE package and picked the lexicographically\nlast DLL, which my comment wrongly described as \"the newest TFM\" (sorting puts\nnetstandard2.0 last, not net10.0). It now collects one probe DLL per shipped\npackage and requires every one to be served, which matters because symbol\ningestion is per symbol package -- a repo shipping four packages had three of\nthem unverified. All packages share a single 30-minute budget rather than one\neach, so adding packages does not multiply worst-case wall clock. The output\ndirectory is emptied before each probe: otherwise a PDB fetched for an earlier\npackage would make the check pass for every package after it.\n\nThe TFM of the probe DLL is irrelevant -- the symbol server is queried by the\nsignature embedded in the assembly -- so the comment now says that instead of\nclaiming a preference it was not implementing.\n\nVerified: actionlint + shellcheck clean in all seven repos, YAML parses, and the\ntwo job bodies still hash to a single distinct body across all seven.\n\n\n\n---------\n\nCo-authored-by: Claude Opus 5 <noreply@anthropic.com>\n\n* test: close the unit-test coverage gaps in the error-policy suites (#343)\n\nThe 100% test-assembly gate does not run on vNext PRs, so these gaps only\nsurfaced on the vNext -> main PR (#342):\n\n- ThrowingComparer.Equals (DistinctBy, Distinct) was never reached because\n  no input produced a hash match. New tests feed a duplicate after the\n  skipped item, which also pins that a skipped item does not break\n  de-duplication of later items.\n- The SelectMany disposal helpers' explicit non-generic members were never\n  called. A small test exercises them directly.\n- The SkipWhile \"predicate stops after the prefix\" test used an unreachable\n  throw arm; it now records the items the predicate saw and asserts [1, 2].\n\nCo-authored-by: Claude Opus 5.5 <noreply@anthropic.com>\n\n---------\n\nCo-authored-by: Claude Opus 5 <noreply@anthropic.com>",
+          "timestamp": "2026-09-26T15:02:36-04:00",
+          "tree_id": "6d516b6d84f4e36b7e6d2916a8d8cc3c12148a86",
+          "url": "https://github.com/Chris-Wolfgang/ETL-Transformers/commit/9f704033ff3725ca5846ecd2b4907215edb76a9d"
+        },
+        "date": 1790449620723,
+        "tool": "benchmarkdotnet",
+        "benches": [
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.BufferedTransformerCapacityBenchmarks.NoBuffer(ItemCount: 100, SourceDelayMicroseconds: 50, SinkDelayMicroseconds: 50, Capacity: 1)",
+            "value": 10079479.786458334,
+            "unit": "ns",
+            "range": "± 3743.0502652472246"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.BufferedTransformerCapacityBenchmarks.WithBuffer(ItemCount: 100, SourceDelayMicroseconds: 50, SinkDelayMicroseconds: 50, Capacity: 1)",
+            "value": 5157116.375,
+            "unit": "ns",
+            "range": "± 24407.441322271912"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.BufferedTransformerCapacityBenchmarks.NoBuffer(ItemCount: 100, SourceDelayMicroseconds: 50, SinkDelayMicroseconds: 50, Capacity: 8)",
+            "value": 10128039.5625,
+            "unit": "ns",
+            "range": "± 4852.037885299419"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.BufferedTransformerCapacityBenchmarks.WithBuffer(ItemCount: 100, SourceDelayMicroseconds: 50, SinkDelayMicroseconds: 50, Capacity: 8)",
+            "value": 5143849.046875,
+            "unit": "ns",
+            "range": "± 1059.9589505578392"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.BufferedTransformerCapacityBenchmarks.NoBuffer(ItemCount: 100, SourceDelayMicroseconds: 50, SinkDelayMicroseconds: 50, Capacity: 64)",
+            "value": 10076033.567708334,
+            "unit": "ns",
+            "range": "± 5624.692184749054"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.BufferedTransformerCapacityBenchmarks.WithBuffer(ItemCount: 100, SourceDelayMicroseconds: 50, SinkDelayMicroseconds: 50, Capacity: 64)",
+            "value": 5144384.036458333,
+            "unit": "ns",
+            "range": "± 614.906619360241"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.BufferedTransformerCapacityBenchmarks.NoBuffer(ItemCount: 100, SourceDelayMicroseconds: 50, SinkDelayMicroseconds: 50, Capacity: 256)",
+            "value": 10075526.479166666,
+            "unit": "ns",
+            "range": "± 284.34939674119823"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.BufferedTransformerCapacityBenchmarks.WithBuffer(ItemCount: 100, SourceDelayMicroseconds: 50, SinkDelayMicroseconds: 50, Capacity: 256)",
+            "value": 5142338.078125,
+            "unit": "ns",
+            "range": "± 2289.045796067466"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.BufferedTransformerCapacityBenchmarks.NoBuffer(ItemCount: 100, SourceDelayMicroseconds: 50, SinkDelayMicroseconds: 50, Capacity: 1024)",
+            "value": 10074609.604166666,
+            "unit": "ns",
+            "range": "± 501.1492929765655"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.BufferedTransformerCapacityBenchmarks.WithBuffer(ItemCount: 100, SourceDelayMicroseconds: 50, SinkDelayMicroseconds: 50, Capacity: 1024)",
+            "value": 5144747.440104167,
+            "unit": "ns",
+            "range": "± 1297.1176279610943"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.BufferedTransformerCapacityBenchmarks.NoBuffer(ItemCount: 100, SourceDelayMicroseconds: 50, SinkDelayMicroseconds: 50, Capacity: 8192)",
+            "value": 10073058.166666666,
+            "unit": "ns",
+            "range": "± 68.78611504072485"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.BufferedTransformerCapacityBenchmarks.WithBuffer(ItemCount: 100, SourceDelayMicroseconds: 50, SinkDelayMicroseconds: 50, Capacity: 8192)",
+            "value": 5150194.481770833,
+            "unit": "ns",
+            "range": "± 23289.34682222024"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.Lightweight(ItemCount: 1000, PassRate: 0.1)",
+            "value": 18843.093002319336,
+            "unit": "ns",
+            "range": "± 60.50551384056765"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.WithBase(ItemCount: 1000, PassRate: 0.1)",
+            "value": 22580.719696044922,
+            "unit": "ns",
+            "range": "± 94.6497788696364"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.Lightweight(ItemCount: 1000, PassRate: 0.5)",
+            "value": 25868.413126627605,
+            "unit": "ns",
+            "range": "± 109.73305576063113"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.WithBase(ItemCount: 1000, PassRate: 0.5)",
+            "value": 36900.591135660805,
+            "unit": "ns",
+            "range": "± 92.6705172379785"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.Lightweight(ItemCount: 1000, PassRate: 0.9)",
+            "value": 36348.72682698568,
+            "unit": "ns",
+            "range": "± 79.51689354234387"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.WithBase(ItemCount: 1000, PassRate: 0.9)",
+            "value": 60077.20585123698,
+            "unit": "ns",
+            "range": "± 154.66168339779787"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.Lightweight(ItemCount: 100000, PassRate: 0.1)",
+            "value": 1917215.5247395833,
+            "unit": "ns",
+            "range": "± 942.3147132258695"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.WithBase(ItemCount: 100000, PassRate: 0.1)",
+            "value": 2180459.36328125,
+            "unit": "ns",
+            "range": "± 13950.896114913861"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.Lightweight(ItemCount: 100000, PassRate: 0.5)",
+            "value": 2634580.6751302085,
+            "unit": "ns",
+            "range": "± 16888.604778283967"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.WithBase(ItemCount: 100000, PassRate: 0.5)",
+            "value": 3800194.23828125,
+            "unit": "ns",
+            "range": "± 1266.784179160142"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.Lightweight(ItemCount: 100000, PassRate: 0.9)",
+            "value": 3605292.8138020835,
+            "unit": "ns",
+            "range": "± 4420.474576641306"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.WithBase(ItemCount: 100000, PassRate: 0.9)",
+            "value": 5517898.341145833,
+            "unit": "ns",
+            "range": "± 13538.54489562632"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.Lightweight(ItemCount: 1000000, PassRate: 0.1)",
+            "value": 18254476.239583332,
+            "unit": "ns",
+            "range": "± 151077.31527842185"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.WithBase(ItemCount: 1000000, PassRate: 0.1)",
+            "value": 21605218.427083332,
+            "unit": "ns",
+            "range": "± 55727.156032801744"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.Lightweight(ItemCount: 1000000, PassRate: 0.5)",
+            "value": 26322768.375,
+            "unit": "ns",
+            "range": "± 85144.79449592282"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.WithBase(ItemCount: 1000000, PassRate: 0.5)",
+            "value": 36657504.78571429,
+            "unit": "ns",
+            "range": "± 85147.4371082417"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.Lightweight(ItemCount: 1000000, PassRate: 0.9)",
+            "value": 36333038.47619047,
+            "unit": "ns",
+            "range": "± 22436.624851254463"
+          },
+          {
+            "name": "Wolfgang.Etl.Transformers.Benchmarks.WhereBenchmarks.WithBase(ItemCount: 1000000, PassRate: 0.9)",
+            "value": 59544489.74074074,
+            "unit": "ns",
+            "range": "± 124731.65645627017"
           }
         ]
       }
