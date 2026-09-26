@@ -41,8 +41,29 @@ namespace Wolfgang.Etl.Transformers;
 /// </para>
 /// <para>
 /// Exceptions thrown by the callback propagate to the consumer through the normal
-/// <see cref="IAsyncEnumerable{T}"/> pull contract.
+/// <see cref="IAsyncEnumerable{T}"/> pull contract and end the run. Because the callback is
+/// invoked before the item is yielded, the item whose callback threw is never delivered
+/// downstream; items before it already have been.
 /// </para>
+/// <para>
+/// This type deliberately does not accept a <see cref="DelegateTransformerOptions"/>
+/// <c>ErrorPolicy</c>. The callback observes items rather than transforming them, so
+/// <c>Skip</c> would mean dropping data because a progress notification failed. To keep a run
+/// alive when the callback fails, handle the failure inside the callback itself:
+/// </para>
+/// <code>
+///     var reporter = new ProgressReportingTransformer&lt;Order&gt;(item =&gt;
+///     {
+///         try
+///         {
+///             myProgress.Report(item);
+///         }
+///         catch (Exception ex)
+///         {
+///             logger.LogWarning(ex, "Progress callback failed");
+///         }
+///     });
+/// </code>
 /// </remarks>
 public sealed class ProgressReportingTransformer<T> : ITransformAsync<T, T>
     where T : notnull

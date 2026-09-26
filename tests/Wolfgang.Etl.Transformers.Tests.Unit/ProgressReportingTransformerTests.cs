@@ -235,6 +235,37 @@ public class ProgressReportingTransformerTests
 
 
 
+    [Fact]
+    public async Task TransformAsync_when_callback_throws_yields_prior_items_but_not_the_failing_item()
+    {
+        var sut = new ProgressReportingTransformer<int>
+        (
+            item =>
+            {
+                if (item == 3)
+                {
+                    throw new InvalidOperationException("boom");
+                }
+            }
+        );
+        var yielded = new List<int>();
+
+        await Assert.ThrowsAsync<InvalidOperationException>
+        (
+            async () =>
+            {
+                await foreach (var item in sut.TransformAsync(ToAsync(new[] { 1, 2, 3, 4 })))
+                {
+                    yielded.Add(item);
+                }
+            }
+        );
+
+        Assert.Equal(new[] { 1, 2 }, yielded);
+    }
+
+
+
     // ---------- reference identity ----------
 
     [Fact]

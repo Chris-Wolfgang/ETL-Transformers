@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Wolfgang.Etl.Abstractions;
 
@@ -36,8 +37,13 @@ namespace Wolfgang.Etl.Transformers;
 /// transformers when those concerns are needed.
 /// </para>
 /// <para>
-/// Exceptions thrown by the selector or by enumerating the returned sequence propagate to the
-/// caller. If the selector returns <see langword="null"/> a <see cref="NullReferenceException"/>
+/// By default, exceptions thrown by the selector or by enumerating the returned sequence propagate
+/// to the caller. Pass a <see cref="DelegateTransformerOptions"/> whose
+/// <see cref="DelegateTransformerOptions.ErrorPolicy"/> returns <see cref="ItemErrorAction.Skip"/>
+/// to abandon the failing source item's expansion and continue with the next one instead; results
+/// already yielded from that item are kept, the item is counted once in
+/// <see cref="CurrentErrorItemCount"/>, and both the selector call and the enumeration of what it
+/// returned are covered. If the selector returns <see langword="null"/> a <see cref="NullReferenceException"/>
 /// will be raised on iteration, matching the behaviour of LINQ's
 /// <see cref="System.Linq.Enumerable.SelectMany{TSource, TResult}(System.Collections.Generic.IEnumerable{TSource}, System.Func{TSource, System.Collections.Generic.IEnumerable{TResult}})"/>.
 /// </para>
@@ -54,12 +60,14 @@ namespace Wolfgang.Etl.Transformers;
 ///     );
 /// </code>
 /// </example>
-public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsync<TSource, TDestination>
+public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsync<TSource, TDestination>, IReportsItemErrors
     where TSource : notnull
     where TDestination : notnull
 {
     private readonly Func<TSource, IEnumerable<TDestination>>? _syncSelector;
     private readonly Func<TSource, IAsyncEnumerable<TDestination>>? _asyncSelector;
+    private readonly DelegateTransformerOptions _options;
+    private int _currentErrorItemCount;
 
 
 
@@ -70,10 +78,34 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
     /// <param name="selector">A function that maps each input item to zero or more output items.</param>
     /// <exception cref="ArgumentNullException"><paramref name="selector"/> is <see langword="null"/>.</exception>
     public SelectManyTransformer(Func<TSource, IEnumerable<TDestination>> selector)
+        : this(selector, DelegateTransformerOptions.Default)
+    {
+    }
+
+
+
+    /// <summary>
+    /// Initializes a new instance with a synchronous selector function and an error policy.
+    /// </summary>
+    /// <param name="selector">A function that expands each input item into a sequence.</param>
+    /// <param name="options">
+    /// Controls what happens when <paramref name="selector"/> throws, either when it is called or
+    /// while the sequence it returned is being enumerated.
+    /// </param>
+    /// <exception cref="ArgumentNullException">
+    /// <paramref name="selector"/> or <paramref name="options"/> is <see langword="null"/>.
+    /// </exception>
+    public SelectManyTransformer
+    (
+        Func<TSource, IEnumerable<TDestination>> selector,
+        DelegateTransformerOptions options
+    )
     {
         ArgumentNullException.ThrowIfNull(selector);
+        ArgumentNullException.ThrowIfNull(options);
 
         _syncSelector = selector;
+        _options = options;
     }
 
 
@@ -88,11 +120,50 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
     /// </param>
     /// <exception cref="ArgumentNullException"><paramref name="selector"/> is <see langword="null"/>.</exception>
     public SelectManyTransformer(Func<TSource, IAsyncEnumerable<TDestination>> selector)
+        : this(selector, DelegateTransformerOptions.Default)
+    {
+    }
+
+
+
+    /// <summary>
+    /// Initializes a new instance with an asynchronous selector function and an error policy.
+    /// </summary>
+    /// <param name="selector">
+    /// A function that expands each input item into an asynchronous sequence.
+    /// </param>
+    /// <param name="options">
+    /// Controls what happens when <paramref name="selector"/> throws, either when it is called or
+    /// while the sequence it returned is being enumerated.
+    /// </param>
+    /// <exception cref="ArgumentNullException">
+    /// <paramref name="selector"/> or <paramref name="options"/> is <see langword="null"/>.
+    /// </exception>
+    public SelectManyTransformer
+    (
+        Func<TSource, IAsyncEnumerable<TDestination>> selector,
+        DelegateTransformerOptions options
+    )
     {
         ArgumentNullException.ThrowIfNull(selector);
+        ArgumentNullException.ThrowIfNull(options);
 
         _asyncSelector = selector;
+        _options = options;
     }
+
+
+
+    /// <summary>
+    /// The number of source items abandoned so far because the selector threw and the error policy
+    /// returned <see cref="ItemErrorAction.Skip"/>.
+    /// </summary>
+    /// <remarks>
+    /// Counts source items, not expanded results, and is cumulative across every enumeration
+    /// produced by this instance. A source item whose failure aborted the run is not counted,
+    /// because the exception is re-thrown instead.
+    /// </remarks>
+    public int CurrentErrorItemCount => Volatile.Read(ref _currentErrorItemCount);
 
 
 
@@ -114,35 +185,203 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
 
 
 
-    private static async IAsyncEnumerable<TDestination> FlattenWithSyncSelectorAsync
+    private async IAsyncEnumerable<TDestination> FlattenWithSyncSelectorAsync
     (
         IAsyncEnumerable<TSource> items,
         Func<TSource, IEnumerable<TDestination>> selector
     )
     {
+        var itemNumber = 0L;
+
         await foreach (var item in items.ConfigureAwait(continueOnCapturedContext: false))
         {
-            foreach (var inner in selector(item))
+            itemNumber++;
+
+            // The selector's sequence is usually lazy, so a throw can surface either here or on a
+            // later MoveNext. The enumerator is therefore driven by hand: a try/catch cannot wrap
+            // the yield, because a C# async iterator cannot resume after it throws.
+            IEnumerator<TDestination> enumerator;
+            try
             {
-                yield return inner;
+                enumerator = selector(item).GetEnumerator();
+            }
+            catch (Exception exception)
+            {
+                if (HandleItemError(itemNumber, exception) == ItemErrorAction.Skip)
+                {
+                    continue;
+                }
+
+                throw;
+            }
+
+            var failureHandled = false;
+            try
+            {
+                while (true)
+                {
+                    TDestination current;
+                    try
+                    {
+                        if (!enumerator.MoveNext())
+                        {
+                            break;
+                        }
+
+                        current = enumerator.Current;
+                    }
+                    catch (Exception exception)
+                    {
+                        failureHandled = true;
+                        if (HandleItemError(itemNumber, exception) == ItemErrorAction.Skip)
+                        {
+                            break;
+                        }
+
+                        throw;
+                    }
+
+                    yield return current;
+                }
+            }
+            finally
+            {
+                DisposeAfterItem(enumerator, failureHandled);
             }
         }
     }
 
 
 
-    private static async IAsyncEnumerable<TDestination> FlattenWithAsyncSelectorAsync
+    private async IAsyncEnumerable<TDestination> FlattenWithAsyncSelectorAsync
     (
         IAsyncEnumerable<TSource> items,
         Func<TSource, IAsyncEnumerable<TDestination>> selector
     )
     {
+        var itemNumber = 0L;
+
         await foreach (var item in items.ConfigureAwait(continueOnCapturedContext: false))
         {
-            await foreach (var inner in selector(item).ConfigureAwait(continueOnCapturedContext: false))
+            itemNumber++;
+
+            IAsyncEnumerator<TDestination> enumerator;
+            try
             {
-                yield return inner;
+                enumerator = selector(item).GetAsyncEnumerator();
+            }
+            catch (Exception exception)
+            {
+                if (HandleItemError(itemNumber, exception) == ItemErrorAction.Skip)
+                {
+                    continue;
+                }
+
+                throw;
+            }
+
+            var failureHandled = false;
+            try
+            {
+                while (true)
+                {
+                    TDestination current;
+                    try
+                    {
+                        if (!await enumerator.MoveNextAsync().ConfigureAwait(continueOnCapturedContext: false))
+                        {
+                            break;
+                        }
+
+                        current = enumerator.Current;
+                    }
+                    catch (Exception exception)
+                    {
+                        failureHandled = true;
+                        if (HandleItemError(itemNumber, exception) == ItemErrorAction.Skip)
+                        {
+                            break;
+                        }
+
+                        throw;
+                    }
+
+                    yield return current;
+                }
+            }
+            finally
+            {
+                await DisposeAfterItemAsync(enumerator, failureHandled)
+                    .ConfigureAwait(continueOnCapturedContext: false);
             }
         }
+    }
+
+
+
+    /// <summary>
+    /// Disposes the inner enumerator once a source item is finished with, deciding whether a
+    /// failure from the cleanup itself may escape.
+    /// </summary>
+    /// <param name="enumerator">The inner enumerator to dispose.</param>
+    /// <param name="failureHandled">
+    /// Whether this source item already had a failure put through the error policy.
+    /// </param>
+    /// <remarks>
+    /// When the item already failed, a cleanup error is swallowed. Letting it escape would end the
+    /// run and defeat the <see cref="ItemErrorAction.Skip"/> just honoured, or displace the
+    /// exception an <see cref="ItemErrorAction.Abort"/> is already propagating; and putting it
+    /// through the policy again would count the same source item twice. On an item that did not
+    /// fail, a disposal error is not an item-level data error and propagates unchanged.
+    /// </remarks>
+    private static void DisposeAfterItem(IEnumerator<TDestination> enumerator, bool failureHandled)
+    {
+        try
+        {
+            enumerator.Dispose();
+        }
+        catch when (failureHandled)
+        {
+        }
+    }
+
+
+
+    /// <summary>
+    /// The asynchronous counterpart of <see cref="DisposeAfterItem"/>, applying the same rule.
+    /// </summary>
+    /// <param name="enumerator">The inner enumerator to dispose.</param>
+    /// <param name="failureHandled">
+    /// Whether this source item already had a failure put through the error policy.
+    /// </param>
+    private static async ValueTask DisposeAfterItemAsync
+    (
+        IAsyncEnumerator<TDestination> enumerator,
+        bool failureHandled
+    )
+    {
+        try
+        {
+            await enumerator.DisposeAsync().ConfigureAwait(continueOnCapturedContext: false);
+        }
+        catch when (failureHandled)
+        {
+        }
+    }
+
+
+
+    /// <summary>
+    /// Applies the configured error policy and, when it asks to skip, records the abandoned item.
+    /// </summary>
+    private ItemErrorAction HandleItemError(long itemNumber, Exception exception)
+    {
+        var action = _options.ErrorPolicy(new ItemErrorContext(itemNumber, exception));
+        if (action == ItemErrorAction.Skip)
+        {
+            _ = Interlocked.Increment(ref _currentErrorItemCount);
+        }
+
+        return action;
     }
 }
