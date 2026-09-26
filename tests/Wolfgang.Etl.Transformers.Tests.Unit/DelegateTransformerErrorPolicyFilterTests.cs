@@ -174,6 +174,24 @@ public class DelegateTransformerErrorPolicyFilterTests
 
 
     [Fact]
+    public async Task DistinctByTransformer_when_the_comparer_throws_still_removes_later_duplicates()
+    {
+        var sut = new DistinctByTransformer<int, int>
+        (
+            i => i,
+            new ThrowingComparer(throwOnKey: 2),
+            SkipAll()
+        );
+
+        var result = await CollectAsync(sut.TransformAsync(ToAsync(new[] { 1, 2, 1, 3 })));
+
+        Assert.Equal(new[] { 1, 3 }, result);
+        Assert.Equal(1, sut.CurrentErrorItemCount);
+    }
+
+
+
+    [Fact]
     public void DistinctByTransformer_when_options_is_null_throws_ArgumentNullException()
     {
         var ex = Assert.Throws<ArgumentNullException>

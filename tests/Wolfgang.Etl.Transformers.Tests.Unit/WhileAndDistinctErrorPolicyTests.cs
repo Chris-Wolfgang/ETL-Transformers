@@ -82,13 +82,13 @@ public class WhileAndDistinctErrorPolicyTests
     public async Task SkipWhile_does_not_evaluate_the_predicate_after_the_prefix_ends()
     {
         // Once skipping stops the predicate is never called again, so a later throw cannot occur.
+        var evaluated = new List<int>();
         var sut = new SkipWhileTransformer<int>
         (
-            i => i switch
+            i =>
             {
-                1 => true,
-                2 => false,
-                _ => throw new InvalidOperationException()
+                evaluated.Add(i);
+                return i == 1;
             },
             SkipAll()
         );
@@ -96,6 +96,7 @@ public class WhileAndDistinctErrorPolicyTests
         var result = await CollectAsync(sut.TransformAsync(ToAsync(new[] { 1, 2, 3, 4 })));
 
         Assert.Equal(new[] { 2, 3, 4 }, result);
+        Assert.Equal(new[] { 1, 2 }, evaluated);
         Assert.Equal(0, sut.CurrentErrorItemCount);
     }
 
@@ -225,6 +226,19 @@ public class WhileAndDistinctErrorPolicyTests
         var sut = new DistinctTransformer<int>(new ThrowingComparer(throwOnValue: 2), SkipAll());
 
         var result = await CollectAsync(sut.TransformAsync(ToAsync(new[] { 1, 2, 3 })));
+
+        Assert.Equal(new[] { 1, 3 }, result);
+        Assert.Equal(1, sut.CurrentErrorItemCount);
+    }
+
+
+
+    [Fact]
+    public async Task Distinct_when_the_comparer_throws_still_removes_later_duplicates()
+    {
+        var sut = new DistinctTransformer<int>(new ThrowingComparer(throwOnValue: 2), SkipAll());
+
+        var result = await CollectAsync(sut.TransformAsync(ToAsync(new[] { 1, 2, 1, 3 })));
 
         Assert.Equal(new[] { 1, 3 }, result);
         Assert.Equal(1, sut.CurrentErrorItemCount);
