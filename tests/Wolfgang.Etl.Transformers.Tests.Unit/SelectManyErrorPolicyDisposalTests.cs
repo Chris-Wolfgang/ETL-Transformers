@@ -127,6 +127,21 @@ public class SelectManyErrorPolicyDisposalTests
 
 
 
+    [Fact]
+    public void ThrowingSequence_non_generic_members_behave_like_the_generic_ones()
+    {
+        // The transformer only uses the generic surface; this keeps the helper's non-generic
+        // interface members honest rather than leaving them unexercised.
+        IEnumerable sequence = new ThrowingSequence(7, throwOnMoveNext: false, throwOnDispose: false);
+        var enumerator = sequence.GetEnumerator();
+
+        Assert.True(enumerator.MoveNext());
+        Assert.Equal("v7", enumerator.Current);
+        Assert.Throws<NotSupportedException>(() => enumerator.Reset());
+    }
+
+
+
     /// <summary>
     /// A sequence whose enumerator can be told to throw from MoveNext, from Dispose, or both.
     /// </summary>
