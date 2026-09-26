@@ -20,6 +20,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 
 
+## [0.8.0] - 2026-09-26
+
+### Added
+
+- `SelectTransformer` and `SelectManyTransformer` accept an optional `DelegateTransformerOptions` carrying an `ErrorPolicy`, so an exception thrown for a single item can skip that item and continue instead of ending the run, with the dropped count reported through `IReportsItemErrors.CurrentErrorItemCount`. Constructed without the record, behaviour is unchanged and the exception still propagates. (#323)
+- `CastTransformer` accepts the same optional `DelegateTransformerOptions`, so an item that does not convert can be dropped and counted rather than ending the run. This differs from `OfTypeTransformer`, which drops mismatches silently: the policy form records each failure in `CurrentErrorItemCount` and hands it to the policy, which can log it or route it to a dead-letter collection. (#325)
+- `WhereTransformer` and `DistinctByTransformer` accept the same optional `DelegateTransformerOptions` as the projecting transformers, so a predicate, key selector or comparer that throws for one item can skip that item instead of ending the run. An item merely filtered out, or dropped as a duplicate, is not counted as an error. (#324)
+- `SkipWhileTransformer`, `TakeWhileTransformer` and `DistinctTransformer` accept the same optional `DelegateTransformerOptions` as the other delegate-invoking transformers. These three were missing from the original scope of the feature despite invoking a caller-supplied predicate or comparer per item. (#327)
+- The library is declared trim- and native-AOT-compatible (`IsTrimmable` / `IsAotCompatible`) on its modern targets, so consumers publishing with trimming or native AOT get no warnings from this package. (#320)
+
+### Documentation
+
+- `ProgressReportingTransformer` now documents that a throwing callback ends the run without delivering the failing item, why it does not take an `ErrorPolicy`, and how to keep a run alive by handling failures inside the callback. (#340)
+
+### Internal
+
+- `PackageValidationBaselineVersion` advances to 0.7.0 now that the package is on the NuGet CDN, so the next release validates its API surface against what actually shipped. (#313)
+- The `CheckNamespace` suppression on the `CallerArgumentExpressionAttribute` polyfill moves onto its own line, with the justification above it, which is the form ReSharper documents for `disable once`. (#315)
+
 ## [0.7.0] - 2026-09-22
 
 ### Added
