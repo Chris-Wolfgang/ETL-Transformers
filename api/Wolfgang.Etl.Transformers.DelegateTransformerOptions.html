@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class DelegateTransformerOptions | Wolfgang.Etl.Transformers Documentation </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class DelegateTransformerOptions | Wolfgang.Etl.Transformers Documentation ">
+      
+      <meta name="description" content="Configuration for the transformers that invoke a caller-supplied delegate, controlling what happens when that delegate throws for a single item.">
+      <link rel="icon" href="../favicon.svg">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="../toc.html">
+      <meta name="docfx:tocrel" content="../toc.html">
+      
+      <meta name="docfx:rel" content="../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/ETL-Transformers/new/v0.8.0/apiSpec/new?filename=Wolfgang_Etl_Transformers_DelegateTransformerOptions.md&amp;value=---%0Auid%3A%20Wolfgang.Etl.Transformers.DelegateTransformerOptions%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="Wolfgang.Etl.Transformers">
+            Wolfgang.Etl.Transformers
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+
+      <div class="content">
+        <div class="actionbar">
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="Wolfgang.Etl.Transformers.DelegateTransformerOptions">
+
+
+
+  <h1 id="Wolfgang_Etl_Transformers_DelegateTransformerOptions" data-uid="Wolfgang.Etl.Transformers.DelegateTransformerOptions" class="text-break">
+Class DelegateTransformerOptions  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.0/src/Wolfgang.Etl.Transformers/DelegateTransformerOptions.cs/#L45"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="Wolfgang.html">Wolfgang</a>.<a class="xref" href="Wolfgang.Etl.html">Etl</a>.<a class="xref" href="Wolfgang.Etl.Transformers.html">Transformers</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>Wolfgang.Etl.Transformers.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Configuration for the transformers that invoke a caller-supplied delegate, controlling what
+happens when that delegate throws for a single item.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public record DelegateTransformerOptions : IEquatable&lt;DelegateTransformerOptions&gt;</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">DelegateTransformerOptions</span></div>
+    </dd>
+  </dl>
+
+  <dl class="typelist implements">
+    <dt>Implements</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html">DelegateTransformerOptions</a>&gt;</div>
+    </dd>
+  </dl>
+
+
+  <dl class="typelist inheritedMembers">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+  <h2 id="Wolfgang_Etl_Transformers_DelegateTransformerOptions_examples">Examples</h2>
+  <pre><code class="lang-csharp">// Drop the items whose projection throws, and count them.
+var options = new DelegateTransformerOptions { ErrorPolicy = ItemErrorPolicy.Skip };
+var transformer = new SelectTransformer&lt;string, int&gt;(int.Parse, options);</code></pre>
+
+
+  <h2 id="Wolfgang_Etl_Transformers_DelegateTransformerOptions_remarks">Remarks</h2>
+  <div class="markdown level0 remarks"><p>
+Per ADR-0009, stage configuration is supplied as a record passed to the constructor rather than
+set through mutable properties, so a transformer is configured once and not reconfigured during a
+run. This record is shared by the transformers that accept it, because the one setting they
+need is the same; <a class="xref" href="Wolfgang.Etl.Transformers.SelectTransformer-2.html">SelectTransformer&lt;TSource, TDestination&gt;</a> and
+<a class="xref" href="Wolfgang.Etl.Transformers.SelectManyTransformer-2.html">SelectManyTransformer&lt;TSource, TDestination&gt;</a> accept it today. It is left unsealed
+so a transformer that later grows its own settings can derive from it.
+</p>
+<p>
+It deliberately does <b>not</b> derive from
+<span class="xref">Wolfgang.Etl.Abstractions.TransformerOptions</span>. That record also carries
+<code>SkipItemCount</code>, <code>MaximumItemCount</code> and <code>ReportingInterval</code>, which the
+transformers in this library do not implement - they carry no counters by design - and which are
+already expressed here by the dedicated <a class="xref" href="Wolfgang.Etl.Transformers.SkipTransformer-1.html">SkipTransformer&lt;T&gt;</a> and
+<a class="xref" href="Wolfgang.Etl.Transformers.TakeTransformer-1.html">TakeTransformer&lt;T&gt;</a> stages. Inheriting them would advertise settings that are
+silently ignored and give the same concept two spellings.
+</p>
+<p>
+The pass-through and windowing transformers (<a class="xref" href="Wolfgang.Etl.Transformers.PassThroughTransformer-1.html">PassThroughTransformer&lt;T&gt;</a>,
+<a class="xref" href="Wolfgang.Etl.Transformers.TakeTransformer-1.html">TakeTransformer&lt;T&gt;</a>, <a class="xref" href="Wolfgang.Etl.Transformers.SkipTransformer-1.html">SkipTransformer&lt;T&gt;</a>,
+<a class="xref" href="Wolfgang.Etl.Transformers.ChunkTransformer-1.html">ChunkTransformer&lt;T&gt;</a>, <a class="xref" href="Wolfgang.Etl.Transformers.BufferedTransformer-1.html">BufferedTransformer&lt;T&gt;</a> and
+<a class="xref" href="Wolfgang.Etl.Transformers.ProgressReportingTransformer-1.html">ProgressReportingTransformer&lt;T&gt;</a>) invoke no caller delegate, so they have nothing to
+apply a policy to and do not accept this record.
+</p>
+</div>
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Wolfgang_Etl_Transformers_DelegateTransformerOptions_ErrorPolicy_" data-uid="Wolfgang.Etl.Transformers.DelegateTransformerOptions.ErrorPolicy*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_DelegateTransformerOptions_ErrorPolicy" data-uid="Wolfgang.Etl.Transformers.DelegateTransformerOptions.ErrorPolicy">
+  ErrorPolicy
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.0/src/Wolfgang.Etl.Transformers/DelegateTransformerOptions.cs/#L74"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The policy applied when the caller-supplied delegate throws while handling one item.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Func&lt;ItemErrorContext, ItemErrorAction&gt; ErrorPolicy { get; init; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;<span class="xref">ItemErrorContext</span>, <span class="xref">ItemErrorAction</span>&gt;</dt>
+    <dd><p>A function receiving an <span class="xref">Wolfgang.Etl.Abstractions.ItemErrorContext</span> describing the failure and returning
+<span class="xref">Wolfgang.Etl.Abstractions.ItemErrorAction.Skip</span> to drop the item and continue, or
+<span class="xref">Wolfgang.Etl.Abstractions.ItemErrorAction.Abort</span> to re-throw. Defaults to a policy that always returns
+<span class="xref">Wolfgang.Etl.Abstractions.ItemErrorAction.Abort</span>, which is the behaviour of a transformer constructed
+without this record: the exception propagates to the caller unchanged.</p>
+</dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="Wolfgang_Etl_Transformers_DelegateTransformerOptions_ErrorPolicy_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Ready-made policies - including skip-and-log and skip-to-dead-letter forms - are available
+from <code>ItemErrorPolicy</code> in the <code>Wolfgang.Etl.ErrorPolicies</code> package. This library
+does not reference that package; the policy is just a delegate.</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p>The value being assigned is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.0/src/Wolfgang.Etl.Transformers/DelegateTransformerOptions.cs/#L45" class="edit-link">Edit this page</a>
+        </div>
+
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          Made with DocFX <script>(function(){var r='/';if(window.location.hostname.endsWith('.github.io')){var s=window.location.pathname.split('/').filter(Boolean);if(s.length)r='/'+s[0]+'/';}var t=document.createElement('script');t.src=r+'public/version-picker.js';t.async=true;document.head.appendChild(t);})();</script>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

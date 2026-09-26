@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<coverage version="1.0" date="2026-07-12_02-00-47" tag="">
+  <assembly name="Wolfgang.Etl.Transformers">
+    <class name="Wolfgang.Etl.Transformers.BufferedTransformer`1" coveredlines="37" coverablelines="37" totallines="201" coveredbranches="6" totalbranches="6" coveredcodeelements="5" fullcoveredcodeelements="5" totalcodeelements="5" />
+    <class name="Wolfgang.Etl.Transformers.CastTransformer`2" coveredlines="7" coverablelines="7" totallines="92" coveredbranches="2" totalbranches="2" coveredcodeelements="3" fullcoveredcodeelements="3" totalcodeelements="3" />
+    <class name="Wolfgang.Etl.Transformers.ChainTransformer`3" coveredlines="12" coverablelines="12" totallines="116" coveredbranches="0" totalbranches="0" coveredcodeelements="2" fullcoveredcodeelements="2" totalcodeelements="2" />
+    <class name="Wolfgang.Etl.Transformers.ChainTransformerWithCancellation`3" coveredlines="14" coverablelines="14" totallines="135" coveredbranches="0" totalbranches="0" coveredcodeelements="3" fullcoveredcodeelements="3" totalcodeelements="3" />
+    <class name="Wolfgang.Etl.Transformers.ChunkTransformer`1" coveredlines="27" coverablelines="27" totallines="158" coveredbranches="10" totalbranches="10" coveredcodeelements="5" fullcoveredcodeelements="5" totalcodeelements="5" />
+    <class name="Wolfgang.Etl.Transformers.DistinctByTransformer`2" coveredlines="14" coverablelines="14" totallines="143" coveredbranches="4" totalbranches="4" coveredcodeelements="4" fullcoveredcodeelements="4" totalcodeelements="4" />
+    <class name="Wolfgang.Etl.Transformers.DistinctTransformer`1" coveredlines="12" coverablelines="12" totallines="114" coveredbranches="4" totalbranches="4" coveredcodeelements="4" fullcoveredcodeelements="4" totalcodeelements="4" />
+    <class name="Wolfgang.Etl.Transformers.OfTypeTransformer`2" coveredlines="8" coverablelines="8" totallines="102" coveredbranches="4" totalbranches="4" coveredcodeelements="3" fullcoveredcodeelements="3" totalcodeelements="3" />
+    <class name="Wolfgang.Etl.Transformers.PassThroughTransformer`1" coveredlines="10" coverablelines="10" totallines="126" coveredbranches="2" totalbranches="2" coveredcodeelements="4" fullcoveredcodeelements="4" totalcodeelements="4" />
+    <class name="Wolfgang.Etl.Transformers.ProgressReportingTransformer`1" coveredlines="21" coverablelines="21" totallines="152" coveredbranches="6" totalbranches="6" coveredcodeelements="5" fullcoveredcodeelements="5" totalcodeelements="5" />
+    <class name="Wolfgang.Etl.Transformers.SelectManyTransformer`2" coveredlines="20" coverablelines="20" totallines="171" coveredbranches="10" totalbranches="10" coveredcodeelements="5" fullcoveredcodeelements="5" totalcodeelements="5" />
+    <class name="Wolfgang.Etl.Transformers.SelectTransformer`2" coveredlines="18" coverablelines="18" totallines="157" coveredbranches="6" totalbranches="6" coveredcodeelements="5" fullcoveredcodeelements="5" totalcodeelements="5" />
+    <class name="Wolfgang.Etl.Transformers.SkipTransformer`1" coveredlines="15" coverablelines="15" totallines="115" coveredbranches="6" totalbranches="6" coveredcodeelements="4" fullcoveredcodeelements="4" totalcodeelements="4" />
+    <class name="Wolfgang.Etl.Transformers.SkipWhileTransformer`1" coveredlines="27" coverablelines="27" totallines="173" coveredbranches="14" totalbranches="14" coveredcodeelements="5" fullcoveredcodeelements="5" totalcodeelements="5" />
+    <class name="Wolfgang.Etl.Transformers.TakeTransformer`1" coveredlines="18" coverablelines="18" totallines="121" coveredbranches="6" totalbranches="6" coveredcodeelements="5" fullcoveredcodeelements="5" totalcodeelements="5" />
+    <class name="Wolfgang.Etl.Transformers.TakeWhileTransformer`1" coveredlines="23" coverablelines="23" totallines="160" coveredbranches="10" totalbranches="10" coveredcodeelements="5" fullcoveredcodeelements="5" totalcodeelements="5" />
+    <class name="Wolfgang.Etl.Transformers.TransformerExtensions" coveredlines="8" coverablelines="8" totallines="177" coveredbranches="0" totalbranches="0" coveredcodeelements="3" fullcoveredcodeelements="3" totalcodeelements="3" />
+    <class name="Wolfgang.Etl.Transformers.WhereTransformer`1" coveredlines="21" coverablelines="21" totallines="162" coveredbranches="10" totalbranches="10" coveredcodeelements="5" fullcoveredcodeelements="5" totalcodeelements="5" />
+  </assembly>
+</coverage>

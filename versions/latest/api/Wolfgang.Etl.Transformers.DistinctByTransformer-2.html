@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/ETL-Transformers/new/v0.7.0/apiSpec/new?filename=Wolfgang_Etl_Transformers_DistinctByTransformer_2.md&amp;value=---%0Auid%3A%20Wolfgang.Etl.Transformers.DistinctByTransformer%602%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/ETL-Transformers/new/v0.8.0/apiSpec/new?filename=Wolfgang_Etl_Transformers_DistinctByTransformer_2.md&amp;value=---%0Auid%3A%20Wolfgang.Etl.Transformers.DistinctByTransformer%602%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -75,7 +75,7 @@
 
 
   <h1 id="Wolfgang_Etl_Transformers_DistinctByTransformer_2" data-uid="Wolfgang.Etl.Transformers.DistinctByTransformer`2" class="text-break">
-Class DistinctByTransformer&lt;TSource, TKey&gt;  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.7.0/src/Wolfgang.Etl.Transformers/DistinctByTransformer.cs/#L54"><i class="bi bi-code-slash"></i></a>
+Class DistinctByTransformer&lt;TSource, TKey&gt;  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.0/src/Wolfgang.Etl.Transformers/DistinctByTransformer.cs/#L64"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -89,7 +89,7 @@ caller-supplied selector. Subsequent items whose key has already been seen are d
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class DistinctByTransformer&lt;TSource, TKey&gt; : ITransformAsync&lt;TSource, TSource&gt; where TSource : notnull where TKey : notnull</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class DistinctByTransformer&lt;TSource, TKey&gt; : ITransformAsync&lt;TSource, TSource&gt;, IReportsItemErrors where TSource : notnull where TKey : notnull</code></pre>
   </div>
 
 
@@ -116,6 +116,7 @@ caller-supplied selector. Subsequent items whose key has already been seen are d
     <dt>Implements</dt>
     <dd>
       <div><span class="xref">ITransformAsync</span>&lt;TSource, TSource&gt;</div>
+      <div><span class="xref">IReportsItemErrors</span></div>
     </dd>
   </dl>
 
@@ -186,7 +187,16 @@ stream.
 </p>
 <p>
 Implements only <span class="xref">Wolfgang.Etl.Abstractions.ITransformAsync&lt;TSource, TDestination&gt;</span> - no progress, no
-cancellation, no Skip/Max - to keep the hot loop minimal.
+cancellation, no Skip/Max - to keep the hot loop minimal. The one counter is the opt-in
+<a class="xref" href="Wolfgang.Etl.Transformers.DistinctByTransformer-2.html#Wolfgang_Etl_Transformers_DistinctByTransformer_2_CurrentErrorItemCount">CurrentErrorItemCount</a>, which stays at zero on the default path.
+</p>
+<p>
+By default an exception thrown by the key selector, or by the comparer while the key is being
+added, propagates to the caller. Pass a <a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html">DelegateTransformerOptions</a> whose
+<a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html#Wolfgang_Etl_Transformers_DelegateTransformerOptions_ErrorPolicy">ErrorPolicy</a> returns <span class="xref">Wolfgang.Etl.Abstractions.ItemErrorAction.Skip</span>
+to drop the failing item and continue instead; those items are counted by
+<a class="xref" href="Wolfgang.Etl.Transformers.DistinctByTransformer-2.html#Wolfgang_Etl_Transformers_DistinctByTransformer_2_CurrentErrorItemCount">CurrentErrorItemCount</a>. An item dropped because its key was already seen is the
+transformer doing its job, not an error, and is never counted.
 </p>
 </div>
 
@@ -199,7 +209,7 @@ cancellation, no Skip/Max - to keep the hot loop minimal.
 
   <h3 id="Wolfgang_Etl_Transformers_DistinctByTransformer_2__ctor_System_Func__0__1__" data-uid="Wolfgang.Etl.Transformers.DistinctByTransformer`2.#ctor(System.Func{`0,`1})">
   DistinctByTransformer(Func&lt;TSource, TKey&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.7.0/src/Wolfgang.Etl.Transformers/DistinctByTransformer.cs/#L69"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.0/src/Wolfgang.Etl.Transformers/DistinctByTransformer.cs/#L81"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance with the given key selector, using
@@ -239,7 +249,7 @@ cancellation, no Skip/Max - to keep the hot loop minimal.
 
   <h3 id="Wolfgang_Etl_Transformers_DistinctByTransformer_2__ctor_System_Func__0__1__System_Collections_Generic_IEqualityComparer__1__" data-uid="Wolfgang.Etl.Transformers.DistinctByTransformer`2.#ctor(System.Func{`0,`1},System.Collections.Generic.IEqualityComparer{`1})">
   DistinctByTransformer(Func&lt;TSource, TKey&gt;, IEqualityComparer&lt;TKey&gt;?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.7.0/src/Wolfgang.Etl.Transformers/DistinctByTransformer.cs/#L85"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.0/src/Wolfgang.Etl.Transformers/DistinctByTransformer.cs/#L97"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance with the given key selector and equality comparer.</p>
@@ -278,6 +288,101 @@ cancellation, no Skip/Max - to keep the hot loop minimal.
 
 
 
+  <a id="Wolfgang_Etl_Transformers_DistinctByTransformer_2__ctor_" data-uid="Wolfgang.Etl.Transformers.DistinctByTransformer`2.#ctor*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_DistinctByTransformer_2__ctor_System_Func__0__1__System_Collections_Generic_IEqualityComparer__1__Wolfgang_Etl_Transformers_DelegateTransformerOptions_" data-uid="Wolfgang.Etl.Transformers.DistinctByTransformer`2.#ctor(System.Func{`0,`1},System.Collections.Generic.IEqualityComparer{`1},Wolfgang.Etl.Transformers.DelegateTransformerOptions)">
+  DistinctByTransformer(Func&lt;TSource, TKey&gt;, IEqualityComparer&lt;TKey&gt;?, DelegateTransformerOptions)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.0/src/Wolfgang.Etl.Transformers/DistinctByTransformer.cs/#L125"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Initializes a new instance with the given key selector, equality comparer and error policy.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DistinctByTransformer(Func&lt;TSource, TKey&gt; keySelector, IEqualityComparer&lt;TKey&gt;? comparer, DelegateTransformerOptions options)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>keySelector</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TSource, TKey&gt;</dt>
+    <dd><p>A function that extracts the comparison key from an input item.</p>
+</dd>
+    <dt><code>comparer</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iequalitycomparer-1">IEqualityComparer</a>&lt;TKey&gt;</dt>
+    <dd><p>The comparer used to determine key equality. If <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>,
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.equalitycomparer-1.default">Default</a> is used.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html">DelegateTransformerOptions</a></dt>
+    <dd><p>Controls what happens when <code class="paramref">keySelector</code> or <code class="paramref">comparer</code>
+throws for one item.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section" id="Wolfgang_Etl_Transformers_DistinctByTransformer_2__ctor_System_Func__0__1__System_Collections_Generic_IEqualityComparer__1__Wolfgang_Etl_Transformers_DelegateTransformerOptions__remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>There is deliberately no two-argument <code>(keySelector, options)</code> overload. It would be
+ambiguous with <code>(keySelector, comparer)</code> at any existing call site passing a literal
+<a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a> comparer, which would be a source break. Pass
+<code>comparer: null</code> explicitly to use the default comparer with a policy.</p>
+</div>
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">keySelector</code> or <code class="paramref">options</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Wolfgang_Etl_Transformers_DistinctByTransformer_2_CurrentErrorItemCount_" data-uid="Wolfgang.Etl.Transformers.DistinctByTransformer`2.CurrentErrorItemCount*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_DistinctByTransformer_2_CurrentErrorItemCount" data-uid="Wolfgang.Etl.Transformers.DistinctByTransformer`2.CurrentErrorItemCount">
+  CurrentErrorItemCount
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.0/src/Wolfgang.Etl.Transformers/DistinctByTransformer.cs/#L151"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The number of items dropped so far because the key selector or comparer threw and the error
+policy returned <span class="xref">Wolfgang.Etl.Abstractions.ItemErrorAction.Skip</span>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int CurrentErrorItemCount { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="Wolfgang_Etl_Transformers_DistinctByTransformer_2_CurrentErrorItemCount_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Cumulative across every enumeration produced by this instance, and counts only failures - an
+item dropped as a duplicate is not an error. An item whose failure aborted the run is not
+counted either, because the exception is re-thrown instead.</p>
+</div>
+
+
+
+
   <h2 class="section" id="methods">Methods
 </h2>
 
@@ -286,7 +391,7 @@ cancellation, no Skip/Max - to keep the hot loop minimal.
 
   <h3 id="Wolfgang_Etl_Transformers_DistinctByTransformer_2_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__" data-uid="Wolfgang.Etl.Transformers.DistinctByTransformer`2.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})">
   TransformAsync(IAsyncEnumerable&lt;TSource&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.7.0/src/Wolfgang.Etl.Transformers/DistinctByTransformer.cs/#L102"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.0/src/Wolfgang.Etl.Transformers/DistinctByTransformer.cs/#L162"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Asynchronously yields the first item in <code class="paramref">items</code> for each unique key
@@ -332,7 +437,7 @@ produced by the configured selector, dropping later items with already-seen keys
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.7.0/src/Wolfgang.Etl.Transformers/DistinctByTransformer.cs/#L54" class="edit-link">Edit this page</a>
+          <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.0/src/Wolfgang.Etl.Transformers/DistinctByTransformer.cs/#L64" class="edit-link">Edit this page</a>
         </div>
 
 

@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/ETL-Transformers/new/v0.7.0/apiSpec/new?filename=Wolfgang_Etl_Transformers_TakeWhileTransformer_1.md&amp;value=---%0Auid%3A%20Wolfgang.Etl.Transformers.TakeWhileTransformer%601%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/ETL-Transformers/new/v0.8.0/apiSpec/new?filename=Wolfgang_Etl_Transformers_TakeWhileTransformer_1.md&amp;value=---%0Auid%3A%20Wolfgang.Etl.Transformers.TakeWhileTransformer%601%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -75,7 +75,7 @@
 
 
   <h1 id="Wolfgang_Etl_Transformers_TakeWhileTransformer_1" data-uid="Wolfgang.Etl.Transformers.TakeWhileTransformer`1" class="text-break">
-Class TakeWhileTransformer&lt;T&gt;  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.7.0/src/Wolfgang.Etl.Transformers/TakeWhileTransformer.cs/#L42"><i class="bi bi-code-slash"></i></a>
+Class TakeWhileTransformer&lt;T&gt;  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.0/src/Wolfgang.Etl.Transformers/TakeWhileTransformer.cs/#L51"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -90,7 +90,7 @@ the predicate stops enumeration immediately and is not yielded.</p>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class TakeWhileTransformer&lt;T&gt; : ITransformAsync&lt;T, T&gt; where T : notnull</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class TakeWhileTransformer&lt;T&gt; : ITransformAsync&lt;T, T&gt;, IReportsItemErrors where T : notnull</code></pre>
   </div>
 
 
@@ -114,6 +114,7 @@ the predicate stops enumeration immediately and is not yielded.</p>
     <dt>Implements</dt>
     <dd>
       <div><span class="xref">ITransformAsync</span>&lt;T, T&gt;</div>
+      <div><span class="xref">IReportsItemErrors</span></div>
     </dd>
   </dl>
 
@@ -168,11 +169,19 @@ predicates returning <a class="xref" href="https://learn.microsoft.com/dotnet/ap
 I/O-bound stop conditions such as a state-check against an external system.
 </p>
 <p>
-Implements only <span class="xref">Wolfgang.Etl.Abstractions.ITransformAsync&lt;TSource, TDestination&gt;</span> - no progress, no
-cancellation, no Skip/Max - to keep the hot loop minimal.
+Implements <span class="xref">Wolfgang.Etl.Abstractions.ITransformAsync&lt;TSource, TDestination&gt;</span> and
+<span class="xref">Wolfgang.Etl.Abstractions.IReportsItemErrors</span> - no progress, no cancellation, no Skip/Max - to keep the hot
+loop minimal. The one counter is the opt-in <a class="xref" href="Wolfgang.Etl.Transformers.TakeWhileTransformer-1.html#Wolfgang_Etl_Transformers_TakeWhileTransformer_1_CurrentErrorItemCount">CurrentErrorItemCount</a>, which stays at zero
+on the default path.
 </p>
 <p>
-Exceptions thrown by the predicate propagate to the caller.
+By default an exception thrown by the predicate propagates to the caller. Pass a
+<a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html">DelegateTransformerOptions</a> whose <a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html#Wolfgang_Etl_Transformers_DelegateTransformerOptions_ErrorPolicy">ErrorPolicy</a>
+returns <span class="xref">Wolfgang.Etl.Abstractions.ItemErrorAction.Skip</span> to drop the failing item and continue instead, counting
+it in <a class="xref" href="Wolfgang.Etl.Transformers.TakeWhileTransformer-1.html#Wolfgang_Etl_Transformers_TakeWhileTransformer_1_CurrentErrorItemCount">CurrentErrorItemCount</a>. A skipped failure <b>does not end the sequence</b>:
+terminating would be a stronger action than the policy asked for, and a predicate that threw
+returned no verdict, so it cannot stand in for the <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a> that normally stops the
+run. A genuine <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a> still ends it, and is never counted as an error.
 </p>
 </div>
 
@@ -185,7 +194,7 @@ Exceptions thrown by the predicate propagate to the caller.
 
   <h3 id="Wolfgang_Etl_Transformers_TakeWhileTransformer_1__ctor_System_Func__0_System_Boolean__" data-uid="Wolfgang.Etl.Transformers.TakeWhileTransformer`1.#ctor(System.Func{`0,System.Boolean})">
   TakeWhileTransformer(Func&lt;T, bool&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.7.0/src/Wolfgang.Etl.Transformers/TakeWhileTransformer.cs/#L55"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.0/src/Wolfgang.Etl.Transformers/TakeWhileTransformer.cs/#L66"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance with a synchronous predicate.</p>
@@ -222,9 +231,51 @@ Exceptions thrown by the predicate propagate to the caller.
 
   <a id="Wolfgang_Etl_Transformers_TakeWhileTransformer_1__ctor_" data-uid="Wolfgang.Etl.Transformers.TakeWhileTransformer`1.#ctor*"></a>
 
+  <h3 id="Wolfgang_Etl_Transformers_TakeWhileTransformer_1__ctor_System_Func__0_System_Boolean__Wolfgang_Etl_Transformers_DelegateTransformerOptions_" data-uid="Wolfgang.Etl.Transformers.TakeWhileTransformer`1.#ctor(System.Func{`0,System.Boolean},Wolfgang.Etl.Transformers.DelegateTransformerOptions)">
+  TakeWhileTransformer(Func&lt;T, bool&gt;, DelegateTransformerOptions)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.0/src/Wolfgang.Etl.Transformers/TakeWhileTransformer.cs/#L81"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Initializes a new instance with a synchronous predicate and an error policy.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TakeWhileTransformer(Func&lt;T, bool&gt; predicate, DelegateTransformerOptions options)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>predicate</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;T, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;</dt>
+    <dd><p>The predicate evaluated for each item.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html">DelegateTransformerOptions</a></dt>
+    <dd><p>Controls what happens when <code class="paramref">predicate</code> throws.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">predicate</code> or <code class="paramref">options</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Wolfgang_Etl_Transformers_TakeWhileTransformer_1__ctor_" data-uid="Wolfgang.Etl.Transformers.TakeWhileTransformer`1.#ctor*"></a>
+
   <h3 id="Wolfgang_Etl_Transformers_TakeWhileTransformer_1__ctor_System_Func__0_System_Threading_Tasks_ValueTask_System_Boolean___" data-uid="Wolfgang.Etl.Transformers.TakeWhileTransformer`1.#ctor(System.Func{`0,System.Threading.Tasks.ValueTask{System.Boolean}})">
   TakeWhileTransformer(Func&lt;T, ValueTask&lt;bool&gt;&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.7.0/src/Wolfgang.Etl.Transformers/TakeWhileTransformer.cs/#L72"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.0/src/Wolfgang.Etl.Transformers/TakeWhileTransformer.cs/#L100"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance with an asynchronous predicate.</p>
@@ -260,6 +311,90 @@ Useful for I/O-bound stop conditions.</p>
 
 
 
+  <a id="Wolfgang_Etl_Transformers_TakeWhileTransformer_1__ctor_" data-uid="Wolfgang.Etl.Transformers.TakeWhileTransformer`1.#ctor*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_TakeWhileTransformer_1__ctor_System_Func__0_System_Threading_Tasks_ValueTask_System_Boolean___Wolfgang_Etl_Transformers_DelegateTransformerOptions_" data-uid="Wolfgang.Etl.Transformers.TakeWhileTransformer`1.#ctor(System.Func{`0,System.Threading.Tasks.ValueTask{System.Boolean}},Wolfgang.Etl.Transformers.DelegateTransformerOptions)">
+  TakeWhileTransformer(Func&lt;T, ValueTask&lt;bool&gt;&gt;, DelegateTransformerOptions)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.0/src/Wolfgang.Etl.Transformers/TakeWhileTransformer.cs/#L115"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Initializes a new instance with an asynchronous predicate and an error policy.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TakeWhileTransformer(Func&lt;T, ValueTask&lt;bool&gt;&gt; predicate, DelegateTransformerOptions options)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>predicate</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;T, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.valuetask-1">ValueTask</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;&gt;</dt>
+    <dd><p>The predicate evaluated for each item.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html">DelegateTransformerOptions</a></dt>
+    <dd><p>Controls what happens when <code class="paramref">predicate</code> throws.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">predicate</code> or <code class="paramref">options</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Wolfgang_Etl_Transformers_TakeWhileTransformer_1_CurrentErrorItemCount_" data-uid="Wolfgang.Etl.Transformers.TakeWhileTransformer`1.CurrentErrorItemCount*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_TakeWhileTransformer_1_CurrentErrorItemCount" data-uid="Wolfgang.Etl.Transformers.TakeWhileTransformer`1.CurrentErrorItemCount">
+  CurrentErrorItemCount
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.0/src/Wolfgang.Etl.Transformers/TakeWhileTransformer.cs/#L135"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The number of items dropped so far because the predicate threw and the error policy returned
+<span class="xref">Wolfgang.Etl.Abstractions.ItemErrorAction.Skip</span>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int CurrentErrorItemCount { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="Wolfgang_Etl_Transformers_TakeWhileTransformer_1_CurrentErrorItemCount_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Cumulative across every enumeration produced by this instance. Only a thrown exception
+counts; ending the sequence because the predicate returned <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a> is
+ordinary behaviour and is not an error.</p>
+</div>
+
+
+
+
   <h2 class="section" id="methods">Methods
 </h2>
 
@@ -268,7 +403,7 @@ Useful for I/O-bound stop conditions.</p>
 
   <h3 id="Wolfgang_Etl_Transformers_TakeWhileTransformer_1_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__" data-uid="Wolfgang.Etl.Transformers.TakeWhileTransformer`1.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})">
   TransformAsync(IAsyncEnumerable&lt;T&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.7.0/src/Wolfgang.Etl.Transformers/TakeWhileTransformer.cs/#L91"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.0/src/Wolfgang.Etl.Transformers/TakeWhileTransformer.cs/#L149"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Asynchronously yields items from the start of <code class="paramref">items</code> while the
@@ -315,7 +450,7 @@ returns <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/bu
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.7.0/src/Wolfgang.Etl.Transformers/TakeWhileTransformer.cs/#L42" class="edit-link">Edit this page</a>
+          <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.0/src/Wolfgang.Etl.Transformers/TakeWhileTransformer.cs/#L51" class="edit-link">Edit this page</a>
         </div>
 
 

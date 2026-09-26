@@ -92,6 +92,20 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/Wolfgang.Etl.Transformers.DelegateTransformerOptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Wolfgang.Etl.Transformers.DelegateTransformerOptions.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "Wolfgang.Etl.Transformers.DelegateTransformerOptions",
+      "Summary": "<p sourcefile=\"api/Wolfgang.Etl.Transformers.DelegateTransformerOptions.yml\" sourcestartlinenumber=\"1\">Configuration for the transformers that invoke a caller-supplied delegate, controlling what\nhappens when that delegate throws for a single item.</p>\n"
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/Wolfgang.Etl.Transformers.DistinctByTransformer-2.yml",
       "output": {
         ".html": {

@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/ETL-Transformers/new/v0.7.0/apiSpec/new?filename=Wolfgang_Etl_Transformers_ProgressReportingTransformer_1.md&amp;value=---%0Auid%3A%20Wolfgang.Etl.Transformers.ProgressReportingTransformer%601%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/ETL-Transformers/new/v0.8.0/apiSpec/new?filename=Wolfgang_Etl_Transformers_ProgressReportingTransformer_1.md&amp;value=---%0Auid%3A%20Wolfgang.Etl.Transformers.ProgressReportingTransformer%601%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -75,7 +75,7 @@
 
 
   <h1 id="Wolfgang_Etl_Transformers_ProgressReportingTransformer_1" data-uid="Wolfgang.Etl.Transformers.ProgressReportingTransformer`1" class="text-break">
-Class ProgressReportingTransformer&lt;T&gt;  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.7.0/src/Wolfgang.Etl.Transformers/ProgressReportingTransformer.cs/#L47"><i class="bi bi-code-slash"></i></a>
+Class ProgressReportingTransformer&lt;T&gt;  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.0/src/Wolfgang.Etl.Transformers/ProgressReportingTransformer.cs/#L68"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -177,8 +177,27 @@ async overload if the callback itself performs I/O.
 </p>
 <p>
 Exceptions thrown by the callback propagate to the consumer through the normal
-<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iasyncenumerable-1">IAsyncEnumerable&lt;T&gt;</a> pull contract.
+<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iasyncenumerable-1">IAsyncEnumerable&lt;T&gt;</a> pull contract and end the run. Because the callback is
+invoked before the item is yielded, the item whose callback threw is never delivered
+downstream; items before it already have been.
 </p>
+<p>
+This type deliberately does not accept a <a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html">DelegateTransformerOptions</a>
+<code>ErrorPolicy</code>. The callback observes items rather than transforming them, so
+<code>Skip</code> would mean dropping data because a progress notification failed. To keep a run
+alive when the callback fails, handle the failure inside the callback itself:
+</p>
+<pre><code class="lang-csharp">var reporter = new ProgressReportingTransformer&lt;Order&gt;(item =&gt;
+{
+    try
+    {
+        myProgress.Report(item);
+    }
+    catch (Exception ex)
+    {
+        logger.LogWarning(ex, "Progress callback failed");
+    }
+});</code></pre>
 </div>
 
 
@@ -190,7 +209,7 @@ Exceptions thrown by the callback propagate to the consumer through the normal
 
   <h3 id="Wolfgang_Etl_Transformers_ProgressReportingTransformer_1__ctor_System_Action__0__" data-uid="Wolfgang.Etl.Transformers.ProgressReportingTransformer`1.#ctor(System.Action{`0})">
   ProgressReportingTransformer(Action&lt;T&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.7.0/src/Wolfgang.Etl.Transformers/ProgressReportingTransformer.cs/#L63"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.0/src/Wolfgang.Etl.Transformers/ProgressReportingTransformer.cs/#L84"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance that invokes a synchronous callback for each item.</p>
@@ -230,7 +249,7 @@ Must not be <a href="https://learn.microsoft.com/dotnet/csharp/language-referenc
 
   <h3 id="Wolfgang_Etl_Transformers_ProgressReportingTransformer_1__ctor_System_Func__0_System_Threading_Tasks_ValueTask__" data-uid="Wolfgang.Etl.Transformers.ProgressReportingTransformer`1.#ctor(System.Func{`0,System.Threading.Tasks.ValueTask})">
   ProgressReportingTransformer(Func&lt;T, ValueTask&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.7.0/src/Wolfgang.Etl.Transformers/ProgressReportingTransformer.cs/#L80"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.0/src/Wolfgang.Etl.Transformers/ProgressReportingTransformer.cs/#L101"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance that invokes an asynchronous callback for each item.</p>
@@ -274,7 +293,7 @@ Must not be <a href="https://learn.microsoft.com/dotnet/csharp/language-referenc
 
   <h3 id="Wolfgang_Etl_Transformers_ProgressReportingTransformer_1_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__" data-uid="Wolfgang.Etl.Transformers.ProgressReportingTransformer`1.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})">
   TransformAsync(IAsyncEnumerable&lt;T&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.7.0/src/Wolfgang.Etl.Transformers/ProgressReportingTransformer.cs/#L99"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.0/src/Wolfgang.Etl.Transformers/ProgressReportingTransformer.cs/#L120"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Asynchronously yields each item from <code class="paramref">items</code>, invoking the callback
@@ -321,7 +340,7 @@ same order.</p>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.7.0/src/Wolfgang.Etl.Transformers/ProgressReportingTransformer.cs/#L47" class="edit-link">Edit this page</a>
+          <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.0/src/Wolfgang.Etl.Transformers/ProgressReportingTransformer.cs/#L68" class="edit-link">Edit this page</a>
         </div>
 
 

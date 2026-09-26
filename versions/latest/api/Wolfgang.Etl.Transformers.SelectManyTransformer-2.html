@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/ETL-Transformers/new/v0.7.0/apiSpec/new?filename=Wolfgang_Etl_Transformers_SelectManyTransformer_2.md&amp;value=---%0Auid%3A%20Wolfgang.Etl.Transformers.SelectManyTransformer%602%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/ETL-Transformers/new/v0.8.0/apiSpec/new?filename=Wolfgang_Etl_Transformers_SelectManyTransformer_2.md&amp;value=---%0Auid%3A%20Wolfgang.Etl.Transformers.SelectManyTransformer%602%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -75,7 +75,7 @@
 
 
   <h1 id="Wolfgang_Etl_Transformers_SelectManyTransformer_2" data-uid="Wolfgang.Etl.Transformers.SelectManyTransformer`2" class="text-break">
-Class SelectManyTransformer&lt;TSource, TDestination&gt;  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.7.0/src/Wolfgang.Etl.Transformers/SelectManyTransformer.cs/#L57"><i class="bi bi-code-slash"></i></a>
+Class SelectManyTransformer&lt;TSource, TDestination&gt;  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.0/src/Wolfgang.Etl.Transformers/SelectManyTransformer.cs/#L63"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
@@ -89,7 +89,7 @@ and yields the concatenation of all those sequences.</p>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class SelectManyTransformer&lt;TSource, TDestination&gt; : ITransformAsync&lt;TSource, TDestination&gt; where TSource : notnull where TDestination : notnull</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class SelectManyTransformer&lt;TSource, TDestination&gt; : ITransformAsync&lt;TSource, TDestination&gt;, IReportsItemErrors where TSource : notnull where TDestination : notnull</code></pre>
   </div>
 
 
@@ -116,6 +116,7 @@ and yields the concatenation of all those sequences.</p>
     <dt>Implements</dt>
     <dd>
       <div><span class="xref">ITransformAsync</span>&lt;TSource, TDestination&gt;</div>
+      <div><span class="xref">IReportsItemErrors</span></div>
     </dd>
   </dl>
 
@@ -183,8 +184,13 @@ no cancellation, no Skip/Max - to keep the hot loop minimal. Compose with dedica
 transformers when those concerns are needed.
 </p>
 <p>
-Exceptions thrown by the selector or by enumerating the returned sequence propagate to the
-caller. If the selector returns <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a> a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.nullreferenceexception">NullReferenceException</a>
+By default, exceptions thrown by the selector or by enumerating the returned sequence propagate
+to the caller. Pass a <a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html">DelegateTransformerOptions</a> whose
+<a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html#Wolfgang_Etl_Transformers_DelegateTransformerOptions_ErrorPolicy">ErrorPolicy</a> returns <span class="xref">Wolfgang.Etl.Abstractions.ItemErrorAction.Skip</span>
+to abandon the failing source item's expansion and continue with the next one instead; results
+already yielded from that item are kept, the item is counted once in
+<a class="xref" href="Wolfgang.Etl.Transformers.SelectManyTransformer-2.html#Wolfgang_Etl_Transformers_SelectManyTransformer_2_CurrentErrorItemCount">CurrentErrorItemCount</a>, and both the selector call and the enumeration of what it
+returned are covered. If the selector returns <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a> a <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.nullreferenceexception">NullReferenceException</a>
 will be raised on iteration, matching the behaviour of LINQ's
 <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.linq.enumerable.selectmany#system-linq-enumerable-selectmany-2(system-collections-generic-ienumerable((-0))-system-func((-0-system-collections-generic-ienumerable((-1)))))">SelectMany&lt;TSource, TResult&gt;(IEnumerable&lt;TSource&gt;, Func&lt;TSource, IEnumerable&lt;TResult&gt;&gt;)</a>.
 </p>
@@ -199,7 +205,7 @@ will be raised on iteration, matching the behaviour of LINQ's
 
   <h3 id="Wolfgang_Etl_Transformers_SelectManyTransformer_2__ctor_System_Func__0_System_Collections_Generic_IAsyncEnumerable__1___" data-uid="Wolfgang.Etl.Transformers.SelectManyTransformer`2.#ctor(System.Func{`0,System.Collections.Generic.IAsyncEnumerable{`1}})">
   SelectManyTransformer(Func&lt;TSource, IAsyncEnumerable&lt;TDestination&gt;&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.7.0/src/Wolfgang.Etl.Transformers/SelectManyTransformer.cs/#L90"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.0/src/Wolfgang.Etl.Transformers/SelectManyTransformer.cs/#L122"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance with an asynchronous selector that returns an
@@ -238,9 +244,52 @@ Useful for streamed inner expansions such as paged database queries.</p>
 
   <a id="Wolfgang_Etl_Transformers_SelectManyTransformer_2__ctor_" data-uid="Wolfgang.Etl.Transformers.SelectManyTransformer`2.#ctor*"></a>
 
+  <h3 id="Wolfgang_Etl_Transformers_SelectManyTransformer_2__ctor_System_Func__0_System_Collections_Generic_IAsyncEnumerable__1___Wolfgang_Etl_Transformers_DelegateTransformerOptions_" data-uid="Wolfgang.Etl.Transformers.SelectManyTransformer`2.#ctor(System.Func{`0,System.Collections.Generic.IAsyncEnumerable{`1}},Wolfgang.Etl.Transformers.DelegateTransformerOptions)">
+  SelectManyTransformer(Func&lt;TSource, IAsyncEnumerable&lt;TDestination&gt;&gt;, DelegateTransformerOptions)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.0/src/Wolfgang.Etl.Transformers/SelectManyTransformer.cs/#L142"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Initializes a new instance with an asynchronous selector function and an error policy.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SelectManyTransformer(Func&lt;TSource, IAsyncEnumerable&lt;TDestination&gt;&gt; selector, DelegateTransformerOptions options)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>selector</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TSource, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iasyncenumerable-1">IAsyncEnumerable</a>&lt;TDestination&gt;&gt;</dt>
+    <dd><p>A function that expands each input item into an asynchronous sequence.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html">DelegateTransformerOptions</a></dt>
+    <dd><p>Controls what happens when <code class="paramref">selector</code> throws, either when it is called or
+while the sequence it returned is being enumerated.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">selector</code> or <code class="paramref">options</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Wolfgang_Etl_Transformers_SelectManyTransformer_2__ctor_" data-uid="Wolfgang.Etl.Transformers.SelectManyTransformer`2.#ctor*"></a>
+
   <h3 id="Wolfgang_Etl_Transformers_SelectManyTransformer_2__ctor_System_Func__0_System_Collections_Generic_IEnumerable__1___" data-uid="Wolfgang.Etl.Transformers.SelectManyTransformer`2.#ctor(System.Func{`0,System.Collections.Generic.IEnumerable{`1}})">
   SelectManyTransformer(Func&lt;TSource, IEnumerable&lt;TDestination&gt;&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.7.0/src/Wolfgang.Etl.Transformers/SelectManyTransformer.cs/#L72"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.0/src/Wolfgang.Etl.Transformers/SelectManyTransformer.cs/#L80"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance with a synchronous selector that returns an
@@ -276,6 +325,91 @@ Useful for streamed inner expansions such as paged database queries.</p>
 
 
 
+  <a id="Wolfgang_Etl_Transformers_SelectManyTransformer_2__ctor_" data-uid="Wolfgang.Etl.Transformers.SelectManyTransformer`2.#ctor*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_SelectManyTransformer_2__ctor_System_Func__0_System_Collections_Generic_IEnumerable__1___Wolfgang_Etl_Transformers_DelegateTransformerOptions_" data-uid="Wolfgang.Etl.Transformers.SelectManyTransformer`2.#ctor(System.Func{`0,System.Collections.Generic.IEnumerable{`1}},Wolfgang.Etl.Transformers.DelegateTransformerOptions)">
+  SelectManyTransformer(Func&lt;TSource, IEnumerable&lt;TDestination&gt;&gt;, DelegateTransformerOptions)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.0/src/Wolfgang.Etl.Transformers/SelectManyTransformer.cs/#L98"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Initializes a new instance with a synchronous selector function and an error policy.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SelectManyTransformer(Func&lt;TSource, IEnumerable&lt;TDestination&gt;&gt; selector, DelegateTransformerOptions options)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>selector</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TSource, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;TDestination&gt;&gt;</dt>
+    <dd><p>A function that expands each input item into a sequence.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html">DelegateTransformerOptions</a></dt>
+    <dd><p>Controls what happens when <code class="paramref">selector</code> throws, either when it is called or
+while the sequence it returned is being enumerated.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">selector</code> or <code class="paramref">options</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <h2 class="section" id="properties">Properties
+</h2>
+
+
+  <a id="Wolfgang_Etl_Transformers_SelectManyTransformer_2_CurrentErrorItemCount_" data-uid="Wolfgang.Etl.Transformers.SelectManyTransformer`2.CurrentErrorItemCount*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_SelectManyTransformer_2_CurrentErrorItemCount" data-uid="Wolfgang.Etl.Transformers.SelectManyTransformer`2.CurrentErrorItemCount">
+  CurrentErrorItemCount
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.0/src/Wolfgang.Etl.Transformers/SelectManyTransformer.cs/#L166"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>The number of source items abandoned so far because the selector threw and the error policy
+returned <span class="xref">Wolfgang.Etl.Abstractions.ItemErrorAction.Skip</span>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int CurrentErrorItemCount { get; }</code></pre>
+  </div>
+
+
+
+
+
+  <h4 class="section">Property Value</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+  <h4 class="section" id="Wolfgang_Etl_Transformers_SelectManyTransformer_2_CurrentErrorItemCount_remarks">Remarks</h4>
+  <div class="markdown level1 remarks"><p>Counts source items, not expanded results, and is cumulative across every enumeration
+produced by this instance. A source item whose failure aborted the run is not counted,
+because the exception is re-thrown instead.</p>
+</div>
+
+
+
+
   <h2 class="section" id="methods">Methods
 </h2>
 
@@ -284,7 +418,7 @@ Useful for streamed inner expansions such as paged database queries.</p>
 
   <h3 id="Wolfgang_Etl_Transformers_SelectManyTransformer_2_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__" data-uid="Wolfgang.Etl.Transformers.SelectManyTransformer`2.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})">
   TransformAsync(IAsyncEnumerable&lt;TSource&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.7.0/src/Wolfgang.Etl.Transformers/SelectManyTransformer.cs/#L106"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.0/src/Wolfgang.Etl.Transformers/SelectManyTransformer.cs/#L177"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Asynchronously yields the concatenation of the per-item sequences produced by the
@@ -330,7 +464,7 @@ configured selector.</p>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.7.0/src/Wolfgang.Etl.Transformers/SelectManyTransformer.cs/#L57" class="edit-link">Edit this page</a>
+          <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.0/src/Wolfgang.Etl.Transformers/SelectManyTransformer.cs/#L63" class="edit-link">Edit this page</a>
         </div>
 
 
