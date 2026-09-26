@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Wolfgang.Etl.Abstractions;
 
@@ -26,11 +27,19 @@ namespace Wolfgang.Etl.Transformers;
 /// I/O-bound stop conditions such as a state-check against an external system.
 /// </para>
 /// <para>
-/// Implements only <see cref="ITransformAsync{TSource, TDestination}"/> - no progress, no
-/// cancellation, no Skip/Max - to keep the hot loop minimal.
+/// Implements <see cref="ITransformAsync{TSource, TDestination}"/> and
+/// <see cref="IReportsItemErrors"/> - no progress, no cancellation, no Skip/Max - to keep the hot
+/// loop minimal. The one counter is the opt-in <see cref="CurrentErrorItemCount"/>, which stays at zero
+/// on the default path.
 /// </para>
 /// <para>
-/// Exceptions thrown by the predicate propagate to the caller.
+/// By default an exception thrown by the predicate propagates to the caller. Pass a
+/// <see cref="DelegateTransformerOptions"/> whose <see cref="DelegateTransformerOptions.ErrorPolicy"/>
+/// returns <see cref="ItemErrorAction.Skip"/> to drop the failing item and continue instead, counting
+/// it in <see cref="CurrentErrorItemCount"/>. A skipped failure <b>does not end the sequence</b>:
+/// terminating would be a stronger action than the policy asked for, and a predicate that threw
+/// returned no verdict, so it cannot stand in for the <see langword="false"/> that normally stops the
+/// run. A genuine <see langword="false"/> still ends it, and is never counted as an error.
 /// </para>
 /// </remarks>
 /// <example>
@@ -39,11 +48,13 @@ namespace Wolfgang.Etl.Transformers;
 ///     var head = new TakeWhileTransformer&lt;Row&gt;(r =&gt; r.IsComplete);
 /// </code>
 /// </example>
-public sealed class TakeWhileTransformer<T> : ITransformAsync<T, T>
+public sealed class TakeWhileTransformer<T> : ITransformAsync<T, T>, IReportsItemErrors
     where T : notnull
 {
     private readonly Func<T, bool>? _syncPredicate;
     private readonly Func<T, ValueTask<bool>>? _asyncPredicate;
+    private readonly DelegateTransformerOptions _options;
+    private int _currentErrorItemCount;
 
 
 
@@ -53,10 +64,27 @@ public sealed class TakeWhileTransformer<T> : ITransformAsync<T, T>
     /// <param name="predicate">A function that returns <see langword="true"/> while items should continue to be yielded.</param>
     /// <exception cref="ArgumentNullException"><paramref name="predicate"/> is <see langword="null"/>.</exception>
     public TakeWhileTransformer(Func<T, bool> predicate)
+        : this(predicate, DelegateTransformerOptions.Default)
+    {
+    }
+
+
+
+    /// <summary>
+    /// Initializes a new instance with a synchronous predicate and an error policy.
+    /// </summary>
+    /// <param name="predicate">The predicate evaluated for each item.</param>
+    /// <param name="options">Controls what happens when <paramref name="predicate"/> throws.</param>
+    /// <exception cref="ArgumentNullException">
+    /// <paramref name="predicate"/> or <paramref name="options"/> is <see langword="null"/>.
+    /// </exception>
+    public TakeWhileTransformer(Func<T, bool> predicate, DelegateTransformerOptions options)
     {
         ArgumentNullException.ThrowIfNull(predicate);
+        ArgumentNullException.ThrowIfNull(options);
 
         _syncPredicate = predicate;
+        _options = options;
     }
 
 
@@ -70,11 +98,41 @@ public sealed class TakeWhileTransformer<T> : ITransformAsync<T, T>
     /// </param>
     /// <exception cref="ArgumentNullException"><paramref name="predicate"/> is <see langword="null"/>.</exception>
     public TakeWhileTransformer(Func<T, ValueTask<bool>> predicate)
+        : this(predicate, DelegateTransformerOptions.Default)
+    {
+    }
+
+
+
+    /// <summary>
+    /// Initializes a new instance with an asynchronous predicate and an error policy.
+    /// </summary>
+    /// <param name="predicate">The predicate evaluated for each item.</param>
+    /// <param name="options">Controls what happens when <paramref name="predicate"/> throws.</param>
+    /// <exception cref="ArgumentNullException">
+    /// <paramref name="predicate"/> or <paramref name="options"/> is <see langword="null"/>.
+    /// </exception>
+    public TakeWhileTransformer(Func<T, ValueTask<bool>> predicate, DelegateTransformerOptions options)
     {
         ArgumentNullException.ThrowIfNull(predicate);
+        ArgumentNullException.ThrowIfNull(options);
 
         _asyncPredicate = predicate;
+        _options = options;
     }
+
+
+
+    /// <summary>
+    /// The number of items dropped so far because the predicate threw and the error policy returned
+    /// <see cref="ItemErrorAction.Skip"/>.
+    /// </summary>
+    /// <remarks>
+    /// Cumulative across every enumeration produced by this instance. Only a thrown exception
+    /// counts; ending the sequence because the predicate returned <see langword="false"/> is
+    /// ordinary behaviour and is not an error.
+    /// </remarks>
+    public int CurrentErrorItemCount => Volatile.Read(ref _currentErrorItemCount);
 
 
 
@@ -99,15 +157,37 @@ public sealed class TakeWhileTransformer<T> : ITransformAsync<T, T>
 
 
 
-    private static async IAsyncEnumerable<T> TakeWhileWithSyncPredicateAsync
+    private async IAsyncEnumerable<T> TakeWhileWithSyncPredicateAsync
     (
         IAsyncEnumerable<T> items,
         Func<T, bool> predicate
     )
     {
+        var itemNumber = 0L;
+
         await foreach (var item in items.ConfigureAwait(continueOnCapturedContext: false))
         {
-            if (!predicate(item))
+            itemNumber++;
+
+            bool keepTaking;
+            try
+            {
+                keepTaking = predicate(item);
+            }
+            catch (Exception exception)
+            {
+                if (HandleItemError(itemNumber, exception) == ItemErrorAction.Skip)
+                {
+                    // Drop the item and keep evaluating. Ending the sequence here would be a
+                    // stronger action than Skip asks for: a predicate that threw gave no verdict,
+                    // so it cannot stand in for the false that normally stops the run.
+                    continue;
+                }
+
+                throw;
+            }
+
+            if (!keepTaking)
             {
                 yield break;
             }
@@ -118,20 +198,58 @@ public sealed class TakeWhileTransformer<T> : ITransformAsync<T, T>
 
 
 
-    private static async IAsyncEnumerable<T> TakeWhileWithAsyncPredicateAsync
+    private async IAsyncEnumerable<T> TakeWhileWithAsyncPredicateAsync
     (
         IAsyncEnumerable<T> items,
         Func<T, ValueTask<bool>> predicate
     )
     {
+        var itemNumber = 0L;
+
         await foreach (var item in items.ConfigureAwait(continueOnCapturedContext: false))
         {
-            if (!await predicate(item).ConfigureAwait(continueOnCapturedContext: false))
+            itemNumber++;
+
+            bool keepTaking;
+            try
+            {
+                keepTaking = await predicate(item).ConfigureAwait(continueOnCapturedContext: false);
+            }
+            catch (Exception exception)
+            {
+                if (HandleItemError(itemNumber, exception) == ItemErrorAction.Skip)
+                {
+                    // Drop the item and keep evaluating. Ending the sequence here would be a
+                    // stronger action than Skip asks for: a predicate that threw gave no verdict,
+                    // so it cannot stand in for the false that normally stops the run.
+                    continue;
+                }
+
+                throw;
+            }
+
+            if (!keepTaking)
             {
                 yield break;
             }
 
             yield return item;
         }
+    }
+
+
+
+    /// <summary>
+    /// Applies the configured error policy and, when it asks to skip, records the dropped item.
+    /// </summary>
+    private ItemErrorAction HandleItemError(long itemNumber, Exception exception)
+    {
+        var action = _options.ErrorPolicy(new ItemErrorContext(itemNumber, exception));
+        if (action == ItemErrorAction.Skip)
+        {
+            _ = Interlocked.Increment(ref _currentErrorItemCount);
+        }
+
+        return action;
     }
 }
