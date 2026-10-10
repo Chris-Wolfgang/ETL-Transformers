@@ -30,8 +30,7 @@ public class SelectManyErrorPolicyDisposalTests
         // when it is called rather than on the first MoveNextAsync.
         var sut = new SelectManyTransformer<int, string>
         (
-            (Func<int, IAsyncEnumerable<string>>)(i =>
-                i == 2 ? throw new InvalidOperationException() : ToAsync(new[] { $"v{i}" })),
+            i => i == 2 ? throw new InvalidOperationException() : ToAsync(new[] { $"v{i}" }),
             SkipAll()
         );
 
@@ -48,8 +47,7 @@ public class SelectManyErrorPolicyDisposalTests
     {
         var sut = new SelectManyTransformer<int, string>
         (
-            (Func<int, IEnumerable<string>>)(i =>
-                i == 2 ? throw new InvalidOperationException() : new[] { $"v{i}" }),
+            i => i == 2 ? throw new InvalidOperationException() : new[] { $"v{i}" },
             SkipAll()
         );
 
@@ -134,10 +132,12 @@ public class SelectManyErrorPolicyDisposalTests
         // interface members honest rather than leaving them unexercised.
         IEnumerable sequence = new ThrowingSequence(7, throwOnMoveNext: false, throwOnDispose: false);
         var enumerator = sequence.GetEnumerator();
-
-        Assert.True(enumerator.MoveNext());
-        Assert.Equal("v7", enumerator.Current);
-        Assert.Throws<NotSupportedException>(() => enumerator.Reset());
+        using (enumerator as IDisposable)
+        {
+            Assert.True(enumerator.MoveNext());
+            Assert.Equal("v7", enumerator.Current);
+            Assert.Throws<NotSupportedException>(() => enumerator.Reset());
+        }
     }
 
 
@@ -216,8 +216,14 @@ public class SelectManyErrorPolicyDisposalTests
         {
             if (_throwOnDispose)
             {
-                throw new ObjectDisposedException(nameof(ThrowingEnumerator));
+                FailDisposal();
             }
         }
+
+
+        // The fault this double exists to inject: a sequence whose cleanup fails, which the
+        // transformer's error policy must tolerate after a skipped item.
+        private static void FailDisposal() =>
+            throw new ObjectDisposedException(nameof(ThrowingEnumerator));
     }
 }

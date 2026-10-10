@@ -238,10 +238,12 @@ public class ProgressReportingTransformerTests
     [Fact]
     public async Task TransformAsync_when_callback_throws_yields_prior_items_but_not_the_failing_item()
     {
+        var observed = new List<int>();
         var sut = new ProgressReportingTransformer<int>
         (
             item =>
             {
+                observed.Add(item);
                 if (item == 3)
                 {
                     throw new InvalidOperationException("boom");
@@ -262,6 +264,7 @@ public class ProgressReportingTransformerTests
         );
 
         Assert.Equal(new[] { 1, 2 }, yielded);
+        Assert.Equal(new[] { 1, 2, 3 }, observed);
     }
 
 
