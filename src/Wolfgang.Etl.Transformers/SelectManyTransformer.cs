@@ -342,6 +342,8 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
         }
         catch when (failureHandled)
         {
+            // Deliberately ignored: this item's failure already went through the error policy,
+            // so a cleanup error must neither end the run nor be counted a second time.
         }
     }
 
@@ -366,6 +368,8 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
         }
         catch when (failureHandled)
         {
+            // Deliberately ignored: this item's failure already went through the error policy,
+            // so a cleanup error must neither end the run nor be counted a second time.
         }
     }
 
