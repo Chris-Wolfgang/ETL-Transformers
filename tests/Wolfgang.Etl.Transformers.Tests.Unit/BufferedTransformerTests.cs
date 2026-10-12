@@ -325,11 +325,10 @@ public class BufferedTransformerTests
         await foreach (var _ in sut.TransformAsync(TrackedSource(50, () => Interlocked.Increment(ref produced))))
         {
             Interlocked.Increment(ref consumed);
-            var inFlight = produced - consumed;
-            if (inFlight > maxInFlight)
-            {
-                maxInFlight = inFlight;
-            }
+            // Math.Max rather than an if: whether in-flight ever exceeds the running max
+            // depends on scheduling, so the if-body ran on some runners (Linux) and never on
+            // others (macOS), flapping this assembly's 100% coverage gate.
+            maxInFlight = Math.Max(maxInFlight, produced - consumed);
         }
 
         Assert.Equal(50, consumed);
