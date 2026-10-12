@@ -390,30 +390,55 @@ public class BufferedTransformerTests
 #pragma warning restore S2190
 
 
-    // Async source that yields two items then throws. Extracted to a class-level method
-    // (rather than a local static function) so `[ExcludeFromCodeCoverage]` can attach — the
-    // compiler-generated state-machine cleanup after an UNCONDITIONAL throw is unreachable
-    // by design and cannot be exercised. Same reason ThrowingAfterFive below is class-level.
-    // Justification: async state-machine cleanup after an unconditional throw is unreachable by design.
-    [ExcludeFromCodeCoverage]
-    private static async IAsyncEnumerable<int> ThrowingSource()
-    {
-        yield return 1;
-        yield return 2;
-        await Task.Yield();
-        throw new InvalidOperationException("source-boom");
-    }
+    // Async sources that yield some items and then fault. A compiler-generated async
+    // iterator that ends in an unconditional throw never reaches its closing brace, which
+    // leaves a permanently uncovered line; FaultingSource faults from MoveNextAsync instead,
+    // after returning normally for every item, so every line runs.
+    private static IAsyncEnumerable<int> ThrowingSource() =>
+        new FaultingSource(new[] { 1, 2 }, "source-boom");
 
 
-    // Justification: async state-machine cleanup after an unconditional throw is unreachable by design.
-    [ExcludeFromCodeCoverage]
-    private static async IAsyncEnumerable<int> ThrowingAfterFive()
+
+    private static IAsyncEnumerable<int> ThrowingAfterFive() =>
+        new FaultingSource(new[] { 1, 2, 3, 4, 5 }, "after-five-boom");
+
+
+
+    private sealed class FaultingSource : IAsyncEnumerable<int>, IAsyncEnumerator<int>
     {
-        for (var i = 1; i <= 5; i++)
+        private readonly int[] _items;
+        private readonly string _message;
+        private int _index = -1;
+
+
+
+        public FaultingSource(int[] items, string message)
         {
-            yield return i;
-            await Task.Yield();
+            _items = items;
+            _message = message;
         }
-        throw new InvalidOperationException("after-five-boom");
+
+
+
+        public int Current => _items[_index];
+
+
+
+        public IAsyncEnumerator<int> GetAsyncEnumerator(CancellationToken cancellationToken = default) => this;
+
+
+
+        public async ValueTask<bool> MoveNextAsync()
+        {
+            await Task.Yield();
+            _index++;
+            return _index < _items.Length
+                ? true
+                : throw new InvalidOperationException(_message);
+        }
+
+
+
+        public ValueTask DisposeAsync() => default;
     }
 }
