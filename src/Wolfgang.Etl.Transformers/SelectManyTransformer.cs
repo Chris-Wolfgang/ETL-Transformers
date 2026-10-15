@@ -220,15 +220,12 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
             {
                 while (true)
                 {
-                    TDestination current;
                     try
                     {
                         if (!enumerator.MoveNext())
                         {
                             break;
                         }
-
-                        current = enumerator.Current;
                     }
                     catch (Exception exception)
                     {
@@ -241,7 +238,7 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
                         throw;
                     }
 
-                    yield return current;
+                    yield return enumerator.Current;
                 }
             }
             finally
