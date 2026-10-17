@@ -28,10 +28,11 @@ namespace Wolfgang.Etl.Transformers;
 /// I/O-bound start conditions such as a state-check against an external system.
 /// </para>
 /// <para>
-/// Implements <see cref="ITransformAsync{TSource, TDestination}"/> and
-/// <see cref="IReportsItemErrors"/> - no progress, no cancellation, no Skip/Max - to keep the hot
-/// loop minimal. The one counter is the opt-in <see cref="CurrentErrorItemCount"/>, which stays at zero
-/// on the default path.
+/// Implements <see cref="ITransformAsync{TSource, TDestination}"/> and <see cref="IReportsItemErrors"/>
+/// - no progress, no cancellation, no <c>SkipItemCount</c>/<c>MaximumItemCount</c> limits (unrelated to
+/// <see cref="ItemErrorAction.Skip"/>, which the error policy uses to drop a failing item) - to keep
+/// the hot loop minimal. The one counter is the opt-in <see cref="CurrentErrorItemCount"/>, which stays
+/// at zero on the default path.
 /// </para>
 /// <para>
 /// By default an exception thrown by the predicate propagates to the caller. Pass a

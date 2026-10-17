@@ -54,9 +54,11 @@ namespace Wolfgang.Etl.Transformers;
 /// </item>
 /// </list>
 /// <para>
-/// Implements only <see cref="ITransformAsync{TSource, TDestination}"/> - no progress, no
-/// cancellation, no Skip/Max - to keep the hot loop minimal. The one counter is the opt-in
-/// <see cref="CurrentErrorItemCount"/>, which stays at zero on the default path.
+/// Implements only <see cref="ITransformAsync{TSource, TDestination}"/> - no progress, no cancellation,
+/// no <c>SkipItemCount</c>/<c>MaximumItemCount</c> limits (unrelated to
+/// <see cref="ItemErrorAction.Skip"/>, which the error policy uses to drop a failing item) - to keep
+/// the hot loop minimal. The one counter is the opt-in <see cref="CurrentErrorItemCount"/>, which stays
+/// at zero on the default path.
 /// </para>
 /// </remarks>
 /// <example>

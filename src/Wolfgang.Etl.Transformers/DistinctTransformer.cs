@@ -29,10 +29,11 @@ namespace Wolfgang.Etl.Transformers;
 /// only after a stage that bounds cardinality.
 /// </para>
 /// <para>
-/// Implements <see cref="ITransformAsync{TSource, TDestination}"/> and
-/// <see cref="IReportsItemErrors"/> - no progress, no cancellation, no Skip/Max - to keep the hot
-/// loop minimal. The one counter is the opt-in <see cref="CurrentErrorItemCount"/>, which stays at zero
-/// on the default path.
+/// Implements <see cref="ITransformAsync{TSource, TDestination}"/> and <see cref="IReportsItemErrors"/>
+/// - no progress, no cancellation, no <c>SkipItemCount</c>/<c>MaximumItemCount</c> limits (unrelated to
+/// <see cref="ItemErrorAction.Skip"/>, which the error policy uses to drop a failing item) - to keep
+/// the hot loop minimal. The one counter is the opt-in <see cref="CurrentErrorItemCount"/>, which stays
+/// at zero on the default path.
 /// </para>
 /// <para>
 /// By default an exception thrown by the caller-supplied comparer - from either

@@ -28,8 +28,8 @@ namespace Wolfgang.Etl.Transformers;
 /// composed pipelines when the upstream extractor does not expose a row-skip property.
 /// </para>
 /// <para>
-/// Implements only <see cref="ITransformAsync{TSource, TDestination}"/> - no progress, no
-/// cancellation, no Skip/Max - to keep the hot loop minimal.
+/// Implements only <see cref="ITransformAsync{TSource, TDestination}"/> - no progress, no cancellation,
+/// no <c>SkipItemCount</c>/<c>MaximumItemCount</c> limits - to keep the hot loop minimal.
 /// </para>
 /// </remarks>
 /// <example>

@@ -32,9 +32,10 @@ namespace Wolfgang.Etl.Transformers;
 /// are yielded before any items produced for the second input item, and so on.
 /// </para>
 /// <para>
-/// This type implements only <see cref="ITransformAsync{TSource, TDestination}"/> - no progress,
-/// no cancellation, no Skip/Max - to keep the hot loop minimal. Compose with dedicated
-/// transformers when those concerns are needed.
+/// This type implements only <see cref="ITransformAsync{TSource, TDestination}"/> - no progress, no
+/// cancellation, no <c>SkipItemCount</c>/<c>MaximumItemCount</c> limits (unrelated to
+/// <see cref="ItemErrorAction.Skip"/>, which the error policy uses to drop a failing item) - to keep
+/// the hot loop minimal. Compose with dedicated transformers when those concerns are needed.
 /// </para>
 /// <para>
 /// By default, exceptions thrown by the selector or by enumerating the returned sequence propagate
