@@ -2,9 +2,9 @@ name: Reproducible Build
 
 # Verifies Wolfgang.Etl.Transformers is a deterministic build: the same commit packed on
 # Ubuntu and on Windows is hashed (.dll/.pdb/.nupkg) and the manifests compared.
-# Same-OS/SDK determinism is the guarantee; cross-OS byte-identity is reported ADVISORY
-# (a warning, not a failure) because .NET does not guarantee it and this project currently
-# diverges cross-OS (tracked as a follow-up). See REPRODUCIBLE-BUILD.md.
+# Byte-identity across operating systems is enforced: the manifests must match or the job
+# fails. Directory.Build.targets normalizes the SDK-generated sources to LF, which was the
+# only input that differed between Linux and Windows. See REPRODUCIBLE-BUILD.md.
 
 on:
   pull_request:
@@ -107,13 +107,12 @@ jobs:
           echo "Windows manifest:"
           cat windows/manifest.txt
           echo
-          # Advisory, not a hard failure. Same-OS/SDK determinism holds, but .NET does not
-          # guarantee cross-OS byte-identity (embedded source order, SourceLink/path
-          # normalization, ref-pack differences can leak). Cross-OS divergence is reported as
-          # a warning and tracked in a follow-up issue; flip this to `exit 1` once the gap is
-          # closed. Matches the fleet reference (ETL-SqlBulkCopy #176 / Etl-DbClient #255).
+          # Hard failure. The two OSes must pack to identical bytes. If this fails, diff the
+          # per-TFM .pdb documents first: a generated source written with a different newline
+          # was the cause that Directory.Build.targets now removes.
           if diff -u ubuntu/manifest.txt windows/manifest.txt; then
             echo "Reproducible: Ubuntu and Windows produced byte-identical outputs."
           else
-            echo "::warning::Outputs differ across runners - the build is not byte-identical cross-OS. This is advisory; tracked in issue #193."
+            echo "::error::Outputs differ across runners - the build is not byte-identical cross-OS."
+            exit 1
           fi
