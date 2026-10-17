@@ -47,6 +47,14 @@ namespace Wolfgang.Etl.Transformers;
 /// will be raised on iteration, matching the behaviour of LINQ's
 /// <see cref="System.Linq.Enumerable.SelectMany{TSource, TResult}(System.Collections.Generic.IEnumerable{TSource}, System.Func{TSource, System.Collections.Generic.IEnumerable{TResult}})"/>.
 /// </para>
+/// <para>
+/// With the default options, both constructors behave like LINQ's <c>SelectMany</c>: the same
+/// items in the same order, and the same exception when something fails, whether it is thrown by
+/// the selector, by the inner sequence's <c>MoveNext</c> or <c>Current</c>, or by its disposal. As
+/// with a <see langword="foreach"/> loop, an exception from disposing the inner sequence replaces
+/// one that was already propagating. Only <see cref="ItemErrorAction.Skip"/> departs from this:
+/// a cleanup error on an item the policy skipped is ignored, so that it cannot end the run.
+/// </para>
 /// </remarks>
 /// <example>
 /// <code>
@@ -185,11 +193,13 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
 
 
 
-    // The `ReSharper disable once` inside the loop is deliberate: InspectCode reads
+    // The two `ReSharper disable once` lines inside the loop are deliberate: InspectCode reads
     // IEnumerator<T>.Current as possibly null although TDestination is notnull and the
-    // compiler agrees it is not. No spelling of that read avoids the finding, and a
-    // null-forgiving operator only trades it for two redundancy findings. The explanation
-    // sits here, outside the body, because the method is at the MA0051 length limit.
+    // compiler agrees it is not, and flags both the read and the yield of that value. No
+    // spelling of the read avoids the finding, and a null-forgiving operator only trades it
+    // for two redundancy findings. Current is read inside the try, as in the asynchronous
+    // path, so an exception from it goes through the error policy. The explanation sits
+    // here, outside the body, because the method is at the MA0051 length limit.
     private async IAsyncEnumerable<TDestination> FlattenWithSyncSelectorAsync
     (
         IAsyncEnumerable<TSource> items,
@@ -220,23 +230,26 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
                 throw;
             }
 
-            var failureHandled = false;
+            var failureSkipped = false;
             try
             {
                 while (true)
                 {
+                    TDestination current;
                     try
                     {
                         if (!enumerator.MoveNext())
                         {
                             break;
                         }
+                        // ReSharper disable once AssignNullToNotNullAttribute
+                        current = enumerator.Current;
                     }
                     catch (Exception exception)
                     {
-                        failureHandled = true;
                         if (HandleItemError(itemNumber, exception) == ItemErrorAction.Skip)
                         {
+                            failureSkipped = true;
                             break;
                         }
 
@@ -244,12 +257,12 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
                     }
 
                     // ReSharper disable once AssignNullToNotNullAttribute
-                    yield return enumerator.Current;
+                    yield return current;
                 }
             }
             finally
             {
-                DisposeAfterItem(enumerator, failureHandled);
+                DisposeAfterItem(enumerator, failureSkipped);
             }
         }
     }
@@ -283,7 +296,7 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
                 throw;
             }
 
-            var failureHandled = false;
+            var failureSkipped = false;
             try
             {
                 while (true)
@@ -300,9 +313,9 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
                     }
                     catch (Exception exception)
                     {
-                        failureHandled = true;
                         if (HandleItemError(itemNumber, exception) == ItemErrorAction.Skip)
                         {
+                            failureSkipped = true;
                             break;
                         }
 
@@ -314,7 +327,7 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
             }
             finally
             {
-                await DisposeAfterItemAsync(enumerator, failureHandled)
+                await DisposeAfterItemAsync(enumerator, failureSkipped)
                     .ConfigureAwait(continueOnCapturedContext: false);
             }
         }
@@ -327,26 +340,27 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
     /// failure from the cleanup itself may escape.
     /// </summary>
     /// <param name="enumerator">The inner enumerator to dispose.</param>
-    /// <param name="failureHandled">
-    /// Whether this source item already had a failure put through the error policy.
+    /// <param name="failureSkipped">
+    /// Whether the error policy chose <see cref="ItemErrorAction.Skip"/> for a failure on this item.
     /// </param>
     /// <remarks>
-    /// When the item already failed, a cleanup error is swallowed. Letting it escape would end the
-    /// run and defeat the <see cref="ItemErrorAction.Skip"/> just honoured, or displace the
-    /// exception an <see cref="ItemErrorAction.Abort"/> is already propagating; and putting it
-    /// through the policy again would count the same source item twice. On an item that did not
-    /// fail, a disposal error is not an item-level data error and propagates unchanged.
+    /// Only after a <see cref="ItemErrorAction.Skip"/> is a cleanup error swallowed: letting it
+    /// escape would end the run and defeat the skip just honoured, and putting it through the
+    /// policy again would count the same source item twice. In every other case it propagates,
+    /// exactly as with LINQ's <c>SelectMany</c> or a <see langword="foreach"/> loop: on an item that
+    /// did not fail it surfaces unchanged, and when the item failed and the policy chose
+    /// <see cref="ItemErrorAction.Abort"/>, it replaces the exception that was propagating.
     /// </remarks>
-    private static void DisposeAfterItem(IEnumerator<TDestination> enumerator, bool failureHandled)
+    private static void DisposeAfterItem(IEnumerator<TDestination> enumerator, bool failureSkipped)
     {
         try
         {
             enumerator.Dispose();
         }
-        catch when (failureHandled)
+        catch when (failureSkipped)
         {
-            // Deliberately ignored: this item's failure already went through the error policy,
-            // so a cleanup error must neither end the run nor be counted a second time.
+            // Deliberately ignored: this item was skipped by the error policy, so a cleanup error
+            // must neither end the run nor be counted a second time.
         }
     }
 
@@ -356,23 +370,23 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
     /// The asynchronous counterpart of <see cref="DisposeAfterItem"/>, applying the same rule.
     /// </summary>
     /// <param name="enumerator">The inner enumerator to dispose.</param>
-    /// <param name="failureHandled">
-    /// Whether this source item already had a failure put through the error policy.
+    /// <param name="failureSkipped">
+    /// Whether the error policy chose <see cref="ItemErrorAction.Skip"/> for a failure on this item.
     /// </param>
     private static async ValueTask DisposeAfterItemAsync
     (
         IAsyncEnumerator<TDestination> enumerator,
-        bool failureHandled
+        bool failureSkipped
     )
     {
         try
         {
             await enumerator.DisposeAsync().ConfigureAwait(continueOnCapturedContext: false);
         }
-        catch when (failureHandled)
+        catch when (failureSkipped)
         {
-            // Deliberately ignored: this item's failure already went through the error policy,
-            // so a cleanup error must neither end the run nor be counted a second time.
+            // Deliberately ignored: this item was skipped by the error policy, so a cleanup error
+            // must neither end the run nor be counted a second time.
         }
     }
 
