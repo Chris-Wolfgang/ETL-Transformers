@@ -185,11 +185,13 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
 
 
 
-    // The `ReSharper disable once` inside the loop is deliberate: InspectCode reads
+    // The two `ReSharper disable once` lines inside the loop are deliberate: InspectCode reads
     // IEnumerator<T>.Current as possibly null although TDestination is notnull and the
-    // compiler agrees it is not. No spelling of that read avoids the finding, and a
-    // null-forgiving operator only trades it for two redundancy findings. The explanation
-    // sits here, outside the body, because the method is at the MA0051 length limit.
+    // compiler agrees it is not, and flags both the read and the yield of that value. No
+    // spelling of the read avoids the finding, and a null-forgiving operator only trades it
+    // for two redundancy findings. Current is read inside the try, as in the asynchronous
+    // path, so an exception from it goes through the error policy. The explanation sits
+    // here, outside the body, because the method is at the MA0051 length limit.
     private async IAsyncEnumerable<TDestination> FlattenWithSyncSelectorAsync
     (
         IAsyncEnumerable<TSource> items,
@@ -225,12 +227,15 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
             {
                 while (true)
                 {
+                    TDestination current;
                     try
                     {
                         if (!enumerator.MoveNext())
                         {
                             break;
                         }
+                        // ReSharper disable once AssignNullToNotNullAttribute
+                        current = enumerator.Current;
                     }
                     catch (Exception exception)
                     {
@@ -244,7 +249,7 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
                     }
 
                     // ReSharper disable once AssignNullToNotNullAttribute
-                    yield return enumerator.Current;
+                    yield return current;
                 }
             }
             finally
