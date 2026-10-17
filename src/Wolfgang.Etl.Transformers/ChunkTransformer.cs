@@ -30,9 +30,9 @@ namespace Wolfgang.Etl.Transformers;
 /// </para>
 /// <para>
 /// Implements only <see cref="ITransformAsync{TSource, TDestination}"/> - no cancellation, no
-/// Skip/Max - to keep the hot loop minimal. An optional <see cref="IProgress{T}"/> sink may be
-/// supplied to receive the running count of source items consumed; when none is supplied the
-/// hot path allocates and reports nothing.
+/// <c>SkipItemCount</c>/<c>MaximumItemCount</c> limits - to keep the hot loop minimal. An optional
+/// <see cref="IProgress{T}"/> sink may be supplied to receive the running count of source items
+/// consumed; when none is supplied the hot path allocates and reports nothing.
 /// </para>
 /// </remarks>
 /// <example>
