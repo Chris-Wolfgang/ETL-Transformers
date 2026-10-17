@@ -2,9 +2,13 @@ name: Reproducible Build
 
 # Verifies Wolfgang.Etl.Transformers is a deterministic build: the same commit packed on
 # Ubuntu and on Windows is hashed (.dll/.pdb/.nupkg) and the manifests compared.
-# Byte-identity across operating systems is enforced: the manifests must match or the job
-# fails. Directory.Build.targets normalizes the SDK-generated sources to LF, which was the
-# only input that differed between Linux and Windows. See REPRODUCIBLE-BUILD.md.
+# The compiled assemblies and symbols (.dll/.pdb, every TFM) must be byte-identical across
+# operating systems, or the job fails. Directory.Build.targets normalizes the SDK-generated
+# sources to LF and Directory.Build.props pins the .NET Framework reference assemblies; those
+# were the inputs that differed between Linux and Windows. The .nupkg/.snupkg files are NOT
+# compared: NuGet stamps each zip entry with the pack time and writes platform-specific zip
+# attributes and newlines into its own metadata, so the same commit gives a different package
+# file on every run, even on one OS. See REPRODUCIBLE-BUILD.md.
 
 on:
   pull_request:
@@ -107,12 +111,17 @@ jobs:
           echo "Windows manifest:"
           cat windows/manifest.txt
           echo
-          # Hard failure. The two OSes must pack to identical bytes. If this fails, diff the
-          # per-TFM .pdb documents first: a generated source written with a different newline
-          # was the cause that Directory.Build.targets now removes.
-          if diff -u ubuntu/manifest.txt windows/manifest.txt; then
-            echo "Reproducible: Ubuntu and Windows produced byte-identical outputs."
+          # Hard failure on the compiled outputs. If this fails, diff the per-TFM .pdb documents
+          # and the referenced-assembly records first: a generated source written with a
+          # different newline, or a different reference assembly, was the cause that
+          # Directory.Build.targets and Directory.Build.props now remove.
+          # Package files are excluded: they embed pack-time timestamps, so they differ on
+          # every run (see the header of this workflow).
+          grep -vE '\.s?nupkg$' ubuntu/manifest.txt > ubuntu/assemblies.txt
+          grep -vE '\.s?nupkg$' windows/manifest.txt > windows/assemblies.txt
+          if diff -u ubuntu/assemblies.txt windows/assemblies.txt; then
+            echo "Reproducible: Ubuntu and Windows produced byte-identical assemblies and symbols."
           else
-            echo "::error::Outputs differ across runners - the build is not byte-identical cross-OS."
+            echo "::error::Assemblies or symbols differ across runners - the build is not byte-identical cross-OS."
             exit 1
           fi
