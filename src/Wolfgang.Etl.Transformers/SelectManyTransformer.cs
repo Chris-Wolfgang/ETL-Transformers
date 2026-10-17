@@ -185,6 +185,11 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
 
 
 
+    // The `ReSharper disable once` inside the loop is deliberate: InspectCode reads
+    // IEnumerator<T>.Current as possibly null although TDestination is notnull and the
+    // compiler agrees it is not. No spelling of that read avoids the finding, and a
+    // null-forgiving operator only trades it for two redundancy findings. The explanation
+    // sits here, outside the body, because the method is at the MA0051 length limit.
     private async IAsyncEnumerable<TDestination> FlattenWithSyncSelectorAsync
     (
         IAsyncEnumerable<TSource> items,
@@ -238,6 +243,7 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
                         throw;
                     }
 
+                    // ReSharper disable once AssignNullToNotNullAttribute
                     yield return enumerator.Current;
                 }
             }
