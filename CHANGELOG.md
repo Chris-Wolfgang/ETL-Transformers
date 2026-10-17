@@ -20,6 +20,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 
 
+## [0.8.1] - 2026-10-17
+
+### Fixed
+
+- `SelectManyTransformer` now surfaces the same exception as LINQ's `SelectMany` when an item fails and disposing its inner sequence also throws: with the default error policy the disposal exception replaces the original one, as with a `foreach` loop. Previously the original exception was kept and the disposal error dropped. A disposal error is still ignored for an item the policy chose to `Skip`. (#420)
+
+### Internal
+
+- `PackageValidationBaselineVersion` advances to 0.8.0 now that the package is on the NuGet CDN, so the next release validates its API surface against what actually shipped. (#345)
+- Document why `SelectManyTransformer` ignores a disposal error on an item that the error policy skipped. (#347)
+- Clear the InspectCode `AssignNullToNotNullAttribute` findings on the enumerator read in `SelectManyTransformer` with two line-scoped suppressions, the reason recorded above the method. No behavior change: the synchronous-selector path reads the inner enumerator's `Current` inside the error-policy guard, exactly as the asynchronous path does (this replaces the interim approaches of #411 and #417). (#420)
+- The compiled assemblies and symbols are now byte-identical whether the package is built on Linux or Windows: SDK-generated sources are normalized to LF and the .NET Framework targets compile against the `Microsoft.NETFramework.ReferenceAssemblies` package on every OS. No change to the package's dependencies. (#418)
+- LINQ-parity test suites: with the default options, `SelectMany`, `Select`, `Where`, `SkipWhile`, `TakeWhile`, `Distinct`, `DistinctBy` and `Cast` are checked against their LINQ counterparts for items, exceptions, delegate calls, source pulls and disposal. (#420, #421)
+
 ## [0.8.0] - 2026-09-26
 
 ### Added
@@ -328,7 +342,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - BenchmarkDotNet project for baseline performance measurement
 - Full DocFX API documentation site
 
-[Unreleased]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.8.1...HEAD
+[0.8.1]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.8.0...v0.8.1
+[0.8.0]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.7.0...v0.8.0
+[0.7.0]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.5.2...v0.6.0
 [0.5.2]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.5.1...v0.5.2
 [0.5.1]: https://github.com/Chris-Wolfgang/ETL-Transformers/compare/v0.5.0...v0.5.1
