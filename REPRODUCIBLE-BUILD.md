@@ -1,42 +1,43 @@
 # Reproducible Builds
 
 `Wolfgang.Etl.Transformers` is built **deterministically**: compiling the same
-commit **with the same OS and SDK** produces byte-for-byte identical outputs,
-regardless of the machine or working directory. This lets anyone independently
-confirm that a published package was built from the tagged source and contains no
-hidden modifications.
+commit **with the same SDK** produces byte-for-byte identical assemblies and symbols,
+on any operating system and regardless of the machine or working directory. This lets
+anyone independently confirm that a published package was built from the tagged source
+and contains no hidden modifications.
 
 ## The guarantee
 
-For a given commit built **on the same operating system with the same SDK**, the
-following outputs are bit-for-bit identical:
+For a given commit built **with the same .NET SDK**, the following outputs are
+bit-for-bit identical, **on Linux and Windows alike**:
 
 - the compiled assembly `Wolfgang.Etl.Transformers.dll` (every target framework),
-- its debug symbols `Wolfgang.Etl.Transformers.pdb`,
-- the produced `.nupkg` / `.snupkg` package.
+- its debug symbols `Wolfgang.Etl.Transformers.pdb`.
 
-> **Cross-OS is advisory, not guaranteed.** Building the same commit on a
-> *different* operating system may currently produce different bytes — .NET does
-> not guarantee cross-OS byte-identity (embedded source ordering, path
-> normalization, and ref/targeting-pack differences can leak). The CI check reports
-> cross-OS divergence as a warning, and closing that gap is tracked in
-> [#193](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/193).
-> Reproduce a release on the **same OS** the release was built on (see below).
+> **The package files are not byte-reproducible.** The `.nupkg` / `.snupkg` are zip
+> containers, and NuGet stamps every entry with the time the package was packed and
+> writes platform-specific zip attributes and newlines into its own metadata
+> (`.nuspec`, `.psmdcp`, `_rels/.rels`). Packing the same commit twice, even on one
+> machine, gives two different package files. What is inside them is stable: the
+> assemblies and symbols in every package are identical across runs and across
+> operating systems. Compare those, not the package file itself (see below).
 
 ## How it is achieved
 
-Determinism is configured in [`Directory.Build.props`](Directory.Build.props):
+Determinism is configured in [`Directory.Build.props`](Directory.Build.props) and
+[`Directory.Build.targets`](Directory.Build.targets):
 
 | Setting | Effect |
 | --- | --- |
 | `Deterministic` (SDK default `true`) | Removes timestamps and other non-deterministic metadata from the assembly. |
 | `ContinuousIntegrationBuild=true` (set when `CI=true`) | Enables `DeterministicSourcePaths`, so absolute source paths are replaced with stable, machine-independent tokens. |
 | `Microsoft.SourceLink.GitHub` + `EmbedUntrackedSources` | Maps source paths to their canonical repository location, which is what makes the PDB reproducible across operating systems. |
+| `NormalizeGeneratedLineEndings` target (`Directory.Build.targets`) | The SDK writes its generated sources (`*.AssemblyInfo.cs`, `*.AssemblyAttributes.cs`) with the OS newline, CRLF on Windows and LF on Linux. The PDB records each file's hash and embeds its text, so the PDB, and through its checksum and the module version id the DLL, differed per OS. The target rewrites them to LF before compilation. |
+| `Microsoft.NETFramework.ReferenceAssemblies` package reference (`Directory.Build.props`, .NET Framework TFMs) | The PDB records every referenced assembly's timestamp and module version id. Windows would otherwise compile against the machine's installed targeting pack and Linux against this NuGet package, which are different builds of the same reference assemblies. Referencing the package makes every OS use it. |
 
 `ContinuousIntegrationBuild` + SourceLink path normalization removes the
-machine- and directory-specific differences, which is what makes builds
-reproducible on a given OS. Cross-OS byte-identity additionally depends on factors
-.NET does not pin (see the advisory note above).
+machine- and directory-specific differences. The last two rows remove the two
+operating-system-specific inputs that remained.
 
 ## Continuous verification
 
@@ -47,13 +48,9 @@ checks reproducibility on every pull request:
    `ContinuousIntegrationBuild=true`.
 2. Each job records the `sha256sum` of every produced `.dll`, `.pdb`, `.nupkg`
    and `.snupkg`.
-3. A final job diffs the two manifests. Divergence is reported as an **advisory
-   warning** (not a failure), because cross-OS byte-identity is not yet
-   guaranteed; closing that gap is tracked as a follow-up before the check is
-   flipped to hard-fail.
-
-Same-OS reproducibility is additionally enforced implicitly: two builds of the same
-commit on the same runner OS/SDK produce identical hashes.
+3. A final job diffs the two manifests for the `.dll` and `.pdb` files and **fails** if
+   any hash differs. The package files are left out of the comparison because they
+   embed the pack time (see above).
 
 ## Verify it yourself
 
@@ -80,8 +77,9 @@ sha256sum published/lib/net8.0/Wolfgang.Etl.Transformers.dll
 ```
 
 If the two hashes match, the published assembly was built from exactly this
-source. The same holds for the `.nupkg` itself and for every other target
-framework.
+source. The same holds for every other target framework, and for the `.pdb` files
+in the `.snupkg`. Do not compare the `.nupkg` file's own hash: it embeds the pack
+time, so it differs on every build.
 
 > **Note on the SDK version.** Reproducibility is guaranteed for a *fixed* .NET
 > SDK. A different SDK/compiler version can legitimately emit different (but still
@@ -96,11 +94,13 @@ by [`scripts/generate-repro-manifest.py`](scripts/generate-repro-manifest.py) in
 
 - the `repository`, `tag`, `commit`, and `sdkVersion` used,
 - the exact `buildCommand`,
-- the SHA-256 of every published `.nupkg` / `.snupkg`,
-- the SHA-256 of each assembly (`lib/**/*.dll`, `lib/**/*.pdb`) *inside* those packages.
+- the SHA-256 of every published `.nupkg` / `.snupkg` (informational: it identifies the
+  exact file released, but cannot be reproduced because the package embeds its pack time),
+- the SHA-256 of each assembly (`lib/**/*.dll`, `lib/**/*.pdb`) *inside* those packages
+  (the `contents` of each artifact), which is what you can reproduce.
 
-This is the authoritative list of expected hashes — you don't have to eyeball
-individual `sha256sum` output. To verify a release end to end:
+The `contents` hashes are the authoritative list of expected hashes — you don't have to
+eyeball individual `sha256sum` output. To verify a release end to end:
 
 ```bash
 # 1. Check out the tagged source and pack it with the pinned SDK (see the note above).
@@ -113,16 +113,17 @@ python3 scripts/generate-repro-manifest.py --packages artifacts --out my-manifes
   --repository Chris-Wolfgang/ETL-Transformers --tag v<version>
 
 # 3. Download the published manifest from the GitHub Release and diff the hashes.
-#    (repository/commit/tag/sdk metadata may differ; the `artifacts` hashes must match.)
+#    (repository/commit/tag/sdk metadata may differ; the per-assembly `contents` hashes
+#    must match. The package files' own `sha256` is excluded: it embeds the pack time.)
 curl -sSL -o released-manifest.json \
   https://github.com/Chris-Wolfgang/ETL-Transformers/releases/download/v<version>/reproducible-build-manifest.json
 diff \
-  <(jq -S '.artifacts' released-manifest.json) \
-  <(jq -S '.artifacts' my-manifest.json)
+  <(jq -S '[.artifacts[] | {file, contents}]' released-manifest.json) \
+  <(jq -S '[.artifacts[] | {file, contents}]' my-manifest.json)
 ```
 
-An empty `diff` is proof that the packages you can rebuild from source are byte-identical
-to the ones that were published.
+An empty `diff` is proof that the assemblies and symbols you can rebuild from source are
+byte-identical to the ones that were published.
 
 ## File a discrepancy
 
