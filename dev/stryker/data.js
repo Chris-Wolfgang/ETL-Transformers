@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1791700525679,
+  "lastUpdate": 1792305296133,
   "repoUrl": "https://github.com/Chris-Wolfgang/ETL-Transformers",
   "entries": {
     "Mutation score": [
@@ -80,6 +80,33 @@ window.BENCHMARK_DATA = {
           {
             "name": "Mutation score",
             "value": 92.06,
+            "unit": "%"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang",
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "c1a08beda8648fa546e1ded6e12595e9a59194d5",
+          "message": "docs: say SkipItemCount/MaximumItemCount instead of \"Skip/Max\" in transformer remarks (#425)\n\n\"No Skip/Max\" read as if the error policy's ItemErrorAction.Skip were\nunsupported. Name the item-count properties, and on the six error-policy\ntransformers note that the limits are unrelated to ItemErrorAction.Skip.\n\nCo-authored-by: Claude Opus 5.5 <noreply@anthropic.com>",
+          "timestamp": "2026-10-17T22:41:08Z",
+          "url": "https://github.com/Chris-Wolfgang/ETL-Transformers/commit/c1a08beda8648fa546e1ded6e12595e9a59194d5"
+        },
+        "date": 1792305287378,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "Mutation score",
+            "value": 92.59,
             "unit": "%"
           }
         ]
