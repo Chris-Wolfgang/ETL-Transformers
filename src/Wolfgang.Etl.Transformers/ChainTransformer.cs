@@ -41,9 +41,6 @@ namespace Wolfgang.Etl.Transformers;
 /// lightweight pattern of the rest of the library. The chain itself adds no per-item
 /// state-machine wrapping; it returns the inner transformers' enumerables composed directly.
 /// </para>
-/// <para>
-/// Formerly known internally as <c>MultiStepTransformer</c>.
-/// </para>
 /// </remarks>
 public sealed class ChainTransformer<TSource, TIntermediate, TDestination>
     : ITransformAsync<TSource, TDestination>

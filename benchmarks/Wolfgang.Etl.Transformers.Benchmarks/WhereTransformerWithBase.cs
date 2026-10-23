@@ -17,8 +17,8 @@ namespace Wolfgang.Etl.Transformers.Benchmarks;
 /// lightweight implementation shipped in the library.
 /// </summary>
 /// <remarks>
-/// This type is deliberately internal to the benchmarks project and does not leak into
-/// the public API of Wolfgang.Etl.Transformers. Any design mirrors the public
+/// This type lives only in the benchmarks project (it is public so BenchmarkDotNet can use it)
+/// and is not part of the public API of Wolfgang.Etl.Transformers. Any design mirrors the public
 /// <see cref="WhereTransformer{T}"/> where applicable (two ctors, propagation semantics,
 /// null checks).
 /// </remarks>

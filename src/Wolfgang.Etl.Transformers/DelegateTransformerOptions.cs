@@ -14,8 +14,12 @@ namespace Wolfgang.Etl.Transformers;
 /// Per ADR-0009, stage configuration is supplied as a record passed to the constructor rather than
 /// set through mutable properties, so a transformer is configured once and not reconfigured during a
 /// run. This record is shared by the transformers that accept it, because the one setting they
-/// need is the same; <see cref="SelectTransformer{TSource, TDestination}"/> and
-/// <see cref="SelectManyTransformer{TSource, TDestination}"/> accept it today. It is left unsealed
+/// need is the same. Every transformer that invokes a caller-supplied delegate or comparer accepts
+/// it: <see cref="CastTransformer{TSource, TDestination}"/>, <see cref="DistinctTransformer{T}"/>,
+/// <see cref="DistinctByTransformer{TSource, TKey}"/>,
+/// <see cref="SelectTransformer{TSource, TDestination}"/>,
+/// <see cref="SelectManyTransformer{TSource, TDestination}"/>, <see cref="SkipWhileTransformer{T}"/>,
+/// <see cref="TakeWhileTransformer{T}"/> and <see cref="WhereTransformer{T}"/>. It is left unsealed
 /// so a transformer that later grows its own settings can derive from it.
 /// </para>
 /// <para>
@@ -28,17 +32,20 @@ namespace Wolfgang.Etl.Transformers;
 /// silently ignored and give the same concept two spellings.
 /// </para>
 /// <para>
-/// The pass-through and windowing transformers (<see cref="PassThroughTransformer{T}"/>,
-/// <see cref="TakeTransformer{T}"/>, <see cref="SkipTransformer{T}"/>,
-/// <see cref="ChunkTransformer{T}"/>, <see cref="BufferedTransformer{T}"/> and
-/// <see cref="ProgressReportingTransformer{T}"/>) invoke no caller delegate, so they have nothing to
-/// apply a policy to and do not accept this record.
+/// The pass-through, windowing, pacing, type-filtering and composition transformers
+/// (<see cref="PassThroughTransformer{T}"/>, <see cref="TakeTransformer{T}"/>,
+/// <see cref="SkipTransformer{T}"/>, <see cref="ChunkTransformer{T}"/>,
+/// <see cref="BufferedTransformer{T}"/>, <see cref="ProgressReportingTransformer{T}"/>,
+/// <see cref="ThrottleTransformer{T}"/>, <see cref="OfTypeTransformer{TSource, TDestination}"/>,
+/// <see cref="ChainTransformer{TSource, TIntermediate, TDestination}"/> and
+/// <see cref="ChainTransformerWithCancellation{TSource, TIntermediate, TDestination}"/>) invoke no
+/// caller delegate, so they have nothing to apply a policy to and do not accept this record.
 /// </para>
 /// </remarks>
 /// <example>
 /// <code>
 ///     // Drop the items whose projection throws, and count them.
-///     var options = new DelegateTransformerOptions { ErrorPolicy = ItemErrorPolicy.Skip };
+///     var options = new DelegateTransformerOptions { ErrorPolicy = _ => ItemErrorAction.Skip };
 ///     var transformer = new SelectTransformer&lt;string, int&gt;(int.Parse, options);
 /// </code>
 /// </example>

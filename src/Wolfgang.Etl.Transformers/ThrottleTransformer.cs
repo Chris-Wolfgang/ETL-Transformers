@@ -23,6 +23,11 @@ namespace Wolfgang.Etl.Transformers;
 /// further. The first item is never delayed. All waits observe the enumeration's
 /// <see cref="CancellationToken"/> (supply it via <c>.WithCancellation(token)</c>).
 /// </para>
+/// <para>
+/// Implements only <see cref="ITransformAsync{TSource, TDestination}"/> - no progress, no
+/// <c>SkipItemCount</c>/<c>MaximumItemCount</c> limits - to keep the hot loop minimal. Cancellation
+/// is observed only through the enumeration's token, as described above.
+/// </para>
 /// </remarks>
 /// <example>
 /// <code>
