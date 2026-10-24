@@ -27,6 +27,8 @@ public class EtlPipelineOperatorExtensionsTests
         Assert.Equal(new[] { 2, 4 }, result);
     }
 
+
+
     [Fact]
     public async Task Where_when_async_predicate_keeps_only_matching_items()
     {
@@ -34,6 +36,8 @@ public class EtlPipelineOperatorExtensionsTests
 
         Assert.Equal(new[] { 3, 4 }, result);
     }
+
+
 
     [Fact]
     public async Task Select_when_sync_selector_projects_each_item()
@@ -43,6 +47,8 @@ public class EtlPipelineOperatorExtensionsTests
         Assert.Equal(new[] { 10, 20, 30 }, result);
     }
 
+
+
     [Fact]
     public async Task Select_when_async_selector_projects_each_item()
     {
@@ -50,6 +56,8 @@ public class EtlPipelineOperatorExtensionsTests
 
         Assert.Equal(new[] { "#1", "#2", "#3" }, result);
     }
+
+
 
     [Fact]
     public async Task SelectMany_when_sync_selector_flattens_results()
@@ -59,6 +67,8 @@ public class EtlPipelineOperatorExtensionsTests
         Assert.Equal(new[] { 1, 10, 2, 20 }, result);
     }
 
+
+
     [Fact]
     public async Task SelectMany_when_async_selector_flattens_results()
     {
@@ -66,6 +76,8 @@ public class EtlPipelineOperatorExtensionsTests
 
         Assert.Equal(new[] { 1, 10, 2, 20 }, result);
     }
+
+
 
     [Fact]
     public async Task Distinct_when_no_comparer_removes_duplicates_preserving_order()
@@ -75,6 +87,8 @@ public class EtlPipelineOperatorExtensionsTests
         Assert.Equal(new[] { 1, 2, 3 }, result);
     }
 
+
+
     [Fact]
     public async Task Distinct_when_comparer_supplied_uses_it()
     {
@@ -82,6 +96,8 @@ public class EtlPipelineOperatorExtensionsTests
 
         Assert.Equal(new[] { "a", "b" }, result);
     }
+
+
 
     [Fact]
     public async Task DistinctBy_keeps_first_item_per_key()
@@ -91,6 +107,8 @@ public class EtlPipelineOperatorExtensionsTests
         Assert.Equal(new[] { "apple", "banana" }, result);
     }
 
+
+
     [Fact]
     public async Task Take_yields_only_the_first_count_items()
     {
@@ -98,6 +116,8 @@ public class EtlPipelineOperatorExtensionsTests
 
         Assert.Equal(new[] { 1, 2 }, result);
     }
+
+
 
     [Fact]
     public async Task Skip_skips_the_first_count_items()
@@ -107,6 +127,8 @@ public class EtlPipelineOperatorExtensionsTests
         Assert.Equal(new[] { 4, 5 }, result);
     }
 
+
+
     [Fact]
     public async Task TakeWhile_when_sync_predicate_yields_leading_run()
     {
@@ -114,6 +136,8 @@ public class EtlPipelineOperatorExtensionsTests
 
         Assert.Equal(new[] { 1, 2 }, result);
     }
+
+
 
     [Fact]
     public async Task TakeWhile_when_async_predicate_yields_leading_run()
@@ -123,6 +147,8 @@ public class EtlPipelineOperatorExtensionsTests
         Assert.Equal(new[] { 1, 2 }, result);
     }
 
+
+
     [Fact]
     public async Task SkipWhile_when_sync_predicate_skips_leading_run()
     {
@@ -131,6 +157,8 @@ public class EtlPipelineOperatorExtensionsTests
         Assert.Equal(new[] { 3, 1 }, result);
     }
 
+
+
     [Fact]
     public async Task SkipWhile_when_async_predicate_skips_leading_run()
     {
@@ -138,6 +166,8 @@ public class EtlPipelineOperatorExtensionsTests
 
         Assert.Equal(new[] { 3, 1 }, result);
     }
+
+
 
     [Fact]
     public async Task Chunk_batches_items_into_fixed_size_lists()
@@ -150,6 +180,8 @@ public class EtlPipelineOperatorExtensionsTests
         Assert.Equal(new[] { 5 }, result[2]);
     }
 
+
+
     [Fact]
     public async Task Buffered_preserves_items_and_order()
     {
@@ -157,6 +189,8 @@ public class EtlPipelineOperatorExtensionsTests
 
         Assert.Equal(new[] { 1, 2, 3 }, result);
     }
+
+
 
     [Fact]
     public async Task Cast_casts_each_item_to_the_target_type()
@@ -166,6 +200,8 @@ public class EtlPipelineOperatorExtensionsTests
         Assert.Equal(new[] { "a", "b" }, result);
     }
 
+
+
     [Fact]
     public async Task OfType_passes_through_only_items_of_the_target_type()
     {
@@ -173,6 +209,8 @@ public class EtlPipelineOperatorExtensionsTests
 
         Assert.Equal(new[] { "a", "b" }, result);
     }
+
+
 
     [Fact]
     public async Task Tap_when_sync_runs_side_effect_per_item_and_passes_items_through()
@@ -185,6 +223,8 @@ public class EtlPipelineOperatorExtensionsTests
         Assert.Equal(new[] { 1, 2, 3 }, seen);
     }
 
+
+
     [Fact]
     public async Task Tap_when_async_runs_side_effect_per_item_and_passes_items_through()
     {
@@ -195,6 +235,8 @@ public class EtlPipelineOperatorExtensionsTests
         Assert.Equal(new[] { 1, 2, 3 }, result);
         Assert.Equal(new[] { 1, 2, 3 }, seen);
     }
+
+
 
     [Fact]
     public async Task Log_writes_a_formatted_message_per_item_and_passes_items_through()
@@ -207,6 +249,8 @@ public class EtlPipelineOperatorExtensionsTests
         Assert.Equal(new[] { "item 1", "item 2", "item 3" }, lines);
     }
 
+
+
     [Fact]
     public async Task Throttle_yields_all_items_in_order()
     {
@@ -214,6 +258,8 @@ public class EtlPipelineOperatorExtensionsTests
 
         Assert.Equal(new[] { 1, 2, 3 }, result);
     }
+
+
 
     [Fact]
     public void Throttle_when_min_interval_is_negative_throws_ArgumentOutOfRangeException()
@@ -247,6 +293,8 @@ public class EtlPipelineOperatorExtensionsTests
         Assert.Throws<ArgumentNullException>(() => nullPipeline.Log(x => x.ToString(), _ => { }));
         Assert.Throws<ArgumentNullException>(() => nullPipeline.Throttle(TimeSpan.Zero));
     }
+
+
 
     [Fact]
     public void Operators_when_delegate_is_null_throw_ArgumentNullException()

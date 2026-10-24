@@ -46,6 +46,7 @@ public sealed class ThrottleTransformer<T> : ITransformAsync<T, T>
     private readonly Func<long> _getTimestamp;
 
 
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ThrottleTransformer{T}"/> class.
     /// </summary>
@@ -58,6 +59,7 @@ public sealed class ThrottleTransformer<T> : ITransformAsync<T, T>
         : this(minInterval, static (delay, token) => Task.Delay(delay, token), Stopwatch.GetTimestamp)
     {
     }
+
 
 
     // Test seam: inject a delay and a monotonic timestamp source so pacing can be verified
@@ -84,6 +86,7 @@ public sealed class ThrottleTransformer<T> : ITransformAsync<T, T>
     public TimeSpan MinInterval => _minInterval;
 
 
+
     /// <summary>
     /// Asynchronously yields each item from <paramref name="items"/> in order, pacing successive items
     /// to at least the configured minimum interval apart.
@@ -96,6 +99,7 @@ public sealed class ThrottleTransformer<T> : ITransformAsync<T, T>
         ArgumentNullException.ThrowIfNull(items);
         return TransformAsyncCore(items);
     }
+
 
 
     private async IAsyncEnumerable<T> TransformAsyncCore

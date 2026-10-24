@@ -62,6 +62,7 @@ public record DelegateTransformerOptions
     internal static DelegateTransformerOptions Default { get; } = new();
 
 
+
     /// <summary>
     /// The policy applied when the caller-supplied delegate throws while handling one item.
     /// </summary>
