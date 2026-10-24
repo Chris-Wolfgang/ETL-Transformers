@@ -1,9 +1,7 @@
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 using static VerifyXunit.Verifier;
+using static Wolfgang.Etl.Transformers.Tests.Shared.AsyncSequence;
 
 namespace Wolfgang.Etl.Transformers.Tests.Snapshots.Snapshots;
 
@@ -31,7 +29,7 @@ public class TransformerSnapshotTests
     [Fact]
     public async Task Select_projection_to_records()
     {
-        var result = await Collect
+        var result = await CollectAsync
         (
             new SelectTransformer<Person, object>(p => new { p.Id, Upper = p.Name.ToUpperInvariant() })
                 .TransformAsync(ToAsync(People))
@@ -43,7 +41,7 @@ public class TransformerSnapshotTests
     [Fact]
     public async Task Chunk_grouping_shape()
     {
-        var result = await Collect(new ChunkTransformer<Person>(2).TransformAsync(ToAsync(People)));
+        var result = await CollectAsync(new ChunkTransformer<Person>(2).TransformAsync(ToAsync(People)));
 
         await Verify(result);
     }
@@ -54,31 +52,8 @@ public class TransformerSnapshotTests
         var byCity = new DistinctByTransformer<Person, string>(p => p.City);
         var project = new SelectTransformer<Person, object>(p => new { p.City, Representative = p.Name });
 
-        var result = await Collect(project.TransformAsync(byCity.TransformAsync(ToAsync(People))));
+        var result = await CollectAsync(project.TransformAsync(byCity.TransformAsync(ToAsync(People))));
 
         await Verify(result);
-    }
-
-    private static async IAsyncEnumerable<T> ToAsync<T>(
-        IEnumerable<T> items,
-        [EnumeratorCancellation] CancellationToken token = default)
-    {
-        foreach (var item in items)
-        {
-            token.ThrowIfCancellationRequested();
-            await Task.Yield();
-            yield return item;
-        }
-    }
-
-    private static async Task<List<T>> Collect<T>(IAsyncEnumerable<T> items)
-    {
-        var list = new List<T>();
-        await foreach (var item in items.ConfigureAwait(false))
-        {
-            list.Add(item);
-        }
-
-        return list;
     }
 }

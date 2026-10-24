@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Wolfgang.Etl.Transformers;
 using Xunit;
+using static Wolfgang.Etl.Transformers.Tests.Shared.AsyncSequence;
 
 namespace Wolfgang.Etl.Transformers.Tests.Integration;
 
@@ -215,7 +216,10 @@ public class PipelineIntegrationTests
         var slowSource = SlowSource(100, () =>
         {
             yielded++;
-            if (yielded >= 3) cts.Cancel();
+            if (yielded >= 3)
+            {
+                cts.Cancel();
+            }
         });
         var source = passThrough.TransformAsync(slowSource, cts.Token);
 
@@ -235,26 +239,6 @@ public class PipelineIntegrationTests
 
     // ---------- helpers ----------
 
-    private static async IAsyncEnumerable<T> ToAsync<T>(IEnumerable<T> items)
-    {
-        foreach (var item in items)
-        {
-            await Task.Yield();
-            yield return item;
-        }
-    }
-
-
-
-    private static async Task<List<T>> CollectAsync<T>(IAsyncEnumerable<T> items)
-    {
-        var list = new List<T>();
-        await foreach (var item in items)
-        {
-            list.Add(item);
-        }
-        return list;
-    }
 
 
 
