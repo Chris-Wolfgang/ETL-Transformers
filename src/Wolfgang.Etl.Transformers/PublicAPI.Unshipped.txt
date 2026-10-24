@@ -1,1 +1,2 @@
 #nullable enable
+Wolfgang.Etl.Transformers.ThrottleTransformer<T>.MinInterval.get -> System.TimeSpan

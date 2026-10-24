@@ -75,6 +75,16 @@ public sealed class ThrottleTransformer<T> : ITransformAsync<T, T>
     }
 
 
+
+    /// <summary>
+    /// The minimum time between successive yielded items, as passed to the constructor.
+    /// </summary>
+    /// <value>
+    /// A non-negative <see cref="TimeSpan"/>; <see cref="TimeSpan.Zero"/> means no pacing.
+    /// </value>
+    public TimeSpan MinInterval => _minInterval;
+
+
     /// <summary>
     /// Asynchronously yields each item from <paramref name="items"/> in order, pacing successive items
     /// to at least the configured minimum interval apart.

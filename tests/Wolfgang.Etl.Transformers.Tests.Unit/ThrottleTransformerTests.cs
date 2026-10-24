@@ -117,6 +117,17 @@ public class ThrottleTransformerTests
 
 
     [Fact]
+    public void MinInterval_when_constructed_returns_the_constructor_argument()
+    {
+        var minInterval = TimeSpan.FromMilliseconds(250);
+
+        var sut = new ThrottleTransformer<int>(minInterval);
+
+        Assert.Equal(minInterval, sut.MinInterval);
+    }
+
+
+    [Fact]
     public void Ctor_when_min_interval_is_negative_throws_ArgumentOutOfRangeException()
     {
         var minInterval = TimeSpan.FromMilliseconds(-1);
