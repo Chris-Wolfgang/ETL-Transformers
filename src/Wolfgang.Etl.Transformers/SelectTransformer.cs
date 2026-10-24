@@ -60,8 +60,7 @@ public sealed class SelectTransformer<TSource, TDestination> : ITransformAsync<T
 {
     private readonly Func<TSource, TDestination>? _syncSelector;
     private readonly Func<TSource, ValueTask<TDestination>>? _asyncSelector;
-    private readonly DelegateTransformerOptions _options;
-    private int _currentErrorItemCount;
+    private readonly ItemErrorCounter _errors;
 
 
 
@@ -91,7 +90,7 @@ public sealed class SelectTransformer<TSource, TDestination> : ITransformAsync<T
         ArgumentNullException.ThrowIfNull(options);
 
         _syncSelector = selector;
-        _options = options;
+        _errors = new ItemErrorCounter(options);
     }
 
 
@@ -131,7 +130,7 @@ public sealed class SelectTransformer<TSource, TDestination> : ITransformAsync<T
         ArgumentNullException.ThrowIfNull(options);
 
         _asyncSelector = selector;
-        _options = options;
+        _errors = new ItemErrorCounter(options);
     }
 
 
@@ -144,7 +143,7 @@ public sealed class SelectTransformer<TSource, TDestination> : ITransformAsync<T
     /// Cumulative across every enumeration produced by this instance. An item whose failure aborted
     /// the run is not counted, because the exception is re-thrown instead.
     /// </remarks>
-    public int CurrentErrorItemCount => Volatile.Read(ref _currentErrorItemCount);
+    public int CurrentErrorItemCount => _errors.Count;
 
 
 
@@ -187,7 +186,7 @@ public sealed class SelectTransformer<TSource, TDestination> : ITransformAsync<T
             }
             catch (Exception exception)
             {
-                if (HandleItemError(itemNumber, exception) == ItemErrorAction.Skip)
+                if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                 {
                     continue;
                 }
@@ -220,7 +219,7 @@ public sealed class SelectTransformer<TSource, TDestination> : ITransformAsync<T
             }
             catch (Exception exception)
             {
-                if (HandleItemError(itemNumber, exception) == ItemErrorAction.Skip)
+                if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                 {
                     continue;
                 }
@@ -230,21 +229,5 @@ public sealed class SelectTransformer<TSource, TDestination> : ITransformAsync<T
 
             yield return projected;
         }
-    }
-
-
-
-    /// <summary>
-    /// Applies the configured error policy and, when it asks to skip, records the dropped item.
-    /// </summary>
-    private ItemErrorAction HandleItemError(long itemNumber, Exception exception)
-    {
-        var action = _options.ErrorPolicy(new ItemErrorContext(itemNumber, exception));
-        if (action == ItemErrorAction.Skip)
-        {
-            _ = Interlocked.Increment(ref _currentErrorItemCount);
-        }
-
-        return action;
     }
 }

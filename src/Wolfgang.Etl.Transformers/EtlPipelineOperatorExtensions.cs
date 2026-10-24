@@ -47,7 +47,7 @@ public static class EtlPipelineOperatorExtensions
     public static IEtlPipeline<T> Where<T>(this IEtlPipeline<T> pipeline, Func<T, bool> predicate)
         where T : notnull
     {
-        ThrowIfNull(pipeline, nameof(pipeline));
+        ArgumentNullException.ThrowIfNull(pipeline);
 
         return pipeline.Through(new WhereTransformer<T>(predicate));
     }
@@ -63,7 +63,7 @@ public static class EtlPipelineOperatorExtensions
     public static IEtlPipeline<T> Where<T>(this IEtlPipeline<T> pipeline, Func<T, ValueTask<bool>> predicate)
         where T : notnull
     {
-        ThrowIfNull(pipeline, nameof(pipeline));
+        ArgumentNullException.ThrowIfNull(pipeline);
 
         return pipeline.Through(new WhereTransformer<T>(predicate));
     }
@@ -81,7 +81,7 @@ public static class EtlPipelineOperatorExtensions
         where TSource : notnull
         where TDestination : notnull
     {
-        ThrowIfNull(pipeline, nameof(pipeline));
+        ArgumentNullException.ThrowIfNull(pipeline);
 
         return pipeline.Through(new SelectTransformer<TSource, TDestination>(selector));
     }
@@ -99,7 +99,7 @@ public static class EtlPipelineOperatorExtensions
         where TSource : notnull
         where TDestination : notnull
     {
-        ThrowIfNull(pipeline, nameof(pipeline));
+        ArgumentNullException.ThrowIfNull(pipeline);
 
         return pipeline.Through(new SelectTransformer<TSource, TDestination>(selector));
     }
@@ -117,7 +117,7 @@ public static class EtlPipelineOperatorExtensions
         where TSource : notnull
         where TDestination : notnull
     {
-        ThrowIfNull(pipeline, nameof(pipeline));
+        ArgumentNullException.ThrowIfNull(pipeline);
 
         return pipeline.Through(new SelectManyTransformer<TSource, TDestination>(selector));
     }
@@ -135,7 +135,7 @@ public static class EtlPipelineOperatorExtensions
         where TSource : notnull
         where TDestination : notnull
     {
-        ThrowIfNull(pipeline, nameof(pipeline));
+        ArgumentNullException.ThrowIfNull(pipeline);
 
         return pipeline.Through(new SelectManyTransformer<TSource, TDestination>(selector));
     }
@@ -154,7 +154,7 @@ public static class EtlPipelineOperatorExtensions
     public static IEtlPipeline<T> Distinct<T>(this IEtlPipeline<T> pipeline, IEqualityComparer<T>? comparer = null)
         where T : notnull
     {
-        ThrowIfNull(pipeline, nameof(pipeline));
+        ArgumentNullException.ThrowIfNull(pipeline);
 
         return pipeline.Through(new DistinctTransformer<T>(comparer));
     }
@@ -176,7 +176,7 @@ public static class EtlPipelineOperatorExtensions
         where TSource : notnull
         where TKey : notnull
     {
-        ThrowIfNull(pipeline, nameof(pipeline));
+        ArgumentNullException.ThrowIfNull(pipeline);
 
         return pipeline.Through(new DistinctByTransformer<TSource, TKey>(keySelector, comparer));
     }
@@ -192,7 +192,7 @@ public static class EtlPipelineOperatorExtensions
     public static IEtlPipeline<T> Take<T>(this IEtlPipeline<T> pipeline, int count)
         where T : notnull
     {
-        ThrowIfNull(pipeline, nameof(pipeline));
+        ArgumentNullException.ThrowIfNull(pipeline);
 
         return pipeline.Through(new TakeTransformer<T>(count));
     }
@@ -208,7 +208,7 @@ public static class EtlPipelineOperatorExtensions
     public static IEtlPipeline<T> Skip<T>(this IEtlPipeline<T> pipeline, int count)
         where T : notnull
     {
-        ThrowIfNull(pipeline, nameof(pipeline));
+        ArgumentNullException.ThrowIfNull(pipeline);
 
         return pipeline.Through(new SkipTransformer<T>(count));
     }
@@ -224,7 +224,7 @@ public static class EtlPipelineOperatorExtensions
     public static IEtlPipeline<T> TakeWhile<T>(this IEtlPipeline<T> pipeline, Func<T, bool> predicate)
         where T : notnull
     {
-        ThrowIfNull(pipeline, nameof(pipeline));
+        ArgumentNullException.ThrowIfNull(pipeline);
 
         return pipeline.Through(new TakeWhileTransformer<T>(predicate));
     }
@@ -240,7 +240,7 @@ public static class EtlPipelineOperatorExtensions
     public static IEtlPipeline<T> TakeWhile<T>(this IEtlPipeline<T> pipeline, Func<T, ValueTask<bool>> predicate)
         where T : notnull
     {
-        ThrowIfNull(pipeline, nameof(pipeline));
+        ArgumentNullException.ThrowIfNull(pipeline);
 
         return pipeline.Through(new TakeWhileTransformer<T>(predicate));
     }
@@ -256,7 +256,7 @@ public static class EtlPipelineOperatorExtensions
     public static IEtlPipeline<T> SkipWhile<T>(this IEtlPipeline<T> pipeline, Func<T, bool> predicate)
         where T : notnull
     {
-        ThrowIfNull(pipeline, nameof(pipeline));
+        ArgumentNullException.ThrowIfNull(pipeline);
 
         return pipeline.Through(new SkipWhileTransformer<T>(predicate));
     }
@@ -272,7 +272,7 @@ public static class EtlPipelineOperatorExtensions
     public static IEtlPipeline<T> SkipWhile<T>(this IEtlPipeline<T> pipeline, Func<T, ValueTask<bool>> predicate)
         where T : notnull
     {
-        ThrowIfNull(pipeline, nameof(pipeline));
+        ArgumentNullException.ThrowIfNull(pipeline);
 
         return pipeline.Through(new SkipWhileTransformer<T>(predicate));
     }
@@ -288,7 +288,7 @@ public static class EtlPipelineOperatorExtensions
     public static IEtlPipeline<IReadOnlyList<T>> Chunk<T>(this IEtlPipeline<T> pipeline, int size)
         where T : notnull
     {
-        ThrowIfNull(pipeline, nameof(pipeline));
+        ArgumentNullException.ThrowIfNull(pipeline);
 
         return pipeline.Through(new ChunkTransformer<T>(size));
     }
@@ -307,7 +307,7 @@ public static class EtlPipelineOperatorExtensions
     public static IEtlPipeline<T> Buffered<T>(this IEtlPipeline<T> pipeline, int capacity)
         where T : notnull
     {
-        ThrowIfNull(pipeline, nameof(pipeline));
+        ArgumentNullException.ThrowIfNull(pipeline);
 
         return pipeline.Through(new BufferedTransformer<T>(capacity));
     }
@@ -324,7 +324,7 @@ public static class EtlPipelineOperatorExtensions
         where TSource : notnull
         where TDestination : notnull
     {
-        ThrowIfNull(pipeline, nameof(pipeline));
+        ArgumentNullException.ThrowIfNull(pipeline);
 
         return pipeline.Through(new CastTransformer<TSource, TDestination>());
     }
@@ -341,7 +341,7 @@ public static class EtlPipelineOperatorExtensions
         where TSource : notnull
         where TDestination : notnull
     {
-        ThrowIfNull(pipeline, nameof(pipeline));
+        ArgumentNullException.ThrowIfNull(pipeline);
 
         return pipeline.Through(new OfTypeTransformer<TSource, TDestination>());
     }
@@ -370,7 +370,7 @@ public static class EtlPipelineOperatorExtensions
     public static IEtlPipeline<T> Tap<T>(this IEtlPipeline<T> pipeline, Action<T> onItem)
         where T : notnull
     {
-        ThrowIfNull(pipeline, nameof(pipeline));
+        ArgumentNullException.ThrowIfNull(pipeline);
 
         return pipeline.Through(new ProgressReportingTransformer<T>(onItem));
     }
@@ -389,7 +389,7 @@ public static class EtlPipelineOperatorExtensions
     public static IEtlPipeline<T> Tap<T>(this IEtlPipeline<T> pipeline, Func<T, ValueTask> onItem)
         where T : notnull
     {
-        ThrowIfNull(pipeline, nameof(pipeline));
+        ArgumentNullException.ThrowIfNull(pipeline);
 
         return pipeline.Through(new ProgressReportingTransformer<T>(onItem));
     }
@@ -420,8 +420,8 @@ public static class EtlPipelineOperatorExtensions
     public static IEtlPipeline<T> Log<T>(this IEtlPipeline<T> pipeline, Func<T, string> format, Action<string> sink)
         where T : notnull
     {
-        ThrowIfNull(format, nameof(format));
-        ThrowIfNull(sink, nameof(sink));
+        ArgumentNullException.ThrowIfNull(format);
+        ArgumentNullException.ThrowIfNull(sink);
 
         return pipeline.Tap(item => sink(format(item)));
     }
@@ -453,18 +453,8 @@ public static class EtlPipelineOperatorExtensions
     public static IEtlPipeline<T> Throttle<T>(this IEtlPipeline<T> pipeline, TimeSpan minInterval)
         where T : notnull
     {
-        ThrowIfNull(pipeline, nameof(pipeline));
+        ArgumentNullException.ThrowIfNull(pipeline);
 
         return pipeline.Through(new ThrottleTransformer<T>(minInterval));
-    }
-
-
-
-    private static void ThrowIfNull(object? argument, string paramName)
-    {
-        if (argument is null)
-        {
-            throw new ArgumentNullException(paramName);
-        }
     }
 }

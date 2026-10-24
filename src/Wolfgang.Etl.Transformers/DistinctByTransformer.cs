@@ -69,8 +69,7 @@ public sealed class DistinctByTransformer<TSource, TKey> : ITransformAsync<TSour
 {
     private readonly Func<TSource, TKey> _keySelector;
     private readonly IEqualityComparer<TKey>? _comparer;
-    private readonly DelegateTransformerOptions _options;
-    private int _currentErrorItemCount;
+    private readonly ItemErrorCounter _errors;
 
 
 
@@ -136,7 +135,7 @@ public sealed class DistinctByTransformer<TSource, TKey> : ITransformAsync<TSour
 
         _keySelector = keySelector;
         _comparer = comparer;
-        _options = options;
+        _errors = new ItemErrorCounter(options);
     }
 
 
@@ -150,7 +149,7 @@ public sealed class DistinctByTransformer<TSource, TKey> : ITransformAsync<TSour
     /// item dropped as a duplicate is not an error. An item whose failure aborted the run is not
     /// counted either, because the exception is re-thrown instead.
     /// </remarks>
-    public int CurrentErrorItemCount => Volatile.Read(ref _currentErrorItemCount);
+    public int CurrentErrorItemCount => _errors.Count;
 
 
 
@@ -194,7 +193,7 @@ public sealed class DistinctByTransformer<TSource, TKey> : ITransformAsync<TSour
             }
             catch (Exception exception)
             {
-                if (HandleItemError(itemNumber, exception) == ItemErrorAction.Skip)
+                if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                 {
                     continue;
                 }
@@ -207,20 +206,5 @@ public sealed class DistinctByTransformer<TSource, TKey> : ITransformAsync<TSour
                 yield return item;
             }
         }
-    }
-
-
-    /// <summary>
-    /// Applies the configured error policy and, when it asks to skip, records the dropped item.
-    /// </summary>
-    private ItemErrorAction HandleItemError(long itemNumber, Exception exception)
-    {
-        var action = _options.ErrorPolicy(new ItemErrorContext(itemNumber, exception));
-        if (action == ItemErrorAction.Skip)
-        {
-            _ = Interlocked.Increment(ref _currentErrorItemCount);
-        }
-
-        return action;
     }
 }
