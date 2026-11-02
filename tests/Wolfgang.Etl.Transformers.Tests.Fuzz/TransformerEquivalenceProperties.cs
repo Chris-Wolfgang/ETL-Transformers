@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Threading.Tasks;
 using CsCheck;
 using Xunit;
+using static Wolfgang.Etl.Transformers.Tests.Shared.AsyncSequence;
 
 namespace Wolfgang.Etl.Transformers.Tests.Fuzz;
 
@@ -25,7 +24,7 @@ public class TransformerEquivalenceProperties
         await IntLists.SampleAsync(async list =>
         {
             var expected = list.Where(IsEven).ToList();
-            var actual = await Collect(new WhereTransformer<int>(IsEven).TransformAsync(ToAsync(list)));
+            var actual = await CollectAsync(new WhereTransformer<int>(IsEven).TransformAsync(ToAsync(list)));
             Assert.Equal(expected, actual);
         });
 
@@ -34,7 +33,7 @@ public class TransformerEquivalenceProperties
         await IntLists.SampleAsync(async list =>
         {
             var expected = list.Select(Times10).ToList();
-            var actual = await Collect(new SelectTransformer<int, long>(Times10).TransformAsync(ToAsync(list)));
+            var actual = await CollectAsync(new SelectTransformer<int, long>(Times10).TransformAsync(ToAsync(list)));
             Assert.Equal(expected, actual);
         });
 
@@ -43,7 +42,7 @@ public class TransformerEquivalenceProperties
         await IntLists.SampleAsync(async list =>
         {
             var expected = list.SelectMany(PlusMinus).ToList();
-            var actual = await Collect(new SelectManyTransformer<int, int>(PlusMinus).TransformAsync(ToAsync(list)));
+            var actual = await CollectAsync(new SelectManyTransformer<int, int>(PlusMinus).TransformAsync(ToAsync(list)));
             Assert.Equal(expected, actual);
         });
 
@@ -52,7 +51,7 @@ public class TransformerEquivalenceProperties
         await IntLists.SampleAsync(async list =>
         {
             var expected = list.Distinct().ToList();
-            var actual = await Collect(new DistinctTransformer<int>().TransformAsync(ToAsync(list)));
+            var actual = await CollectAsync(new DistinctTransformer<int>().TransformAsync(ToAsync(list)));
             Assert.Equal(expected, actual);
         });
 
@@ -61,7 +60,7 @@ public class TransformerEquivalenceProperties
         await IntLists.SampleAsync(async list =>
         {
             var expected = list.DistinctBy(Mod3).ToList();
-            var actual = await Collect(new DistinctByTransformer<int, int>(Mod3).TransformAsync(ToAsync(list)));
+            var actual = await CollectAsync(new DistinctByTransformer<int, int>(Mod3).TransformAsync(ToAsync(list)));
             Assert.Equal(expected, actual);
         });
 
@@ -71,7 +70,7 @@ public class TransformerEquivalenceProperties
         {
             var (list, n) = pair;
             var expected = list.Take(n).ToList();
-            var actual = await Collect(new TakeTransformer<int>(n).TransformAsync(ToAsync(list)));
+            var actual = await CollectAsync(new TakeTransformer<int>(n).TransformAsync(ToAsync(list)));
             Assert.Equal(expected, actual);
         });
 
@@ -81,7 +80,7 @@ public class TransformerEquivalenceProperties
         {
             var (list, n) = pair;
             var expected = list.Skip(n).ToList();
-            var actual = await Collect(new SkipTransformer<int>(n).TransformAsync(ToAsync(list)));
+            var actual = await CollectAsync(new SkipTransformer<int>(n).TransformAsync(ToAsync(list)));
             Assert.Equal(expected, actual);
         });
 
@@ -90,7 +89,7 @@ public class TransformerEquivalenceProperties
         await IntLists.SampleAsync(async list =>
         {
             var expected = list.TakeWhile(IsNonNegative).ToList();
-            var actual = await Collect(new TakeWhileTransformer<int>(IsNonNegative).TransformAsync(ToAsync(list)));
+            var actual = await CollectAsync(new TakeWhileTransformer<int>(IsNonNegative).TransformAsync(ToAsync(list)));
             Assert.Equal(expected, actual);
         });
 
@@ -99,7 +98,7 @@ public class TransformerEquivalenceProperties
         await IntLists.SampleAsync(async list =>
         {
             var expected = list.SkipWhile(IsNonNegative).ToList();
-            var actual = await Collect(new SkipWhileTransformer<int>(IsNonNegative).TransformAsync(ToAsync(list)));
+            var actual = await CollectAsync(new SkipWhileTransformer<int>(IsNonNegative).TransformAsync(ToAsync(list)));
             Assert.Equal(expected, actual);
         });
 
@@ -109,7 +108,7 @@ public class TransformerEquivalenceProperties
         {
             var (list, size) = pair;
             var expected = list.Chunk(size).Select(chunk => chunk.ToList()).ToList();
-            var actual = await Collect(new ChunkTransformer<int>(size).TransformAsync(ToAsync(list)));
+            var actual = await CollectAsync(new ChunkTransformer<int>(size).TransformAsync(ToAsync(list)));
             Assert.Equal(expected, actual.Select(chunk => chunk.ToList()).ToList());
         });
 
@@ -118,7 +117,7 @@ public class TransformerEquivalenceProperties
         await ListAndCapacity().SampleAsync(async pair =>
         {
             var (list, capacity) = pair;
-            var actual = await Collect(new BufferedTransformer<int>(capacity).TransformAsync(ToAsync(list)));
+            var actual = await CollectAsync(new BufferedTransformer<int>(capacity).TransformAsync(ToAsync(list)));
             Assert.Equal(list, actual);
         });
 
@@ -126,7 +125,7 @@ public class TransformerEquivalenceProperties
     public async Task PassThrough_is_the_identity() =>
         await IntLists.SampleAsync(async list =>
         {
-            var actual = await Collect(new PassThroughTransformer<int>().TransformAsync(ToAsync(list)));
+            var actual = await CollectAsync(new PassThroughTransformer<int>().TransformAsync(ToAsync(list)));
             Assert.Equal(list, actual);
         });
 
@@ -154,27 +153,4 @@ public class TransformerEquivalenceProperties
     private static int Mod3(int x) => ((x % 3) + 3) % 3;
 
     private static IEnumerable<int> PlusMinus(int x) => new[] { x, -x };
-
-    private static async IAsyncEnumerable<T> ToAsync<T>(
-        IEnumerable<T> items,
-        [EnumeratorCancellation] CancellationToken token = default)
-    {
-        foreach (var item in items)
-        {
-            token.ThrowIfCancellationRequested();
-            await Task.Yield();
-            yield return item;
-        }
-    }
-
-    private static async Task<List<T>> Collect<T>(IAsyncEnumerable<T> items)
-    {
-        var list = new List<T>();
-        await foreach (var item in items.ConfigureAwait(false))
-        {
-            list.Add(item);
-        }
-
-        return list;
-    }
 }
