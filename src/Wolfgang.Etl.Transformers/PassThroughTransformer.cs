@@ -27,9 +27,6 @@ namespace Wolfgang.Etl.Transformers;
 /// Because it performs no work, it does not need progress reporting, skip/max item counts, or a reporting timer,
 /// and implementing the interface directly keeps the type minimal and allocation-free.
 /// </para>
-/// <para>
-/// Formerly known internally as <c>NoOpTransformer</c>.
-/// </para>
 /// </remarks>
 /// <example>
 /// <code>
