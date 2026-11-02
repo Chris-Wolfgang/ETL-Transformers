@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -139,10 +140,10 @@ public class BufferedTransformerCapacityBenchmarks
 
     /// <summary>
     /// Busy-spin for approximately <paramref name="microseconds"/> microseconds.
-    /// Uses <see cref="System.Diagnostics.Stopwatch.GetTimestamp"/> for sub-millisecond
+    /// Uses <see cref="Stopwatch.GetTimestamp"/> for sub-millisecond
     /// resolution; avoids thread-sleep scheduler granularity on Windows.
     /// </summary>
-    [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+    [MethodImpl(MethodImplOptions.NoInlining)]
     private static void SpinWait(int microseconds)
     {
         if (microseconds <= 0)
@@ -150,13 +151,13 @@ public class BufferedTransformerCapacityBenchmarks
             return;
         }
 
-        var frequency = (double)System.Diagnostics.Stopwatch.Frequency;
-        var target    = System.Diagnostics.Stopwatch.GetTimestamp()
+        var frequency = (double)Stopwatch.Frequency;
+        var target    = Stopwatch.GetTimestamp()
                         + (long)(microseconds * frequency / 1_000_000.0);
 
-        while (System.Diagnostics.Stopwatch.GetTimestamp() < target)
+        while (Stopwatch.GetTimestamp() < target)
         {
-            System.Threading.Thread.SpinWait(20);
+            Thread.SpinWait(20);
         }
     }
 }
