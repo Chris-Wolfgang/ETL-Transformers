@@ -61,6 +61,7 @@
     <Project Path="src/Wolfgang.Etl.Transformers/Wolfgang.Etl.Transformers.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/Wolfgang.Etl.Transformers.Tests.Aot/Wolfgang.Etl.Transformers.Tests.Aot.csproj" />
     <Project Path="tests/Wolfgang.Etl.Transformers.Tests.Concurrency/Wolfgang.Etl.Transformers.Tests.Concurrency.csproj" />
     <Project Path="tests/Wolfgang.Etl.Transformers.Tests.SourceLink/Wolfgang.Etl.Transformers.Tests.SourceLink.csproj" />
     <Project Path="tests/Wolfgang.Etl.Transformers.Tests.Allocation/Wolfgang.Etl.Transformers.Tests.Allocation.csproj" />
