@@ -75,8 +75,7 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
 {
     private readonly Func<TSource, IEnumerable<TDestination>>? _syncSelector;
     private readonly Func<TSource, IAsyncEnumerable<TDestination>>? _asyncSelector;
-    private readonly DelegateTransformerOptions _options;
-    private int _currentErrorItemCount;
+    private readonly ItemErrorCounter _errors;
 
 
 
@@ -114,7 +113,7 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
         ArgumentNullException.ThrowIfNull(options);
 
         _syncSelector = selector;
-        _options = options;
+        _errors = new ItemErrorCounter(options);
     }
 
 
@@ -158,7 +157,7 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
         ArgumentNullException.ThrowIfNull(options);
 
         _asyncSelector = selector;
-        _options = options;
+        _errors = new ItemErrorCounter(options);
     }
 
 
@@ -172,7 +171,7 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
     /// produced by this instance. A source item whose failure aborted the run is not counted,
     /// because the exception is re-thrown instead.
     /// </remarks>
-    public int CurrentErrorItemCount => Volatile.Read(ref _currentErrorItemCount);
+    public int CurrentErrorItemCount => _errors.Count;
 
 
 
@@ -223,7 +222,7 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
             }
             catch (Exception exception)
             {
-                if (HandleItemError(itemNumber, exception) == ItemErrorAction.Skip)
+                if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                 {
                     continue;
                 }
@@ -248,7 +247,7 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
                     }
                     catch (Exception exception)
                     {
-                        if (HandleItemError(itemNumber, exception) == ItemErrorAction.Skip)
+                        if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                         {
                             failureSkipped = true;
                             break;
@@ -289,7 +288,7 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
             }
             catch (Exception exception)
             {
-                if (HandleItemError(itemNumber, exception) == ItemErrorAction.Skip)
+                if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                 {
                     continue;
                 }
@@ -314,7 +313,7 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
                     }
                     catch (Exception exception)
                     {
-                        if (HandleItemError(itemNumber, exception) == ItemErrorAction.Skip)
+                        if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                         {
                             failureSkipped = true;
                             break;
@@ -389,21 +388,5 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
             // Deliberately ignored: this item was skipped by the error policy, so a cleanup error
             // must neither end the run nor be counted a second time.
         }
-    }
-
-
-
-    /// <summary>
-    /// Applies the configured error policy and, when it asks to skip, records the abandoned item.
-    /// </summary>
-    private ItemErrorAction HandleItemError(long itemNumber, Exception exception)
-    {
-        var action = _options.ErrorPolicy(new ItemErrorContext(itemNumber, exception));
-        if (action == ItemErrorAction.Skip)
-        {
-            _ = Interlocked.Increment(ref _currentErrorItemCount);
-        }
-
-        return action;
     }
 }

@@ -136,7 +136,7 @@ public class ThrottleTransformerTests
 
         Assert.Equal("minInterval", ex.ParamName);
         Assert.Equal(minInterval, ex.ActualValue);
-        Assert.Contains("must not be negative", ex.Message, StringComparison.Ordinal);
+        Assert.Contains("must be greater than or equal to", ex.Message, StringComparison.Ordinal);
     }
 
 
