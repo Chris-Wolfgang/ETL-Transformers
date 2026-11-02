@@ -48,4 +48,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Include="..\Shared\AsyncSequence.cs" Link="Shared\AsyncSequence.cs" />
+  </ItemGroup>
+
 </Project>
