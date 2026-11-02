@@ -27,7 +27,7 @@ public class TransformerSnapshotTests
     };
 
     [Fact]
-    public async Task Select_projection_to_records()
+    public async Task TransformAsync_when_SelectTransformer_projects_records_matches_snapshot()
     {
         var result = await CollectAsync
         (
@@ -39,7 +39,7 @@ public class TransformerSnapshotTests
     }
 
     [Fact]
-    public async Task Chunk_grouping_shape()
+    public async Task TransformAsync_when_ChunkTransformer_size_is_2_matches_snapshot()
     {
         var result = await CollectAsync(new ChunkTransformer<Person>(2).TransformAsync(ToAsync(People)));
 
@@ -47,7 +47,7 @@ public class TransformerSnapshotTests
     }
 
     [Fact]
-    public async Task Pipeline_filter_dedup_project()
+    public async Task TransformAsync_when_pipeline_filters_dedups_and_projects_matches_snapshot()
     {
         var byCity = new DistinctByTransformer<Person, string>(p => p.City);
         var project = new SelectTransformer<Person, object>(p => new { p.City, Representative = p.Name });
