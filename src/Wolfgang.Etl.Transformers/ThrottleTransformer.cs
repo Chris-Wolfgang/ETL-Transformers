@@ -64,14 +64,13 @@ public sealed class ThrottleTransformer<T> : ITransformAsync<T, T>
     // deterministically without real time passing.
     internal ThrottleTransformer(TimeSpan minInterval, Func<TimeSpan, CancellationToken, Task> delayAsync, Func<long> getTimestamp)
     {
-        if (minInterval < TimeSpan.Zero)
-        {
-            throw new ArgumentOutOfRangeException(nameof(minInterval), minInterval, "The minimum interval must not be negative.");
-        }
+        ArgumentOutOfRangeException.ThrowIfLessThan(minInterval, TimeSpan.Zero);
+        ArgumentNullException.ThrowIfNull(delayAsync);
+        ArgumentNullException.ThrowIfNull(getTimestamp);
 
         _minInterval = minInterval;
-        _delayAsync = delayAsync ?? throw new ArgumentNullException(nameof(delayAsync));
-        _getTimestamp = getTimestamp ?? throw new ArgumentNullException(nameof(getTimestamp));
+        _delayAsync = delayAsync;
+        _getTimestamp = getTimestamp;
     }
 
 
