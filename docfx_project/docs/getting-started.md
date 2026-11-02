@@ -4,7 +4,7 @@ This guide will help you quickly get up and running with Wolfgang.Etl.Transforme
 
 ## Prerequisites
 
-- .NET 5.0 or later (any TFM from .NET Framework 4.6.2 to .NET 10.0 is supported at runtime)
+- .NET Framework 4.6.2 or later, any .NET Standard 2.0 platform, or .NET 5.0 or later
 - .NET 10.0 SDK to build from source and run the full TFM matrix
 
 ## Installation

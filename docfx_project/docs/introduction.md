@@ -4,8 +4,9 @@
 
 **Wolfgang.Etl.Transformers** is a library of generic, composable transformers for ETL pipelines.
 It builds on [Wolfgang.Etl.Abstractions](https://github.com/Chris-Wolfgang/ETL-Abstractions) and
-provides the middle tier of a pipeline — the T in ETL — through 18 public types covering filtering,
-projection, fan-out, deduplication, batching, buffering, progress reporting, and composition.
+provides the middle tier of a pipeline — the T in ETL — through 21 public types covering filtering,
+projection, fan-out, deduplication, batching, buffering, pacing, progress reporting, error
+handling, and composition.
 
 ## Key Features
 
@@ -14,11 +15,20 @@ projection, fan-out, deduplication, batching, buffering, progress reporting, and
   `TakeTransformer`, `TakeWhileTransformer`, `SkipTransformer`, `SkipWhileTransformer`, `ChunkTransformer`
 - **Pipeline infrastructure**: `BufferedTransformer` decouples producer from consumer using
   `System.Threading.Channels` so both stages run concurrently; `ProgressReportingTransformer`
-  calls a callback per item without changing the stream
+  calls a callback per item without changing the stream; `ThrottleTransformer` paces items at
+  least a minimum `TimeSpan` apart to rate-limit a downstream sink
+- **Pipeline operators**: referencing the package adds LINQ-flavored operators to
+  `IEtlPipeline<T>` (`Where`, `Select`, `SelectMany`, `Distinct`, `DistinctBy`, `Take`, `Skip`,
+  `TakeWhile`, `SkipWhile`, `Chunk`, `Buffered`, `Cast`, `OfType`, plus `Tap`, `Log` and
+  `Throttle`), each a thin wrapper over the matching transformer
+- **Per-item error policy**: the eight delegate-invoking transformers accept a
+  `DelegateTransformerOptions` whose `ErrorPolicy` can skip an item whose delegate throws instead
+  of aborting the run; skipped items are counted by `CurrentErrorItemCount`
 - **Fluent composition**: `.Then(next)` extension composes any two transformers into one,
   chains arbitrarily deep, and automatically picks the cancellation-aware overload when both
   sides implement `ITransformWithCancellationAsync<TSource, TDestination>`
-- **Multi-TFM**: targets .NET Framework 4.6.2–4.8.1, .NET Core 3.1, and .NET 5.0–10.0
+- **Multi-TFM**: targets .NET Framework 4.6.2, 4.7.2, 4.8 and 4.8.1, .NET Standard 2.0, and
+  .NET 5.0–10.0
 - **Zero allocations on hot paths**: all transformers yield items via `IAsyncEnumerable<T>` with
   no intermediate buffering beyond `BufferedTransformer`'s explicit channel
 

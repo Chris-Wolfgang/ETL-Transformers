@@ -26,9 +26,9 @@
 //      v
 //   first N Bucket records
 //      |
-//      |  Chunk:    group into arrays of size 3
+//      |  Chunk:    group into lists of size 3
 //      v
-//   Bucket[]   (one or more arrays, last may be partial)
+//   IReadOnlyList<Bucket>   (one or more chunks, last may be partial)
 //
 // Each stage is a standalone transformer. The chain composes them with
 // full type inference at every .Then(...).
@@ -71,9 +71,9 @@ var source = Enumerable.Range(1, 30)
 //                                Negative/zero count yields empty without
 //                                enumerating the source.
 //
-//   ChunkTransformer<T>        : ITransformAsync<T, T[]>
+//   ChunkTransformer<T>        : ITransformAsync<T, IReadOnlyList<T>>
 //                                Last chunk may be smaller than 'size'.
-//                                Each yielded chunk is a fresh array.
+//                                Each yielded chunk is a fresh list.
 // ---------------------------------------------------------------------------
 
 var pipeline = new WhereTransformer<int>(i => i % 2 == 0)
