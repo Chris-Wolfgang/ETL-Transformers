@@ -74,8 +74,7 @@ public sealed class CastTransformer<TSource, TDestination> : ITransformAsync<TSo
     where TSource : notnull
     where TDestination : notnull
 {
-    private readonly DelegateTransformerOptions _options;
-    private int _currentErrorItemCount;
+    private readonly ItemErrorCounter _errors;
 
 
 
@@ -104,7 +103,7 @@ public sealed class CastTransformer<TSource, TDestination> : ITransformAsync<TSo
     {
         ArgumentNullException.ThrowIfNull(options);
 
-        _options = options;
+        _errors = new ItemErrorCounter(options);
     }
 
 
@@ -117,7 +116,7 @@ public sealed class CastTransformer<TSource, TDestination> : ITransformAsync<TSo
     /// Cumulative across every enumeration produced by this instance. An item whose failure aborted
     /// the run is not counted, because the exception is re-thrown instead.
     /// </remarks>
-    public int CurrentErrorItemCount => Volatile.Read(ref _currentErrorItemCount);
+    public int CurrentErrorItemCount => _errors.Count;
 
 
 
@@ -157,7 +156,7 @@ public sealed class CastTransformer<TSource, TDestination> : ITransformAsync<TSo
             }
             catch (InvalidCastException exception)
             {
-                if (HandleItemError(itemNumber, exception) == ItemErrorAction.Skip)
+                if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                 {
                     continue;
                 }
@@ -167,21 +166,5 @@ public sealed class CastTransformer<TSource, TDestination> : ITransformAsync<TSo
 
             yield return converted;
         }
-    }
-
-
-
-    /// <summary>
-    /// Applies the configured error policy and, when it asks to skip, records the dropped item.
-    /// </summary>
-    private ItemErrorAction HandleItemError(long itemNumber, Exception exception)
-    {
-        var action = _options.ErrorPolicy(new ItemErrorContext(itemNumber, exception));
-        if (action == ItemErrorAction.Skip)
-        {
-            _ = Interlocked.Increment(ref _currentErrorItemCount);
-        }
-
-        return action;
     }
 }

@@ -298,11 +298,8 @@ public class BufferedTransformerTests
             }
         );
 
-        // Give the producer Task (spawned via Task.Run inside BufferAsync) a scheduling window
-        // in case it started concurrently; the assertion is that it never advanced past its
-        // token pre-check.
-        await Task.Delay(50);
-
+        // A pre-cancelled token is rejected before BufferAsync starts its producer Task, so the
+        // source can never have been pulled; no scheduling window is needed to prove it.
         Assert.Equal(0, source.PullCount);
     }
 

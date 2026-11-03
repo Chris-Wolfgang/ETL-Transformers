@@ -31,8 +31,11 @@ namespace Wolfgang.Etl.Transformers;
 /// path - the only counter is the opt-in <see cref="CurrentErrorItemCount"/>, which stays at zero
 /// unless an error policy skips an item - keeping the hot loop as small as possible for use as a
 /// building block in composed pipelines. Callers needing
-/// cancellation or windowing should compose with dedicated transformers (for example a future
-/// <c>SkipTransformer</c> / <c>TakeTransformer</c> / <c>BufferedTransformer</c>).
+/// cancellation or windowing should compose with dedicated transformers (for example
+/// <see cref="SkipTransformer{T}"/>, <see cref="TakeTransformer{T}"/> or
+/// <see cref="BufferedTransformer{T}"/>). The <c>WhereBenchmarks</c> class in the benchmarks project
+/// measures this choice against a <see cref="TransformerBase{TSource, TDestination, TProgress}"/>
+/// implementation.
 /// </para>
 /// <para>
 /// By default an exception thrown by the predicate propagates to the caller. Pass a
@@ -59,8 +62,7 @@ public sealed class WhereTransformer<T> : ITransformAsync<T, T>, IReportsItemErr
 {
     private readonly Func<T, bool>? _syncPredicate;
     private readonly Func<T, ValueTask<bool>>? _asyncPredicate;
-    private readonly DelegateTransformerOptions _options;
-    private int _currentErrorItemCount;
+    private readonly ItemErrorCounter _errors;
 
 
 
@@ -90,7 +92,7 @@ public sealed class WhereTransformer<T> : ITransformAsync<T, T>, IReportsItemErr
         ArgumentNullException.ThrowIfNull(options);
 
         _syncPredicate = predicate;
-        _options = options;
+        _errors = new ItemErrorCounter(options);
     }
 
 
@@ -124,7 +126,7 @@ public sealed class WhereTransformer<T> : ITransformAsync<T, T>, IReportsItemErr
         ArgumentNullException.ThrowIfNull(options);
 
         _asyncPredicate = predicate;
-        _options = options;
+        _errors = new ItemErrorCounter(options);
     }
 
 
@@ -138,7 +140,7 @@ public sealed class WhereTransformer<T> : ITransformAsync<T, T>, IReportsItemErr
     /// item the predicate deliberately filtered out is not an error. An item whose failure aborted
     /// the run is not counted either, because the exception is re-thrown instead.
     /// </remarks>
-    public int CurrentErrorItemCount => Volatile.Read(ref _currentErrorItemCount);
+    public int CurrentErrorItemCount => _errors.Count;
 
 
 
@@ -181,7 +183,7 @@ public sealed class WhereTransformer<T> : ITransformAsync<T, T>, IReportsItemErr
             }
             catch (Exception exception)
             {
-                if (HandleItemError(itemNumber, exception) == ItemErrorAction.Skip)
+                if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                 {
                     continue;
                 }
@@ -217,7 +219,7 @@ public sealed class WhereTransformer<T> : ITransformAsync<T, T>, IReportsItemErr
             }
             catch (Exception exception)
             {
-                if (HandleItemError(itemNumber, exception) == ItemErrorAction.Skip)
+                if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                 {
                     continue;
                 }
@@ -230,20 +232,5 @@ public sealed class WhereTransformer<T> : ITransformAsync<T, T>, IReportsItemErr
                 yield return item;
             }
         }
-    }
-
-
-    /// <summary>
-    /// Applies the configured error policy and, when it asks to skip, records the dropped item.
-    /// </summary>
-    private ItemErrorAction HandleItemError(long itemNumber, Exception exception)
-    {
-        var action = _options.ErrorPolicy(new ItemErrorContext(itemNumber, exception));
-        if (action == ItemErrorAction.Skip)
-        {
-            _ = Interlocked.Increment(ref _currentErrorItemCount);
-        }
-
-        return action;
     }
 }

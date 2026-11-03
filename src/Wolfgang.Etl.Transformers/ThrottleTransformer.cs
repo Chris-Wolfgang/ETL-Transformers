@@ -23,6 +23,11 @@ namespace Wolfgang.Etl.Transformers;
 /// further. The first item is never delayed. All waits observe the enumeration's
 /// <see cref="CancellationToken"/> (supply it via <c>.WithCancellation(token)</c>).
 /// </para>
+/// <para>
+/// Implements only <see cref="ITransformAsync{TSource, TDestination}"/> - no progress, no
+/// <c>SkipItemCount</c>/<c>MaximumItemCount</c> limits - to keep the hot loop minimal. Cancellation
+/// is observed only through the enumeration's token, as described above.
+/// </para>
 /// </remarks>
 /// <example>
 /// <code>
@@ -41,6 +46,7 @@ public sealed class ThrottleTransformer<T> : ITransformAsync<T, T>
     private readonly Func<long> _getTimestamp;
 
 
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ThrottleTransformer{T}"/> class.
     /// </summary>
@@ -55,19 +61,30 @@ public sealed class ThrottleTransformer<T> : ITransformAsync<T, T>
     }
 
 
+
     // Test seam: inject a delay and a monotonic timestamp source so pacing can be verified
     // deterministically without real time passing.
     internal ThrottleTransformer(TimeSpan minInterval, Func<TimeSpan, CancellationToken, Task> delayAsync, Func<long> getTimestamp)
     {
-        if (minInterval < TimeSpan.Zero)
-        {
-            throw new ArgumentOutOfRangeException(nameof(minInterval), minInterval, "The minimum interval must not be negative.");
-        }
+        ArgumentOutOfRangeException.ThrowIfLessThan(minInterval, TimeSpan.Zero);
+        ArgumentNullException.ThrowIfNull(delayAsync);
+        ArgumentNullException.ThrowIfNull(getTimestamp);
 
         _minInterval = minInterval;
-        _delayAsync = delayAsync ?? throw new ArgumentNullException(nameof(delayAsync));
-        _getTimestamp = getTimestamp ?? throw new ArgumentNullException(nameof(getTimestamp));
+        _delayAsync = delayAsync;
+        _getTimestamp = getTimestamp;
     }
+
+
+
+    /// <summary>
+    /// The minimum time between successive yielded items, as passed to the constructor.
+    /// </summary>
+    /// <value>
+    /// A non-negative <see cref="TimeSpan"/>; <see cref="TimeSpan.Zero"/> means no pacing.
+    /// </value>
+    public TimeSpan MinInterval => _minInterval;
+
 
 
     /// <summary>
@@ -82,6 +99,7 @@ public sealed class ThrottleTransformer<T> : ITransformAsync<T, T>
         ArgumentNullException.ThrowIfNull(items);
         return TransformAsyncCore(items);
     }
+
 
 
     private async IAsyncEnumerable<T> TransformAsyncCore
