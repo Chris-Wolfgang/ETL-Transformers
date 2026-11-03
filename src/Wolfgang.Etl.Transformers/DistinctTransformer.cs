@@ -59,8 +59,7 @@ public sealed class DistinctTransformer<T> : ITransformAsync<T, T>, IReportsItem
     where T : notnull
 {
     private readonly IEqualityComparer<T>? _comparer;
-    private readonly DelegateTransformerOptions _options;
-    private int _currentErrorItemCount;
+    private readonly ItemErrorCounter _errors;
 
 
 
@@ -108,7 +107,7 @@ public sealed class DistinctTransformer<T> : ITransformAsync<T, T>, IReportsItem
     {
         ArgumentNullException.ThrowIfNull(options);
 
-        _options = options;
+        _errors = new ItemErrorCounter(options);
         _comparer = comparer;
     }
 
@@ -139,7 +138,7 @@ public sealed class DistinctTransformer<T> : ITransformAsync<T, T>, IReportsItem
     /// equal one was already seen is the transformer doing its job, not an error, and is never
     /// counted.
     /// </remarks>
-    public int CurrentErrorItemCount => Volatile.Read(ref _currentErrorItemCount);
+    public int CurrentErrorItemCount => _errors.Count;
 
 
 
@@ -166,7 +165,7 @@ public sealed class DistinctTransformer<T> : ITransformAsync<T, T>, IReportsItem
             }
             catch (Exception exception)
             {
-                if (HandleItemError(itemNumber, exception) == ItemErrorAction.Skip)
+                if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                 {
                     // The item never entered the set, so an equal item later in the stream is
                     // still treated as a first occurrence.
@@ -181,21 +180,5 @@ public sealed class DistinctTransformer<T> : ITransformAsync<T, T>, IReportsItem
                 yield return item;
             }
         }
-    }
-
-
-
-    /// <summary>
-    /// Applies the configured error policy and, when it asks to skip, records the dropped item.
-    /// </summary>
-    private ItemErrorAction HandleItemError(long itemNumber, Exception exception)
-    {
-        var action = _options.ErrorPolicy(new ItemErrorContext(itemNumber, exception));
-        if (action == ItemErrorAction.Skip)
-        {
-            _ = Interlocked.Increment(ref _currentErrorItemCount);
-        }
-
-        return action;
     }
 }

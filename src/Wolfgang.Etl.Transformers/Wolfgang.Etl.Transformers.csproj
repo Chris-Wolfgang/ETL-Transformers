@@ -15,17 +15,14 @@
     <FileVersion>$([System.Text.RegularExpressions.Regex]::Replace("$(Version)", "[-+].*$", "")).0</FileVersion>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <Title>Wolfgang.Etl.Transformers</Title>
-    <Authors>Chris Wolfgang</Authors>
     <Description>A collection of generic, broadly reusable transformers for use in ETL pipelines built on Wolfgang.Etl.Abstractions.</Description>
-    <Copyright>Copyright 2026 Chris Wolfgang</Copyright>
     <PackageProjectUrl>https://github.com/Chris-Wolfgang/ETL-Transformers</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Chris-Wolfgang/ETL-Transformers</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <SignAssembly>False</SignAssembly>
-    <PackageTags>ETL;Extract-Transform-Load;Transformer;PassThrough;Identity;NoOp;Data-Pipeline;IAsyncEnumerable;Streaming;dotnet;Wolfgang-ETL;Wolfgang.Etl.Abstractions</PackageTags>
+    <PackageTags>ETL;Extract-Transform-Load;Transformer;LINQ;Where;Select;SelectMany;Distinct;Chunk;Buffer;Throttle;ErrorPolicy;Pipeline;Data-Pipeline;IAsyncEnumerable;Streaming;dotnet;Wolfgang-ETL;Wolfgang.Etl.Abstractions</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
     <!--
