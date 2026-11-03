@@ -4,7 +4,7 @@ A collection of generic, composable transformers for ETL pipelines built on [Wol
 
 [![NuGet](https://img.shields.io/nuget/v/Wolfgang.Etl.Transformers.svg?logo=nuget&label=NuGet)](https://www.nuget.org/packages/Wolfgang.Etl.Transformers/)
 [![Downloads](https://img.shields.io/nuget/dt/Wolfgang.Etl.Transformers.svg?logo=nuget&label=downloads)](https://www.nuget.org/packages/Wolfgang.Etl.Transformers/)
-[![PR build](https://img.shields.io/github/actions/workflow/status/Chris-Wolfgang/ETL-Transformers/pr.yaml?event=pull_request_target&label=PR%20build&logo=github)](https://github.com/Chris-Wolfgang/ETL-Transformers/actions/workflows/pr.yaml)
+[![PR build](https://img.shields.io/github/actions/workflow/status/Chris-Wolfgang/ETL-Transformers/pr.yaml?event=pull_request&label=PR%20build&logo=github)](https://github.com/Chris-Wolfgang/ETL-Transformers/actions/workflows/pr.yaml)
 [![release](https://img.shields.io/github/actions/workflow/status/Chris-Wolfgang/ETL-Transformers/release.yaml?event=release&label=release&logo=github)](https://github.com/Chris-Wolfgang/ETL-Transformers/actions/workflows/release.yaml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![.NET](https://img.shields.io/badge/.NET-Multi--Targeted-purple.svg)](https://dotnet.microsoft.com/)
@@ -26,7 +26,7 @@ dotnet add package Wolfgang.Etl.Transformers
 ```csharp
 using Wolfgang.Etl.Transformers;
 
-// Build a pipeline: parse → filter → project → buffer
+// Build a pipeline: parse → filter → project
 var pipeline = new SelectTransformer<string, Order>(ParseOrder)
     .Then(new WhereTransformer<Order>(o => o.IsValid))
     .Then(new SelectTransformer<Order, InvoiceRow>(ToInvoice));
@@ -66,7 +66,7 @@ await foreach (var row in projected.TransformAsync(filtered.TransformAsync(buffe
 | `TakeWhileTransformer<T>` | Yields items while a predicate holds |
 | `SkipTransformer<T>` | Skips the first N items |
 | `SkipWhileTransformer<T>` | Skips items while a predicate holds |
-| `ChunkTransformer<T>` | Batches items into fixed-size arrays |
+| `ChunkTransformer<T>` | Batches items into fixed-size `IReadOnlyList<T>` chunks (the last may be smaller) |
 
 ### Pipeline infrastructure
 
@@ -85,6 +85,31 @@ await foreach (var row in projected.TransformAsync(filtered.TransformAsync(buffe
 | `ChainTransformerWithCancellation<TSource, TIntermediate, TDestination>` | Same as above but propagates `CancellationToken` through both stages |
 | `TransformerExtensions.Then(...)` | Fluent composition — two overloads: one for `ITransformAsync` pairs, one for `ITransformWithCancellationAsync` pairs |
 | `TransformerExtensions.Buffered(...)` | Inline buffer insertion — sugar for `new BufferedTransformer<T>(n).TransformAsync(source)` |
+
+### Error handling
+
+The eight transformers that invoke a caller-supplied delegate or comparer — `Cast`, `Distinct`,
+`DistinctBy`, `Select`, `SelectMany`, `SkipWhile`, `TakeWhile` and `Where` — each have a constructor
+overload that takes a `DelegateTransformerOptions`. Its `ErrorPolicy` decides what happens when the
+delegate throws for one item: `ItemErrorAction.Abort` (the default) re-throws, and
+`ItemErrorAction.Skip` drops the item and carries on. Each of these transformers implements
+`IReportsItemErrors`, so `CurrentErrorItemCount` tells you how many items were skipped.
+
+```csharp
+var options = new DelegateTransformerOptions { ErrorPolicy = _ => ItemErrorAction.Skip };
+var parse = new SelectTransformer<string, int>(int.Parse, options);
+
+await foreach (var value in parse.TransformAsync(rawLines))
+{
+    // lines that fail int.Parse are dropped
+}
+
+Console.WriteLine($"Skipped {parse.CurrentErrorItemCount} bad lines");
+```
+
+The policy receives an `ItemErrorContext` (the item number and the exception), so it can log or
+route the failure before it decides. Ready-made policies live in the separate
+`Wolfgang.Etl.ErrorPolicies` package; this library does not reference it.
 
 ---
 

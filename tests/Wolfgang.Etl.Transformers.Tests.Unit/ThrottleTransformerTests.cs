@@ -26,6 +26,7 @@ public class ThrottleTransformerTests
     }
 
 
+
     [Fact]
     public async Task TransformAsync_delays_each_item_after_the_first_by_the_min_interval()
     {
@@ -42,6 +43,7 @@ public class ThrottleTransformerTests
         Assert.Equal(2, waits.Count);          // the first item is never delayed
         Assert.All(waits, w => Assert.Equal(interval, w));
     }
+
 
 
     [Fact]
@@ -63,6 +65,7 @@ public class ThrottleTransformerTests
         Assert.Equal(new[] { 1, 2, 3 }, result);
         Assert.Empty(waits);
     }
+
 
 
     [Fact]
@@ -94,12 +97,14 @@ public class ThrottleTransformerTests
     }
 
 
+
     [Fact]
     public void Internal_ctor_when_delay_or_timestamp_is_null_throws_ArgumentNullException()
     {
         Assert.Throws<ArgumentNullException>(() => new ThrottleTransformer<int>(TimeSpan.Zero, null!, () => 0L));
         Assert.Throws<ArgumentNullException>(() => new ThrottleTransformer<int>(TimeSpan.Zero, (_, _) => Task.CompletedTask, null!));
     }
+
 
 
     [Fact]
@@ -116,6 +121,19 @@ public class ThrottleTransformerTests
     }
 
 
+
+    [Fact]
+    public void MinInterval_when_constructed_returns_the_constructor_argument()
+    {
+        var minInterval = TimeSpan.FromMilliseconds(250);
+
+        var sut = new ThrottleTransformer<int>(minInterval);
+
+        Assert.Equal(minInterval, sut.MinInterval);
+    }
+
+
+
     [Fact]
     public void Ctor_when_min_interval_is_negative_throws_ArgumentOutOfRangeException()
     {
@@ -125,8 +143,9 @@ public class ThrottleTransformerTests
 
         Assert.Equal("minInterval", ex.ParamName);
         Assert.Equal(minInterval, ex.ActualValue);
-        Assert.Contains("must not be negative", ex.Message, StringComparison.Ordinal);
+        Assert.Contains("must be greater than or equal to", ex.Message, StringComparison.Ordinal);
     }
+
 
 
     [Fact]

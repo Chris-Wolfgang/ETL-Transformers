@@ -31,8 +31,7 @@ namespace Wolfgang.Etl.Transformers;
 /// It carries no progress reporting and no cancellation token, and counts nothing on the default
 /// path - the only counter is the opt-in <see cref="CurrentErrorItemCount"/>, which stays at zero
 /// unless an error policy skips an item - keeping the hot loop as small as possible for use as a
-/// building block in composed pipelines. See the
-/// benchmarks project for measurements motivating this choice.
+/// building block in composed pipelines.
 /// </para>
 /// <para>
 /// By default an exception thrown by the selector propagates to the caller. Pass a
@@ -61,8 +60,7 @@ public sealed class SelectTransformer<TSource, TDestination> : ITransformAsync<T
 {
     private readonly Func<TSource, TDestination>? _syncSelector;
     private readonly Func<TSource, ValueTask<TDestination>>? _asyncSelector;
-    private readonly DelegateTransformerOptions _options;
-    private int _currentErrorItemCount;
+    private readonly ItemErrorCounter _errors;
 
 
 
@@ -92,7 +90,7 @@ public sealed class SelectTransformer<TSource, TDestination> : ITransformAsync<T
         ArgumentNullException.ThrowIfNull(options);
 
         _syncSelector = selector;
-        _options = options;
+        _errors = new ItemErrorCounter(options);
     }
 
 
@@ -132,7 +130,7 @@ public sealed class SelectTransformer<TSource, TDestination> : ITransformAsync<T
         ArgumentNullException.ThrowIfNull(options);
 
         _asyncSelector = selector;
-        _options = options;
+        _errors = new ItemErrorCounter(options);
     }
 
 
@@ -145,7 +143,7 @@ public sealed class SelectTransformer<TSource, TDestination> : ITransformAsync<T
     /// Cumulative across every enumeration produced by this instance. An item whose failure aborted
     /// the run is not counted, because the exception is re-thrown instead.
     /// </remarks>
-    public int CurrentErrorItemCount => Volatile.Read(ref _currentErrorItemCount);
+    public int CurrentErrorItemCount => _errors.Count;
 
 
 
@@ -188,7 +186,7 @@ public sealed class SelectTransformer<TSource, TDestination> : ITransformAsync<T
             }
             catch (Exception exception)
             {
-                if (HandleItemError(itemNumber, exception) == ItemErrorAction.Skip)
+                if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                 {
                     continue;
                 }
@@ -221,7 +219,7 @@ public sealed class SelectTransformer<TSource, TDestination> : ITransformAsync<T
             }
             catch (Exception exception)
             {
-                if (HandleItemError(itemNumber, exception) == ItemErrorAction.Skip)
+                if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                 {
                     continue;
                 }
@@ -231,21 +229,5 @@ public sealed class SelectTransformer<TSource, TDestination> : ITransformAsync<T
 
             yield return projected;
         }
-    }
-
-
-
-    /// <summary>
-    /// Applies the configured error policy and, when it asks to skip, records the dropped item.
-    /// </summary>
-    private ItemErrorAction HandleItemError(long itemNumber, Exception exception)
-    {
-        var action = _options.ErrorPolicy(new ItemErrorContext(itemNumber, exception));
-        if (action == ItemErrorAction.Skip)
-        {
-            _ = Interlocked.Increment(ref _currentErrorItemCount);
-        }
-
-        return action;
     }
 }

@@ -56,8 +56,7 @@ public sealed class SkipWhileTransformer<T> : ITransformAsync<T, T>, IReportsIte
 {
     private readonly Func<T, bool>? _syncPredicate;
     private readonly Func<T, ValueTask<bool>>? _asyncPredicate;
-    private readonly DelegateTransformerOptions _options;
-    private int _currentErrorItemCount;
+    private readonly ItemErrorCounter _errors;
 
 
 
@@ -87,7 +86,7 @@ public sealed class SkipWhileTransformer<T> : ITransformAsync<T, T>, IReportsIte
         ArgumentNullException.ThrowIfNull(options);
 
         _syncPredicate = predicate;
-        _options = options;
+        _errors = new ItemErrorCounter(options);
     }
 
 
@@ -121,7 +120,7 @@ public sealed class SkipWhileTransformer<T> : ITransformAsync<T, T>, IReportsIte
         ArgumentNullException.ThrowIfNull(options);
 
         _asyncPredicate = predicate;
-        _options = options;
+        _errors = new ItemErrorCounter(options);
     }
 
 
@@ -133,7 +132,7 @@ public sealed class SkipWhileTransformer<T> : ITransformAsync<T, T>, IReportsIte
     /// <remarks>
     /// Cumulative across every enumeration produced by this instance. Only a thrown exception counts; an item skipped because the predicate returned <see langword="true"/> is ordinary behaviour.
     /// </remarks>
-    public int CurrentErrorItemCount => Volatile.Read(ref _currentErrorItemCount);
+    public int CurrentErrorItemCount => _errors.Count;
 
 
 
@@ -180,7 +179,7 @@ public sealed class SkipWhileTransformer<T> : ITransformAsync<T, T>, IReportsIte
                 }
                 catch (Exception exception)
                 {
-                    if (HandleItemError(itemNumber, exception) == ItemErrorAction.Skip)
+                    if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                     {
                         // Drop the item and stay in the skipping phase: a predicate that threw says
                         // nothing about whether the leading run has ended, so ending it here would
@@ -227,7 +226,7 @@ public sealed class SkipWhileTransformer<T> : ITransformAsync<T, T>, IReportsIte
                 }
                 catch (Exception exception)
                 {
-                    if (HandleItemError(itemNumber, exception) == ItemErrorAction.Skip)
+                    if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                     {
                         // Drop the item and stay in the skipping phase: a predicate that threw says
                         // nothing about whether the leading run has ended, so ending it here would
@@ -248,21 +247,5 @@ public sealed class SkipWhileTransformer<T> : ITransformAsync<T, T>, IReportsIte
 
             yield return item;
         }
-    }
-
-
-
-    /// <summary>
-    /// Applies the configured error policy and, when it asks to skip, records the dropped item.
-    /// </summary>
-    private ItemErrorAction HandleItemError(long itemNumber, Exception exception)
-    {
-        var action = _options.ErrorPolicy(new ItemErrorContext(itemNumber, exception));
-        if (action == ItemErrorAction.Skip)
-        {
-            _ = Interlocked.Increment(ref _currentErrorItemCount);
-        }
-
-        return action;
     }
 }

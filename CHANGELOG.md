@@ -78,8 +78,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.5.2] - 2026-09-15
 
-### Added
-
 ### Changed
 
 - Argument guards across the operators now throw the same exception on every target framework.
@@ -90,14 +88,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `ThrowIfLessThan` are polyfilled as C# 14 static extension members on the targets that lack them
   (the same three internal files as ETL-Abstractions #463). No public API change. (#244)
 - `Wolfgang.Etl.Abstractions` dependency 0.23.2 → 0.23.4 (#241).
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
 
 ## [0.5.1] - 2026-08-17
 
@@ -258,16 +248,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   files a discrepancy, and publishes an independent verification attestation; a "Verify
   the build" section links it from the README. ([#102](https://github.com/Chris-Wolfgang/ETL-Transformers/issues/102))
 
-### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
-
 ## [0.3.0] - 2026-08-06
 
 ### Added
@@ -291,6 +271,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Dependabot bump: dotnet-dependencies group (7 packages).
+
 ## [0.2.0] - 2026-06-26
 
 ### Changed
