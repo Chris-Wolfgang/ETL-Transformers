@@ -31,8 +31,11 @@ namespace Wolfgang.Etl.Transformers;
 /// path - the only counter is the opt-in <see cref="CurrentErrorItemCount"/>, which stays at zero
 /// unless an error policy skips an item - keeping the hot loop as small as possible for use as a
 /// building block in composed pipelines. Callers needing
-/// cancellation or windowing should compose with dedicated transformers (for example a future
-/// <c>SkipTransformer</c> / <c>TakeTransformer</c> / <c>BufferedTransformer</c>).
+/// cancellation or windowing should compose with dedicated transformers (for example
+/// <see cref="SkipTransformer{T}"/>, <see cref="TakeTransformer{T}"/> or
+/// <see cref="BufferedTransformer{T}"/>). The <c>WhereBenchmarks</c> class in the benchmarks project
+/// measures this choice against a <see cref="TransformerBase{TSource, TDestination, TProgress}"/>
+/// implementation.
 /// </para>
 /// <para>
 /// By default an exception thrown by the predicate propagates to the caller. Pass a

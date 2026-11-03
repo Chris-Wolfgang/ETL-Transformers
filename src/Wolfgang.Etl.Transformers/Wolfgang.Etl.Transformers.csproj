@@ -49,8 +49,9 @@
   </ItemGroup>
 
   <!--
-    Microsoft.Bcl.AsyncInterfaces: the runtime assembly is built into net8+, so pre-net8 TFMs
-    get a full reference. The net8+ group pins the version with ExcludeAssets="runtime" to
+    Microsoft.Bcl.AsyncInterfaces: IAsyncEnumerable<T> / IAsyncDisposable are in-box from
+    netcoreapp3.0 / net5.0, so only the .NET Framework and netstandard2.0 slots strictly need the
+    full reference; net5.0-net7.0 keep it as well, which only pins the version. The net8+ group pins the version with ExcludeAssets="runtime" to
     prevent NuGet from resolving an older transitive version - no runtime assembly is copied.
   -->
   <ItemGroup Condition="'$(TargetFramework)' == 'net462' OR '$(TargetFramework)' == 'net472' OR '$(TargetFramework)' == 'net48' OR '$(TargetFramework)' == 'net481' OR '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'net5.0' OR '$(TargetFramework)' == 'net6.0' OR '$(TargetFramework)' == 'net7.0'">

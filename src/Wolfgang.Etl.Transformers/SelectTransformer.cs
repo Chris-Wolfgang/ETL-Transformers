@@ -31,8 +31,7 @@ namespace Wolfgang.Etl.Transformers;
 /// It carries no progress reporting and no cancellation token, and counts nothing on the default
 /// path - the only counter is the opt-in <see cref="CurrentErrorItemCount"/>, which stays at zero
 /// unless an error policy skips an item - keeping the hot loop as small as possible for use as a
-/// building block in composed pipelines. See the
-/// benchmarks project for measurements motivating this choice.
+/// building block in composed pipelines.
 /// </para>
 /// <para>
 /// By default an exception thrown by the selector propagates to the caller. Pass a

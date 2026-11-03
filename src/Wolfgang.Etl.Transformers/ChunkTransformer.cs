@@ -74,7 +74,9 @@ public sealed class ChunkTransformer<T> : ITransformAsync<T, IReadOnlyList<T>>
     /// <param name="size">The maximum number of items in each yielded chunk. Must be at least 1.</param>
     /// <param name="progress">
     /// A sink that receives the cumulative number of source items consumed so far, reported once per
-    /// yielded chunk (including the partial final chunk). May be <see langword="null"/> to disable reporting.
+    /// chunk (including the partial final chunk) after the consumer takes that chunk and asks for the
+    /// next one, so a consumer that stops after a chunk does not receive that chunk's report. May be
+    /// <see langword="null"/> to disable reporting.
     /// </param>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="size"/> is less than 1.</exception>
     public ChunkTransformer(int size, IProgress<int>? progress)
