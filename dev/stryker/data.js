@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1792305296133,
+  "lastUpdate": 1794142975919,
   "repoUrl": "https://github.com/Chris-Wolfgang/ETL-Transformers",
   "entries": {
     "Mutation score": [
@@ -107,6 +107,33 @@ window.BENCHMARK_DATA = {
           {
             "name": "Mutation score",
             "value": 92.59,
+            "unit": "%"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang",
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "6a6e646ee08d1fa695b576d54411c0ea2fe0382c",
+          "message": "ci(pr): coverage step names carry no percentage (#468)\n\nThe coverage steps are now just 'Enforce coverage thresholds' and the\nStage 1 summary line says 'coverage gate'; the values live only in the\nenv block (CODECOV_MINIMUM / CODECOV_TEST_MINIMUM), so changing a\nthreshold never means renaming a step. Step names are not required-check\ncontexts (job names are), so the ruleset is unaffected.\n\nCo-authored-by: Claude Opus 5.5 <noreply@anthropic.com>",
+          "timestamp": "2026-11-08T02:22:55Z",
+          "url": "https://github.com/Chris-Wolfgang/ETL-Transformers/commit/6a6e646ee08d1fa695b576d54411c0ea2fe0382c"
+        },
+        "date": 1794142970336,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "Mutation score",
+            "value": 91.86,
             "unit": "%"
           }
         ]
