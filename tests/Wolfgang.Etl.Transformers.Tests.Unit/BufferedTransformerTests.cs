@@ -193,6 +193,10 @@ public class BufferedTransformerTests
         var disposalSignal = new TaskCompletionSource<bool>();
         var sut = new BufferedTransformer<int>(capacity: 4);
 
+        // S3267 would turn this into a LINQ `Where`, but the consumer walking the first items and
+        // then breaking out of the enumeration IS the behaviour under test: the break is what must
+        // trigger producer cancellation. A filter would hide the abandonment.
+#pragma warning disable S3267
         await foreach (var item in sut.TransformAsync(InfiniteSource(disposalSignal)))
         {
             if (item >= 5)
@@ -200,6 +204,7 @@ public class BufferedTransformerTests
                 break;
             }
         }
+#pragma warning restore S3267
 
         // After consumer breaks, the iterator's finally must cancel the producer, which
         // in turn disposes the source enumerator. This must happen quickly - well under
