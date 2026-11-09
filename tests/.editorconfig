@@ -46,3 +46,11 @@ dotnet_diagnostic.S1144.severity = none
 
 # xUnit2013: Use Assert.Single instead of Assert.Equal for collection size
 dotnet_diagnostic.xUnit2013.severity = none
+
+# xUnit1051: Pass TestContext.Current.CancellationToken — that API exists only in xunit v3. These
+# sources belong to the xunit 2.x project and are linked into Tests.Aot (xunit.v3.aot), so the
+# prescribed fix cannot be written here, and a v3-only shim would churn every call site of a test
+# helper for no change in the 2.x run. xunit.analyzers ships the rule at Info; InspectCode promotes
+# Roslyn Info to warning. "suggestion" keeps the analyzer's own level and stays below the
+# InspectCode WARNING threshold.
+dotnet_diagnostic.xUnit1051.severity = suggestion
