@@ -19,8 +19,9 @@
     <!-- Follows Tests.Unit: the repo is multi-targeted, so the linked sources carry explicit usings. -->
     <ImplicitUsings>disable</ImplicitUsings>
     <IsPackable>false</IsPackable>
-    <!-- Not a dotnet-test project: build-pr.ps1 runs `dotnet test` only on IsTestProject /
-         Microsoft.NET.Test.Sdk projects. This one is published and executed by the AOT job. -->
+    <!-- Not a dotnet-test project: build-pr.ps1, pr.yaml, coverage-report.yaml and release.yaml run
+         `dotnet test` only on IsTestProject / Microsoft.NET.Test.Sdk projects. This one is published
+         and executed as a native binary by the aot-unit-suite job in .github/workflows/aot.yaml. -->
     <IsTestProject>false</IsTestProject>
     <PublishAot>true</PublishAot>
     <PublishTrimmed>true</PublishTrimmed>
