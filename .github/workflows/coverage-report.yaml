@@ -93,6 +93,18 @@ jobs:
               *) echo "::notice::Skipping $proj - targets [$tfms], not net10.0"; continue ;;
             esac
 
+            # Only projects that really run tests. The Native AOT unit-suite executable
+            # (xunit.v3, IsTestProject=false) has no VSTest adapter, and `dotnet test` on it
+            # fails under the .NET 10 SDK. Ask MSBuild rather than grep the csproj, for the
+            # same reason as the TFMs above; a probe that cannot answer is an error, never a
+            # silent skip (mirrors release.yaml and scripts/build-pr.ps1).
+            is_test="$(dotnet msbuild "$proj" -getProperty:IsTestProject -nologo -p:Configuration=Release -p:TargetFramework=net10.0 | tr -d "\r\n " | tr '[:upper:]' '[:lower:]')" \
+              || { echo "::error::Could not evaluate IsTestProject for $proj"; exit 1; }
+            if [ "$is_test" != "true" ]; then
+              echo "::notice::Skipping $proj - not a test project (IsTestProject=[$is_test])"
+              continue
+            fi
+
             dotnet test "$proj" \
               --configuration Release \
               --framework net10.0 \
