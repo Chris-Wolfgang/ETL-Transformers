@@ -1,10 +1,13 @@
 name: AOT Smoke
 
-# Publishes a console consumer that roots the whole public surface with
-# Native AOT + trimming. Fails on any IL2xxx/IL3xxx trim/AOT warning (the library
-# must not rely on reflection the trimmer can't see, dynamic generic
-# instantiation, or runtime codegen) and asserts the native binary runs the
-# surface correctly. Runs on PRs so AOT regressions block before merge.
+# Two Native AOT + trimming gates, both failing on any IL2xxx/IL3xxx trim/AOT
+# warning (the library must not rely on reflection the trimmer can't see, dynamic
+# generic instantiation, or runtime codegen):
+#   aot-smoke       publishes a console consumer that roots the whole public surface
+#                   and asserts the native binary runs the surface correctly;
+#   aot-unit-suite  publishes the xunit.v3.aot edition of the unit suite
+#                   (tests/*.Tests.Aot) and runs it as a native executable.
+# Runs on PRs so AOT regressions block before merge.
 
 on:
   pull_request:
@@ -75,3 +78,76 @@ jobs:
           fi
           echo "Running native binary: $binary"
           "$binary"
+
+  aot-unit-suite:
+    name: Native-AOT unit suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Detect the AOT unit-suite project
+        id: detect
+        run: |
+          # tests/<name>.Tests.Aot/<name>.Tests.Aot.csproj: the xunit.v3.aot edition of
+          # the unit suite (IsTestProject=false, PublishAot=true). Absent means the repo
+          # has no such suite and the job skips; present means it MUST publish and run.
+          project="$(git ls-files 'tests/*.Tests.Aot/*.Tests.Aot.csproj' | head -n1)"
+          if [ -n "$project" ]; then
+            echo "Found $project"
+            echo "found=true" >> "$GITHUB_OUTPUT"
+            echo "project=$project" >> "$GITHUB_OUTPUT"
+          else
+            echo "No tests/*.Tests.Aot/*.Tests.Aot.csproj — skipping."
+            echo "found=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup .NET
+        if: steps.detect.outputs.found == 'true'
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Install AOT prerequisites
+        if: steps.detect.outputs.found == 'true'
+        run: sudo apt-get update && sudo apt-get install -y clang zlib1g-dev
+
+      # Same rule as the consumer job: any trimmer (IL2xxx) or AOT (IL3xxx) diagnostic
+      # fails the publish. The suite links every Tests.Unit source file, so this also
+      # proves the tests themselves are trim/AOT-clean.
+      - name: Publish the unit suite Native-AOT + trimmed
+        if: steps.detect.outputs.found == 'true'
+        env:
+          PROJECT: ${{ steps.detect.outputs.project }}
+        run: |
+          set -o pipefail
+          dotnet publish "$PROJECT" -c Release -r linux-x64 2>&1 | tee aot-suite-publish.log
+          if grep -qE ': (warning|error) IL[0-9]' aot-suite-publish.log; then
+            echo "::error::Trim/AOT (ILxxxx) diagnostics found while publishing the unit suite. See log."
+            exit 1
+          fi
+
+      # xunit.v3's in-process runner is the executable's entry point: a non-zero exit
+      # means failed tests. The summary line guard catches a binary that ran but
+      # discovered nothing, which would otherwise pass silently.
+      - name: Run the native unit suite
+        if: steps.detect.outputs.found == 'true'
+        env:
+          PROJECT: ${{ steps.detect.outputs.project }}
+        run: |
+          set -o pipefail
+          name="$(basename "$PROJECT" .csproj)"
+          binary="$(find "$(dirname "$PROJECT")/bin" -type f -path '*/publish/*' -name "$name" ! -name '*.dll' | head -n1)"
+          if [ -z "$binary" ] || [ ! -x "$binary" ]; then
+            echo "::error::Native $name binary not found under $(dirname "$PROJECT")/bin."
+            exit 1
+          fi
+          echo "Running native unit suite: $binary"
+          "$binary" 2>&1 | tee aot-suite-run.log
+          if ! grep -qE 'Total: *[1-9][0-9]*' aot-suite-run.log; then
+            echo "::error::The native unit suite reported no executed tests (no 'Total: N' summary with N > 0)."
+            exit 1
+          fi
