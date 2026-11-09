@@ -188,25 +188,18 @@ public class BufferedTransformerTests
     // ---------- consumer abandonment ----------
 
     [Fact]
-    public async Task TransformAsync_when_consumer_breaks_early_disposes_source_enumerator()
+    public async Task TransformAsync_when_consumer_stops_after_five_items_disposes_source_enumerator()
     {
         var disposalSignal = new TaskCompletionSource<bool>();
         var sut = new BufferedTransformer<int>(capacity: 4);
 
-        // S3267 would turn this into a LINQ `Where`, but the consumer walking the first items and
-        // then breaking out of the enumeration IS the behaviour under test: the break is what must
-        // trigger producer cancellation. A filter would hide the abandonment.
-#pragma warning disable S3267
-        await foreach (var item in sut.TransformAsync(InfiniteSource(disposalSignal)))
-        {
-            if (item >= 5)
-            {
-                break;
-            }
-        }
-#pragma warning restore S3267
+        // Take(5) stops enumerating and disposes the transformer's enumerator once five items have
+        // been yielded, which is the consumer abandoning an infinite stream mid-way.
+        var taken = await CollectAsync(sut.TransformAsync(InfiniteSource(disposalSignal)).Take(5));
 
-        // After consumer breaks, the iterator's finally must cancel the producer, which
+        Assert.Equal(5, taken.Count);
+
+        // After the consumer stops, the iterator's finally must cancel the producer, which
         // in turn disposes the source enumerator. This must happen quickly - well under
         // a generous timeout.
         var disposed = await Task.WhenAny
