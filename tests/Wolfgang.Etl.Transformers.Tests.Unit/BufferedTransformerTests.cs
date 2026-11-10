@@ -188,20 +188,18 @@ public class BufferedTransformerTests
     // ---------- consumer abandonment ----------
 
     [Fact]
-    public async Task TransformAsync_when_consumer_breaks_early_disposes_source_enumerator()
+    public async Task TransformAsync_when_consumer_stops_after_five_items_disposes_source_enumerator()
     {
         var disposalSignal = new TaskCompletionSource<bool>();
         var sut = new BufferedTransformer<int>(capacity: 4);
 
-        await foreach (var item in sut.TransformAsync(InfiniteSource(disposalSignal)))
-        {
-            if (item >= 5)
-            {
-                break;
-            }
-        }
+        // Take(5) stops enumerating and disposes the transformer's enumerator once five items have
+        // been yielded, which is the consumer abandoning an infinite stream mid-way.
+        var taken = await CollectAsync(sut.TransformAsync(InfiniteSource(disposalSignal)).Take(5));
 
-        // After consumer breaks, the iterator's finally must cancel the producer, which
+        Assert.Equal(5, taken.Count);
+
+        // After the consumer stops, the iterator's finally must cancel the producer, which
         // in turn disposes the source enumerator. This must happen quickly - well under
         // a generous timeout.
         var disposed = await Task.WhenAny
