@@ -40,3 +40,11 @@ updates:
       pip-tooling:
         patterns:
           - "*"
+    # semgrep declares opentelemetry-instrumentation-requests ~=0.58b0 and mcp ==1.29.0;
+    # semgrep.txt carries newer pins for those through uv's --override
+    # (semgrep-overrides.txt). pip-compile has no override, so every attempt to bump
+    # semgrep or mcp ends in dependency_file_not_resolvable and fails the whole run.
+    # Those two move by hand with `uv pip compile` (see the header of semgrep.txt).
+    ignore:
+      - dependency-name: "semgrep"
+      - dependency-name: "mcp"
