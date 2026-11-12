@@ -34,7 +34,7 @@
          XPlat Code Coverage collector; without this package that collector is
          unavailable and the run aborts for this project. Every other test project
          in the repo carries it. -->
-    <PackageReference Include="coverlet.collector" Version="10.0.1">
+    <PackageReference Include="coverlet.collector" Version="10.1.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
