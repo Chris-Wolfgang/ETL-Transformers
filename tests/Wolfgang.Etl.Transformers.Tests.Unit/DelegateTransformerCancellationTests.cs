@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Threading;
+using System.Linq;
 using System.Threading.Tasks;
 using Wolfgang.Etl.Abstractions;
 using Xunit;
@@ -13,53 +13,30 @@ namespace Wolfgang.Etl.Transformers.Tests.Unit;
 /// <summary>
 /// An <see cref="OperationCanceledException"/> thrown by a caller delegate is cancellation, not an
 /// item failure: it must never reach the <see cref="DelegateTransformerOptions.ErrorPolicy"/>,
-/// even a skip-everything one, and must propagate to the caller.
+/// even a skip-everything one (so nothing is counted), and must propagate to the caller.
 /// </summary>
 public class DelegateTransformerCancellationTests
 {
-    private sealed class PolicyProbe
+    // Every collision forces an Equals call, so a comparer that throws from Equals is reached.
+    private sealed class CollidingThrowingComparer : IEqualityComparer<int>
     {
-        public int Calls { get; private set; }
+        public bool Equals(int x, int y) => throw new OperationCanceledException();
 
-        public DelegateTransformerOptions Options => new()
-        {
-            ErrorPolicy = _ =>
-            {
-                Calls++;
-                return ItemErrorAction.Skip;
-            }
-        };
+        public int GetHashCode(int obj) => 0;
     }
 
 
 
-    private sealed class ThrowingComparer : IEqualityComparer<int>
-    {
-        public bool Equals(int x, int y) => x == y;
-
-        public int GetHashCode(int obj) => throw new OperationCanceledException();
-    }
+    private static readonly DelegateTransformerOptions SkipAll = new() { ErrorPolicy = _ => ItemErrorAction.Skip };
 
 
 
-    private static async IAsyncEnumerable<int> CancelledInnerAsync()
-    {
-        await Task.Yield();
-        throw new OperationCanceledException();
-#pragma warning disable CS0162 // Unreachable code: makes this an iterator
-        yield break;
-#pragma warning restore CS0162
-    }
+    private static int ThrowCancelled() => throw new OperationCanceledException();
 
 
 
-    private static IEnumerable<int> CancelledInner()
-    {
-        throw new OperationCanceledException();
-#pragma warning disable CS0162 // Unreachable code: makes this an iterator
-        yield break;
-#pragma warning restore CS0162
-    }
+    private static IAsyncEnumerable<int> CancelledInnerAsync() =>
+        new SelectTransformer<int, int>(_ => ThrowCancelled()).TransformAsync(ToAsync(new[] { 1 }));
 
 
 
@@ -75,28 +52,29 @@ public class DelegateTransformerCancellationTests
 
 
 
-    private static IAsyncEnumerable<int> Build(string name, DelegateTransformerOptions o)
+    private static (IAsyncEnumerable<int> Items, Func<int> ErrorCount) Run<TSut>(TSut sut)
+        where TSut : ITransformAsync<int, int>, IReportsItemErrors
+        => (sut.TransformAsync(ToAsync(new[] { 1, 2, 3 })), () => sut.CurrentErrorItemCount);
+
+
+
+    private static (IAsyncEnumerable<int> Items, Func<int> ErrorCount) Build(string name) => name switch // the final arm is "DistinctBy"
     {
-        var src = ToAsync(new[] { 1, 2, 3 });
-        return name switch
-        {
-            "Select-sync" => new SelectTransformer<int, int>((Func<int, int>)(_ => throw new OperationCanceledException()), o).TransformAsync(src),
-            "Select-async" => new SelectTransformer<int, int>((Func<int, ValueTask<int>>)(_ => throw new OperationCanceledException()), o).TransformAsync(src),
-            "Where-sync" => new WhereTransformer<int>((Func<int, bool>)(_ => throw new OperationCanceledException()), o).TransformAsync(src),
-            "Where-async" => new WhereTransformer<int>((Func<int, ValueTask<bool>>)(_ => throw new OperationCanceledException()), o).TransformAsync(src),
-            "SelectMany-sync-outer" => new SelectManyTransformer<int, int>((Func<int, IEnumerable<int>>)(_ => throw new OperationCanceledException()), o).TransformAsync(src),
-            "SelectMany-sync-inner" => new SelectManyTransformer<int, int>((Func<int, IEnumerable<int>>)(_ => CancelledInner()), o).TransformAsync(src),
-            "SelectMany-async-outer" => new SelectManyTransformer<int, int>((Func<int, IAsyncEnumerable<int>>)(_ => throw new OperationCanceledException()), o).TransformAsync(src),
-            "SelectMany-async-inner" => new SelectManyTransformer<int, int>((Func<int, IAsyncEnumerable<int>>)(_ => CancelledInnerAsync()), o).TransformAsync(src),
-            "SkipWhile-sync" => new SkipWhileTransformer<int>((Func<int, bool>)(_ => throw new OperationCanceledException()), o).TransformAsync(src),
-            "SkipWhile-async" => new SkipWhileTransformer<int>((Func<int, ValueTask<bool>>)(_ => throw new OperationCanceledException()), o).TransformAsync(src),
-            "TakeWhile-sync" => new TakeWhileTransformer<int>((Func<int, bool>)(_ => throw new OperationCanceledException()), o).TransformAsync(src),
-            "TakeWhile-async" => new TakeWhileTransformer<int>((Func<int, ValueTask<bool>>)(_ => throw new OperationCanceledException()), o).TransformAsync(src),
-            "Distinct" => new DistinctTransformer<int>(new ThrowingComparer(), o).TransformAsync(src),
-            "DistinctBy" => new DistinctByTransformer<int, int>(_ => throw new OperationCanceledException(), comparer: null, o).TransformAsync(src),
-            _ => throw new ArgumentOutOfRangeException(nameof(name)),
-        };
-    }
+        "Select-sync" => Run(new SelectTransformer<int, int>((Func<int, int>)(_ => ThrowCancelled()), SkipAll)),
+        "Select-async" => Run(new SelectTransformer<int, int>((Func<int, ValueTask<int>>)(_ => throw new OperationCanceledException()), SkipAll)),
+        "Where-sync" => Run(new WhereTransformer<int>((Func<int, bool>)(_ => throw new OperationCanceledException()), SkipAll)),
+        "Where-async" => Run(new WhereTransformer<int>((Func<int, ValueTask<bool>>)(_ => throw new OperationCanceledException()), SkipAll)),
+        "SelectMany-sync-outer" => Run(new SelectManyTransformer<int, int>((Func<int, IEnumerable<int>>)(_ => throw new OperationCanceledException()), SkipAll)),
+        "SelectMany-sync-inner" => Run(new SelectManyTransformer<int, int>((Func<int, IEnumerable<int>>)(i => new[] { i }.Select(_ => ThrowCancelled())), SkipAll)),
+        "SelectMany-async-outer" => Run(new SelectManyTransformer<int, int>((Func<int, IAsyncEnumerable<int>>)(_ => throw new OperationCanceledException()), SkipAll)),
+        "SelectMany-async-inner" => Run(new SelectManyTransformer<int, int>((Func<int, IAsyncEnumerable<int>>)(_ => CancelledInnerAsync()), SkipAll)),
+        "SkipWhile-sync" => Run(new SkipWhileTransformer<int>((Func<int, bool>)(_ => throw new OperationCanceledException()), SkipAll)),
+        "SkipWhile-async" => Run(new SkipWhileTransformer<int>((Func<int, ValueTask<bool>>)(_ => throw new OperationCanceledException()), SkipAll)),
+        "TakeWhile-sync" => Run(new TakeWhileTransformer<int>((Func<int, bool>)(_ => throw new OperationCanceledException()), SkipAll)),
+        "TakeWhile-async" => Run(new TakeWhileTransformer<int>((Func<int, ValueTask<bool>>)(_ => throw new OperationCanceledException()), SkipAll)),
+        "Distinct" => Run(new DistinctTransformer<int>(new CollidingThrowingComparer(), SkipAll)),
+        _ => Run(new DistinctByTransformer<int, int>(_ => ThrowCancelled(), comparer: null, SkipAll)),
+    };
 
 
 
@@ -104,13 +82,13 @@ public class DelegateTransformerCancellationTests
     [MemberData(nameof(Cases))]
     public async Task TransformAsync_when_delegate_throws_OperationCanceledException_does_not_consult_policy_and_propagates(string name)
     {
-        var probe = new PolicyProbe();
+        var (items, errorCount) = Build(name);
 
         _ = await Assert.ThrowsAnyAsync<OperationCanceledException>
         (
-            async () => await CollectAsync(Build(name, probe.Options))
+            async () => await CollectAsync(items)
         );
 
-        Assert.Equal(0, probe.Calls);
+        Assert.Equal(0, errorCount());
     }
 }
