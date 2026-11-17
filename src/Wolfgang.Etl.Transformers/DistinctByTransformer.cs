@@ -193,7 +193,7 @@ public sealed class DistinctByTransformer<TSource, TKey> : ITransformAsync<TSour
             {
                 isFirstOccurrence = seen.Add(keySelector(item));
             }
-            catch (Exception exception)
+            catch (Exception exception) when (exception is not OperationCanceledException)
             {
                 if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                 {

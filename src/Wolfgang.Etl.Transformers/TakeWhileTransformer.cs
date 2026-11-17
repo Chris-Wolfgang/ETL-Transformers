@@ -176,7 +176,7 @@ public sealed class TakeWhileTransformer<T> : ITransformAsync<T, T>, IReportsIte
             {
                 keepTaking = predicate(item);
             }
-            catch (Exception exception)
+            catch (Exception exception) when (exception is not OperationCanceledException)
             {
                 if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                 {
@@ -218,7 +218,7 @@ public sealed class TakeWhileTransformer<T> : ITransformAsync<T, T>, IReportsIte
             {
                 keepTaking = await predicate(item).ConfigureAwait(continueOnCapturedContext: false);
             }
-            catch (Exception exception)
+            catch (Exception exception) when (exception is not OperationCanceledException)
             {
                 if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                 {

@@ -179,7 +179,7 @@ public sealed class SkipWhileTransformer<T> : ITransformAsync<T, T>, IReportsIte
                 {
                     stillSkipping = predicate(item);
                 }
-                catch (Exception exception)
+                catch (Exception exception) when (exception is not OperationCanceledException)
                 {
                     if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                     {
@@ -227,7 +227,7 @@ public sealed class SkipWhileTransformer<T> : ITransformAsync<T, T>, IReportsIte
                 {
                     stillSkipping = await predicate(item).ConfigureAwait(continueOnCapturedContext: false);
                 }
-                catch (Exception exception)
+                catch (Exception exception) when (exception is not OperationCanceledException)
                 {
                     if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                     {

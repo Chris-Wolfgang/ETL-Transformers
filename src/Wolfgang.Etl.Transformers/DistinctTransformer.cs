@@ -165,7 +165,7 @@ public sealed class DistinctTransformer<T> : ITransformAsync<T, T>, IReportsItem
             {
                 isFirstOccurrence = seen.Add(item);
             }
-            catch (Exception exception)
+            catch (Exception exception) when (exception is not OperationCanceledException)
             {
                 if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                 {

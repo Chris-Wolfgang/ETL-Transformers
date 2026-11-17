@@ -186,7 +186,7 @@ public sealed class SelectTransformer<TSource, TDestination> : ITransformAsync<T
             {
                 projected = selector(item);
             }
-            catch (Exception exception)
+            catch (Exception exception) when (exception is not OperationCanceledException)
             {
                 if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                 {
@@ -220,7 +220,7 @@ public sealed class SelectTransformer<TSource, TDestination> : ITransformAsync<T
             {
                 projected = await selector(item).ConfigureAwait(continueOnCapturedContext: false);
             }
-            catch (Exception exception)
+            catch (Exception exception) when (exception is not OperationCanceledException)
             {
                 if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                 {
