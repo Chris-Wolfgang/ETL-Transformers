@@ -33,10 +33,7 @@ ITransformAsync<string, InvoiceRow> pipeline =
         .Then(new WhereTransformer<Order>(o => o.IsValid))
         .Then(new SelectTransformer<Order, InvoiceRow>(ToInvoice));
 
-await foreach (var row in pipeline.TransformAsync(rawLines))
-{
-    await loader.LoadAsync(row, token);
-}
+await loader.LoadAsync(pipeline.TransformAsync(rawLines), token);
 ```
 
 ### Buffered producer–consumer

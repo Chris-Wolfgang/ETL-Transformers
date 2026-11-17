@@ -31,20 +31,14 @@ var pipeline = new SelectTransformer<string, Order>(ParseOrder)
     .Then(new WhereTransformer<Order>(o => o.IsValid))
     .Then(new SelectTransformer<Order, InvoiceRow>(ToInvoice));
 
-await foreach (var row in pipeline.TransformAsync(rawLines))
-{
-    await loader.LoadAsync(row);
-}
+await loader.LoadAsync(pipeline.TransformAsync(rawLines));
 
 // Or buffer inline between pipeline stages:
 var buffered = rawLines.Buffered(capacity: 500);
 var filtered = new WhereTransformer<Order>(o => o.IsValid);
 var projected = new SelectTransformer<Order, InvoiceRow>(ToInvoice);
 
-await foreach (var row in projected.TransformAsync(filtered.TransformAsync(buffered)))
-{
-    await loader.LoadAsync(row);
-}
+await loader.LoadAsync(projected.TransformAsync(filtered.TransformAsync(buffered)));
 ```
 
 ---
@@ -83,7 +77,7 @@ await foreach (var row in projected.TransformAsync(filtered.TransformAsync(buffe
 |---------------|-------------|
 | `ChainTransformer<TSource, TIntermediate, TDestination>` | Composes two `ITransformAsync` transformers into one |
 | `ChainTransformerWithCancellation<TSource, TIntermediate, TDestination>` | Same as above but propagates `CancellationToken` through both stages |
-| `TransformerExtensions.Then(...)` | Fluent composition — two overloads: one for `ITransformAsync` pairs, one for `ITransformWithCancellationAsync` pairs |
+| `TransformerExtensions.Then(...)` | Fluent composition — two overloads: one for `ITransformAsync` pairs, one for `ITransformWithCancellationAsync` pairs. `PassThroughTransformer<T>` is the only transformer in this package that implements `ITransformWithCancellationAsync`, so the cancellation-aware overload only applies to chains built from it (and custom transformers you write); `where.Then(select)` uses the plain overload |
 | `TransformerExtensions.Buffered(...)` | Inline buffer insertion — sugar for `new BufferedTransformer<T>(n).TransformAsync(source)` |
 
 ### Error handling
