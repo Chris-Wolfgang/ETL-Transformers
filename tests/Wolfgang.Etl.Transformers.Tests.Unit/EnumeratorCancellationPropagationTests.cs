@@ -75,8 +75,7 @@ public class EnumeratorCancellationPropagationTests
         "OfType" => new OfTypeTransformer<object, int>().TransformAsync(s.Items()).Box(),
         "Chunk" => new ChunkTransformer<int>(2).TransformAsync(s.IntItems()).Box(),
         "ProgressReporting-sync" => new ProgressReportingTransformer<int>((Action<int>)(_ => { })).TransformAsync(s.IntItems()).Box(),
-        "ProgressReporting-async" => new ProgressReportingTransformer<int>((Func<int, ValueTask>)(_ => default)).TransformAsync(s.IntItems()).Box(),
-        _ => throw new ArgumentOutOfRangeException(nameof(name)),
+        _ => new ProgressReportingTransformer<int>((Func<int, ValueTask>)(_ => default)).TransformAsync(s.IntItems()).Box(), // "ProgressReporting-async"
     };
 
 
@@ -106,9 +105,11 @@ public class EnumeratorCancellationPropagationTests
 
         async IAsyncEnumerable<int> Stalled([EnumeratorCancellation] CancellationToken token = default)
         {
-            yield return 1;
-            await Task.Delay(TimeSpan.FromSeconds(30), token);
-            yield return 2;
+            while (true)
+            {
+                yield return 1;
+                await Task.Delay(TimeSpan.FromSeconds(30), token);
+            }
         }
 
         cts.CancelAfter(200);
