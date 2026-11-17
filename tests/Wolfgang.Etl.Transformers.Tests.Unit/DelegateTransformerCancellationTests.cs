@@ -60,14 +60,14 @@ public class DelegateTransformerCancellationTests
 
     private static (IAsyncEnumerable<int> Items, Func<int> ErrorCount) Build(string name) => name switch // the final arm is "DistinctBy"
     {
-        "Select-sync" => Run(new SelectTransformer<int, int>((Func<int, int>)(_ => ThrowCancelled()), SkipAll)),
+        "Select-sync" => Run(new SelectTransformer<int, int>(_ => ThrowCancelled(), SkipAll)),
         "Select-async" => Run(new SelectTransformer<int, int>((Func<int, ValueTask<int>>)(_ => throw new OperationCanceledException()), SkipAll)),
         "Where-sync" => Run(new WhereTransformer<int>((Func<int, bool>)(_ => throw new OperationCanceledException()), SkipAll)),
         "Where-async" => Run(new WhereTransformer<int>((Func<int, ValueTask<bool>>)(_ => throw new OperationCanceledException()), SkipAll)),
         "SelectMany-sync-outer" => Run(new SelectManyTransformer<int, int>((Func<int, IEnumerable<int>>)(_ => throw new OperationCanceledException()), SkipAll)),
-        "SelectMany-sync-inner" => Run(new SelectManyTransformer<int, int>((Func<int, IEnumerable<int>>)(i => new[] { i }.Select(_ => ThrowCancelled())), SkipAll)),
+        "SelectMany-sync-inner" => Run(new SelectManyTransformer<int, int>(i => new[] { i }.Select(_ => ThrowCancelled()), SkipAll)),
         "SelectMany-async-outer" => Run(new SelectManyTransformer<int, int>((Func<int, IAsyncEnumerable<int>>)(_ => throw new OperationCanceledException()), SkipAll)),
-        "SelectMany-async-inner" => Run(new SelectManyTransformer<int, int>((Func<int, IAsyncEnumerable<int>>)(_ => CancelledInnerAsync()), SkipAll)),
+        "SelectMany-async-inner" => Run(new SelectManyTransformer<int, int>(_ => CancelledInnerAsync(), SkipAll)),
         "SkipWhile-sync" => Run(new SkipWhileTransformer<int>((Func<int, bool>)(_ => throw new OperationCanceledException()), SkipAll)),
         "SkipWhile-async" => Run(new SkipWhileTransformer<int>((Func<int, ValueTask<bool>>)(_ => throw new OperationCanceledException()), SkipAll)),
         "TakeWhile-sync" => Run(new TakeWhileTransformer<int>((Func<int, bool>)(_ => throw new OperationCanceledException()), SkipAll)),
