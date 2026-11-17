@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -160,13 +161,14 @@ public sealed class SkipWhileTransformer<T> : ITransformAsync<T, T>, IReportsIte
     private async IAsyncEnumerable<T> SkipWhileWithSyncPredicateAsync
     (
         IAsyncEnumerable<T> items,
-        Func<T, bool> predicate
+        Func<T, bool> predicate,
+        [EnumeratorCancellation] CancellationToken token = default
     )
     {
         var skipping = true;
         var itemNumber = 0L;
 
-        await foreach (var item in items.ConfigureAwait(continueOnCapturedContext: false))
+        await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
         {
             itemNumber++;
 
@@ -177,7 +179,7 @@ public sealed class SkipWhileTransformer<T> : ITransformAsync<T, T>, IReportsIte
                 {
                     stillSkipping = predicate(item);
                 }
-                catch (Exception exception)
+                catch (Exception exception) when (exception is not OperationCanceledException)
                 {
                     if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                     {
@@ -207,13 +209,14 @@ public sealed class SkipWhileTransformer<T> : ITransformAsync<T, T>, IReportsIte
     private async IAsyncEnumerable<T> SkipWhileWithAsyncPredicateAsync
     (
         IAsyncEnumerable<T> items,
-        Func<T, ValueTask<bool>> predicate
+        Func<T, ValueTask<bool>> predicate,
+        [EnumeratorCancellation] CancellationToken token = default
     )
     {
         var skipping = true;
         var itemNumber = 0L;
 
-        await foreach (var item in items.ConfigureAwait(continueOnCapturedContext: false))
+        await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
         {
             itemNumber++;
 
@@ -224,7 +227,7 @@ public sealed class SkipWhileTransformer<T> : ITransformAsync<T, T>, IReportsIte
                 {
                     stillSkipping = await predicate(item).ConfigureAwait(continueOnCapturedContext: false);
                 }
-                catch (Exception exception)
+                catch (Exception exception) when (exception is not OperationCanceledException)
                 {
                     if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                     {
