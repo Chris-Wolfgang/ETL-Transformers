@@ -27,7 +27,7 @@ handling, and composition.
 - **Fluent composition**: `.Then(next)` extension composes any two transformers into one,
   chains arbitrarily deep, and automatically picks the cancellation-aware overload when both
   sides implement `ITransformWithCancellationAsync<TSource, TDestination>` (in this package only
-  `PassThroughTransformer<T>` does; other chains use the plain overload)
+  `PassThroughTransformer<T>` and `ThrottleTransformer<T>` do; other chains use the plain overload)
 - **Multi-TFM**: targets .NET Framework 4.6.2, 4.7.2, 4.8 and 4.8.1, .NET Standard 2.0, and
   .NET 5.0–10.0
 - **No per-item allocations in the pass-through, filter and projection transformers**: they yield
