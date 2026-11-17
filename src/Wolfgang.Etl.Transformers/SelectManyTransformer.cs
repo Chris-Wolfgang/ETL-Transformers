@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -203,12 +204,13 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
     private async IAsyncEnumerable<TDestination> FlattenWithSyncSelectorAsync
     (
         IAsyncEnumerable<TSource> items,
-        Func<TSource, IEnumerable<TDestination>> selector
+        Func<TSource, IEnumerable<TDestination>> selector,
+        [EnumeratorCancellation] CancellationToken token = default
     )
     {
         var itemNumber = 0L;
 
-        await foreach (var item in items.ConfigureAwait(continueOnCapturedContext: false))
+        await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
         {
             itemNumber++;
 
@@ -220,7 +222,7 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
             {
                 enumerator = selector(item).GetEnumerator();
             }
-            catch (Exception exception)
+            catch (Exception exception) when (exception is not OperationCanceledException)
             {
                 if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                 {
@@ -245,7 +247,7 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
                         // ReSharper disable once AssignNullToNotNullAttribute
                         current = enumerator.Current;
                     }
-                    catch (Exception exception)
+                    catch (Exception exception) when (exception is not OperationCanceledException)
                     {
                         if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                         {
@@ -272,21 +274,22 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
     private async IAsyncEnumerable<TDestination> FlattenWithAsyncSelectorAsync
     (
         IAsyncEnumerable<TSource> items,
-        Func<TSource, IAsyncEnumerable<TDestination>> selector
+        Func<TSource, IAsyncEnumerable<TDestination>> selector,
+        [EnumeratorCancellation] CancellationToken token = default
     )
     {
         var itemNumber = 0L;
 
-        await foreach (var item in items.ConfigureAwait(continueOnCapturedContext: false))
+        await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
         {
             itemNumber++;
 
             IAsyncEnumerator<TDestination> enumerator;
             try
             {
-                enumerator = selector(item).GetAsyncEnumerator();
+                enumerator = selector(item).GetAsyncEnumerator(token);
             }
-            catch (Exception exception)
+            catch (Exception exception) when (exception is not OperationCanceledException)
             {
                 if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                 {
@@ -311,7 +314,7 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
 
                         current = enumerator.Current;
                     }
-                    catch (Exception exception)
+                    catch (Exception exception) when (exception is not OperationCanceledException)
                     {
                         if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                         {

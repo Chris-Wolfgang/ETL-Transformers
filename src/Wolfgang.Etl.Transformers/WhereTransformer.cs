@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -165,12 +166,13 @@ public sealed class WhereTransformer<T> : ITransformAsync<T, T>, IReportsItemErr
     private async IAsyncEnumerable<T> FilterWithSyncPredicateAsync
     (
         IAsyncEnumerable<T> items,
-        Func<T, bool> predicate
+        Func<T, bool> predicate,
+        [EnumeratorCancellation] CancellationToken token = default
     )
     {
         var itemNumber = 0L;
 
-        await foreach (var item in items.ConfigureAwait(continueOnCapturedContext: false))
+        await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
         {
             itemNumber++;
 
@@ -181,7 +183,7 @@ public sealed class WhereTransformer<T> : ITransformAsync<T, T>, IReportsItemErr
             {
                 keep = predicate(item);
             }
-            catch (Exception exception)
+            catch (Exception exception) when (exception is not OperationCanceledException)
             {
                 if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                 {
@@ -203,12 +205,13 @@ public sealed class WhereTransformer<T> : ITransformAsync<T, T>, IReportsItemErr
     private async IAsyncEnumerable<T> FilterWithAsyncPredicateAsync
     (
         IAsyncEnumerable<T> items,
-        Func<T, ValueTask<bool>> predicate
+        Func<T, ValueTask<bool>> predicate,
+        [EnumeratorCancellation] CancellationToken token = default
     )
     {
         var itemNumber = 0L;
 
-        await foreach (var item in items.ConfigureAwait(continueOnCapturedContext: false))
+        await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
         {
             itemNumber++;
 
@@ -217,7 +220,7 @@ public sealed class WhereTransformer<T> : ITransformAsync<T, T>, IReportsItemErr
             {
                 keep = await predicate(item).ConfigureAwait(continueOnCapturedContext: false);
             }
-            catch (Exception exception)
+            catch (Exception exception) when (exception is not OperationCanceledException)
             {
                 if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                 {

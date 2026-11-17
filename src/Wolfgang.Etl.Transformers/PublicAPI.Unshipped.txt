@@ -1,5 +1,6 @@
 #nullable enable
 Wolfgang.Etl.Transformers.ThrottleTransformer<T>.MinInterval.get -> System.TimeSpan
+Wolfgang.Etl.Transformers.ThrottleTransformer<T>.TransformAsync(System.Collections.Generic.IAsyncEnumerable<T>! items, System.Threading.CancellationToken token) -> System.Collections.Generic.IAsyncEnumerable<T>!
 static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Cast<TSource, TDestination>(this Wolfgang.Etl.Abstractions.IEtlPipeline<TSource>! pipeline, Wolfgang.Etl.Transformers.DelegateTransformerOptions! options) -> Wolfgang.Etl.Abstractions.IEtlPipeline<TDestination>!
 static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Chunk<T>(this Wolfgang.Etl.Abstractions.IEtlPipeline<T>! pipeline, int size, System.IProgress<int>? progress) -> Wolfgang.Etl.Abstractions.IEtlPipeline<System.Collections.Generic.IReadOnlyList<T>!>!
 static Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Distinct<T>(this Wolfgang.Etl.Abstractions.IEtlPipeline<T>! pipeline, System.Collections.Generic.IEqualityComparer<T>? comparer, Wolfgang.Etl.Transformers.DelegateTransformerOptions! options) -> Wolfgang.Etl.Abstractions.IEtlPipeline<T>!
