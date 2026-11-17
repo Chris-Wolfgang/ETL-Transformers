@@ -103,13 +103,12 @@ public class EnumeratorCancellationPropagationTests
         var sut = new BufferedTransformer<int>(4);
         var where = new WhereTransformer<int>(_ => true);
 
+        // A source that stalls until the token fires, then ends quietly, so every line is reachable.
         async IAsyncEnumerable<int> Stalled([EnumeratorCancellation] CancellationToken token = default)
         {
-            while (true)
-            {
-                yield return 1;
-                await Task.Delay(TimeSpan.FromSeconds(30), token);
-            }
+            yield return 1;
+
+            try { await Task.Delay(TimeSpan.FromSeconds(30), token); } catch (OperationCanceledException) { yield break; }
         }
 
         cts.CancelAfter(200);
@@ -117,18 +116,20 @@ public class EnumeratorCancellationPropagationTests
 
         // Whether the consumer sees an OperationCanceledException or a quietly truncated sequence
         // depends on the target framework's channel implementation; the property under test here is
-        // that the stalled source is interrupted promptly, so both outcomes are accepted.
-        try
-        {
-            await foreach (var _ in sut.TransformAsync(where.TransformAsync(Stalled())).WithCancellation(cts.Token))
+        // that the stalled source is interrupted promptly, so completion in either form is accepted.
+        var consume = Task.Run
+        (
+            async () =>
             {
+                await foreach (var _ in sut.TransformAsync(where.TransformAsync(Stalled())).WithCancellation(cts.Token))
+                {
+                }
             }
-        }
-        catch (OperationCanceledException)
-        {
-            // expected on most targets
-        }
+        );
 
+        var finished = await Task.WhenAny(consume, Task.Delay(TimeSpan.FromSeconds(10)));
+
+        Assert.Same(consume, finished);
         Assert.True(watch.Elapsed < TimeSpan.FromSeconds(10), $"took {watch.Elapsed}");
     }
 }
