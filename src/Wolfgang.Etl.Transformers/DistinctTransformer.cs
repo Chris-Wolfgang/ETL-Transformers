@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -145,13 +146,14 @@ public sealed class DistinctTransformer<T> : ITransformAsync<T, T>, IReportsItem
     private async IAsyncEnumerable<T> DistinctAsync
     (
         IAsyncEnumerable<T> items,
-        IEqualityComparer<T>? comparer
+        IEqualityComparer<T>? comparer,
+        [EnumeratorCancellation] CancellationToken token = default
     )
     {
         var seen = new HashSet<T>(comparer);
         var itemNumber = 0L;
 
-        await foreach (var item in items.ConfigureAwait(continueOnCapturedContext: false))
+        await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
         {
             itemNumber++;
 

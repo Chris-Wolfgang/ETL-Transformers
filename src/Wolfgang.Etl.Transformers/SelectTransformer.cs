@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -168,12 +169,13 @@ public sealed class SelectTransformer<TSource, TDestination> : ITransformAsync<T
     private async IAsyncEnumerable<TDestination> ProjectWithSyncSelectorAsync
     (
         IAsyncEnumerable<TSource> items,
-        Func<TSource, TDestination> selector
+        Func<TSource, TDestination> selector,
+        [EnumeratorCancellation] CancellationToken token = default
     )
     {
         var itemNumber = 0L;
 
-        await foreach (var item in items.ConfigureAwait(continueOnCapturedContext: false))
+        await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
         {
             itemNumber++;
 
@@ -203,12 +205,13 @@ public sealed class SelectTransformer<TSource, TDestination> : ITransformAsync<T
     private async IAsyncEnumerable<TDestination> ProjectWithAsyncSelectorAsync
     (
         IAsyncEnumerable<TSource> items,
-        Func<TSource, ValueTask<TDestination>> selector
+        Func<TSource, ValueTask<TDestination>> selector,
+        [EnumeratorCancellation] CancellationToken token = default
     )
     {
         var itemNumber = 0L;
 
-        await foreach (var item in items.ConfigureAwait(continueOnCapturedContext: false))
+        await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
         {
             itemNumber++;
 

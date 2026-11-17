@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -160,12 +161,13 @@ public sealed class TakeWhileTransformer<T> : ITransformAsync<T, T>, IReportsIte
     private async IAsyncEnumerable<T> TakeWhileWithSyncPredicateAsync
     (
         IAsyncEnumerable<T> items,
-        Func<T, bool> predicate
+        Func<T, bool> predicate,
+        [EnumeratorCancellation] CancellationToken token = default
     )
     {
         var itemNumber = 0L;
 
-        await foreach (var item in items.ConfigureAwait(continueOnCapturedContext: false))
+        await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
         {
             itemNumber++;
 
@@ -201,12 +203,13 @@ public sealed class TakeWhileTransformer<T> : ITransformAsync<T, T>, IReportsIte
     private async IAsyncEnumerable<T> TakeWhileWithAsyncPredicateAsync
     (
         IAsyncEnumerable<T> items,
-        Func<T, ValueTask<bool>> predicate
+        Func<T, ValueTask<bool>> predicate,
+        [EnumeratorCancellation] CancellationToken token = default
     )
     {
         var itemNumber = 0L;
 
-        await foreach (var item in items.ConfigureAwait(continueOnCapturedContext: false))
+        await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
         {
             itemNumber++;
 
