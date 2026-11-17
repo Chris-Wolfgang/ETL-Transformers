@@ -220,7 +220,7 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
             {
                 enumerator = selector(item).GetEnumerator();
             }
-            catch (Exception exception)
+            catch (Exception exception) when (exception is not OperationCanceledException)
             {
                 if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                 {
@@ -245,7 +245,7 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
                         // ReSharper disable once AssignNullToNotNullAttribute
                         current = enumerator.Current;
                     }
-                    catch (Exception exception)
+                    catch (Exception exception) when (exception is not OperationCanceledException)
                     {
                         if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                         {
@@ -286,7 +286,7 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
             {
                 enumerator = selector(item).GetAsyncEnumerator();
             }
-            catch (Exception exception)
+            catch (Exception exception) when (exception is not OperationCanceledException)
             {
                 if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                 {
@@ -311,7 +311,7 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
 
                         current = enumerator.Current;
                     }
-                    catch (Exception exception)
+                    catch (Exception exception) when (exception is not OperationCanceledException)
                     {
                         if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                         {

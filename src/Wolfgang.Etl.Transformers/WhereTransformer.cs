@@ -181,7 +181,7 @@ public sealed class WhereTransformer<T> : ITransformAsync<T, T>, IReportsItemErr
             {
                 keep = predicate(item);
             }
-            catch (Exception exception)
+            catch (Exception exception) when (exception is not OperationCanceledException)
             {
                 if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                 {
@@ -217,7 +217,7 @@ public sealed class WhereTransformer<T> : ITransformAsync<T, T>, IReportsItemErr
             {
                 keep = await predicate(item).ConfigureAwait(continueOnCapturedContext: false);
             }
-            catch (Exception exception)
+            catch (Exception exception) when (exception is not OperationCanceledException)
             {
                 if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                 {
