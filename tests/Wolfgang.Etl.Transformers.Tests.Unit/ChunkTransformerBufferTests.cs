@@ -83,10 +83,10 @@ public class ChunkTransformerBufferTests
         var sut = new ChunkTransformer<long>(50_000_000);
         var before = GC.GetAllocatedBytesForCurrentThread();
 
-        var result = await CollectLongsAsync(sut.TransformAsync(EmptyLongs()));
+        var result = await CollectAsync(sut.TransformAsync(EmptyLongs()));
 
         var allocated = GC.GetAllocatedBytesForCurrentThread() - before;
-        Assert.Empty(result);
+        Assert.Empty(result.SelectMany(c => c));
         Assert.True(allocated < 1_000_000, $"allocated {allocated} bytes");
     }
 
@@ -98,7 +98,7 @@ public class ChunkTransformerBufferTests
         var sut = new ChunkTransformer<int>(5_000_000);
         var before = GC.GetAllocatedBytesForCurrentThread();
 
-        var result = await CollectChunksAsync(sut.TransformAsync(SyncSource(10)));
+        var result = await CollectAsync(sut.TransformAsync(SyncSource(10)));
 
         var allocated = GC.GetAllocatedBytesForCurrentThread() - before;
         Assert.Single(result);
@@ -117,38 +117,12 @@ public class ChunkTransformerBufferTests
 
 
 
-    private static async Task<List<long>> CollectLongsAsync(IAsyncEnumerable<IReadOnlyList<long>> items)
-    {
-        var all = new List<long>();
-        await foreach (var chunk in items)
-        {
-            all.AddRange(chunk);
-        }
-
-        return all;
-    }
-
-
-
-    private static async Task<List<IReadOnlyList<int>>> CollectChunksAsync(IAsyncEnumerable<IReadOnlyList<int>> items)
-    {
-        var all = new List<IReadOnlyList<int>>();
-        await foreach (var chunk in items)
-        {
-            all.Add(chunk);
-        }
-
-        return all;
-    }
-
-
-
     [Fact]
     public async Task ChunkAsync_progress_holds_at_Int32_MaxValue_instead_of_wrapping_negative()
     {
         var progress = new RecordingProgress();
 
-        _ = await CollectChunksAsync
+        _ = await CollectAsync
         (
             ChunkTransformer<int>.ChunkAsync(SyncSource(3), size: 1, progress, startCount: int.MaxValue - 1L)
         );
@@ -163,7 +137,7 @@ public class ChunkTransformerBufferTests
     {
         var progress = new RecordingProgress();
 
-        _ = await CollectChunksAsync(ChunkTransformer<int>.ChunkAsync(SyncSource(5), size: 2, progress));
+        _ = await CollectAsync(ChunkTransformer<int>.ChunkAsync(SyncSource(5), size: 2, progress));
 
         Assert.Equal(new[] { 2, 4, 5 }, progress.Reports);
     }
