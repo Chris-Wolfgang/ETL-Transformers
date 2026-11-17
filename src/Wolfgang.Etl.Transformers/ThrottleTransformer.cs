@@ -47,7 +47,7 @@ public sealed class ThrottleTransformer<T> : ITransformWithCancellationAsync<T, 
     /// days), the limit of <see cref="Task.Delay(TimeSpan, CancellationToken)"/> on the oldest
     /// supported target. Applied on every target so behaviour does not vary by framework.
     /// </summary>
-    private static readonly TimeSpan MaxInterval = TimeSpan.FromMilliseconds(int.MaxValue);
+    private const long MaxIntervalTicks = (long)int.MaxValue * TimeSpan.TicksPerMillisecond;
 
     private readonly TimeSpan _minInterval;
     private readonly Func<TimeSpan, CancellationToken, Task> _delayAsync;
@@ -77,13 +77,13 @@ public sealed class ThrottleTransformer<T> : ITransformWithCancellationAsync<T, 
     internal ThrottleTransformer(TimeSpan minInterval, Func<TimeSpan, CancellationToken, Task> delayAsync, Func<long> getTimestamp)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(minInterval, TimeSpan.Zero);
-        if (minInterval > MaxInterval)
+        if (minInterval.Ticks > MaxIntervalTicks)
         {
             throw new ArgumentOutOfRangeException
             (
                 nameof(minInterval),
                 minInterval,
-                "minInterval must not exceed " + MaxInterval + " (Int32.MaxValue milliseconds), the longest delay Task.Delay accepts on every supported target."
+                "minInterval must not exceed " + TimeSpan.FromTicks(MaxIntervalTicks) + " (Int32.MaxValue milliseconds), the longest delay Task.Delay accepts on every supported target."
             );
         }
         ArgumentNullException.ThrowIfNull(delayAsync);
