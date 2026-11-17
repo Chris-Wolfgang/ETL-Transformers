@@ -1,4 +1,6 @@
 using System;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Wolfgang.Etl.Abstractions;
@@ -125,7 +127,8 @@ public sealed class ChunkTransformer<T> : ITransformAsync<T, IReadOnlyList<T>>
         IAsyncEnumerable<T> items,
         int size,
         IProgress<int>? progress,
-        long startCount = 0
+        long startCount = 0,
+        [EnumeratorCancellation] CancellationToken token = default
     )
     {
         T[]? buffer = null;
@@ -133,7 +136,7 @@ public sealed class ChunkTransformer<T> : ITransformAsync<T, IReadOnlyList<T>>
         var index = 0;
         var itemsConsumed = startCount;
 
-        await foreach (var item in items.ConfigureAwait(continueOnCapturedContext: false))
+        await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
         {
             if (buffer is null)
             {
