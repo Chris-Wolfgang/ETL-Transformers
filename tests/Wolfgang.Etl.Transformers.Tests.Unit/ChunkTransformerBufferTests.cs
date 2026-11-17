@@ -35,6 +35,20 @@ public class ChunkTransformerBufferTests
 
 
 
+    // Enumerable.Chunk does not exist before .NET 6, so the reference result is built by hand.
+    private static List<List<int>> ReferenceChunks(int[] source, int size)
+    {
+        var chunks = new List<List<int>>();
+        for (var i = 0; i < source.Length; i += size)
+        {
+            chunks.Add(source.Skip(i).Take(size).ToList());
+        }
+
+        return chunks;
+    }
+
+
+
     [Theory]
     [InlineData(0, 5)]
     [InlineData(1, 5)]
@@ -56,7 +70,7 @@ public class ChunkTransformerBufferTests
 
         var result = await CollectAsync(sut.TransformAsync(ToAsync(source)));
 
-        Assert.Equal(source.Chunk(size).Select(c => c.ToList()).ToList(), result.Select(c => c.ToList()).ToList());
+        Assert.Equal(ReferenceChunks(source, size), result.Select(c => c.ToList()).ToList());
         Assert.All(result.Take(Math.Max(0, result.Count - 1)), c => Assert.Equal(size, c.Count));
     }
 
