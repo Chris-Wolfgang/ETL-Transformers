@@ -436,10 +436,15 @@ public static class EtlPipelineOperatorExtensions
     /// </summary>
     /// <typeparam name="T">The item type. Must be non-null.</typeparam>
     /// <param name="pipeline">The pipeline to pace.</param>
-    /// <param name="minInterval">The minimum time between successive items. <see cref="TimeSpan.Zero"/> is a pass-through.</param>
+    /// <param name="minInterval">
+    /// The minimum time between successive items. <see cref="TimeSpan.Zero"/> is a pass-through. Must not
+    /// exceed <see cref="int.MaxValue"/> milliseconds (about 24.8 days).
+    /// </param>
     /// <returns>A pipeline yielding the same items, in the same order, paced apart.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="pipeline"/> is <see langword="null"/>.</exception>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="minInterval"/> is negative.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="minInterval"/> is negative or longer than <see cref="int.MaxValue"/> milliseconds.
+    /// </exception>
     /// <example>
     /// <code>
     ///     await EtlPipeline

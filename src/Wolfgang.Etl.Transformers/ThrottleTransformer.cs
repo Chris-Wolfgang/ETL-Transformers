@@ -41,6 +41,13 @@ namespace Wolfgang.Etl.Transformers;
 public sealed class ThrottleTransformer<T> : ITransformAsync<T, T>
     where T : notnull
 {
+    /// <summary>
+    /// The longest accepted <c>minInterval</c>: <see cref="int.MaxValue"/> milliseconds (about 24.8
+    /// days), the limit of <see cref="Task.Delay(TimeSpan, CancellationToken)"/> on the oldest
+    /// supported target. Applied on every target so behaviour does not vary by framework.
+    /// </summary>
+    private static readonly TimeSpan MaxInterval = TimeSpan.FromMilliseconds(int.MaxValue);
+
     private readonly TimeSpan _minInterval;
     private readonly Func<TimeSpan, CancellationToken, Task> _delayAsync;
     private readonly Func<long> _getTimestamp;
@@ -52,9 +59,11 @@ public sealed class ThrottleTransformer<T> : ITransformAsync<T, T>
     /// </summary>
     /// <param name="minInterval">
     /// The minimum time between successive yielded items. <see cref="TimeSpan.Zero"/> disables pacing
-    /// (a pass-through).
+    /// (a pass-through). Must not exceed <see cref="int.MaxValue"/> milliseconds (about 24.8 days).
     /// </param>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="minInterval"/> is negative.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="minInterval"/> is negative or longer than <see cref="int.MaxValue"/> milliseconds.
+    /// </exception>
     public ThrottleTransformer(TimeSpan minInterval)
         : this(minInterval, static (delay, token) => Task.Delay(delay, token), Stopwatch.GetTimestamp)
     {
@@ -67,6 +76,15 @@ public sealed class ThrottleTransformer<T> : ITransformAsync<T, T>
     internal ThrottleTransformer(TimeSpan minInterval, Func<TimeSpan, CancellationToken, Task> delayAsync, Func<long> getTimestamp)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(minInterval, TimeSpan.Zero);
+        if (minInterval > MaxInterval)
+        {
+            throw new ArgumentOutOfRangeException
+            (
+                nameof(minInterval),
+                minInterval,
+                "minInterval must not exceed " + MaxInterval + " (Int32.MaxValue milliseconds), the longest delay Task.Delay accepts on every supported target."
+            );
+        }
         ArgumentNullException.ThrowIfNull(delayAsync);
         ArgumentNullException.ThrowIfNull(getTimestamp);
 
