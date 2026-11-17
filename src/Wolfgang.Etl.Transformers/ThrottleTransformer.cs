@@ -24,9 +24,10 @@ namespace Wolfgang.Etl.Transformers;
 /// <see cref="CancellationToken"/> (supply it via <c>.WithCancellation(token)</c>).
 /// </para>
 /// <para>
-/// Implements only <see cref="ITransformAsync{TSource, TDestination}"/> - no progress, no
-/// <c>SkipItemCount</c>/<c>MaximumItemCount</c> limits - to keep the hot loop minimal. Cancellation
-/// is observed only through the enumeration's token, as described above.
+/// Implements only <see cref="ITransformWithCancellationAsync{TSource, TDestination}"/> - no progress,
+/// no <c>SkipItemCount</c>/<c>MaximumItemCount</c> limits - to keep the hot loop minimal. Because it
+/// implements the cancellation-aware interface, <c>IEtlPipeline.Through</c> hands it the pipeline's
+/// run token, so a pacing delay inside an <c>EtlPipeline</c> is interrupted by cancellation.
 /// </para>
 /// </remarks>
 /// <example>
@@ -38,9 +39,16 @@ namespace Wolfgang.Etl.Transformers;
 ///     }
 /// </code>
 /// </example>
-public sealed class ThrottleTransformer<T> : ITransformAsync<T, T>
+public sealed class ThrottleTransformer<T> : ITransformWithCancellationAsync<T, T>
     where T : notnull
 {
+    /// <summary>
+    /// The longest accepted <c>minInterval</c>: <see cref="int.MaxValue"/> milliseconds (about 24.8
+    /// days), the limit of <see cref="Task.Delay(TimeSpan, CancellationToken)"/> on the oldest
+    /// supported target. Applied on every target so behaviour does not vary by framework.
+    /// </summary>
+    private static readonly TimeSpan MaxInterval = TimeSpan.FromMilliseconds(int.MaxValue);
+
     private readonly TimeSpan _minInterval;
     private readonly Func<TimeSpan, CancellationToken, Task> _delayAsync;
     private readonly Func<long> _getTimestamp;
@@ -52,9 +60,11 @@ public sealed class ThrottleTransformer<T> : ITransformAsync<T, T>
     /// </summary>
     /// <param name="minInterval">
     /// The minimum time between successive yielded items. <see cref="TimeSpan.Zero"/> disables pacing
-    /// (a pass-through).
+    /// (a pass-through). Must not exceed <see cref="int.MaxValue"/> milliseconds (about 24.8 days).
     /// </param>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="minInterval"/> is negative.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="minInterval"/> is negative or longer than <see cref="int.MaxValue"/> milliseconds.
+    /// </exception>
     public ThrottleTransformer(TimeSpan minInterval)
         : this(minInterval, static (delay, token) => Task.Delay(delay, token), Stopwatch.GetTimestamp)
     {
@@ -67,6 +77,15 @@ public sealed class ThrottleTransformer<T> : ITransformAsync<T, T>
     internal ThrottleTransformer(TimeSpan minInterval, Func<TimeSpan, CancellationToken, Task> delayAsync, Func<long> getTimestamp)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(minInterval, TimeSpan.Zero);
+        if (minInterval > MaxInterval)
+        {
+            throw new ArgumentOutOfRangeException
+            (
+                nameof(minInterval),
+                minInterval,
+                "minInterval must not exceed " + MaxInterval + " (Int32.MaxValue milliseconds), the longest delay Task.Delay accepts on every supported target."
+            );
+        }
         ArgumentNullException.ThrowIfNull(delayAsync);
         ArgumentNullException.ThrowIfNull(getTimestamp);
 
@@ -98,6 +117,24 @@ public sealed class ThrottleTransformer<T> : ITransformAsync<T, T>
     {
         ArgumentNullException.ThrowIfNull(items);
         return TransformAsyncCore(items);
+    }
+
+
+
+    /// <summary>
+    /// Asynchronously yields each item from <paramref name="items"/> in order, pacing successive items
+    /// to at least the configured minimum interval apart, and observing <paramref name="token"/>
+    /// (combined with any token supplied through <c>.WithCancellation(token)</c>) while waiting.
+    /// </summary>
+    /// <param name="items">The asynchronous source sequence.</param>
+    /// <param name="token">A token that interrupts the pacing delay and the enumeration of the source.</param>
+    /// <returns>An asynchronous sequence with the same items, in the same order, paced apart.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="items"/> is <see langword="null"/>.</exception>
+    /// <exception cref="OperationCanceledException">A token was cancelled before or during enumeration.</exception>
+    public IAsyncEnumerable<T> TransformAsync(IAsyncEnumerable<T> items, CancellationToken token)
+    {
+        ArgumentNullException.ThrowIfNull(items);
+        return TransformAsyncCore(items, token);
     }
 
 

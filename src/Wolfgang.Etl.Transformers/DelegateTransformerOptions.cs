@@ -77,6 +77,8 @@ public record DelegateTransformerOptions
     /// Ready-made policies - including skip-and-log and skip-to-dead-letter forms - are available
     /// from <c>ItemErrorPolicy</c> in the <c>Wolfgang.Etl.ErrorPolicies</c> package. This library
     /// does not reference that package; the policy is just a delegate.
+    /// An <see cref="OperationCanceledException"/> thrown by the delegate is cancellation, not an item
+    /// failure: it is never passed to the policy, is not counted, and propagates to the caller.
     /// </remarks>
     /// <exception cref="ArgumentNullException">The value being assigned is <see langword="null"/>.</exception>
     public Func<ItemErrorContext, ItemErrorAction> ErrorPolicy

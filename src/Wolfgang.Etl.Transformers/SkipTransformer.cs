@@ -1,4 +1,6 @@
 using System;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Wolfgang.Etl.Abstractions;
@@ -89,10 +91,15 @@ public sealed class SkipTransformer<T> : ITransformAsync<T, T>
 
 
 
-    private static async IAsyncEnumerable<T> SkipAsync(IAsyncEnumerable<T> items, int count)
+    private static async IAsyncEnumerable<T> SkipAsync
+    (
+        IAsyncEnumerable<T> items,
+        int count,
+        [EnumeratorCancellation] CancellationToken token = default
+    )
     {
         var skipped = 0;
-        await foreach (var item in items.ConfigureAwait(continueOnCapturedContext: false))
+        await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
         {
             if (skipped < count)
             {
