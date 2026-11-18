@@ -113,28 +113,51 @@ public sealed class ChunkTransformer<T> : ITransformAsync<T, IReadOnlyList<T>>
 
 
 
-    private static async IAsyncEnumerable<IReadOnlyList<T>> ChunkAsync
+    // The first chunk's buffer starts small and doubles up to the chunk size, as Enumerable.Chunk does,
+    // so an empty or short source never pays for a size-element array. Every later chunk is allocated
+    // at full size, but only when its first item arrives, so no unused trailing buffer is created.
+    private const int InitialFirstChunkCapacity = 16;
+
+
+
+    // internal (not private) and taking startCount only so the progress counter's saturation can be
+    // tested without enumerating 2^31 items; the public path always starts at 0.
+    internal static async IAsyncEnumerable<IReadOnlyList<T>> ChunkAsync
     (
         IAsyncEnumerable<T> items,
         int size,
         IProgress<int>? progress,
+        long startCount = 0,
         [EnumeratorCancellation] CancellationToken token = default
     )
     {
-        var buffer = new T[size];
+        T[]? buffer = null;
+        var isFirstChunk = true;
         var index = 0;
-        var itemsConsumed = 0;
+        var itemsConsumed = startCount;
 
         await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
         {
+            if (buffer is null)
+            {
+                buffer = new T[isFirstChunk ? Math.Min(size, InitialFirstChunkCapacity) : size];
+            }
+            else if (index == buffer.Length)
+            {
+                // Only reachable for the first chunk: later buffers are allocated at full size, and a
+                // full buffer is yielded (and dropped) before the next item arrives.
+                Array.Resize(ref buffer, (int)Math.Min((long)buffer.Length * 2, size));
+            }
+
             buffer[index++] = item;
             itemsConsumed++;
 
             if (index == size)
             {
                 yield return buffer;
-                progress?.Report(itemsConsumed);
-                buffer = new T[size];
+                progress?.Report(Saturate(itemsConsumed));
+                buffer = null;
+                isFirstChunk = false;
                 index = 0;
             }
         }
@@ -144,9 +167,14 @@ public sealed class ChunkTransformer<T> : ITransformAsync<T, IReadOnlyList<T>>
             // partial final chunk - copy to a right-sized array so the consumer
             // sees only the items that were actually present
             var partial = new T[index];
-            Array.Copy(buffer, partial, index);
+            Array.Copy(buffer!, partial, index);
             yield return partial;
-            progress?.Report(itemsConsumed);
+            progress?.Report(Saturate(itemsConsumed));
         }
     }
+
+
+
+    // Progress is IProgress<int>; past int.MaxValue items it holds at int.MaxValue rather than wrapping negative.
+    private static int Saturate(long count) => count > int.MaxValue ? int.MaxValue : (int)count;
 }
