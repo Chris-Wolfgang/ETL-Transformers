@@ -26,11 +26,14 @@ handling, and composition.
   of aborting the run; skipped items are counted by `CurrentErrorItemCount`
 - **Fluent composition**: `.Then(next)` extension composes any two transformers into one,
   chains arbitrarily deep, and automatically picks the cancellation-aware overload when both
-  sides implement `ITransformWithCancellationAsync<TSource, TDestination>`
+  sides implement `ITransformWithCancellationAsync<TSource, TDestination>` (in this package only
+  `PassThroughTransformer<T>` and `ThrottleTransformer<T>` do; other chains use the plain overload)
 - **Multi-TFM**: targets .NET Framework 4.6.2, 4.7.2, 4.8 and 4.8.1, .NET Standard 2.0, and
   .NET 5.0–10.0
-- **Zero allocations on hot paths**: all transformers yield items via `IAsyncEnumerable<T>` with
-  no intermediate buffering beyond `BufferedTransformer`'s explicit channel
+- **No per-item allocations in the pass-through, filter and projection transformers**: they yield
+  items via `IAsyncEnumerable<T>` without intermediate buffering. The stateful ones are the
+  exceptions: `BufferedTransformer` (an explicit channel), `ChunkTransformer` (a `T[]` per chunk)
+  and `DistinctTransformer` / `DistinctByTransformer` (a `HashSet` of every unique item or key)
 
 ## Design Principles
 

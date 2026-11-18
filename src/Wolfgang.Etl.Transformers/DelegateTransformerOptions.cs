@@ -11,7 +11,7 @@ namespace Wolfgang.Etl.Transformers;
 /// </summary>
 /// <remarks>
 /// <para>
-/// Per ADR-0009, stage configuration is supplied as a record passed to the constructor rather than
+/// Per ADR-0009 in ETL-Abstractions, stage configuration is supplied as a record passed to the constructor rather than
 /// set through mutable properties, so a transformer is configured once and not reconfigured during a
 /// run. This record is shared by the transformers that accept it, because the one setting they
 /// need is the same. Every transformer that invokes a caller-supplied delegate or comparer accepts
