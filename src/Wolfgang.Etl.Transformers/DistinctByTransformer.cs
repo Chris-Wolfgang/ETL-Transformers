@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -173,13 +174,14 @@ public sealed class DistinctByTransformer<TSource, TKey> : ITransformAsync<TSour
     (
         IAsyncEnumerable<TSource> items,
         Func<TSource, TKey> keySelector,
-        IEqualityComparer<TKey>? comparer
+        IEqualityComparer<TKey>? comparer,
+        [EnumeratorCancellation] CancellationToken token = default
     )
     {
         var seen = new HashSet<TKey>(comparer);
         var itemNumber = 0L;
 
-        await foreach (var item in items.ConfigureAwait(continueOnCapturedContext: false))
+        await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
         {
             itemNumber++;
 
@@ -191,7 +193,7 @@ public sealed class DistinctByTransformer<TSource, TKey> : ITransformAsync<TSour
             {
                 isFirstOccurrence = seen.Add(keySelector(item));
             }
-            catch (Exception exception)
+            catch (Exception exception) when (exception is not OperationCanceledException)
             {
                 if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
                 {

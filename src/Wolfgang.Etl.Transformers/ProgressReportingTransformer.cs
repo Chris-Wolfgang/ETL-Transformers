@@ -1,4 +1,6 @@
 using System;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Wolfgang.Etl.Abstractions;
@@ -128,9 +130,14 @@ public sealed class ProgressReportingTransformer<T> : ITransformAsync<T, T>
 
 
 
-    private static async IAsyncEnumerable<T> ReportSync(IAsyncEnumerable<T> items, Action<T> callback)
+    private static async IAsyncEnumerable<T> ReportSync
+    (
+        IAsyncEnumerable<T> items,
+        Action<T> callback,
+        [EnumeratorCancellation] CancellationToken token = default
+    )
     {
-        await foreach (var item in items.ConfigureAwait(continueOnCapturedContext: false))
+        await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
         {
             callback(item);
             yield return item;
@@ -139,9 +146,14 @@ public sealed class ProgressReportingTransformer<T> : ITransformAsync<T, T>
 
 
 
-    private static async IAsyncEnumerable<T> ReportAsync(IAsyncEnumerable<T> items, Func<T, ValueTask> callback)
+    private static async IAsyncEnumerable<T> ReportAsync
+    (
+        IAsyncEnumerable<T> items,
+        Func<T, ValueTask> callback,
+        [EnumeratorCancellation] CancellationToken token = default
+    )
     {
-        await foreach (var item in items.ConfigureAwait(continueOnCapturedContext: false))
+        await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
         {
             await callback(item).ConfigureAwait(continueOnCapturedContext: false);
             yield return item;

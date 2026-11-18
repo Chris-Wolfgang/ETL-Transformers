@@ -11,7 +11,7 @@ namespace Wolfgang.Etl.Transformers;
 /// </summary>
 /// <remarks>
 /// <para>
-/// Per ADR-0009, stage configuration is supplied as a record passed to the constructor rather than
+/// Per ADR-0009 in ETL-Abstractions, stage configuration is supplied as a record passed to the constructor rather than
 /// set through mutable properties, so a transformer is configured once and not reconfigured during a
 /// run. This record is shared by the transformers that accept it, because the one setting they
 /// need is the same. Every transformer that invokes a caller-supplied delegate or comparer accepts
@@ -77,6 +77,8 @@ public record DelegateTransformerOptions
     /// Ready-made policies - including skip-and-log and skip-to-dead-letter forms - are available
     /// from <c>ItemErrorPolicy</c> in the <c>Wolfgang.Etl.ErrorPolicies</c> package. This library
     /// does not reference that package; the policy is just a delegate.
+    /// An <see cref="OperationCanceledException"/> thrown by the delegate is cancellation, not an item
+    /// failure: it is never passed to the policy, is not counted, and propagates to the caller.
     /// </remarks>
     /// <exception cref="ArgumentNullException">The value being assigned is <see langword="null"/>.</exception>
     public Func<ItemErrorContext, ItemErrorAction> ErrorPolicy

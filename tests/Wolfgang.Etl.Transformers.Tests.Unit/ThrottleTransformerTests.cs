@@ -149,6 +149,37 @@ public class ThrottleTransformerTests
 
 
     [Fact]
+    public void Ctor_when_min_interval_exceeds_Int32_MaxValue_milliseconds_throws_ArgumentOutOfRangeException()
+    {
+        var minInterval = TimeSpan.FromMilliseconds((double)int.MaxValue + 1);
+
+        var ex = Assert.Throws<ArgumentOutOfRangeException>(() => new ThrottleTransformer<int>(minInterval));
+
+        Assert.Equal("minInterval", ex.ParamName);
+        Assert.Equal(minInterval, ex.ActualValue);
+    }
+
+
+
+    [Fact]
+    public void Ctor_when_min_interval_is_TimeSpan_MaxValue_throws_ArgumentOutOfRangeException()
+        => Assert.Throws<ArgumentOutOfRangeException>(() => new ThrottleTransformer<int>(TimeSpan.MaxValue));
+
+
+
+    [Fact]
+    public void Ctor_when_min_interval_is_exactly_Int32_MaxValue_milliseconds_is_accepted()
+    {
+        var minInterval = TimeSpan.FromMilliseconds(int.MaxValue);
+
+        var sut = new ThrottleTransformer<int>(minInterval);
+
+        Assert.Equal(minInterval, sut.MinInterval);
+    }
+
+
+
+    [Fact]
     public void TransformAsync_when_items_is_null_throws_ArgumentNullException()
         => Assert.Throws<ArgumentNullException>(() => new ThrottleTransformer<int>(TimeSpan.Zero).TransformAsync(null!));
 
