@@ -70,6 +70,48 @@ public static class EtlPipelineOperatorExtensions
 
 
 
+    /// <summary>
+    /// Filters the pipeline like <c>Where</c> without options, but applies the
+    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose delegate (or comparer) throws, so
+    /// the item can be skipped and counted in <c>EtlPipelineProgress.ErrorItemCount</c> instead of aborting the run.
+    /// </summary>
+    /// <typeparam name="T">The item type. Must be non-null.</typeparam>
+    /// <param name="pipeline">The pipeline to extend.</param>
+    /// <param name="predicate">The caller-supplied delegate.</param>
+    /// <param name="options">The per-item error handling options.</param>
+    /// <returns>The extended pipeline.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="pipeline"/> or <paramref name="options"/> is <see langword="null"/>, or the delegate argument is <see langword="null"/>.</exception>
+    public static IEtlPipeline<T> Where<T>(this IEtlPipeline<T> pipeline, Func<T, bool> predicate, DelegateTransformerOptions options)
+        where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(pipeline);
+
+        return pipeline.Through(new WhereTransformer<T>(predicate, options));
+    }
+
+
+
+    /// <summary>
+    /// Filters the pipeline like <c>Where</c> without options, but applies the
+    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose delegate (or comparer) throws, so
+    /// the item can be skipped and counted in <c>EtlPipelineProgress.ErrorItemCount</c> instead of aborting the run.
+    /// </summary>
+    /// <typeparam name="T">The item type. Must be non-null.</typeparam>
+    /// <param name="pipeline">The pipeline to extend.</param>
+    /// <param name="predicate">The caller-supplied delegate.</param>
+    /// <param name="options">The per-item error handling options.</param>
+    /// <returns>The extended pipeline.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="pipeline"/> or <paramref name="options"/> is <see langword="null"/>, or the delegate argument is <see langword="null"/>.</exception>
+    public static IEtlPipeline<T> Where<T>(this IEtlPipeline<T> pipeline, Func<T, ValueTask<bool>> predicate, DelegateTransformerOptions options)
+        where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(pipeline);
+
+        return pipeline.Through(new WhereTransformer<T>(predicate, options));
+    }
+
+
+
     /// <summary>Projects each item with a synchronous <paramref name="selector"/>.</summary>
     /// <typeparam name="TSource">The input item type. Must be non-null.</typeparam>
     /// <typeparam name="TDestination">The projected item type. Must be non-null.</typeparam>
@@ -102,6 +144,52 @@ public static class EtlPipelineOperatorExtensions
         ArgumentNullException.ThrowIfNull(pipeline);
 
         return pipeline.Through(new SelectTransformer<TSource, TDestination>(selector));
+    }
+
+
+
+    /// <summary>
+    /// Projects the pipeline like <c>Select</c> without options, but applies the
+    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose delegate (or comparer) throws, so
+    /// the item can be skipped and counted in <c>EtlPipelineProgress.ErrorItemCount</c> instead of aborting the run.
+    /// </summary>
+    /// <typeparam name="TSource">The source item type. Must be non-null.</typeparam>
+    /// <typeparam name="TDestination">The destination item type. Must be non-null.</typeparam>
+    /// <param name="pipeline">The pipeline to extend.</param>
+    /// <param name="selector">The caller-supplied delegate.</param>
+    /// <param name="options">The per-item error handling options.</param>
+    /// <returns>The extended pipeline.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="pipeline"/> or <paramref name="options"/> is <see langword="null"/>, or the delegate argument is <see langword="null"/>.</exception>
+    public static IEtlPipeline<TDestination> Select<TSource, TDestination>(this IEtlPipeline<TSource> pipeline, Func<TSource, TDestination> selector, DelegateTransformerOptions options)
+        where TSource : notnull
+        where TDestination : notnull
+    {
+        ArgumentNullException.ThrowIfNull(pipeline);
+
+        return pipeline.Through(new SelectTransformer<TSource, TDestination>(selector, options));
+    }
+
+
+
+    /// <summary>
+    /// Projects the pipeline like <c>Select</c> without options, but applies the
+    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose delegate (or comparer) throws, so
+    /// the item can be skipped and counted in <c>EtlPipelineProgress.ErrorItemCount</c> instead of aborting the run.
+    /// </summary>
+    /// <typeparam name="TSource">The source item type. Must be non-null.</typeparam>
+    /// <typeparam name="TDestination">The destination item type. Must be non-null.</typeparam>
+    /// <param name="pipeline">The pipeline to extend.</param>
+    /// <param name="selector">The caller-supplied delegate.</param>
+    /// <param name="options">The per-item error handling options.</param>
+    /// <returns>The extended pipeline.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="pipeline"/> or <paramref name="options"/> is <see langword="null"/>, or the delegate argument is <see langword="null"/>.</exception>
+    public static IEtlPipeline<TDestination> Select<TSource, TDestination>(this IEtlPipeline<TSource> pipeline, Func<TSource, ValueTask<TDestination>> selector, DelegateTransformerOptions options)
+        where TSource : notnull
+        where TDestination : notnull
+    {
+        ArgumentNullException.ThrowIfNull(pipeline);
+
+        return pipeline.Through(new SelectTransformer<TSource, TDestination>(selector, options));
     }
 
 
@@ -142,6 +230,52 @@ public static class EtlPipelineOperatorExtensions
 
 
 
+    /// <summary>
+    /// Flattens the pipeline like <c>SelectMany</c> without options, but applies the
+    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose delegate (or comparer) throws, so
+    /// the item can be skipped and counted in <c>EtlPipelineProgress.ErrorItemCount</c> instead of aborting the run.
+    /// </summary>
+    /// <typeparam name="TSource">The source item type. Must be non-null.</typeparam>
+    /// <typeparam name="TDestination">The destination item type. Must be non-null.</typeparam>
+    /// <param name="pipeline">The pipeline to extend.</param>
+    /// <param name="selector">The caller-supplied delegate.</param>
+    /// <param name="options">The per-item error handling options.</param>
+    /// <returns>The extended pipeline.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="pipeline"/> or <paramref name="options"/> is <see langword="null"/>, or the delegate argument is <see langword="null"/>.</exception>
+    public static IEtlPipeline<TDestination> SelectMany<TSource, TDestination>(this IEtlPipeline<TSource> pipeline, Func<TSource, IEnumerable<TDestination>> selector, DelegateTransformerOptions options)
+        where TSource : notnull
+        where TDestination : notnull
+    {
+        ArgumentNullException.ThrowIfNull(pipeline);
+
+        return pipeline.Through(new SelectManyTransformer<TSource, TDestination>(selector, options));
+    }
+
+
+
+    /// <summary>
+    /// Flattens the pipeline like <c>SelectMany</c> without options, but applies the
+    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose delegate (or comparer) throws, so
+    /// the item can be skipped and counted in <c>EtlPipelineProgress.ErrorItemCount</c> instead of aborting the run.
+    /// </summary>
+    /// <typeparam name="TSource">The source item type. Must be non-null.</typeparam>
+    /// <typeparam name="TDestination">The destination item type. Must be non-null.</typeparam>
+    /// <param name="pipeline">The pipeline to extend.</param>
+    /// <param name="selector">The caller-supplied delegate.</param>
+    /// <param name="options">The per-item error handling options.</param>
+    /// <returns>The extended pipeline.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="pipeline"/> or <paramref name="options"/> is <see langword="null"/>, or the delegate argument is <see langword="null"/>.</exception>
+    public static IEtlPipeline<TDestination> SelectMany<TSource, TDestination>(this IEtlPipeline<TSource> pipeline, Func<TSource, IAsyncEnumerable<TDestination>> selector, DelegateTransformerOptions options)
+        where TSource : notnull
+        where TDestination : notnull
+    {
+        ArgumentNullException.ThrowIfNull(pipeline);
+
+        return pipeline.Through(new SelectManyTransformer<TSource, TDestination>(selector, options));
+    }
+
+
+
     /// <summary>Removes duplicate items, optionally using a supplied <paramref name="comparer"/>.</summary>
     /// <typeparam name="T">The item type. Must be non-null.</typeparam>
     /// <param name="pipeline">The pipeline to deduplicate.</param>
@@ -157,6 +291,27 @@ public static class EtlPipelineOperatorExtensions
         ArgumentNullException.ThrowIfNull(pipeline);
 
         return pipeline.Through(new DistinctTransformer<T>(comparer));
+    }
+
+
+
+    /// <summary>
+    /// De-duplicates the pipeline like <c>Distinct</c> without options, but applies the
+    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose delegate (or comparer) throws, so
+    /// the item can be skipped and counted in <c>EtlPipelineProgress.ErrorItemCount</c> instead of aborting the run.
+    /// </summary>
+    /// <typeparam name="T">The item type. Must be non-null.</typeparam>
+    /// <param name="pipeline">The pipeline to extend.</param>
+    /// <param name="comparer">The equality comparer, or null for the default.</param>
+    /// <param name="options">The per-item error handling options.</param>
+    /// <returns>The extended pipeline.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="pipeline"/> or <paramref name="options"/> is <see langword="null"/>, or the delegate argument is <see langword="null"/>.</exception>
+    public static IEtlPipeline<T> Distinct<T>(this IEtlPipeline<T> pipeline, IEqualityComparer<T>? comparer, DelegateTransformerOptions options)
+        where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(pipeline);
+
+        return pipeline.Through(new DistinctTransformer<T>(comparer, options));
     }
 
 
@@ -179,6 +334,30 @@ public static class EtlPipelineOperatorExtensions
         ArgumentNullException.ThrowIfNull(pipeline);
 
         return pipeline.Through(new DistinctByTransformer<TSource, TKey>(keySelector, comparer));
+    }
+
+
+
+    /// <summary>
+    /// De-duplicates by key the pipeline like <c>DistinctBy</c> without options, but applies the
+    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose delegate (or comparer) throws, so
+    /// the item can be skipped and counted in <c>EtlPipelineProgress.ErrorItemCount</c> instead of aborting the run.
+    /// </summary>
+    /// <typeparam name="TSource">The source item type. Must be non-null.</typeparam>
+    /// <typeparam name="TKey">The key type. Must be non-null.</typeparam>
+    /// <param name="pipeline">The pipeline to extend.</param>
+    /// <param name="keySelector">The caller-supplied delegate.</param>
+    /// <param name="comparer">The comparer used to compare keys, or null for the default.</param>
+    /// <param name="options">The per-item error handling options.</param>
+    /// <returns>The extended pipeline.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="pipeline"/> or <paramref name="options"/> is <see langword="null"/>, or the delegate argument is <see langword="null"/>.</exception>
+    public static IEtlPipeline<TSource> DistinctBy<TSource, TKey>(this IEtlPipeline<TSource> pipeline, Func<TSource, TKey> keySelector, IEqualityComparer<TKey>? comparer, DelegateTransformerOptions options)
+        where TSource : notnull
+        where TKey : notnull
+    {
+        ArgumentNullException.ThrowIfNull(pipeline);
+
+        return pipeline.Through(new DistinctByTransformer<TSource, TKey>(keySelector, comparer, options));
     }
 
 
@@ -247,6 +426,48 @@ public static class EtlPipelineOperatorExtensions
 
 
 
+    /// <summary>
+    /// Takes items while a predicate holds the pipeline like <c>TakeWhile</c> without options, but applies the
+    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose delegate (or comparer) throws, so
+    /// the item can be skipped and counted in <c>EtlPipelineProgress.ErrorItemCount</c> instead of aborting the run.
+    /// </summary>
+    /// <typeparam name="T">The item type. Must be non-null.</typeparam>
+    /// <param name="pipeline">The pipeline to extend.</param>
+    /// <param name="predicate">The caller-supplied delegate.</param>
+    /// <param name="options">The per-item error handling options.</param>
+    /// <returns>The extended pipeline.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="pipeline"/> or <paramref name="options"/> is <see langword="null"/>, or the delegate argument is <see langword="null"/>.</exception>
+    public static IEtlPipeline<T> TakeWhile<T>(this IEtlPipeline<T> pipeline, Func<T, bool> predicate, DelegateTransformerOptions options)
+        where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(pipeline);
+
+        return pipeline.Through(new TakeWhileTransformer<T>(predicate, options));
+    }
+
+
+
+    /// <summary>
+    /// Takes items while a predicate holds the pipeline like <c>TakeWhile</c> without options, but applies the
+    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose delegate (or comparer) throws, so
+    /// the item can be skipped and counted in <c>EtlPipelineProgress.ErrorItemCount</c> instead of aborting the run.
+    /// </summary>
+    /// <typeparam name="T">The item type. Must be non-null.</typeparam>
+    /// <param name="pipeline">The pipeline to extend.</param>
+    /// <param name="predicate">The caller-supplied delegate.</param>
+    /// <param name="options">The per-item error handling options.</param>
+    /// <returns>The extended pipeline.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="pipeline"/> or <paramref name="options"/> is <see langword="null"/>, or the delegate argument is <see langword="null"/>.</exception>
+    public static IEtlPipeline<T> TakeWhile<T>(this IEtlPipeline<T> pipeline, Func<T, ValueTask<bool>> predicate, DelegateTransformerOptions options)
+        where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(pipeline);
+
+        return pipeline.Through(new TakeWhileTransformer<T>(predicate, options));
+    }
+
+
+
     /// <summary>Skips items while a synchronous <paramref name="predicate"/> holds, then yields the rest.</summary>
     /// <typeparam name="T">The item type. Must be non-null.</typeparam>
     /// <param name="pipeline">The pipeline to skip within.</param>
@@ -279,6 +500,48 @@ public static class EtlPipelineOperatorExtensions
 
 
 
+    /// <summary>
+    /// Skips items while a predicate holds the pipeline like <c>SkipWhile</c> without options, but applies the
+    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose delegate (or comparer) throws, so
+    /// the item can be skipped and counted in <c>EtlPipelineProgress.ErrorItemCount</c> instead of aborting the run.
+    /// </summary>
+    /// <typeparam name="T">The item type. Must be non-null.</typeparam>
+    /// <param name="pipeline">The pipeline to extend.</param>
+    /// <param name="predicate">The caller-supplied delegate.</param>
+    /// <param name="options">The per-item error handling options.</param>
+    /// <returns>The extended pipeline.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="pipeline"/> or <paramref name="options"/> is <see langword="null"/>, or the delegate argument is <see langword="null"/>.</exception>
+    public static IEtlPipeline<T> SkipWhile<T>(this IEtlPipeline<T> pipeline, Func<T, bool> predicate, DelegateTransformerOptions options)
+        where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(pipeline);
+
+        return pipeline.Through(new SkipWhileTransformer<T>(predicate, options));
+    }
+
+
+
+    /// <summary>
+    /// Skips items while a predicate holds the pipeline like <c>SkipWhile</c> without options, but applies the
+    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose delegate (or comparer) throws, so
+    /// the item can be skipped and counted in <c>EtlPipelineProgress.ErrorItemCount</c> instead of aborting the run.
+    /// </summary>
+    /// <typeparam name="T">The item type. Must be non-null.</typeparam>
+    /// <param name="pipeline">The pipeline to extend.</param>
+    /// <param name="predicate">The caller-supplied delegate.</param>
+    /// <param name="options">The per-item error handling options.</param>
+    /// <returns>The extended pipeline.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="pipeline"/> or <paramref name="options"/> is <see langword="null"/>, or the delegate argument is <see langword="null"/>.</exception>
+    public static IEtlPipeline<T> SkipWhile<T>(this IEtlPipeline<T> pipeline, Func<T, ValueTask<bool>> predicate, DelegateTransformerOptions options)
+        where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(pipeline);
+
+        return pipeline.Through(new SkipWhileTransformer<T>(predicate, options));
+    }
+
+
+
     /// <summary>Batches items into fixed-size chunks.</summary>
     /// <typeparam name="T">The item type. Must be non-null.</typeparam>
     /// <param name="pipeline">The pipeline to batch.</param>
@@ -291,6 +554,27 @@ public static class EtlPipelineOperatorExtensions
         ArgumentNullException.ThrowIfNull(pipeline);
 
         return pipeline.Through(new ChunkTransformer<T>(size));
+    }
+
+
+
+    /// <summary>
+    /// Groups the pipeline's items into fixed-size chunks like <c>Chunk(size)</c>, additionally reporting the
+    /// running count of source items consumed to <paramref name="progress"/> after each chunk.
+    /// </summary>
+    /// <typeparam name="T">The item type. Must be non-null.</typeparam>
+    /// <param name="pipeline">The pipeline to extend.</param>
+    /// <param name="size">The maximum number of items per chunk. Must be at least 1.</param>
+    /// <param name="progress">The sink for the running consumed-item count, or <see langword="null"/> for none.</param>
+    /// <returns>A pipeline of read-only lists, each containing up to <paramref name="size"/> items.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="pipeline"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="size"/> is less than 1.</exception>
+    public static IEtlPipeline<IReadOnlyList<T>> Chunk<T>(this IEtlPipeline<T> pipeline, int size, IProgress<int>? progress)
+        where T : notnull
+    {
+        ArgumentNullException.ThrowIfNull(pipeline);
+
+        return pipeline.Through(new ChunkTransformer<T>(size, progress));
     }
 
 
@@ -327,6 +611,28 @@ public static class EtlPipelineOperatorExtensions
         ArgumentNullException.ThrowIfNull(pipeline);
 
         return pipeline.Through(new CastTransformer<TSource, TDestination>());
+    }
+
+
+
+    /// <summary>
+    /// Casts the pipeline like <c>Cast</c> without options, but applies the
+    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose delegate (or comparer) throws, so
+    /// the item can be skipped and counted in <c>EtlPipelineProgress.ErrorItemCount</c> instead of aborting the run.
+    /// </summary>
+    /// <typeparam name="TSource">The source item type. Must be non-null.</typeparam>
+    /// <typeparam name="TDestination">The destination item type. Must be non-null.</typeparam>
+    /// <param name="pipeline">The pipeline to extend.</param>
+    /// <param name="options">The per-item error handling options.</param>
+    /// <returns>The extended pipeline.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="pipeline"/> or <paramref name="options"/> is <see langword="null"/>, or the delegate argument is <see langword="null"/>.</exception>
+    public static IEtlPipeline<TDestination> Cast<TSource, TDestination>(this IEtlPipeline<TSource> pipeline, DelegateTransformerOptions options)
+        where TSource : notnull
+        where TDestination : notnull
+    {
+        ArgumentNullException.ThrowIfNull(pipeline);
+
+        return pipeline.Through(new CastTransformer<TSource, TDestination>(options));
     }
 
 
