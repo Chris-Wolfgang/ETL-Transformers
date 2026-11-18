@@ -1,4 +1,6 @@
 using System;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Wolfgang.Etl.Abstractions;
@@ -80,9 +82,13 @@ public sealed class OfTypeTransformer<TSource, TDestination> : ITransformAsync<T
 
 
 
-    private static async IAsyncEnumerable<TDestination> FilterByTypeAsync(IAsyncEnumerable<TSource> items)
+    private static async IAsyncEnumerable<TDestination> FilterByTypeAsync
+    (
+        IAsyncEnumerable<TSource> items,
+        [EnumeratorCancellation] CancellationToken token = default
+    )
     {
-        await foreach (var item in items.ConfigureAwait(continueOnCapturedContext: false))
+        await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
         {
             if (item is TDestination typed)
             {
