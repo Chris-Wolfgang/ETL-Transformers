@@ -19,11 +19,13 @@ public class EnumeratorCancellationPropagationTests
 {
     private sealed class TokenRecordingSource
     {
-        public CancellationToken Seen { get; private set; }
+        private CancellationToken _seen;
+
+        public CancellationToken GetSeen() => _seen;
 
         public async IAsyncEnumerable<object> Items([EnumeratorCancellation] CancellationToken token = default)
         {
-            Seen = token;
+            _seen = token;
             await Task.Yield();
             yield return 1;
             yield return 2;
@@ -33,7 +35,7 @@ public class EnumeratorCancellationPropagationTests
 
         public async IAsyncEnumerable<int> IntItems([EnumeratorCancellation] CancellationToken token = default)
         {
-            Seen = token;
+            _seen = token;
             await Task.Yield();
             yield return 1;
             yield return 2;
@@ -57,25 +59,25 @@ public class EnumeratorCancellationPropagationTests
 
     private static IAsyncEnumerable<object> Build(string name, TokenRecordingSource s) => name switch
     {
-        "Where-sync" => new WhereTransformer<int>((Func<int, bool>)(i => i > 0)).TransformAsync(s.IntItems()).Box(),
-        "Where-async" => new WhereTransformer<int>((Func<int, ValueTask<bool>>)(i => new ValueTask<bool>(i > 0))).TransformAsync(s.IntItems()).Box(),
-        "Select-sync" => new SelectTransformer<int, int>((Func<int, int>)(i => i)).TransformAsync(s.IntItems()).Box(),
-        "Select-async" => new SelectTransformer<int, int>((Func<int, ValueTask<int>>)(i => new ValueTask<int>(i))).TransformAsync(s.IntItems()).Box(),
-        "SelectMany-sync" => new SelectManyTransformer<int, int>((Func<int, IEnumerable<int>>)(i => new[] { i })).TransformAsync(s.IntItems()).Box(),
-        "SelectMany-async" => new SelectManyTransformer<int, int>((Func<int, IAsyncEnumerable<int>>)(i => ToAsync(new[] { i }))).TransformAsync(s.IntItems()).Box(),
+        "Where-sync" => new WhereTransformer<int>(i => i > 0).TransformAsync(s.IntItems()).Box(),
+        "Where-async" => new WhereTransformer<int>(i => new ValueTask<bool>(i > 0)).TransformAsync(s.IntItems()).Box(),
+        "Select-sync" => new SelectTransformer<int, int>(i => i).TransformAsync(s.IntItems()).Box(),
+        "Select-async" => new SelectTransformer<int, int>(i => new ValueTask<int>(i)).TransformAsync(s.IntItems()).Box(),
+        "SelectMany-sync" => new SelectManyTransformer<int, int>(i => new[] { i }).TransformAsync(s.IntItems()).Box(),
+        "SelectMany-async" => new SelectManyTransformer<int, int>(i => ToAsync(new[] { i })).TransformAsync(s.IntItems()).Box(),
         "Skip" => new SkipTransformer<int>(1).TransformAsync(s.IntItems()).Box(),
         "Take" => new TakeTransformer<int>(3).TransformAsync(s.IntItems()).Box(),
-        "SkipWhile-sync" => new SkipWhileTransformer<int>((Func<int, bool>)(i => i < 2)).TransformAsync(s.IntItems()).Box(),
-        "SkipWhile-async" => new SkipWhileTransformer<int>((Func<int, ValueTask<bool>>)(i => new ValueTask<bool>(i < 2))).TransformAsync(s.IntItems()).Box(),
-        "TakeWhile-sync" => new TakeWhileTransformer<int>((Func<int, bool>)(i => i < 3)).TransformAsync(s.IntItems()).Box(),
-        "TakeWhile-async" => new TakeWhileTransformer<int>((Func<int, ValueTask<bool>>)(i => new ValueTask<bool>(i < 3))).TransformAsync(s.IntItems()).Box(),
+        "SkipWhile-sync" => new SkipWhileTransformer<int>(i => i < 2).TransformAsync(s.IntItems()).Box(),
+        "SkipWhile-async" => new SkipWhileTransformer<int>(i => new ValueTask<bool>(i < 2)).TransformAsync(s.IntItems()).Box(),
+        "TakeWhile-sync" => new TakeWhileTransformer<int>(i => i < 3).TransformAsync(s.IntItems()).Box(),
+        "TakeWhile-async" => new TakeWhileTransformer<int>(i => new ValueTask<bool>(i < 3)).TransformAsync(s.IntItems()).Box(),
         "Distinct" => new DistinctTransformer<int>().TransformAsync(s.IntItems()).Box(),
         "DistinctBy" => new DistinctByTransformer<int, int>(i => i).TransformAsync(s.IntItems()).Box(),
         "Cast" => new CastTransformer<object, int>().TransformAsync(s.Items()).Box(),
         "OfType" => new OfTypeTransformer<object, int>().TransformAsync(s.Items()).Box(),
         "Chunk" => new ChunkTransformer<int>(2).TransformAsync(s.IntItems()).Box(),
-        "ProgressReporting-sync" => new ProgressReportingTransformer<int>((Action<int>)(_ => { })).TransformAsync(s.IntItems()).Box(),
-        _ => new ProgressReportingTransformer<int>((Func<int, ValueTask>)(_ => default)).TransformAsync(s.IntItems()).Box(), // "ProgressReporting-async"
+        "ProgressReporting-sync" => new ProgressReportingTransformer<int>(_ => { }).TransformAsync(s.IntItems()).Box(),
+        _ => new ProgressReportingTransformer<int>(_ => default).TransformAsync(s.IntItems()).Box(), // "ProgressReporting-async"
     };
 
 
@@ -91,7 +93,7 @@ public class EnumeratorCancellationPropagationTests
         {
         }
 
-        Assert.Equal(cts.Token, source.Seen);
+        Assert.Equal(cts.Token, source.GetSeen());
     }
 
 
@@ -104,13 +106,14 @@ public class EnumeratorCancellationPropagationTests
         var where = new WhereTransformer<int>(_ => true);
 
         // A source that stalls until the token fires, then ends quietly, so every line is reachable.
-        async IAsyncEnumerable<int> Stalled([EnumeratorCancellation] CancellationToken token = default)
+        static async IAsyncEnumerable<int> Stalled([EnumeratorCancellation] CancellationToken token = default)
         {
             yield return 1;
 
-            try { await Task.Delay(TimeSpan.FromSeconds(30), token); } catch (OperationCanceledException) { yield break; }
+            try { await Task.Delay(TimeSpan.FromSeconds(30), token); } catch (OperationCanceledException) { }
         }
 
+        var token = cts.Token;
         cts.CancelAfter(200);
         var watch = Stopwatch.StartNew();
 
@@ -121,7 +124,7 @@ public class EnumeratorCancellationPropagationTests
         (
             async () =>
             {
-                await foreach (var _ in sut.TransformAsync(where.TransformAsync(Stalled())).WithCancellation(cts.Token))
+                await foreach (var _ in sut.TransformAsync(where.TransformAsync(Stalled())).WithCancellation(token))
                 {
                 }
             }
