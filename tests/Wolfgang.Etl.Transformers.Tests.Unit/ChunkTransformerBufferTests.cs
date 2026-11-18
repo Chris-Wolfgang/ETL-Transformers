@@ -105,7 +105,6 @@ public class ChunkTransformerBufferTests
         Assert.Equal(10, result[0].Count);
         Assert.True(allocated < 1_000_000, $"allocated {allocated} bytes");
     }
-#endif
 
 
 
@@ -114,7 +113,7 @@ public class ChunkTransformerBufferTests
         await Task.CompletedTask;
         yield break;
     }
-
+#endif
 
 
     [Fact]
