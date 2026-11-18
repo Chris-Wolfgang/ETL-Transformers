@@ -33,7 +33,7 @@ namespace Wolfgang.Etl.Transformers;
 ///         .Then(validate);
 /// </code>
 /// <para>
-/// Because it implements <see cref="ITransformAsync{TSource, TDestination}"/>, it composes
+/// Because it implements <see cref="ITransformWithCancellationAsync{TSource, TDestination}"/>, it composes
 /// naturally with <see cref="TransformerExtensions"/>.
 /// </para>
 /// <para>
@@ -67,7 +67,7 @@ namespace Wolfgang.Etl.Transformers;
 ///     });
 /// </code>
 /// </remarks>
-public sealed class ProgressReportingTransformer<T> : ITransformAsync<T, T>
+public sealed class ProgressReportingTransformer<T> : ITransformWithCancellationAsync<T, T>
     where T : notnull
 {
     private readonly Action<T>?            _syncCallback;
@@ -126,6 +126,25 @@ public sealed class ProgressReportingTransformer<T> : ITransformAsync<T, T>
         return _asyncCallback != null
             ? ReportAsync(items, _asyncCallback)
             : ReportSync(items, _syncCallback!);
+    }
+
+
+
+    /// <summary>
+    /// Transforms <paramref name="items"/> like the overload without a token, and forwards
+    /// <paramref name="token"/> to the stages above this one and to the source.
+    /// </summary>
+    /// <param name="items">The sequence to transform.</param>
+    /// <param name="token">A token that cancels the enumeration, including the source.</param>
+    /// <returns>The transformed sequence.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="items"/> is <see langword="null"/>.</exception>
+    public IAsyncEnumerable<T> TransformAsync(IAsyncEnumerable<T> items, CancellationToken token)
+    {
+        ArgumentNullException.ThrowIfNull(items);
+
+        return _asyncCallback != null
+            ? ReportAsync(items, _asyncCallback, token: token)
+            : ReportSync(items, _syncCallback!, token: token);
     }
 
 

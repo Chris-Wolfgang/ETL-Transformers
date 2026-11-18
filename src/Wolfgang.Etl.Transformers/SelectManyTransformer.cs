@@ -33,8 +33,8 @@ namespace Wolfgang.Etl.Transformers;
 /// are yielded before any items produced for the second input item, and so on.
 /// </para>
 /// <para>
-/// This type implements only <see cref="ITransformAsync{TSource, TDestination}"/> - no progress, no
-/// cancellation, no <c>SkipItemCount</c>/<c>MaximumItemCount</c> limits (unrelated to
+/// This type implements <see cref="ITransformWithCancellationAsync{TSource, TDestination}"/> - no progress, no
+/// <c>SkipItemCount</c>/<c>MaximumItemCount</c> limits (unrelated to
 /// <see cref="ItemErrorAction.Skip"/>, which the error policy uses to drop a failing item) - to keep
 /// the hot loop minimal. Compose with dedicated transformers when those concerns are needed.
 /// </para>
@@ -70,7 +70,7 @@ namespace Wolfgang.Etl.Transformers;
 ///     );
 /// </code>
 /// </example>
-public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsync<TSource, TDestination>, IReportsItemErrors
+public sealed class SelectManyTransformer<TSource, TDestination> : ITransformWithCancellationAsync<TSource, TDestination>, IReportsItemErrors
     where TSource : notnull
     where TDestination : notnull
 {
@@ -190,6 +190,25 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
         return _syncSelector is not null
             ? FlattenWithSyncSelectorAsync(items, _syncSelector)
             : FlattenWithAsyncSelectorAsync(items, _asyncSelector!);
+    }
+
+
+
+    /// <summary>
+    /// Transforms <paramref name="items"/> like the overload without a token, and forwards
+    /// <paramref name="token"/> to the stages above this one and to the source.
+    /// </summary>
+    /// <param name="items">The sequence to transform.</param>
+    /// <param name="token">A token that cancels the enumeration, including the source.</param>
+    /// <returns>The transformed sequence.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="items"/> is <see langword="null"/>.</exception>
+    public IAsyncEnumerable<TDestination> TransformAsync(IAsyncEnumerable<TSource> items, CancellationToken token)
+    {
+        ArgumentNullException.ThrowIfNull(items);
+
+        return _syncSelector is not null
+            ? FlattenWithSyncSelectorAsync(items, _syncSelector, token: token)
+            : FlattenWithAsyncSelectorAsync(items, _asyncSelector!, token: token);
     }
 
 

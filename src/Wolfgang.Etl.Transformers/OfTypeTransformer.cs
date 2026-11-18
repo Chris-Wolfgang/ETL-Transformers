@@ -37,7 +37,7 @@ namespace Wolfgang.Etl.Transformers;
 /// <see langword="false"/> for any <c>T</c>.
 /// </para>
 /// <para>
-/// Implements only <see cref="ITransformAsync{TSource, TDestination}"/> - no progress, no cancellation,
+/// Implements <see cref="ITransformWithCancellationAsync{TSource, TDestination}"/> - no progress,
 /// no <c>SkipItemCount</c>/<c>MaximumItemCount</c> limits - to keep the hot loop minimal.
 /// </para>
 /// </remarks>
@@ -50,7 +50,7 @@ namespace Wolfgang.Etl.Transformers;
 ///     var dogs = new OfTypeTransformer&lt;Animal, Dog&gt;();
 /// </code>
 /// </example>
-public sealed class OfTypeTransformer<TSource, TDestination> : ITransformAsync<TSource, TDestination>
+public sealed class OfTypeTransformer<TSource, TDestination> : ITransformWithCancellationAsync<TSource, TDestination>
     where TSource : notnull
     where TDestination : notnull
 {
@@ -78,6 +78,23 @@ public sealed class OfTypeTransformer<TSource, TDestination> : ITransformAsync<T
         ArgumentNullException.ThrowIfNull(items);
 
         return FilterByTypeAsync(items);
+    }
+
+
+
+    /// <summary>
+    /// Transforms <paramref name="items"/> like the overload without a token, and forwards
+    /// <paramref name="token"/> to the stages above this one and to the source.
+    /// </summary>
+    /// <param name="items">The sequence to transform.</param>
+    /// <param name="token">A token that cancels the enumeration, including the source.</param>
+    /// <returns>The transformed sequence.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="items"/> is <see langword="null"/>.</exception>
+    public IAsyncEnumerable<TDestination> TransformAsync(IAsyncEnumerable<TSource> items, CancellationToken token)
+    {
+        ArgumentNullException.ThrowIfNull(items);
+
+        return FilterByTypeAsync(items, token: token);
     }
 
 

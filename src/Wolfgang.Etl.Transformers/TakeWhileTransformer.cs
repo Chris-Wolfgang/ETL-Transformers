@@ -28,8 +28,8 @@ namespace Wolfgang.Etl.Transformers;
 /// I/O-bound stop conditions such as a state-check against an external system.
 /// </para>
 /// <para>
-/// Implements <see cref="ITransformAsync{TSource, TDestination}"/> and <see cref="IReportsItemErrors"/>
-/// - no progress, no cancellation, no <c>SkipItemCount</c>/<c>MaximumItemCount</c> limits (unrelated to
+/// Implements <see cref="ITransformWithCancellationAsync{TSource, TDestination}"/> and <see cref="IReportsItemErrors"/>
+/// - no progress, no <c>SkipItemCount</c>/<c>MaximumItemCount</c> limits (unrelated to
 /// <see cref="ItemErrorAction.Skip"/>, which the error policy uses to drop a failing item) - to keep
 /// the hot loop minimal. The one counter is the opt-in <see cref="CurrentErrorItemCount"/>, which stays
 /// at zero on the default path.
@@ -50,7 +50,7 @@ namespace Wolfgang.Etl.Transformers;
 ///     var head = new TakeWhileTransformer&lt;Row&gt;(r =&gt; r.IsComplete);
 /// </code>
 /// </example>
-public sealed class TakeWhileTransformer<T> : ITransformAsync<T, T>, IReportsItemErrors
+public sealed class TakeWhileTransformer<T> : ITransformWithCancellationAsync<T, T>, IReportsItemErrors
     where T : notnull
 {
     private readonly Func<T, bool>? _syncPredicate;
@@ -154,6 +154,25 @@ public sealed class TakeWhileTransformer<T> : ITransformAsync<T, T>, IReportsIte
         return _syncPredicate is not null
             ? TakeWhileWithSyncPredicateAsync(items, _syncPredicate)
             : TakeWhileWithAsyncPredicateAsync(items, _asyncPredicate!);
+    }
+
+
+
+    /// <summary>
+    /// Transforms <paramref name="items"/> like the overload without a token, and forwards
+    /// <paramref name="token"/> to the stages above this one and to the source.
+    /// </summary>
+    /// <param name="items">The sequence to transform.</param>
+    /// <param name="token">A token that cancels the enumeration, including the source.</param>
+    /// <returns>The transformed sequence.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="items"/> is <see langword="null"/>.</exception>
+    public IAsyncEnumerable<T> TransformAsync(IAsyncEnumerable<T> items, CancellationToken token)
+    {
+        ArgumentNullException.ThrowIfNull(items);
+
+        return _syncPredicate is not null
+            ? TakeWhileWithSyncPredicateAsync(items, _syncPredicate, token: token)
+            : TakeWhileWithAsyncPredicateAsync(items, _asyncPredicate!, token: token);
     }
 
 

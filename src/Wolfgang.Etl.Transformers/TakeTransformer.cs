@@ -30,7 +30,7 @@ namespace Wolfgang.Etl.Transformers;
 /// row-count limit, and as a building block in composed pipelines.
 /// </para>
 /// <para>
-/// Implements only <see cref="ITransformAsync{TSource, TDestination}"/> - no progress, no cancellation,
+/// Implements <see cref="ITransformWithCancellationAsync{TSource, TDestination}"/> - no progress,
 /// no <c>SkipItemCount</c>/<c>MaximumItemCount</c> limits - to keep the hot loop minimal.
 /// </para>
 /// </remarks>
@@ -40,7 +40,7 @@ namespace Wolfgang.Etl.Transformers;
 ///     var head = new TakeTransformer&lt;Row&gt;(count: 100);
 /// </code>
 /// </example>
-public sealed class TakeTransformer<T> : ITransformAsync<T, T>
+public sealed class TakeTransformer<T> : ITransformWithCancellationAsync<T, T>
     where T : notnull
 {
     private readonly int _count;
@@ -77,6 +77,23 @@ public sealed class TakeTransformer<T> : ITransformAsync<T, T>
         ArgumentNullException.ThrowIfNull(items);
 
         return TakeAsync(items, _count);
+    }
+
+
+
+    /// <summary>
+    /// Transforms <paramref name="items"/> like the overload without a token, and forwards
+    /// <paramref name="token"/> to the stages above this one and to the source.
+    /// </summary>
+    /// <param name="items">The sequence to transform.</param>
+    /// <param name="token">A token that cancels the enumeration, including the source.</param>
+    /// <returns>The transformed sequence.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="items"/> is <see langword="null"/>.</exception>
+    public IAsyncEnumerable<T> TransformAsync(IAsyncEnumerable<T> items, CancellationToken token)
+    {
+        ArgumentNullException.ThrowIfNull(items);
+
+        return TakeAsync(items, _count, token: token);
     }
 
 

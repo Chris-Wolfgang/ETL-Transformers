@@ -31,7 +31,7 @@ namespace Wolfgang.Etl.Transformers;
 /// materializing the entire stream.
 /// </para>
 /// <para>
-/// Implements only <see cref="ITransformAsync{TSource, TDestination}"/> - no cancellation, no
+/// Implements <see cref="ITransformWithCancellationAsync{TSource, TDestination}"/> - no
 /// <c>SkipItemCount</c>/<c>MaximumItemCount</c> limits - to keep the hot loop minimal. An optional
 /// <see cref="IProgress{T}"/> sink may be supplied to receive the running count of source items
 /// consumed; when none is supplied the hot path allocates and reports nothing.
@@ -47,7 +47,7 @@ namespace Wolfgang.Etl.Transformers;
 ///     var tracked = new ChunkTransformer&lt;Row&gt;(size: 1000, progress);
 /// </code>
 /// </example>
-public sealed class ChunkTransformer<T> : ITransformAsync<T, IReadOnlyList<T>>
+public sealed class ChunkTransformer<T> : ITransformWithCancellationAsync<T, IReadOnlyList<T>>
     where T : notnull
 {
     private readonly int _size;
@@ -102,6 +102,23 @@ public sealed class ChunkTransformer<T> : ITransformAsync<T, IReadOnlyList<T>>
         ArgumentNullException.ThrowIfNull(items);
 
         return ChunkAsync(items, _size, _progress);
+    }
+
+
+
+    /// <summary>
+    /// Transforms <paramref name="items"/> like the overload without a token, and forwards
+    /// <paramref name="token"/> to the stages above this one and to the source.
+    /// </summary>
+    /// <param name="items">The sequence to transform.</param>
+    /// <param name="token">A token that cancels the enumeration, including the source.</param>
+    /// <returns>The transformed sequence.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="items"/> is <see langword="null"/>.</exception>
+    public IAsyncEnumerable<IReadOnlyList<T>> TransformAsync(IAsyncEnumerable<T> items, CancellationToken token)
+    {
+        ArgumentNullException.ThrowIfNull(items);
+
+        return ChunkAsync(items, _size, _progress, token: token);
     }
 
 

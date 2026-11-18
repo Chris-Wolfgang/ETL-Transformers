@@ -26,9 +26,9 @@ namespace Wolfgang.Etl.Transformers;
 /// I/O-bound filter conditions such as a database existence check.
 /// </para>
 /// <para>
-/// This type deliberately implements only <see cref="ITransformAsync{TSource, TDestination}"/> and
+/// This type deliberately implements only <see cref="ITransformWithCancellationAsync{TSource, TDestination}"/> and
 /// does <b>not</b> inherit from <see cref="TransformerBase{TSource, TDestination, TProgress}"/>.
-/// It carries no progress reporting and no cancellation token, and counts nothing on the default
+/// It carries no progress reporting, and counts nothing on the default
 /// path - the only counter is the opt-in <see cref="CurrentErrorItemCount"/>, which stays at zero
 /// unless an error policy skips an item - keeping the hot loop as small as possible for use as a
 /// building block in composed pipelines. Callers needing
@@ -58,7 +58,7 @@ namespace Wolfgang.Etl.Transformers;
 ///     );
 /// </code>
 /// </example>
-public sealed class WhereTransformer<T> : ITransformAsync<T, T>, IReportsItemErrors
+public sealed class WhereTransformer<T> : ITransformWithCancellationAsync<T, T>, IReportsItemErrors
     where T : notnull
 {
     private readonly Func<T, bool>? _syncPredicate;
@@ -159,6 +159,25 @@ public sealed class WhereTransformer<T> : ITransformAsync<T, T>, IReportsItemErr
         return _syncPredicate is not null
             ? FilterWithSyncPredicateAsync(items, _syncPredicate)
             : FilterWithAsyncPredicateAsync(items, _asyncPredicate!);
+    }
+
+
+
+    /// <summary>
+    /// Transforms <paramref name="items"/> like the overload without a token, and forwards
+    /// <paramref name="token"/> to the stages above this one and to the source.
+    /// </summary>
+    /// <param name="items">The sequence to transform.</param>
+    /// <param name="token">A token that cancels the enumeration, including the source.</param>
+    /// <returns>The transformed sequence.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="items"/> is <see langword="null"/>.</exception>
+    public IAsyncEnumerable<T> TransformAsync(IAsyncEnumerable<T> items, CancellationToken token)
+    {
+        ArgumentNullException.ThrowIfNull(items);
+
+        return _syncPredicate is not null
+            ? FilterWithSyncPredicateAsync(items, _syncPredicate, token: token)
+            : FilterWithAsyncPredicateAsync(items, _asyncPredicate!, token: token);
     }
 
 
