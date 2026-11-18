@@ -131,7 +131,7 @@ public sealed class SkipWhileTransformer<T> : ITransformAsync<T, T>, IReportsIte
     /// <see cref="ItemErrorAction.Skip"/>.
     /// </summary>
     /// <remarks>
-    /// Cumulative across every enumeration produced by this instance. Only a thrown exception counts; an item skipped because the predicate returned <see langword="true"/> is ordinary behaviour.
+    /// Per run: restarts at zero when a new enumeration begins while no other one is active. Only a thrown exception counts; an item skipped because the predicate returned <see langword="true"/> is ordinary behaviour.
     /// </remarks>
     public int CurrentErrorItemCount => _errors.Count;
 
@@ -165,6 +165,8 @@ public sealed class SkipWhileTransformer<T> : ITransformAsync<T, T>, IReportsIte
         [EnumeratorCancellation] CancellationToken token = default
     )
     {
+        using var run = _errors.BeginRun();
+
         var skipping = true;
         var itemNumber = 0L;
 
@@ -213,6 +215,8 @@ public sealed class SkipWhileTransformer<T> : ITransformAsync<T, T>, IReportsIte
         [EnumeratorCancellation] CancellationToken token = default
     )
     {
+        using var run = _errors.BeginRun();
+
         var skipping = true;
         var itemNumber = 0L;
 

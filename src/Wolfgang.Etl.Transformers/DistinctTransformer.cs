@@ -135,7 +135,7 @@ public sealed class DistinctTransformer<T> : ITransformAsync<T, T>, IReportsItem
     /// <see cref="ItemErrorAction.Skip"/>.
     /// </summary>
     /// <remarks>
-    /// Cumulative across every enumeration produced by this instance. An item dropped because an
+    /// Per run: restarts at zero when a new enumeration begins while no other one is active. An item dropped because an
     /// equal one was already seen is the transformer doing its job, not an error, and is never
     /// counted.
     /// </remarks>
@@ -150,6 +150,8 @@ public sealed class DistinctTransformer<T> : ITransformAsync<T, T>, IReportsItem
         [EnumeratorCancellation] CancellationToken token = default
     )
     {
+        using var run = _errors.BeginRun();
+
         var seen = new HashSet<T>(comparer);
         var itemNumber = 0L;
 

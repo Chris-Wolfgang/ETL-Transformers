@@ -38,8 +38,8 @@ namespace Wolfgang.Etl.Transformers;
 /// By default an exception thrown by the selector propagates to the caller. Pass a
 /// <see cref="DelegateTransformerOptions"/> whose <see cref="DelegateTransformerOptions.ErrorPolicy"/>
 /// returns <see cref="ItemErrorAction.Skip"/> to drop the failing item and continue instead; skipped
-/// items are counted by <see cref="CurrentErrorItemCount"/>. That count is cumulative across every
-/// enumeration of this instance, while the <see cref="ItemErrorContext.ItemNumber"/> handed to the
+/// items are counted by <see cref="CurrentErrorItemCount"/>. That count is per run (it restarts at zero when a
+/// new enumeration begins while no other one is active), while the <see cref="ItemErrorContext.ItemNumber"/> handed to the
 /// policy is the one-based position within the enumeration that failed.
 /// </para>
 /// </remarks>
@@ -141,7 +141,7 @@ public sealed class SelectTransformer<TSource, TDestination> : ITransformAsync<T
     /// <see cref="ItemErrorAction.Skip"/>.
     /// </summary>
     /// <remarks>
-    /// Cumulative across every enumeration produced by this instance. An item whose failure aborted
+    /// Per run: restarts at zero when a new enumeration begins while no other one is active. An item whose failure aborted
     /// the run is not counted, because the exception is re-thrown instead.
     /// </remarks>
     public int CurrentErrorItemCount => _errors.Count;
@@ -173,6 +173,8 @@ public sealed class SelectTransformer<TSource, TDestination> : ITransformAsync<T
         [EnumeratorCancellation] CancellationToken token = default
     )
     {
+        using var run = _errors.BeginRun();
+
         var itemNumber = 0L;
 
         await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
@@ -209,6 +211,8 @@ public sealed class SelectTransformer<TSource, TDestination> : ITransformAsync<T
         [EnumeratorCancellation] CancellationToken token = default
     )
     {
+        using var run = _errors.BeginRun();
+
         var itemNumber = 0L;
 
         await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))

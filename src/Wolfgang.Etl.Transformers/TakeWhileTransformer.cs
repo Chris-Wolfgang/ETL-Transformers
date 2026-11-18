@@ -129,7 +129,7 @@ public sealed class TakeWhileTransformer<T> : ITransformAsync<T, T>, IReportsIte
     /// <see cref="ItemErrorAction.Skip"/>.
     /// </summary>
     /// <remarks>
-    /// Cumulative across every enumeration produced by this instance. Only a thrown exception
+    /// Per run: restarts at zero when a new enumeration begins while no other one is active. Only a thrown exception
     /// counts; ending the sequence because the predicate returned <see langword="false"/> is
     /// ordinary behaviour and is not an error.
     /// </remarks>
@@ -165,6 +165,8 @@ public sealed class TakeWhileTransformer<T> : ITransformAsync<T, T>, IReportsIte
         [EnumeratorCancellation] CancellationToken token = default
     )
     {
+        using var run = _errors.BeginRun();
+
         var itemNumber = 0L;
 
         await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
@@ -207,6 +209,8 @@ public sealed class TakeWhileTransformer<T> : ITransformAsync<T, T>, IReportsIte
         [EnumeratorCancellation] CancellationToken token = default
     )
     {
+        using var run = _errors.BeginRun();
+
         var itemNumber = 0L;
 
         await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
