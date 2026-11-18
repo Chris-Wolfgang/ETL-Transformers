@@ -47,7 +47,7 @@ public sealed class ThrottleTransformer<T> : ITransformWithCancellationAsync<T, 
     /// days), the limit of <see cref="Task.Delay(TimeSpan, CancellationToken)"/> on the oldest
     /// supported target. Applied on every target so behaviour does not vary by framework.
     /// </summary>
-    private const long MaxIntervalTicks = (long)int.MaxValue * TimeSpan.TicksPerMillisecond;
+    private const long MaxIntervalTicks = int.MaxValue * TimeSpan.TicksPerMillisecond;
 
     private readonly TimeSpan _minInterval;
     private readonly Func<TimeSpan, CancellationToken, Task> _delayAsync;
