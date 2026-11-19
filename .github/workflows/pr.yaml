@@ -2243,13 +2243,15 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73  # v6.1.0
         with:
+          # Newest first. With the ascending order, windows-11-arm runs crashed in the dotnet-install after 7.0
+          # (0xC0000005 / CLR 0x80131506, twice); the cause is not established, this order is an attempted fix.
           dotnet-version: |
-            6.0.x
-            7.0.x
-            8.0.x
-            9.0.x
-            10.0.x
             11.0.x
+            10.0.x
+            9.0.x
+            8.0.x
+            7.0.x
+            6.0.x
 
       - name: Restore .NET workloads
         # Some projects (MAUI / MauiHybrid / Android / iOS / WPF) declare workloads via
