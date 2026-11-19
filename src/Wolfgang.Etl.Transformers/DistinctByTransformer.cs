@@ -32,11 +32,11 @@ namespace Wolfgang.Etl.Transformers;
 /// </para>
 /// <para>
 /// <b>Memory footprint:</b> a fresh <see cref="HashSet{T}"/> of keys is allocated per call to
-/// <see cref="TransformAsync"/> and grows in proportion to the number of unique keys in the
+/// <see cref="TransformAsync(IAsyncEnumerable{TSource})"/> and grows in proportion to the number of unique keys in the
 /// stream.
 /// </para>
 /// <para>
-/// Implements only <see cref="ITransformAsync{TSource, TDestination}"/> - no progress, no cancellation,
+/// Implements <see cref="ITransformWithCancellationAsync{TSource, TDestination}"/> - no progress,
 /// no <c>SkipItemCount</c>/<c>MaximumItemCount</c> limits (unrelated to
 /// <see cref="ItemErrorAction.Skip"/>, which the error policy uses to drop a failing item) - to keep
 /// the hot loop minimal. The one counter is the opt-in <see cref="CurrentErrorItemCount"/>, which stays
@@ -64,7 +64,7 @@ namespace Wolfgang.Etl.Transformers;
 ///     );
 /// </code>
 /// </example>
-public sealed class DistinctByTransformer<TSource, TKey> : ITransformAsync<TSource, TSource>, IReportsItemErrors
+public sealed class DistinctByTransformer<TSource, TKey> : ITransformWithCancellationAsync<TSource, TSource>, IReportsItemErrors
     where TSource : notnull
     where TKey : notnull
 {
@@ -166,6 +166,23 @@ public sealed class DistinctByTransformer<TSource, TKey> : ITransformAsync<TSour
         ArgumentNullException.ThrowIfNull(items);
 
         return DistinctByAsync(items, _keySelector, _comparer);
+    }
+
+
+
+    /// <summary>
+    /// Transforms <paramref name="items"/> like the overload without a token, and forwards
+    /// <paramref name="token"/> to the stages above this one and to the source.
+    /// </summary>
+    /// <param name="items">The sequence to transform.</param>
+    /// <param name="token">A token that cancels the enumeration, including the source.</param>
+    /// <returns>The transformed sequence.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="items"/> is <see langword="null"/>.</exception>
+    public IAsyncEnumerable<TSource> TransformAsync(IAsyncEnumerable<TSource> items, CancellationToken token)
+    {
+        ArgumentNullException.ThrowIfNull(items);
+
+        return DistinctByAsync(items, _keySelector, _comparer, token: token);
     }
 
 

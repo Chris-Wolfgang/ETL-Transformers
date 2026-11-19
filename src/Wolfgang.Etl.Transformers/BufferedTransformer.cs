@@ -42,7 +42,7 @@ namespace Wolfgang.Etl.Transformers;
 /// throws the original exception (unwrapped) once any already-buffered items have drained.
 /// </para>
 /// <para>
-/// Implements only <see cref="ITransformAsync{TSource, TDestination}"/> - matching the
+/// Implements <see cref="ITransformWithCancellationAsync{TSource, TDestination}"/> - matching the
 /// lightweight pattern of the rest of the library. The producer task's lifecycle is managed
 /// internally via the iterator's disposal contract.
 /// </para>
@@ -56,7 +56,7 @@ namespace Wolfgang.Etl.Transformers;
 ///         .Pipe(loader);
 /// </code>
 /// </example>
-public sealed class BufferedTransformer<T> : ITransformAsync<T, T>
+public sealed class BufferedTransformer<T> : ITransformWithCancellationAsync<T, T>
     where T : notnull
 {
     private readonly int _capacity;
@@ -99,6 +99,23 @@ public sealed class BufferedTransformer<T> : ITransformAsync<T, T>
         ArgumentNullException.ThrowIfNull(items);
 
         return BufferAsync(items, _capacity);
+    }
+
+
+
+    /// <summary>
+    /// Transforms <paramref name="items"/> like the overload without a token, and forwards
+    /// <paramref name="token"/> to the stages above this one and to the source.
+    /// </summary>
+    /// <param name="items">The sequence to transform.</param>
+    /// <param name="token">A token that cancels the enumeration, including the source.</param>
+    /// <returns>The transformed sequence.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="items"/> is <see langword="null"/>.</exception>
+    public IAsyncEnumerable<T> TransformAsync(IAsyncEnumerable<T> items, CancellationToken token)
+    {
+        ArgumentNullException.ThrowIfNull(items);
+
+        return BufferAsync(items, _capacity, externalToken: token);
     }
 
 

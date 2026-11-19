@@ -77,7 +77,7 @@ await loader.LoadAsync(projected.TransformAsync(filtered.TransformAsync(buffered
 |---------------|-------------|
 | `ChainTransformer<TSource, TIntermediate, TDestination>` | Composes two `ITransformAsync` transformers into one |
 | `ChainTransformerWithCancellation<TSource, TIntermediate, TDestination>` | Same as above but propagates `CancellationToken` through both stages |
-| `TransformerExtensions.Then(...)` | Fluent composition — two overloads: one for `ITransformAsync` pairs, one for `ITransformWithCancellationAsync` pairs. `PassThroughTransformer<T>` and `ThrottleTransformer<T>` are the only transformers in this package that implement `ITransformWithCancellationAsync`, so the cancellation-aware overload only applies to chains built from them (and custom transformers you write); `where.Then(select)` uses the plain overload |
+| `TransformerExtensions.Then(...)` | Fluent composition — two overloads: one for `ITransformAsync` pairs, one for `ITransformWithCancellationAsync` pairs. every transformer in this package implements `ITransformWithCancellationAsync`, so chains built from them use the cancellation-aware overload and a token passed to `TransformAsync(items, token)` reaches the source; chains that include a transformer implementing only `ITransformAsync` use the plain overload |
 | `TransformerExtensions.Buffered(...)` | Inline buffer insertion — sugar for `new BufferedTransformer<T>(n).TransformAsync(source)` |
 
 ### Error handling

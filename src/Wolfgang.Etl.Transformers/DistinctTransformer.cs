@@ -24,14 +24,14 @@ namespace Wolfgang.Etl.Transformers;
 /// </para>
 /// <para>
 /// <b>Memory footprint:</b> a fresh <see cref="HashSet{T}"/> is allocated per call to
-/// <see cref="TransformAsync"/> and grows in proportion to the number of unique items in the
+/// <see cref="TransformAsync(IAsyncEnumerable{T})"/> and grows in proportion to the number of unique items in the
 /// stream. For unbounded streams or streams with many unique items, prefer
 /// <see cref="DistinctByTransformer{TSource, TKey}"/> with a small key type, or apply Distinct
 /// only after a stage that bounds cardinality.
 /// </para>
 /// <para>
-/// Implements <see cref="ITransformAsync{TSource, TDestination}"/> and <see cref="IReportsItemErrors"/>
-/// - no progress, no cancellation, no <c>SkipItemCount</c>/<c>MaximumItemCount</c> limits (unrelated to
+/// Implements <see cref="ITransformWithCancellationAsync{TSource, TDestination}"/> and <see cref="IReportsItemErrors"/>
+/// - no progress, no <c>SkipItemCount</c>/<c>MaximumItemCount</c> limits (unrelated to
 /// <see cref="ItemErrorAction.Skip"/>, which the error policy uses to drop a failing item) - to keep
 /// the hot loop minimal. The one counter is the opt-in <see cref="CurrentErrorItemCount"/>, which stays
 /// at zero on the default path.
@@ -56,7 +56,7 @@ namespace Wolfgang.Etl.Transformers;
 ///     var insensitive = new DistinctTransformer&lt;string&gt;(StringComparer.OrdinalIgnoreCase);
 /// </code>
 /// </example>
-public sealed class DistinctTransformer<T> : ITransformAsync<T, T>, IReportsItemErrors
+public sealed class DistinctTransformer<T> : ITransformWithCancellationAsync<T, T>, IReportsItemErrors
     where T : notnull
 {
     private readonly IEqualityComparer<T>? _comparer;
@@ -126,6 +126,23 @@ public sealed class DistinctTransformer<T> : ITransformAsync<T, T>, IReportsItem
         ArgumentNullException.ThrowIfNull(items);
 
         return DistinctAsync(items, _comparer);
+    }
+
+
+
+    /// <summary>
+    /// Transforms <paramref name="items"/> like the overload without a token, and forwards
+    /// <paramref name="token"/> to the stages above this one and to the source.
+    /// </summary>
+    /// <param name="items">The sequence to transform.</param>
+    /// <param name="token">A token that cancels the enumeration, including the source.</param>
+    /// <returns>The transformed sequence.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="items"/> is <see langword="null"/>.</exception>
+    public IAsyncEnumerable<T> TransformAsync(IAsyncEnumerable<T> items, CancellationToken token)
+    {
+        ArgumentNullException.ThrowIfNull(items);
+
+        return DistinctAsync(items, _comparer, token: token);
     }
 
 
