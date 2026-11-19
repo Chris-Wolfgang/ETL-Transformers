@@ -1109,15 +1109,35 @@ jobs:
       # nuget-packages artifact as reproducible-build-manifest.json — no regeneration
       # here, which would hash the signed (non-reproducible) packages.
 
+      # SHA256SUMS.txt: the per-assembly hashes from the pre-signing manifest, in `sha256sum`
+      # format ("<hash>  <package>!<path inside the package>"), so a verifier can compare their own
+      # rebuild line by line. Only .dll/.pdb entries are listed: package files are not
+      # byte-reproducible (REPRODUCIBLE-BUILD.md) and the attached packages may be signed.
+      - name: Write SHA256SUMS.txt from the build manifest
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          m = json.load(open("nuget-packages/reproducible-build-manifest.json", encoding="utf-8"))
+          lines = sorted(f"{c['sha256']}  {a['file']}!{c['path']}" for a in m["artifacts"] for c in a["contents"])
+          if not lines:
+              raise SystemExit("the manifest lists no assemblies")
+          with open("nuget-packages/SHA256SUMS.txt", "w", encoding="utf-8", newline=chr(10)) as out:
+              out.write(chr(10).join(lines) + chr(10))
+          print(f"SHA256SUMS.txt: {len(lines)} entries; sdk {m['sdkVersion']}, commit {m['commit']}")
+          PY
+
       # SLSA build-provenance attestation (Sigstore-backed, keyless). Proves the
-      # packages were produced by this workflow from this repo. Consumers verify with
-      # `gh attestation verify <pkg> --repo Chris-Wolfgang/ETL-Transformers`.
+      # packages, the hash list and the manifest were produced by this workflow from this repo.
+      # Consumers verify with `gh attestation verify <file> --repo Chris-Wolfgang/ETL-Transformers`.
       - name: Attest build provenance (SLSA)
         uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
         with:
           subject-path: |
             ./nuget-packages/*.nupkg
             ./nuget-packages/*.snupkg
+            ./nuget-packages/SHA256SUMS.txt
+            ./nuget-packages/reproducible-build-manifest.json
 
       # `gh` is pre-installed on the runner, so no third-party action is needed
       # to upload release assets (zizmor superfluous-actions).
@@ -1128,6 +1148,6 @@ jobs:
           TAG_NAME: ${{ github.event.release.tag_name }}
         run: |
           shopt -s nullglob
-          files=(./nuget-packages/*.nupkg ./nuget-packages/*.snupkg ./nuget-packages/*.bom.json ./nuget-packages/reproducible-build-manifest.json release-coverage.zip)
+          files=(./nuget-packages/*.nupkg ./nuget-packages/*.snupkg ./nuget-packages/*.bom.json ./nuget-packages/reproducible-build-manifest.json ./nuget-packages/SHA256SUMS.txt release-coverage.zip)
           echo "Uploading ${#files[@]} asset(s) to release $TAG_NAME"
           gh release upload "$TAG_NAME" "${files[@]}" --clobber
