@@ -50,7 +50,7 @@ therefore binary drop-in replacements: `0.2.0`, `0.2.1`, `0.2.2` all present
 
 The decision stands, but `AssemblyVersion` is no longer a hand-maintained literal like the
 `0.2.0.0` shown under Context. Since 0.7.0 the csproj derives it from `<Version>`, following
-ETL-Abstractions ADR-0011:
+ETL-Abstractions ADR-0015:
 
 ```xml
 <Version>0.8.1</Version>

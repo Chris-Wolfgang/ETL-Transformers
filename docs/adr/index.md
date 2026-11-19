@@ -15,3 +15,5 @@ the old one `Superseded by ADR-XXXX` and add the replacement).
 | [0002](0002-notnull-constraint-on-record-type.md) | `where T : notnull` on transformer record types | Accepted |
 | [0003](0003-multi-tfm-targeting.md) | Broad multi-TFM matrix (net462 → net10.0) | Accepted |
 | [0004](0004-assemblyversion-pinned-to-minor.md) | Pin `AssemblyVersion` to `major.minor.0.0` | Accepted |
+| [0005](0005-trim-and-native-aot-compatibility.md) | Declare the library trim- and Native-AOT-compatible, and prove it twice | Accepted |
+| [0006](0006-record-architecture-decisions.md) | Record architecture decisions | Accepted |
