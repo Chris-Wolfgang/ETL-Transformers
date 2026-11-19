@@ -168,8 +168,8 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
     /// returned <see cref="ItemErrorAction.Skip"/>.
     /// </summary>
     /// <remarks>
-    /// Counts source items, not expanded results, and is cumulative across every enumeration
-    /// produced by this instance. A source item whose failure aborted the run is not counted,
+    /// Counts source items, not expanded results, and is per run:
+    /// it restarts at zero when a new enumeration begins while no other one is active. A source item whose failure aborted the run is not counted,
     /// because the exception is re-thrown instead.
     /// </remarks>
     public int CurrentErrorItemCount => _errors.Count;
@@ -208,8 +208,8 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
         [EnumeratorCancellation] CancellationToken token = default
     )
     {
+        using var run = _errors.BeginRun();
         var itemNumber = 0L;
-
         await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
         {
             itemNumber++;
@@ -278,6 +278,8 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
         [EnumeratorCancellation] CancellationToken token = default
     )
     {
+        using var run = _errors.BeginRun();
+
         var itemNumber = 0L;
 
         await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))

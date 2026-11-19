@@ -146,7 +146,7 @@ public sealed class DistinctByTransformer<TSource, TKey> : ITransformAsync<TSour
     /// policy returned <see cref="ItemErrorAction.Skip"/>.
     /// </summary>
     /// <remarks>
-    /// Cumulative across every enumeration produced by this instance, and counts only failures - an
+    /// Per run: restarts at zero when a new enumeration begins while no other one is active, and counts only failures - an
     /// item dropped as a duplicate is not an error. An item whose failure aborted the run is not
     /// counted either, because the exception is re-thrown instead.
     /// </remarks>
@@ -178,6 +178,8 @@ public sealed class DistinctByTransformer<TSource, TKey> : ITransformAsync<TSour
         [EnumeratorCancellation] CancellationToken token = default
     )
     {
+        using var run = _errors.BeginRun();
+
         var seen = new HashSet<TKey>(comparer);
         var itemNumber = 0L;
 

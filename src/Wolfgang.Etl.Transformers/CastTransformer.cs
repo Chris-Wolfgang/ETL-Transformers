@@ -114,7 +114,7 @@ public sealed class CastTransformer<TSource, TDestination> : ITransformAsync<TSo
     /// returned <see cref="ItemErrorAction.Skip"/>.
     /// </summary>
     /// <remarks>
-    /// Cumulative across every enumeration produced by this instance. An item whose failure aborted
+    /// Per run: restarts at zero when a new enumeration begins while no other one is active. An item whose failure aborted
     /// the run is not counted, because the exception is re-thrown instead.
     /// </remarks>
     public int CurrentErrorItemCount => _errors.Count;
@@ -146,6 +146,8 @@ public sealed class CastTransformer<TSource, TDestination> : ITransformAsync<TSo
         [EnumeratorCancellation] CancellationToken token = default
     )
     {
+        using var run = _errors.BeginRun();
+
         var itemNumber = 0L;
 
         await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))

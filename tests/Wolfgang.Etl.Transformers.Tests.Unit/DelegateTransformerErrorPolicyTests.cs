@@ -133,7 +133,7 @@ public class DelegateTransformerErrorPolicyTests
 
 
     [Fact]
-    public async Task SelectTransformer_error_count_accumulates_across_enumerations()
+    public async Task SelectTransformer_error_count_restarts_for_each_run()
     {
         var sut = new SelectTransformer<int, string>
         (
@@ -144,7 +144,7 @@ public class DelegateTransformerErrorPolicyTests
         _ = await CollectAsync(sut.TransformAsync(ToAsync(new[] { 1, 2 })));
         _ = await CollectAsync(sut.TransformAsync(ToAsync(new[] { 1, 2 })));
 
-        Assert.Equal(2, sut.CurrentErrorItemCount);
+        Assert.Equal(1, sut.CurrentErrorItemCount);
     }
 
 

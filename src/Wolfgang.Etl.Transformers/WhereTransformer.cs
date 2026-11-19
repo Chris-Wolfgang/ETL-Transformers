@@ -137,7 +137,7 @@ public sealed class WhereTransformer<T> : ITransformAsync<T, T>, IReportsItemErr
     /// <see cref="ItemErrorAction.Skip"/>.
     /// </summary>
     /// <remarks>
-    /// Cumulative across every enumeration produced by this instance, and counts only failures - an
+    /// Per run: restarts at zero when a new enumeration begins while no other one is active, and counts only failures - an
     /// item the predicate deliberately filtered out is not an error. An item whose failure aborted
     /// the run is not counted either, because the exception is re-thrown instead.
     /// </remarks>
@@ -170,6 +170,8 @@ public sealed class WhereTransformer<T> : ITransformAsync<T, T>, IReportsItemErr
         [EnumeratorCancellation] CancellationToken token = default
     )
     {
+        using var run = _errors.BeginRun();
+
         var itemNumber = 0L;
 
         await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
@@ -209,6 +211,8 @@ public sealed class WhereTransformer<T> : ITransformAsync<T, T>, IReportsItemErr
         [EnumeratorCancellation] CancellationToken token = default
     )
     {
+        using var run = _errors.BeginRun();
+
         var itemNumber = 0L;
 
         await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
