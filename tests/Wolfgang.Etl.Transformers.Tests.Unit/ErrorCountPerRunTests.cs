@@ -19,6 +19,11 @@ public class ErrorCountPerRunTests
 
 
 
+    // The repeated 1 makes Distinct compare two equal-hash items, so the comparer's Equals is reached.
+    private static readonly int[] Source = { 1, 2, 3, 1 };
+
+
+
     private static int FailOnTwo(int i) => i == 2 ? throw new InvalidOperationException("bad") : i;
 
 
@@ -78,10 +83,10 @@ public class ErrorCountPerRunTests
     {
         var (sut, reporter) = Build(name);
 
-        _ = await CollectAsync(sut.TransformAsync(ToAsync(new[] { 1, 2, 3 })));
+        _ = await CollectAsync(sut.TransformAsync(ToAsync(Source)));
         Assert.Equal(1, reporter.CurrentErrorItemCount);
 
-        _ = await CollectAsync(sut.TransformAsync(ToAsync(new[] { 1, 2, 3 })));
+        _ = await CollectAsync(sut.TransformAsync(ToAsync(Source)));
         Assert.Equal(1, reporter.CurrentErrorItemCount);
     }
 
