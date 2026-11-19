@@ -205,7 +205,7 @@ public class EnumeratorCancellationPropagationTests
         var finished = await Task.WhenAny(consume, Task.Delay(TimeSpan.FromSeconds(10)));
 
         Assert.Same(consume, finished);
-        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => consume);
+        Assert.True(EndedByCancellation(consume));
     }
 
 
@@ -241,8 +241,15 @@ public class EnumeratorCancellationPropagationTests
         var finished = await Task.WhenAny(consume, Task.Delay(TimeSpan.FromSeconds(10)));
 
         Assert.Same(consume, finished);
-        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => consume);
+        Assert.True(EndedByCancellation(consume));
         Assert.True(watch.Elapsed < TimeSpan.FromSeconds(10), $"took {watch.Elapsed}");
+    }
+
+    // The task has already completed (asserted by the caller), so inspect it rather than await it: an
+    // OperationCanceledException thrown by an async lambda surfaces as a Canceled task.
+    private static bool EndedByCancellation(Task finished)
+    {
+        return finished.IsCanceled || (finished.IsFaulted && finished.Exception!.GetBaseException() is OperationCanceledException);
     }
 }
 
