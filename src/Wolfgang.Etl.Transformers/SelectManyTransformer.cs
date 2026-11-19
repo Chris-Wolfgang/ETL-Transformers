@@ -209,9 +209,7 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformAsy
     )
     {
         using var run = _errors.BeginRun();
-
         var itemNumber = 0L;
-
         await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
         {
             itemNumber++;
