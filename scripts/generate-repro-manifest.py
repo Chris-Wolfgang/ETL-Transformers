@@ -14,6 +14,7 @@ Pure standard library — runs anywhere Python 3 does, no jq or NuGet tooling re
 Usage:
     generate-repro-manifest.py --packages <dir> --out <file.json> \
         [--repository owner/repo] [--tag v0.0.0] [--commit <sha>] [--sdk <version>]
+        [--runner-image <image>]
 """
 from __future__ import annotations
 
@@ -39,6 +40,15 @@ def sha256_file(path: str) -> str:
     return digest.hexdigest()
 
 
+def default_runner_image() -> str:
+    """The GitHub-hosted runner image (ImageOS/ImageVersion, e.g. ``win25/20261110.1``), or ""."""
+    image_os = os.environ.get("ImageOS", "")
+    image_version = os.environ.get("ImageVersion", "")
+    if image_os and image_version:
+        return f"{image_os}/{image_version}"
+    return image_os or image_version
+
+
 def package_contents(path: str) -> list[dict[str, str]]:
     """SHA-256 of each assembly under lib/ inside a .nupkg/.snupkg (sorted, stable)."""
     contents: list[dict[str, str]] = []
@@ -58,6 +68,11 @@ def main() -> int:
     parser.add_argument("--tag", default="")
     parser.add_argument("--commit", default=os.environ.get("GITHUB_SHA", ""))
     parser.add_argument("--sdk", default="", help="the .NET SDK version used to build")
+    parser.add_argument(
+        "--runner-image",
+        default=default_runner_image(),
+        help="the runner image that built the packages (default: $ImageOS/$ImageVersion)",
+    )
     args = parser.parse_args()
 
     artifacts = []
@@ -83,6 +98,7 @@ def main() -> int:
         "tag": args.tag,
         "commit": args.commit,
         "sdkVersion": args.sdk,
+        "runnerImage": args.runner_image,
         "buildCommand": (
             "dotnet pack src/Wolfgang.Etl.Transformers/Wolfgang.Etl.Transformers.csproj "
             "-c Release -p:ContinuousIntegrationBuild=true -p:Deterministic=true"
