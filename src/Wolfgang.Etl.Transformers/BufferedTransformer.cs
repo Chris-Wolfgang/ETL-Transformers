@@ -155,6 +155,9 @@ public sealed class BufferedTransformer<T> : ITransformWithCancellationAsync<T, 
             {
                 yield return item;
             }
+
+            // A source may honour cancellation by ending quietly; do not let that read as a complete result.
+            externalToken.ThrowIfCancellationRequested();
         }
         finally
         {
@@ -205,9 +208,13 @@ public sealed class BufferedTransformer<T> : ITransformWithCancellationAsync<T, 
 
             channel.Writer.Complete();
         }
-        catch (OperationCanceledException) when (token.IsCancellationRequested)
+        catch (OperationCanceledException ex) when (token.IsCancellationRequested)
         {
-            channel.Writer.TryComplete();
+            // Complete with the cancellation rather than quietly. A bare TryComplete() ends the
+            // sequence normally, and whether the reader then sees that end or its own token firing
+            // first is a race that differs by target framework (issue #781): a cancelled buffered
+            // stage could look like a short but complete result.
+            channel.Writer.TryComplete(ex);
         }
 #pragma warning disable CA1031 // intentional: surface ANY producer fault to the consumer via the channel
         catch (Exception ex)

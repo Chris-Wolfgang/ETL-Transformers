@@ -202,11 +202,10 @@ public class EnumeratorCancellationPropagationTests
             }
         );
 
-        // Completion by exception or by a quietly ended sequence are both accepted; see the issue about
-        // BufferedTransformer on net5.0. What matters is that the stalled source is interrupted.
         var finished = await Task.WhenAny(consume, Task.Delay(TimeSpan.FromSeconds(10)));
 
         Assert.Same(consume, finished);
+        Assert.True(EndedByCancellation(consume));
     }
 
 
@@ -229,9 +228,6 @@ public class EnumeratorCancellationPropagationTests
         cts.CancelAfter(200);
         var watch = Stopwatch.StartNew();
 
-        // Whether the consumer sees an OperationCanceledException or a quietly truncated sequence
-        // depends on the target framework's channel implementation; the property under test here is
-        // that the stalled source is interrupted promptly, so completion in either form is accepted.
         var consume = Task.Run
         (
             async () =>
@@ -245,7 +241,15 @@ public class EnumeratorCancellationPropagationTests
         var finished = await Task.WhenAny(consume, Task.Delay(TimeSpan.FromSeconds(10)));
 
         Assert.Same(consume, finished);
+        Assert.True(EndedByCancellation(consume));
         Assert.True(watch.Elapsed < TimeSpan.FromSeconds(10), $"took {watch.Elapsed}");
+    }
+
+    // The task has already completed (asserted by the caller), so inspect it rather than await it: an
+    // OperationCanceledException thrown by an async lambda surfaces as a Canceled task.
+    private static bool EndedByCancellation(Task finished)
+    {
+        return finished.IsCanceled || (finished.IsFaulted && finished.Exception?.GetBaseException() is OperationCanceledException);
     }
 }
 
