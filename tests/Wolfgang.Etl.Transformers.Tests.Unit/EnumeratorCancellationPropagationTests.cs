@@ -249,7 +249,7 @@ public class EnumeratorCancellationPropagationTests
     // OperationCanceledException thrown by an async lambda surfaces as a Canceled task.
     private static bool EndedByCancellation(Task finished)
     {
-        return finished.IsCanceled || (finished.IsFaulted && finished.Exception!.GetBaseException() is OperationCanceledException);
+        return finished.IsCanceled || (finished.IsFaulted && finished.Exception?.GetBaseException() is OperationCanceledException);
     }
 }
 
