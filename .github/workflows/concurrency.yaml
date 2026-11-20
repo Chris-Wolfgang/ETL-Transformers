@@ -47,7 +47,10 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
         with:
-          dotnet-version: 8.0.x
+          # 8.0 for the Coyote runtime; 11.0 because global.json pins the 11.0 SDK.
+          dotnet-version: |
+            8.0.x
+            11.0.x
 
       # --- Layer 1: blocking stress gate (runs the un-rewritten assembly) ---
       - name: Concurrency stress tests
