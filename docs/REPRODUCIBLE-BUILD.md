@@ -24,8 +24,8 @@ bit-for-bit identical, **on Linux and Windows alike**:
 
 ## How it is achieved
 
-Determinism is configured in [`Directory.Build.props`](Directory.Build.props) and
-[`Directory.Build.targets`](Directory.Build.targets):
+Determinism is configured in [`Directory.Build.props`](../Directory.Build.props) and
+[`Directory.Build.targets`](../Directory.Build.targets):
 
 | Setting | Effect |
 | --- | --- |
@@ -41,16 +41,16 @@ operating-system-specific inputs that remained.
 
 ## Continuous verification
 
-The [`Reproducible Build`](.github/workflows/reproducible-build.yaml) workflow
+The [`Reproducible Build`](../.github/workflows/reproducible-build.yaml) workflow
 checks reproducibility on every pull request:
 
-1. It packs the project on **both** `ubuntu-latest` and `windows-latest` with
-   `ContinuousIntegrationBuild=true`.
-2. Each job records the `sha256sum` of every produced `.dll`, `.pdb`, `.nupkg`
-   and `.snupkg`.
-3. A final job diffs the two manifests for the `.dll` and `.pdb` files and **fails** if
-   any hash differs. The package files are left out of the comparison because they
-   embed the pack time (see above).
+1. **Gate (Ubuntu).** It packs the commit twice with `CI=true`, with a full `git clean`
+   in between, and fails unless every `.dll` and `.pdb` is byte-identical between the two
+   builds and every `.nupkg` / `.snupkg` matches entry by entry. The package files
+   themselves are never compared: they embed the pack time (see above).
+2. **Report (Windows).** It packs the same commit once on `windows-latest` and diffs the
+   hashes against the Ubuntu manifest in the job summary. Cross-OS identity is reported,
+   not gated, and this job never fails the workflow.
 
 ## Verify it yourself
 
@@ -83,13 +83,13 @@ time, so it differs on every build.
 
 > **Note on the SDK version.** Reproducibility is guaranteed for a *fixed* .NET
 > SDK. A different SDK/compiler version can legitimately emit different (but still
-> deterministic) bytes. Use the SDK pinned by the CI workflow (`10.0.x`) when
+> deterministic) bytes. Use the `sdkVersion` recorded in the release manifest ([`global.json`](../global.json) pins the 10.0 SDK feature band) when
 > reproducing a release.
 
 ## The release manifest
 
 Every published release attaches a **`reproducible-build-manifest.json`** asset (built
-by [`scripts/generate-repro-manifest.py`](scripts/generate-repro-manifest.py) inside
+by [`scripts/generate-repro-manifest.py`](../scripts/generate-repro-manifest.py) inside
 `release.yaml`). It records, for that exact tag:
 
 - the `repository`, `tag`, `commit`, and `sdkVersion` used,
@@ -122,8 +122,27 @@ diff \
   <(jq -S '[.artifacts[] | {file, contents}]' my-manifest.json)
 ```
 
+Each release also attaches **`SHA256SUMS.txt`**: the same per-assembly hashes in
+`sha256sum` format (`<hash>  <package>!<path inside the package>`), one line per
+`.dll`/`.pdb`. To check your own rebuild against it, hash the matching entries from your
+`artifacts` packages and compare line by line.
+
 An empty `diff` is proof that the assemblies and symbols you can rebuild from source are
 byte-identical to the ones that were published.
+
+## Verify the attestation
+
+The packages, `SHA256SUMS.txt` and `reproducible-build-manifest.json` are covered by a
+SLSA build-provenance attestation recorded by the release workflow. With the GitHub CLI:
+
+```bash
+gh attestation verify Wolfgang.Etl.Transformers.<version>.nupkg --repo Chris-Wolfgang/ETL-Transformers
+gh attestation verify SHA256SUMS.txt --repo Chris-Wolfgang/ETL-Transformers
+gh attestation verify reproducible-build-manifest.json --repo Chris-Wolfgang/ETL-Transformers
+```
+
+This proves the files were produced by that repository's release workflow; the rebuild
+above proves the assemblies match the tagged source.
 
 ## File a discrepancy
 
@@ -137,7 +156,7 @@ supply-chain signal worth reporting. Please
 - your generated `my-manifest.json` and the released `reproducible-build-manifest.json`,
 - the `diff` output.
 
-Discrepancies are treated as a security concern — see [SECURITY.md](SECURITY.md).
+Discrepancies are treated as a security concern — see [SECURITY.md](../SECURITY.md).
 
 ## Publish a third-party attestation
 

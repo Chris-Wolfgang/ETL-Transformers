@@ -72,7 +72,7 @@ dependency graph, for vulnerability scanning and license review.
 
 The build is byte-for-byte reproducible: you can rebuild the tag from source and compare
 hashes against the attached `reproducible-build-manifest.json`. See
-[REPRODUCIBLE-BUILD.md](REPRODUCIBLE-BUILD.md) for the full procedure.
+[REPRODUCIBLE-BUILD.md](docs/REPRODUCIBLE-BUILD.md) for the full procedure.
 
 Together these close the chain: **reproducible build** (bits match source) → **provenance**
 (this repo/workflow produced them) → **signature** (they were not altered after signing) →
