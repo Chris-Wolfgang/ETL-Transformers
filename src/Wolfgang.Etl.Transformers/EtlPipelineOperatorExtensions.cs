@@ -285,12 +285,25 @@ public static class EtlPipelineOperatorExtensions
     /// </param>
     /// <returns>A pipeline with duplicate items removed, preserving first-seen order.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="pipeline"/> is <see langword="null"/>.</exception>
-    public static IEtlPipeline<T> Distinct<T>(this IEtlPipeline<T> pipeline, IEqualityComparer<T>? comparer = null)
+    public static IEtlPipeline<T> Distinct<T>(this IEtlPipeline<T> pipeline, IEqualityComparer<T>? comparer)
         where T : notnull
     {
         ArgumentNullException.ThrowIfNull(pipeline);
 
         return pipeline.Through(new DistinctTransformer<T>(comparer));
+    }
+
+
+
+    /// <summary>Removes duplicate items using <see cref="EqualityComparer{T}.Default"/>.</summary>
+    /// <typeparam name="T">The item type. Must be non-null.</typeparam>
+    /// <param name="pipeline">The pipeline to deduplicate.</param>
+    /// <returns>A pipeline with duplicate items removed, preserving first-seen order.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="pipeline"/> is <see langword="null"/>.</exception>
+    public static IEtlPipeline<T> Distinct<T>(this IEtlPipeline<T> pipeline)
+        where T : notnull
+    {
+        return pipeline.Distinct(comparer: null);
     }
 
 
@@ -327,13 +340,29 @@ public static class EtlPipelineOperatorExtensions
     /// </param>
     /// <returns>A pipeline keeping the first item seen for each distinct key.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="pipeline"/> or <paramref name="keySelector"/> is <see langword="null"/>.</exception>
-    public static IEtlPipeline<TSource> DistinctBy<TSource, TKey>(this IEtlPipeline<TSource> pipeline, Func<TSource, TKey> keySelector, IEqualityComparer<TKey>? comparer = null)
+    public static IEtlPipeline<TSource> DistinctBy<TSource, TKey>(this IEtlPipeline<TSource> pipeline, Func<TSource, TKey> keySelector, IEqualityComparer<TKey>? comparer)
         where TSource : notnull
         where TKey : notnull
     {
         ArgumentNullException.ThrowIfNull(pipeline);
 
         return pipeline.Through(new DistinctByTransformer<TSource, TKey>(keySelector, comparer));
+    }
+
+
+
+    /// <summary>Removes items with duplicate keys using <see cref="EqualityComparer{TKey}.Default"/>.</summary>
+    /// <typeparam name="TSource">The item type. Must be non-null.</typeparam>
+    /// <typeparam name="TKey">The key type. Must be non-null.</typeparam>
+    /// <param name="pipeline">The pipeline to deduplicate.</param>
+    /// <param name="keySelector">Extracts the key each item is deduplicated by.</param>
+    /// <returns>A pipeline keeping the first item seen for each distinct key.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="pipeline"/> or <paramref name="keySelector"/> is <see langword="null"/>.</exception>
+    public static IEtlPipeline<TSource> DistinctBy<TSource, TKey>(this IEtlPipeline<TSource> pipeline, Func<TSource, TKey> keySelector)
+        where TSource : notnull
+        where TKey : notnull
+    {
+        return pipeline.DistinctBy(keySelector, comparer: null);
     }
 
 
