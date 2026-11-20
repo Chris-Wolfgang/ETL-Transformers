@@ -83,7 +83,7 @@ time, so it differs on every build.
 
 > **Note on the SDK version.** Reproducibility is guaranteed for a *fixed* .NET
 > SDK. A different SDK/compiler version can legitimately emit different (but still
-> deterministic) bytes. Use the `sdkVersion` recorded in the release manifest ([`global.json`](../global.json) pins the 10.0 SDK feature band) when
+> deterministic) bytes. Use the `sdkVersion` recorded in the release manifest ([`global.json`](../global.json) pins the 11.0 SDK feature band) when
 > reproducing a release.
 
 ## The release manifest
@@ -93,6 +93,8 @@ by [`scripts/generate-repro-manifest.py`](../scripts/generate-repro-manifest.py)
 `release.yaml`). It records, for that exact tag:
 
 - the `repository`, `tag`, `commit`, and `sdkVersion` used,
+- the `runnerImage` that built the packages (the GitHub-hosted image name and version,
+  `ImageOS/ImageVersion`, e.g. `win25/20261110.1`; empty when built elsewhere),
 - the exact `buildCommand`,
 - the SHA-256 of every published `.nupkg` / `.snupkg` (informational: it identifies the
   exact file released, but cannot be reproduced because the package embeds its pack time),
