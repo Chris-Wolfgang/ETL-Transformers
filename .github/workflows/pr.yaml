@@ -2582,6 +2582,12 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Setup .NET
+        uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
+        with:
+          # global.json pins the 11.0 SDK; do not rely on the runner image having it.
+          dotnet-version: 11.0.x
+
       - name: Restore CI tools (DevSkim CLI)
         # Pinned in .config/dotnet-tools.json (a protected file); never installed unversioned.
         run: dotnet tool restore
