@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1794750406329,
+  "lastUpdate": 1795357310628,
   "repoUrl": "https://github.com/Chris-Wolfgang/ETL-Transformers",
   "entries": {
     "Mutation score": [
@@ -161,6 +161,33 @@ window.BENCHMARK_DATA = {
           {
             "name": "Mutation score (tests/Wolfgang.Etl.Transformers.Tests.Unit)",
             "value": 86.4,
+            "unit": "%"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Chris Wolfgang",
+            "username": "Chris-Wolfgang",
+            "email": "210299580+Chris-Wolfgang@users.noreply.github.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "b051133512301b7e8c208bd8d2f40ecc64a87497",
+          "message": "build: record the runner image in the reproducible-build manifest (#470) (#802)\n\n#470 asks the release manifest to record the SDK version, runner image and commit;\n#792 left the runner image out. generate-repro-manifest.py now writes runnerImage,\ndefaulting to the hosted runner's $ImageOS/$ImageVersion (override: --runner-image).\nThe verifier doc lists the field and no longer says global.json pins 10.0 (#795 moved\nit to 11.0.100).\n\nCo-authored-by: Claude Opus 5.5 <noreply@anthropic.com>",
+          "timestamp": "2026-11-20T17:56:25Z",
+          "url": "https://github.com/Chris-Wolfgang/ETL-Transformers/commit/b051133512301b7e8c208bd8d2f40ecc64a87497"
+        },
+        "date": 1795357303941,
+        "tool": "customBiggerIsBetter",
+        "benches": [
+          {
+            "name": "Mutation score (tests/Wolfgang.Etl.Transformers.Tests.Unit)",
+            "value": 82.83,
             "unit": "%"
           }
         ]
