@@ -20,6 +20,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 
 
+## [0.9.0] - 2026-11-23
+
+### Added
+
+- The package now also ships a `net11.0` build, and the unit and integration tests run on the .NET 11 runtime. No target framework was removed. (#752)
+- Added `DelegateTransformerOptions` overloads to the `IEtlPipeline` operators and a `Chunk(size, progress)` overload. (#774)
+- `ThrottleTransformer<T>` exposes its configured pacing interval as `MinInterval`, like `BufferedTransformer<T>.Capacity`, `ChunkTransformer<T>.Size` and `SkipTransformer<T>`/`TakeTransformer<T>.Count`. (#429)
+- Every transformer now implements `ITransformWithCancellationAsync`, adding a `TransformAsync(items, token)` overload that forwards the token to the source. The cancellation-aware `Then` overload now composes any chain of this package's transformers, not only `PassThroughTransformer<T>` and `ThrottleTransformer<T>`. (#784)
+
+### Fixed
+
+- Cancelling a `BufferedTransformer` stage now always ends the enumeration with `OperationCanceledException`. Previously the sequence could end quietly instead, depending on the target framework and on whether the source honoured the token by returning early, so a cancelled run could be mistaken for a complete one. (#789)
+- An `OperationCanceledException` thrown by a delegate is no longer passed to the per-item `ErrorPolicy`, so cancellation propagates instead of being skipped and counted. (#768)
+- `ChunkTransformer<T>` allocates its buffers lazily and its progress count saturates at `int.MaxValue` instead of wrapping negative. (#772)
+- **Binary-incompatible (source-compatible):** `Distinct` and `DistinctBy` on `IEtlPipeline<T>` now have an explicit overload without the comparer instead of an optional `comparer = null` parameter, so the overload with the most parameters is the one that carries optional parameters (RS0027). Calls such as `pipeline.Distinct()` and `pipeline.DistinctBy(x => x.Id)` compile unchanged; code that was compiled against the earlier optional-parameter signature should be rebuilt. (#788)
+- A token supplied with `WithCancellation` now reaches the source through the LINQ-style transformers instead of stopping at the first one. (#769)
+- `CurrentErrorItemCount` is now per run: it restarts at zero when a transformer is enumerated again while no other enumeration of it is active, so re-running a pipeline no longer reports the earlier run's skips in `EtlPipelineProgress.ErrorItemCount`. Enumerations that overlap in time still share one count. (#783)
+- `ThrottleTransformer<T>` rejects a `minInterval` longer than `int.MaxValue` milliseconds in its constructor instead of failing mid-enumeration. (#771)
+- `ThrottleTransformer<T>` implements `ITransformWithCancellationAsync`, so its pacing delay observes the `EtlPipeline` cancellation token. (#770)
+
+### Documentation
+
+- The `AssemblyVersion` policy is now cited as ETL-Abstractions ADR-0015 (csproj comment and ADR 0004); it was cited as an ADR-0011 that never recorded it. (#782)
+- The transformer remarks now say "no `SkipItemCount`/`MaximumItemCount` limits" instead of "no Skip/Max", and the error-policy transformers note that this is unrelated to `ItemErrorAction.Skip`, which they do support. (#425)
+- Corrected the quick-start loader call, the allocation claim, the ADR-0009 reference and the cancellation-aware `Then` description. (#773)
+- XML doc remarks now list every transformer that accepts `DelegateTransformerOptions` (and every one that does not), drop stale "future transformer" and former-name notes, use a self-contained error-policy example, document `ThrottleTransformer<T>` as `ITransformAsync`-only, and say when `ChunkTransformer<T>` reports progress. (#428)
+
+### Internal
+
+- Updated the `Wolfgang.Etl.Abstractions` dependency to 0.27.0. (#777)
+- Updated the `Wolfgang.Etl.Abstractions` dependency (and the `Wolfgang.Etl.TestKit` reference in the examples) to 0.28.0. (#800)
+- The unit suite now also runs as a Native AOT executable (`Tests.Aot`, xunit.v3.aot), so a trim or AOT break in the library fails a test instead of shipping; the library grants that test assembly the same `InternalsVisibleTo` access as `Tests.Unit`. (#453)
+- `PackageValidationBaselineVersion` advances to 0.8.1 now that the package is on the NuGet CDN, so the next release validates its API surface against what actually shipped. (#424)
+- Package metadata: `PackageTags` now describe the current operators, and `Authors` / `Copyright` / `RepositoryType` come from `Directory.Build.props` (the copyright year is no longer hard-coded). Test projects drop unused package references and use `xunit.runner.visualstudio` 3.0.1 on net8.0+. (#429)
+- One guard spelling and one error-policy implementation: `ThrottleTransformer<T>` and the `IEtlPipeline<T>` operators use the polyfilled `ArgumentNullException.ThrowIfNull` / `ArgumentOutOfRangeException.ThrowIfLessThan` (a negative `minInterval` now reports the runtime's standard "must be greater than or equal to" message, with the same `ParamName` and `ActualValue` as before), and the eight `DelegateTransformerOptions` transformers share an internal `ItemErrorCounter` instead of eight copies of the policy-and-counter code. No public API change. (#429)
+
 ## [0.8.1] - 2026-10-17
 
 ### Fixed
