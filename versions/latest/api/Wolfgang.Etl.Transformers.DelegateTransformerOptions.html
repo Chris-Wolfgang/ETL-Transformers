@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/ETL-Transformers/new/v0.8.1/apiSpec/new?filename=Wolfgang_Etl_Transformers_DelegateTransformerOptions.md&amp;value=---%0Auid%3A%20Wolfgang.Etl.Transformers.DelegateTransformerOptions%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/ETL-Transformers/new/v0.9.0/apiSpec/new?filename=Wolfgang_Etl_Transformers_DelegateTransformerOptions.md&amp;value=---%0Auid%3A%20Wolfgang.Etl.Transformers.DelegateTransformerOptions%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -75,11 +75,11 @@
 
 
   <h1 id="Wolfgang_Etl_Transformers_DelegateTransformerOptions" data-uid="Wolfgang.Etl.Transformers.DelegateTransformerOptions" class="text-break">
-Class DelegateTransformerOptions  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/DelegateTransformerOptions.cs/#L45"><i class="bi bi-code-slash"></i></a>
+Class DelegateTransformerOptions  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/DelegateTransformerOptions.cs/#L52"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
-    <dl><dt>Namespace</dt><dd><a class="xref" href="Wolfgang.html">Wolfgang</a>.<a class="xref" href="Wolfgang.Etl.html">Etl</a>.<a class="xref" href="Wolfgang.Etl.Transformers.html">Transformers</a></dd></dl>
+    <dl><dt>Namespace</dt><dd><span class="xref">Wolfgang</span>.<span class="xref">Etl</span>.<a class="xref" href="Wolfgang.Etl.Transformers.html">Transformers</a></dd></dl>
   <dl><dt>Assembly</dt><dd>Wolfgang.Etl.Transformers.dll</dd></dl>
   </div>
 
@@ -141,17 +141,21 @@ happens when that delegate throws for a single item.</p>
 
   <h2 id="Wolfgang_Etl_Transformers_DelegateTransformerOptions_examples">Examples</h2>
   <pre><code class="lang-csharp">// Drop the items whose projection throws, and count them.
-var options = new DelegateTransformerOptions { ErrorPolicy = ItemErrorPolicy.Skip };
+var options = new DelegateTransformerOptions { ErrorPolicy = _ =&gt; ItemErrorAction.Skip };
 var transformer = new SelectTransformer&lt;string, int&gt;(int.Parse, options);</code></pre>
 
 
   <h2 id="Wolfgang_Etl_Transformers_DelegateTransformerOptions_remarks">Remarks</h2>
   <div class="markdown level0 remarks"><p>
-Per ADR-0009, stage configuration is supplied as a record passed to the constructor rather than
+Per ADR-0009 in ETL-Abstractions, stage configuration is supplied as a record passed to the constructor rather than
 set through mutable properties, so a transformer is configured once and not reconfigured during a
 run. This record is shared by the transformers that accept it, because the one setting they
-need is the same; <a class="xref" href="Wolfgang.Etl.Transformers.SelectTransformer-2.html">SelectTransformer&lt;TSource, TDestination&gt;</a> and
-<a class="xref" href="Wolfgang.Etl.Transformers.SelectManyTransformer-2.html">SelectManyTransformer&lt;TSource, TDestination&gt;</a> accept it today. It is left unsealed
+need is the same. Every transformer that invokes a caller-supplied delegate or comparer accepts
+it: <a class="xref" href="Wolfgang.Etl.Transformers.CastTransformer-2.html">CastTransformer&lt;TSource, TDestination&gt;</a>, <a class="xref" href="Wolfgang.Etl.Transformers.DistinctTransformer-1.html">DistinctTransformer&lt;T&gt;</a>,
+<a class="xref" href="Wolfgang.Etl.Transformers.DistinctByTransformer-2.html">DistinctByTransformer&lt;TSource, TKey&gt;</a>,
+<a class="xref" href="Wolfgang.Etl.Transformers.SelectTransformer-2.html">SelectTransformer&lt;TSource, TDestination&gt;</a>,
+<a class="xref" href="Wolfgang.Etl.Transformers.SelectManyTransformer-2.html">SelectManyTransformer&lt;TSource, TDestination&gt;</a>, <a class="xref" href="Wolfgang.Etl.Transformers.SkipWhileTransformer-1.html">SkipWhileTransformer&lt;T&gt;</a>,
+<a class="xref" href="Wolfgang.Etl.Transformers.TakeWhileTransformer-1.html">TakeWhileTransformer&lt;T&gt;</a> and <a class="xref" href="Wolfgang.Etl.Transformers.WhereTransformer-1.html">WhereTransformer&lt;T&gt;</a>. It is left unsealed
 so a transformer that later grows its own settings can derive from it.
 </p>
 <p>
@@ -164,11 +168,14 @@ already expressed here by the dedicated <a class="xref" href="Wolfgang.Etl.Trans
 silently ignored and give the same concept two spellings.
 </p>
 <p>
-The pass-through and windowing transformers (<a class="xref" href="Wolfgang.Etl.Transformers.PassThroughTransformer-1.html">PassThroughTransformer&lt;T&gt;</a>,
-<a class="xref" href="Wolfgang.Etl.Transformers.TakeTransformer-1.html">TakeTransformer&lt;T&gt;</a>, <a class="xref" href="Wolfgang.Etl.Transformers.SkipTransformer-1.html">SkipTransformer&lt;T&gt;</a>,
-<a class="xref" href="Wolfgang.Etl.Transformers.ChunkTransformer-1.html">ChunkTransformer&lt;T&gt;</a>, <a class="xref" href="Wolfgang.Etl.Transformers.BufferedTransformer-1.html">BufferedTransformer&lt;T&gt;</a> and
-<a class="xref" href="Wolfgang.Etl.Transformers.ProgressReportingTransformer-1.html">ProgressReportingTransformer&lt;T&gt;</a>) invoke no caller delegate, so they have nothing to
-apply a policy to and do not accept this record.
+The pass-through, windowing, pacing, type-filtering and composition transformers
+(<a class="xref" href="Wolfgang.Etl.Transformers.PassThroughTransformer-1.html">PassThroughTransformer&lt;T&gt;</a>, <a class="xref" href="Wolfgang.Etl.Transformers.TakeTransformer-1.html">TakeTransformer&lt;T&gt;</a>,
+<a class="xref" href="Wolfgang.Etl.Transformers.SkipTransformer-1.html">SkipTransformer&lt;T&gt;</a>, <a class="xref" href="Wolfgang.Etl.Transformers.ChunkTransformer-1.html">ChunkTransformer&lt;T&gt;</a>,
+<a class="xref" href="Wolfgang.Etl.Transformers.BufferedTransformer-1.html">BufferedTransformer&lt;T&gt;</a>, <a class="xref" href="Wolfgang.Etl.Transformers.ProgressReportingTransformer-1.html">ProgressReportingTransformer&lt;T&gt;</a>,
+<a class="xref" href="Wolfgang.Etl.Transformers.ThrottleTransformer-1.html">ThrottleTransformer&lt;T&gt;</a>, <a class="xref" href="Wolfgang.Etl.Transformers.OfTypeTransformer-2.html">OfTypeTransformer&lt;TSource, TDestination&gt;</a>,
+<a class="xref" href="Wolfgang.Etl.Transformers.ChainTransformer-3.html">ChainTransformer&lt;TSource, TIntermediate, TDestination&gt;</a> and
+<a class="xref" href="Wolfgang.Etl.Transformers.ChainTransformerWithCancellation-3.html">ChainTransformerWithCancellation&lt;TSource, TIntermediate, TDestination&gt;</a>) invoke no
+caller delegate, so they have nothing to apply a policy to and do not accept this record.
 </p>
 </div>
 
@@ -181,7 +188,7 @@ apply a policy to and do not accept this record.
 
   <h3 id="Wolfgang_Etl_Transformers_DelegateTransformerOptions_ErrorPolicy" data-uid="Wolfgang.Etl.Transformers.DelegateTransformerOptions.ErrorPolicy">
   ErrorPolicy
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/DelegateTransformerOptions.cs/#L74"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/DelegateTransformerOptions.cs/#L84"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The policy applied when the caller-supplied delegate throws while handling one item.</p>
@@ -213,7 +220,9 @@ without this record: the exception propagates to the caller unchanged.</p>
   <h4 class="section" id="Wolfgang_Etl_Transformers_DelegateTransformerOptions_ErrorPolicy_remarks">Remarks</h4>
   <div class="markdown level1 remarks"><p>Ready-made policies - including skip-and-log and skip-to-dead-letter forms - are available
 from <code>ItemErrorPolicy</code> in the <code>Wolfgang.Etl.ErrorPolicies</code> package. This library
-does not reference that package; the policy is just a delegate.</p>
+does not reference that package; the policy is just a delegate.
+An <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.operationcanceledexception">OperationCanceledException</a> thrown by the delegate is cancellation, not an item
+failure: it is never passed to the policy, is not counted, and propagates to the caller.</p>
 </div>
 
   <h4 class="section">Exceptions</h4>
@@ -229,7 +238,7 @@ does not reference that package; the policy is just a delegate.</p>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/DelegateTransformerOptions.cs/#L45" class="edit-link">Edit this page</a>
+          <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/DelegateTransformerOptions.cs/#L52" class="edit-link">Edit this page</a>
         </div>
 
 

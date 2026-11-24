@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/ETL-Transformers/new/v0.8.1/apiSpec/new?filename=Wolfgang_Etl_Transformers_SelectTransformer_2.md&amp;value=---%0Auid%3A%20Wolfgang.Etl.Transformers.SelectTransformer%602%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/ETL-Transformers/new/v0.9.0/apiSpec/new?filename=Wolfgang_Etl_Transformers_SelectTransformer_2.md&amp;value=---%0Auid%3A%20Wolfgang.Etl.Transformers.SelectTransformer%602%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -75,11 +75,11 @@
 
 
   <h1 id="Wolfgang_Etl_Transformers_SelectTransformer_2" data-uid="Wolfgang.Etl.Transformers.SelectTransformer`2" class="text-break">
-Class SelectTransformer&lt;TSource, TDestination&gt;  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/SelectTransformer.cs/#L58"><i class="bi bi-code-slash"></i></a>
+Class SelectTransformer&lt;TSource, TDestination&gt;  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/SelectTransformer.cs/#L58"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
-    <dl><dt>Namespace</dt><dd><a class="xref" href="Wolfgang.html">Wolfgang</a>.<a class="xref" href="Wolfgang.Etl.html">Etl</a>.<a class="xref" href="Wolfgang.Etl.Transformers.html">Transformers</a></dd></dl>
+    <dl><dt>Namespace</dt><dd><span class="xref">Wolfgang</span>.<span class="xref">Etl</span>.<a class="xref" href="Wolfgang.Etl.Transformers.html">Transformers</a></dd></dl>
   <dl><dt>Assembly</dt><dd>Wolfgang.Etl.Transformers.dll</dd></dl>
   </div>
 
@@ -89,7 +89,7 @@ selector function, returning the result.</p>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class SelectTransformer&lt;TSource, TDestination&gt; : ITransformAsync&lt;TSource, TDestination&gt;, IReportsItemErrors where TSource : notnull where TDestination : notnull</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class SelectTransformer&lt;TSource, TDestination&gt; : ITransformWithCancellationAsync&lt;TSource, TDestination&gt;, ITransformAsync&lt;TSource, TDestination&gt;, IReportsItemErrors where TSource : notnull where TDestination : notnull</code></pre>
   </div>
 
 
@@ -115,6 +115,7 @@ selector function, returning the result.</p>
   <dl class="typelist implements">
     <dt>Implements</dt>
     <dd>
+      <div><span class="xref">ITransformWithCancellationAsync</span>&lt;TSource, TDestination&gt;</div>
       <div><span class="xref">ITransformAsync</span>&lt;TSource, TDestination&gt;</div>
       <div><span class="xref">IReportsItemErrors</span></div>
     </dd>
@@ -150,6 +151,9 @@ selector function, returning the result.</p>
   <div>
       <a class="xref" href="Wolfgang.Etl.Transformers.TransformerExtensions.html#Wolfgang_Etl_Transformers_TransformerExtensions_Then__3_Wolfgang_Etl_Abstractions_ITransformAsync___0___1__Wolfgang_Etl_Abstractions_ITransformAsync___1___2__">TransformerExtensions.Then&lt;TSource, TIntermediate, TDestination&gt;(ITransformAsync&lt;TSource, TIntermediate&gt;, ITransformAsync&lt;TIntermediate, TDestination&gt;)</a>
   </div>
+  <div>
+      <a class="xref" href="Wolfgang.Etl.Transformers.TransformerExtensions.html#Wolfgang_Etl_Transformers_TransformerExtensions_Then__3_Wolfgang_Etl_Abstractions_ITransformWithCancellationAsync___0___1__Wolfgang_Etl_Abstractions_ITransformWithCancellationAsync___1___2__">TransformerExtensions.Then&lt;TSource, TIntermediate, TDestination&gt;(ITransformWithCancellationAsync&lt;TSource, TIntermediate&gt;, ITransformWithCancellationAsync&lt;TIntermediate, TDestination&gt;)</a>
+  </div>
   </dd></dl>
 
 
@@ -176,20 +180,19 @@ selectors returning <a class="xref" href="https://learn.microsoft.com/dotnet/api
 I/O-bound projections (database lookups, HTTP calls, etc.).
 </p>
 <p>
-This type deliberately implements only <span class="xref">Wolfgang.Etl.Abstractions.ITransformAsync&lt;TSource, TDestination&gt;</span> and
+This type deliberately implements only <span class="xref">Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync&lt;TSource, TDestination&gt;</span> and
 does <b>not</b> inherit from <span class="xref">Wolfgang.Etl.Abstractions.TransformerBase&lt;TSource, TDestination, TProgress&gt;</span>.
-It carries no progress reporting and no cancellation token, and counts nothing on the default
+It carries no progress reporting, and counts nothing on the default
 path - the only counter is the opt-in <a class="xref" href="Wolfgang.Etl.Transformers.SelectTransformer-2.html#Wolfgang_Etl_Transformers_SelectTransformer_2_CurrentErrorItemCount">CurrentErrorItemCount</a>, which stays at zero
 unless an error policy skips an item - keeping the hot loop as small as possible for use as a
-building block in composed pipelines. See the
-benchmarks project for measurements motivating this choice.
+building block in composed pipelines.
 </p>
 <p>
 By default an exception thrown by the selector propagates to the caller. Pass a
 <a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html">DelegateTransformerOptions</a> whose <a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html#Wolfgang_Etl_Transformers_DelegateTransformerOptions_ErrorPolicy">ErrorPolicy</a>
 returns <span class="xref">Wolfgang.Etl.Abstractions.ItemErrorAction.Skip</span> to drop the failing item and continue instead; skipped
-items are counted by <a class="xref" href="Wolfgang.Etl.Transformers.SelectTransformer-2.html#Wolfgang_Etl_Transformers_SelectTransformer_2_CurrentErrorItemCount">CurrentErrorItemCount</a>. That count is cumulative across every
-enumeration of this instance, while the <span class="xref">Wolfgang.Etl.Abstractions.ItemErrorContext.ItemNumber</span> handed to the
+items are counted by <a class="xref" href="Wolfgang.Etl.Transformers.SelectTransformer-2.html#Wolfgang_Etl_Transformers_SelectTransformer_2_CurrentErrorItemCount">CurrentErrorItemCount</a>. That count is per run (it restarts at zero when a
+new enumeration begins while no other one is active), while the <span class="xref">Wolfgang.Etl.Abstractions.ItemErrorContext.ItemNumber</span> handed to the
 policy is the one-based position within the enumeration that failed.
 </p>
 </div>
@@ -203,7 +206,7 @@ policy is the one-based position within the enumeration that failed.
 
   <h3 id="Wolfgang_Etl_Transformers_SelectTransformer_2__ctor_System_Func__0_System_Threading_Tasks_ValueTask__1___" data-uid="Wolfgang.Etl.Transformers.SelectTransformer`2.#ctor(System.Func{`0,System.Threading.Tasks.ValueTask{`1}})">
   SelectTransformer(Func&lt;TSource, ValueTask&lt;TDestination&gt;&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/SelectTransformer.cs/#L108"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/SelectTransformer.cs/#L107"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance with an asynchronous selector function.</p>
@@ -243,7 +246,7 @@ Useful for I/O-bound projections.</p>
 
   <h3 id="Wolfgang_Etl_Transformers_SelectTransformer_2__ctor_System_Func__0_System_Threading_Tasks_ValueTask__1___Wolfgang_Etl_Transformers_DelegateTransformerOptions_" data-uid="Wolfgang.Etl.Transformers.SelectTransformer`2.#ctor(System.Func{`0,System.Threading.Tasks.ValueTask{`1}},Wolfgang.Etl.Transformers.DelegateTransformerOptions)">
   SelectTransformer(Func&lt;TSource, ValueTask&lt;TDestination&gt;&gt;, DelegateTransformerOptions)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/SelectTransformer.cs/#L125"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/SelectTransformer.cs/#L124"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance with an asynchronous selector function and an error policy.</p>
@@ -285,7 +288,7 @@ Useful for I/O-bound projections.</p>
 
   <h3 id="Wolfgang_Etl_Transformers_SelectTransformer_2__ctor_System_Func__0__1__" data-uid="Wolfgang.Etl.Transformers.SelectTransformer`2.#ctor(System.Func{`0,`1})">
   SelectTransformer(Func&lt;TSource, TDestination&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/SelectTransformer.cs/#L74"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/SelectTransformer.cs/#L73"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance with a synchronous selector function.</p>
@@ -324,7 +327,7 @@ Useful for I/O-bound projections.</p>
 
   <h3 id="Wolfgang_Etl_Transformers_SelectTransformer_2__ctor_System_Func__0__1__Wolfgang_Etl_Transformers_DelegateTransformerOptions_" data-uid="Wolfgang.Etl.Transformers.SelectTransformer`2.#ctor(System.Func{`0,`1},Wolfgang.Etl.Transformers.DelegateTransformerOptions)">
   SelectTransformer(Func&lt;TSource, TDestination&gt;, DelegateTransformerOptions)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/SelectTransformer.cs/#L89"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/SelectTransformer.cs/#L88"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance with a synchronous selector function and an error policy.</p>
@@ -370,7 +373,7 @@ Useful for I/O-bound projections.</p>
 
   <h3 id="Wolfgang_Etl_Transformers_SelectTransformer_2_CurrentErrorItemCount" data-uid="Wolfgang.Etl.Transformers.SelectTransformer`2.CurrentErrorItemCount">
   CurrentErrorItemCount
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/SelectTransformer.cs/#L148"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/SelectTransformer.cs/#L147"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The number of items dropped so far because the selector threw and the error policy returned
@@ -396,7 +399,7 @@ Useful for I/O-bound projections.</p>
 
 
   <h4 class="section" id="Wolfgang_Etl_Transformers_SelectTransformer_2_CurrentErrorItemCount_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>Cumulative across every enumeration produced by this instance. An item whose failure aborted
+  <div class="markdown level1 remarks"><p>Per run: restarts at zero when a new enumeration begins while no other one is active. An item whose failure aborted
 the run is not counted, because the exception is re-thrown instead.</p>
 </div>
 
@@ -411,7 +414,7 @@ the run is not counted, because the exception is re-thrown instead.</p>
 
   <h3 id="Wolfgang_Etl_Transformers_SelectTransformer_2_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__" data-uid="Wolfgang.Etl.Transformers.SelectTransformer`2.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})">
   TransformAsync(IAsyncEnumerable&lt;TSource&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/SelectTransformer.cs/#L159"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/SelectTransformer.cs/#L158"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Asynchronously projects each item from <code class="paramref">items</code> through the configured
@@ -453,11 +456,60 @@ selector and yields the result.</p>
 
 
 
+  <a id="Wolfgang_Etl_Transformers_SelectTransformer_2_TransformAsync_" data-uid="Wolfgang.Etl.Transformers.SelectTransformer`2.TransformAsync*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_SelectTransformer_2_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__System_Threading_CancellationToken_" data-uid="Wolfgang.Etl.Transformers.SelectTransformer`2.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0},System.Threading.CancellationToken)">
+  TransformAsync(IAsyncEnumerable&lt;TSource&gt;, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/SelectTransformer.cs/#L177"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Transforms <code class="paramref">items</code> like the overload without a token, and forwards
+<code class="paramref">token</code> to the stages above this one and to the source.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IAsyncEnumerable&lt;TDestination&gt; TransformAsync(IAsyncEnumerable&lt;TSource&gt; items, CancellationToken token)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>items</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iasyncenumerable-1">IAsyncEnumerable</a>&lt;TSource&gt;</dt>
+    <dd><p>The sequence to transform.</p>
+</dd>
+    <dt><code>token</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>A token that cancels the enumeration, including the source.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iasyncenumerable-1">IAsyncEnumerable</a>&lt;TDestination&gt;</dt>
+    <dd><p>The transformed sequence.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">items</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
 
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/SelectTransformer.cs/#L58" class="edit-link">Edit this page</a>
+          <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/SelectTransformer.cs/#L58" class="edit-link">Edit this page</a>
         </div>
 
 

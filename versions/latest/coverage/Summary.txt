@@ -1,26 +1,26 @@
 Summary
-  Generated on: 10/17/2026 - 8:01:16 PM
-  Coverage date: 10/17/2026 - 8:01:02 PM - 10/17/2026 - 8:01:14 PM
+  Generated on: 11/24/2026 - 12:48:56 AM
+  Coverage date: 11/24/2026 - 12:48:44 AM - 11/24/2026 - 12:48:54 AM
   Parser: MultiReport (7x Cobertura)
   Assemblies: 8
-  Classes: 59
-  Files: 59
-  Line coverage: 99.9%
-  Covered lines: 4456
-  Uncovered lines: 3
-  Coverable lines: 4459
-  Total lines: 13572
-  Branch coverage: 84.9% (523 of 616)
-  Covered branches: 523
-  Total branches: 616
-  Method coverage: 100% (806 of 806)
-  Full method coverage: 99.7% (804 of 806)
-  Covered methods: 806
-  Fully covered methods: 804
-  Total methods: 806
+  Classes: 70
+  Files: 67
+  Line coverage: 99.8%
+  Covered lines: 5001
+  Uncovered lines: 6
+  Coverable lines: 5007
+  Total lines: 15386
+  Branch coverage: 86.5% (717 of 828)
+  Covered branches: 717
+  Total branches: 828
+  Method coverage: 99.6% (924 of 927)
+  Full method coverage: 99.4% (922 of 927)
+  Covered methods: 924
+  Fully covered methods: 922
+  Total methods: 927
 
-Wolfgang.Etl.Transformers                                                           99.5%
-  Wolfgang.Etl.Transformers.BufferedTransformer<T>                                  94.8%
+Wolfgang.Etl.Transformers                                                           99.1%
+  Wolfgang.Etl.Transformers.BufferedTransformer<T>                                  95.2%
   Wolfgang.Etl.Transformers.CastTransformer<T1, T2>                                  100%
   Wolfgang.Etl.Transformers.ChainTransformer<T1, T2, T3>                             100%
   Wolfgang.Etl.Transformers.ChainTransformerWithCancellation<T1, T2, T3>             100%
@@ -29,6 +29,7 @@ Wolfgang.Etl.Transformers                                                       
   Wolfgang.Etl.Transformers.DistinctByTransformer<T1, T2>                            100%
   Wolfgang.Etl.Transformers.DistinctTransformer<T>                                   100%
   Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions                            100%
+  Wolfgang.Etl.Transformers.ItemErrorCounter                                        81.2%
   Wolfgang.Etl.Transformers.OfTypeTransformer<T1, T2>                                100%
   Wolfgang.Etl.Transformers.PassThroughTransformer<T>                                100%
   Wolfgang.Etl.Transformers.ProgressReportingTransformer<T>                          100%
@@ -51,28 +52,37 @@ Wolfgang.Etl.Transformers.Tests.DocExamples                                     
 
 Wolfgang.Etl.Transformers.Tests.Fuzz                                                 100%
   Wolfgang.Etl.Transformers.Tests.Fuzz.TransformerEquivalenceProperties              100%
+  Wolfgang.Etl.Transformers.Tests.Shared.AsyncSequence                               100%
 
 Wolfgang.Etl.Transformers.Tests.Integration                                          100%
   Wolfgang.Etl.Transformers.Tests.Integration.PipelineIntegrationTests               100%
+  Wolfgang.Etl.Transformers.Tests.Shared.AsyncSequence                               100%
 
 Wolfgang.Etl.Transformers.Tests.Snapshots                                            100%
+  Wolfgang.Etl.Transformers.Tests.Shared.AsyncSequence                               100%
   Wolfgang.Etl.Transformers.Tests.Snapshots.Snapshots.TransformerSnapshotTests       100%
 
 Wolfgang.Etl.Transformers.Tests.SourceLink                                           100%
   Wolfgang.Etl.Transformers.Tests.SourceLink.SourceLinkPdbTests                      100%
 
 Wolfgang.Etl.Transformers.Tests.Unit                                                 100%
+  Wolfgang.Etl.Transformers.Tests.Unit.BoxExtensions                                 100%
   Wolfgang.Etl.Transformers.Tests.Unit.BufferedTransformerTests                      100%
   Wolfgang.Etl.Transformers.Tests.Unit.CastTransformerErrorPolicyTests               100%
   Wolfgang.Etl.Transformers.Tests.Unit.CastTransformerTests                          100%
   Wolfgang.Etl.Transformers.Tests.Unit.ChainTransformerTests                         100%
   Wolfgang.Etl.Transformers.Tests.Unit.ChainTransformerWithCancellationTests         100%
+  Wolfgang.Etl.Transformers.Tests.Unit.ChunkTransformerBufferTests                   100%
   Wolfgang.Etl.Transformers.Tests.Unit.ChunkTransformerTests                         100%
+  Wolfgang.Etl.Transformers.Tests.Unit.DelegateTransformerCancellationTests          100%
   Wolfgang.Etl.Transformers.Tests.Unit.DelegateTransformerErrorPolicyFilterTests     100%
   Wolfgang.Etl.Transformers.Tests.Unit.DelegateTransformerErrorPolicyTests           100%
   Wolfgang.Etl.Transformers.Tests.Unit.DistinctByTransformerTests                    100%
   Wolfgang.Etl.Transformers.Tests.Unit.DistinctTransformerTests                      100%
+  Wolfgang.Etl.Transformers.Tests.Unit.EnumeratorCancellationPropagationTests        100%
+  Wolfgang.Etl.Transformers.Tests.Unit.ErrorCountPerRunTests                         100%
   Wolfgang.Etl.Transformers.Tests.Unit.EtlPipelineOperatorExtensionsTests            100%
+  Wolfgang.Etl.Transformers.Tests.Unit.EtlPipelineOperatorOptionsTests               100%
   Wolfgang.Etl.Transformers.Tests.Unit.Globalization.GlobalizationInvarianceTests    100%
   Wolfgang.Etl.Transformers.Tests.Unit.GuardParityTests                              100%
   Wolfgang.Etl.Transformers.Tests.Unit.OfTypeTransformerTests                        100%
@@ -88,6 +98,7 @@ Wolfgang.Etl.Transformers.Tests.Unit                                            
   Wolfgang.Etl.Transformers.Tests.Unit.TakeWhileTransformerTests                     100%
   Wolfgang.Etl.Transformers.Tests.Unit.TestHelpers                                   100%
   Wolfgang.Etl.Transformers.Tests.Unit.TestHelpersTests                              100%
+  Wolfgang.Etl.Transformers.Tests.Unit.ThrottleTransformerCancellationTests          100%
   Wolfgang.Etl.Transformers.Tests.Unit.ThrottleTransformerTests                      100%
   Wolfgang.Etl.Transformers.Tests.Unit.TransformerExtensionsTests                    100%
   Wolfgang.Etl.Transformers.Tests.Unit.TransformerLinqParityTests                    100%

@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/docfx_project/docs/introduction.md/#L1">
+      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/docfx_project/docs/introduction.md/#L1">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -76,8 +76,9 @@
 <h2 id="overview">Overview</h2>
 <p><strong>Wolfgang.Etl.Transformers</strong> is a library of generic, composable transformers for ETL pipelines.
 It builds on <a href="https://github.com/Chris-Wolfgang/ETL-Abstractions">Wolfgang.Etl.Abstractions</a> and
-provides the middle tier of a pipeline — the T in ETL — through 18 public types covering filtering,
-projection, fan-out, deduplication, batching, buffering, progress reporting, and composition.</p>
+provides the middle tier of a pipeline — the T in ETL — through 21 public types covering filtering,
+projection, fan-out, deduplication, batching, buffering, pacing, progress reporting, error
+handling, and composition.</p>
 <h2 id="key-features">Key Features</h2>
 <ul>
 <li><strong>LINQ-style operations</strong>: <code>WhereTransformer</code>, <code>SelectTransformer</code>, <code>SelectManyTransformer</code>,
@@ -85,13 +86,25 @@ projection, fan-out, deduplication, batching, buffering, progress reporting, and
 <code>TakeTransformer</code>, <code>TakeWhileTransformer</code>, <code>SkipTransformer</code>, <code>SkipWhileTransformer</code>, <code>ChunkTransformer</code></li>
 <li><strong>Pipeline infrastructure</strong>: <code>BufferedTransformer</code> decouples producer from consumer using
 <code>System.Threading.Channels</code> so both stages run concurrently; <code>ProgressReportingTransformer</code>
-calls a callback per item without changing the stream</li>
+calls a callback per item without changing the stream; <code>ThrottleTransformer</code> paces items at
+least a minimum <code>TimeSpan</code> apart to rate-limit a downstream sink</li>
+<li><strong>Pipeline operators</strong>: referencing the package adds LINQ-flavored operators to
+<code>IEtlPipeline&lt;T&gt;</code> (<code>Where</code>, <code>Select</code>, <code>SelectMany</code>, <code>Distinct</code>, <code>DistinctBy</code>, <code>Take</code>, <code>Skip</code>,
+<code>TakeWhile</code>, <code>SkipWhile</code>, <code>Chunk</code>, <code>Buffered</code>, <code>Cast</code>, <code>OfType</code>, plus <code>Tap</code>, <code>Log</code> and
+<code>Throttle</code>), each a thin wrapper over the matching transformer</li>
+<li><strong>Per-item error policy</strong>: the eight delegate-invoking transformers accept a
+<code>DelegateTransformerOptions</code> whose <code>ErrorPolicy</code> can skip an item whose delegate throws instead
+of aborting the run; skipped items are counted by <code>CurrentErrorItemCount</code></li>
 <li><strong>Fluent composition</strong>: <code>.Then(next)</code> extension composes any two transformers into one,
 chains arbitrarily deep, and automatically picks the cancellation-aware overload when both
-sides implement <code>ITransformWithCancellationAsync&lt;TSource, TDestination&gt;</code></li>
-<li><strong>Multi-TFM</strong>: targets .NET Framework 4.6.2–4.8.1, .NET Core 3.1, and .NET 5.0–10.0</li>
-<li><strong>Zero allocations on hot paths</strong>: all transformers yield items via <code>IAsyncEnumerable&lt;T&gt;</code> with
-no intermediate buffering beyond <code>BufferedTransformer</code>'s explicit channel</li>
+sides implement <code>ITransformWithCancellationAsync&lt;TSource, TDestination&gt;</code> (every transformer in this package does; a
+chain that includes a custom transformer implementing only <code>ITransformAsync</code> uses the plain overload)</li>
+<li><strong>Multi-TFM</strong>: targets .NET Framework 4.6.2, 4.7.2, 4.8 and 4.8.1, .NET Standard 2.0, and
+.NET 5.0–10.0</li>
+<li><strong>No per-item allocations in the pass-through, filter and projection transformers</strong>: they yield
+items via <code>IAsyncEnumerable&lt;T&gt;</code> without intermediate buffering. The stateful ones are the
+exceptions: <code>BufferedTransformer</code> (an explicit channel), <code>ChunkTransformer</code> (a <code>T[]</code> per chunk)
+and <code>DistinctTransformer</code> / <code>DistinctByTransformer</code> (a <code>HashSet</code> of every unique item or key)</li>
 </ul>
 <h2 id="design-principles">Design Principles</h2>
 <ul>
@@ -113,7 +126,7 @@ hierarchy beyond the interface they implement</li>
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/docfx_project/docs/introduction.md/#L1" class="edit-link">Edit this page</a>
+          <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/docfx_project/docs/introduction.md/#L1" class="edit-link">Edit this page</a>
         </div>
 
         <div class="next-article d-print-none border-top" id="nextArticle"></div>

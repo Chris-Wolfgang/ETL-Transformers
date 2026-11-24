@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/ETL-Transformers/new/v0.8.1/apiSpec/new?filename=Wolfgang_Etl_Transformers_TakeTransformer_1.md&amp;value=---%0Auid%3A%20Wolfgang.Etl.Transformers.TakeTransformer%601%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/ETL-Transformers/new/v0.9.0/apiSpec/new?filename=Wolfgang_Etl_Transformers_TakeTransformer_1.md&amp;value=---%0Auid%3A%20Wolfgang.Etl.Transformers.TakeTransformer%601%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -75,11 +75,11 @@
 
 
   <h1 id="Wolfgang_Etl_Transformers_TakeTransformer_1" data-uid="Wolfgang.Etl.Transformers.TakeTransformer`1" class="text-break">
-Class TakeTransformer&lt;T&gt;  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/TakeTransformer.cs/#L41"><i class="bi bi-code-slash"></i></a>
+Class TakeTransformer&lt;T&gt;  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/TakeTransformer.cs/#L43"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
-    <dl><dt>Namespace</dt><dd><a class="xref" href="Wolfgang.html">Wolfgang</a>.<a class="xref" href="Wolfgang.Etl.html">Etl</a>.<a class="xref" href="Wolfgang.Etl.Transformers.html">Transformers</a></dd></dl>
+    <dl><dt>Namespace</dt><dd><span class="xref">Wolfgang</span>.<span class="xref">Etl</span>.<a class="xref" href="Wolfgang.Etl.Transformers.html">Transformers</a></dd></dl>
   <dl><dt>Assembly</dt><dd>Wolfgang.Etl.Transformers.dll</dd></dl>
   </div>
 
@@ -89,7 +89,7 @@ sequence.</p>
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class TakeTransformer&lt;T&gt; : ITransformAsync&lt;T, T&gt; where T : notnull</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class TakeTransformer&lt;T&gt; : ITransformWithCancellationAsync&lt;T, T&gt;, ITransformAsync&lt;T, T&gt; where T : notnull</code></pre>
   </div>
 
 
@@ -112,6 +112,7 @@ sequence.</p>
   <dl class="typelist implements">
     <dt>Implements</dt>
     <dd>
+      <div><span class="xref">ITransformWithCancellationAsync</span>&lt;T, T&gt;</div>
       <div><span class="xref">ITransformAsync</span>&lt;T, T&gt;</div>
     </dd>
   </dl>
@@ -146,6 +147,9 @@ sequence.</p>
   <div>
       <a class="xref" href="Wolfgang.Etl.Transformers.TransformerExtensions.html#Wolfgang_Etl_Transformers_TransformerExtensions_Then__3_Wolfgang_Etl_Abstractions_ITransformAsync___0___1__Wolfgang_Etl_Abstractions_ITransformAsync___1___2__">TransformerExtensions.Then&lt;TSource, TIntermediate, TDestination&gt;(ITransformAsync&lt;TSource, TIntermediate&gt;, ITransformAsync&lt;TIntermediate, TDestination&gt;)</a>
   </div>
+  <div>
+      <a class="xref" href="Wolfgang.Etl.Transformers.TransformerExtensions.html#Wolfgang_Etl_Transformers_TransformerExtensions_Then__3_Wolfgang_Etl_Abstractions_ITransformWithCancellationAsync___0___1__Wolfgang_Etl_Abstractions_ITransformWithCancellationAsync___1___2__">TransformerExtensions.Then&lt;TSource, TIntermediate, TDestination&gt;(ITransformWithCancellationAsync&lt;TSource, TIntermediate&gt;, ITransformWithCancellationAsync&lt;TIntermediate, TDestination&gt;)</a>
+  </div>
   </dd></dl>
 
 
@@ -170,8 +174,8 @@ Useful for windowing the head of a stream when the upstream extractor does not e
 row-count limit, and as a building block in composed pipelines.
 </p>
 <p>
-Implements only <span class="xref">Wolfgang.Etl.Abstractions.ITransformAsync&lt;TSource, TDestination&gt;</span> - no progress, no
-cancellation, no Skip/Max - to keep the hot loop minimal.
+Implements <span class="xref">Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync&lt;TSource, TDestination&gt;</span> - no progress,
+no <code>SkipItemCount</code>/<code>MaximumItemCount</code> limits - to keep the hot loop minimal.
 </p>
 </div>
 
@@ -184,7 +188,7 @@ cancellation, no Skip/Max - to keep the hot loop minimal.
 
   <h3 id="Wolfgang_Etl_Transformers_TakeTransformer_1__ctor_System_Int32_" data-uid="Wolfgang.Etl.Transformers.TakeTransformer`1.#ctor(System.Int32)">
   TakeTransformer(int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/TakeTransformer.cs/#L55"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/TakeTransformer.cs/#L57"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance that yields at most <code class="paramref">count</code> items.</p>
@@ -222,7 +226,7 @@ output sequence and the source is not enumerated.</p>
 
   <h3 id="Wolfgang_Etl_Transformers_TakeTransformer_1_Count" data-uid="Wolfgang.Etl.Transformers.TakeTransformer`1.Count">
   Count
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/TakeTransformer.cs/#L85"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/TakeTransformer.cs/#L104"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The maximum number of items this transformer will yield.</p>
@@ -258,7 +262,7 @@ output sequence and the source is not enumerated.</p>
 
   <h3 id="Wolfgang_Etl_Transformers_TakeTransformer_1_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__" data-uid="Wolfgang.Etl.Transformers.TakeTransformer`1.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})">
   TransformAsync(IAsyncEnumerable&lt;T&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/TakeTransformer.cs/#L73"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/TakeTransformer.cs/#L75"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Asynchronously yields at most <a class="xref" href="Wolfgang.Etl.Transformers.TakeTransformer-1.html#Wolfgang_Etl_Transformers_TakeTransformer_1_Count">Count</a> items from the start of
@@ -302,11 +306,60 @@ Empty if <a class="xref" href="Wolfgang.Etl.Transformers.TakeTransformer-1.html#
 
 
 
+  <a id="Wolfgang_Etl_Transformers_TakeTransformer_1_TransformAsync_" data-uid="Wolfgang.Etl.Transformers.TakeTransformer`1.TransformAsync*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_TakeTransformer_1_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__System_Threading_CancellationToken_" data-uid="Wolfgang.Etl.Transformers.TakeTransformer`1.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0},System.Threading.CancellationToken)">
+  TransformAsync(IAsyncEnumerable&lt;T&gt;, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/TakeTransformer.cs/#L92"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Transforms <code class="paramref">items</code> like the overload without a token, and forwards
+<code class="paramref">token</code> to the stages above this one and to the source.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IAsyncEnumerable&lt;T&gt; TransformAsync(IAsyncEnumerable&lt;T&gt; items, CancellationToken token)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>items</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iasyncenumerable-1">IAsyncEnumerable</a>&lt;T&gt;</dt>
+    <dd><p>The sequence to transform.</p>
+</dd>
+    <dt><code>token</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>A token that cancels the enumeration, including the source.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iasyncenumerable-1">IAsyncEnumerable</a>&lt;T&gt;</dt>
+    <dd><p>The transformed sequence.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">items</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
 
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/TakeTransformer.cs/#L41" class="edit-link">Edit this page</a>
+          <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/TakeTransformer.cs/#L43" class="edit-link">Edit this page</a>
         </div>
 
 

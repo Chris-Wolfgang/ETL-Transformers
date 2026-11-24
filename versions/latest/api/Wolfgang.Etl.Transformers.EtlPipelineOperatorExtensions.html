@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/ETL-Transformers/new/v0.8.1/apiSpec/new?filename=Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions.md&amp;value=---%0Auid%3A%20Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/ETL-Transformers/new/v0.9.0/apiSpec/new?filename=Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions.md&amp;value=---%0Auid%3A%20Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -75,11 +75,11 @@
 
 
   <h1 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions" class="text-break">
-Class EtlPipelineOperatorExtensions  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L35"><i class="bi bi-code-slash"></i></a>
+Class EtlPipelineOperatorExtensions  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L35"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
-    <dl><dt>Namespace</dt><dd><a class="xref" href="Wolfgang.html">Wolfgang</a>.<a class="xref" href="Wolfgang.Etl.html">Etl</a>.<a class="xref" href="Wolfgang.Etl.Transformers.html">Transformers</a></dd></dl>
+    <dl><dt>Namespace</dt><dd><span class="xref">Wolfgang</span>.<span class="xref">Etl</span>.<a class="xref" href="Wolfgang.Etl.Transformers.html">Transformers</a></dd></dl>
   <dl><dt>Assembly</dt><dd>Wolfgang.Etl.Transformers.dll</dd></dl>
   </div>
 
@@ -163,7 +163,7 @@ pipeline:
 
   <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Buffered__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Int32_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Buffered``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Int32)">
   Buffered&lt;T&gt;(IEtlPipeline&lt;T&gt;, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L307"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L620"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Inserts a decoupling buffer so the upstream producer and downstream consumer run concurrently.
@@ -218,7 +218,7 @@ The item type is unchanged; this batches nothing.</p>
 
   <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Cast__2_Wolfgang_Etl_Abstractions_IEtlPipeline___0__" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Cast``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0})">
   Cast&lt;TSource, TDestination&gt;(IEtlPipeline&lt;TSource&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L323"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L636"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Casts each item to <code class="typeparamref">TDestination</code>, throwing on an incompatible item.</p>
@@ -268,11 +268,70 @@ The item type is unchanged; this batches nothing.</p>
 
 
 
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Cast_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Cast*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Cast__2_Wolfgang_Etl_Abstractions_IEtlPipeline___0__Wolfgang_Etl_Transformers_DelegateTransformerOptions_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Cast``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},Wolfgang.Etl.Transformers.DelegateTransformerOptions)">
+  Cast&lt;TSource, TDestination&gt;(IEtlPipeline&lt;TSource&gt;, DelegateTransformerOptions)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L658"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Casts the pipeline like <code>Cast</code> without options, but applies the
+<a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html#Wolfgang_Etl_Transformers_DelegateTransformerOptions_ErrorPolicy">ErrorPolicy</a> in <code class="paramref">options</code> to an item whose delegate (or comparer) throws, so
+the item can be skipped and counted in <code>EtlPipelineProgress.ErrorItemCount</code> instead of aborting the run.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;TDestination&gt; Cast&lt;TSource, TDestination&gt;(this IEtlPipeline&lt;TSource&gt; pipeline, DelegateTransformerOptions options) where TSource : notnull where TDestination : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;TSource&gt;</dt>
+    <dd><p>The pipeline to extend.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html">DelegateTransformerOptions</a></dt>
+    <dd><p>The per-item error handling options.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;TDestination&gt;</dt>
+    <dd><p>The extended pipeline.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TSource</code></dt>
+    <dd><p>The source item type. Must be non-null.</p>
+</dd>
+    <dt><code>TDestination</code></dt>
+    <dd><p>The destination item type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> or <code class="paramref">options</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>, or the delegate argument is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
   <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Chunk_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Chunk*"></a>
 
   <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Chunk__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Int32_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Chunk``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Int32)">
   Chunk&lt;T&gt;(IEtlPipeline&lt;T&gt;, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L288"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L580"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Batches items into fixed-size chunks.</p>
@@ -322,11 +381,129 @@ The item type is unchanged; this batches nothing.</p>
 
 
 
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Chunk_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Chunk*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Chunk__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Int32_System_IProgress_System_Int32__" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Chunk``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Int32,System.IProgress{System.Int32})">
+  Chunk&lt;T&gt;(IEtlPipeline&lt;T&gt;, int, IProgress&lt;int&gt;?)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L601"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Groups the pipeline's items into fixed-size chunks like <code>Chunk(size)</code>, additionally reporting the
+running count of source items consumed to <code class="paramref">progress</code> after each chunk.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;IReadOnlyList&lt;T&gt;&gt; Chunk&lt;T&gt;(this IEtlPipeline&lt;T&gt; pipeline, int size, IProgress&lt;int&gt;? progress) where T : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>The pipeline to extend.</p>
+</dd>
+    <dt><code>size</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The maximum number of items per chunk. Must be at least 1.</p>
+</dd>
+    <dt><code>progress</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.iprogress-1">IProgress</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a>&gt;</dt>
+    <dd><p>The sink for the running consumed-item count, or <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a> for none.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;T&gt;&gt;</dt>
+    <dd><p>A pipeline of read-only lists, each containing up to <code class="paramref">size</code> items.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>The item type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
+    <dd><p><code class="paramref">size</code> is less than 1.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_DistinctBy_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.DistinctBy*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_DistinctBy__2_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0___1__" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.DistinctBy``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,``1})">
+  DistinctBy&lt;TSource, TKey&gt;(IEtlPipeline&lt;TSource&gt;, Func&lt;TSource, TKey&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L361"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Removes items with duplicate keys using <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.equalitycomparer-1.default">Default</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;TSource&gt; DistinctBy&lt;TSource, TKey&gt;(this IEtlPipeline&lt;TSource&gt; pipeline, Func&lt;TSource, TKey&gt; keySelector) where TSource : notnull where TKey : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;TSource&gt;</dt>
+    <dd><p>The pipeline to deduplicate.</p>
+</dd>
+    <dt><code>keySelector</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TSource, TKey&gt;</dt>
+    <dd><p>Extracts the key each item is deduplicated by.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;TSource&gt;</dt>
+    <dd><p>A pipeline keeping the first item seen for each distinct key.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TSource</code></dt>
+    <dd><p>The item type. Must be non-null.</p>
+</dd>
+    <dt><code>TKey</code></dt>
+    <dd><p>The key type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> or <code class="paramref">keySelector</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
   <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_DistinctBy_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.DistinctBy*"></a>
 
   <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_DistinctBy__2_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0___1__System_Collections_Generic_IEqualityComparer___1__" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.DistinctBy``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,``1},System.Collections.Generic.IEqualityComparer{``1})">
   DistinctBy&lt;TSource, TKey&gt;(IEtlPipeline&lt;TSource&gt;, Func&lt;TSource, TKey&gt;, IEqualityComparer&lt;TKey&gt;?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L175"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L343"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Removes items with duplicate keys, optionally using a supplied key <code class="paramref">comparer</code>.</p>
@@ -334,7 +511,7 @@ The item type is unchanged; this batches nothing.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;TSource&gt; DistinctBy&lt;TSource, TKey&gt;(this IEtlPipeline&lt;TSource&gt; pipeline, Func&lt;TSource, TKey&gt; keySelector, IEqualityComparer&lt;TKey&gt;? comparer = null) where TSource : notnull where TKey : notnull</code></pre>
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;TSource&gt; DistinctBy&lt;TSource, TKey&gt;(this IEtlPipeline&lt;TSource&gt; pipeline, Func&lt;TSource, TKey&gt; keySelector, IEqualityComparer&lt;TKey&gt;? comparer) where TSource : notnull where TKey : notnull</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -383,11 +560,127 @@ The item type is unchanged; this batches nothing.</p>
 
 
 
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_DistinctBy_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.DistinctBy*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_DistinctBy__2_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0___1__System_Collections_Generic_IEqualityComparer___1__Wolfgang_Etl_Transformers_DelegateTransformerOptions_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.DistinctBy``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,``1},System.Collections.Generic.IEqualityComparer{``1},Wolfgang.Etl.Transformers.DelegateTransformerOptions)">
+  DistinctBy&lt;TSource, TKey&gt;(IEtlPipeline&lt;TSource&gt;, Func&lt;TSource, TKey&gt;, IEqualityComparer&lt;TKey&gt;?, DelegateTransformerOptions)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L383"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>De-duplicates by key the pipeline like <code>DistinctBy</code> without options, but applies the
+<a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html#Wolfgang_Etl_Transformers_DelegateTransformerOptions_ErrorPolicy">ErrorPolicy</a> in <code class="paramref">options</code> to an item whose delegate (or comparer) throws, so
+the item can be skipped and counted in <code>EtlPipelineProgress.ErrorItemCount</code> instead of aborting the run.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;TSource&gt; DistinctBy&lt;TSource, TKey&gt;(this IEtlPipeline&lt;TSource&gt; pipeline, Func&lt;TSource, TKey&gt; keySelector, IEqualityComparer&lt;TKey&gt;? comparer, DelegateTransformerOptions options) where TSource : notnull where TKey : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;TSource&gt;</dt>
+    <dd><p>The pipeline to extend.</p>
+</dd>
+    <dt><code>keySelector</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TSource, TKey&gt;</dt>
+    <dd><p>The caller-supplied delegate.</p>
+</dd>
+    <dt><code>comparer</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iequalitycomparer-1">IEqualityComparer</a>&lt;TKey&gt;</dt>
+    <dd><p>The comparer used to compare keys, or null for the default.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html">DelegateTransformerOptions</a></dt>
+    <dd><p>The per-item error handling options.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;TSource&gt;</dt>
+    <dd><p>The extended pipeline.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TSource</code></dt>
+    <dd><p>The source item type. Must be non-null.</p>
+</dd>
+    <dt><code>TKey</code></dt>
+    <dd><p>The key type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> or <code class="paramref">options</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>, or the delegate argument is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Distinct_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Distinct*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Distinct__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Distinct``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0})">
+  Distinct&lt;T&gt;(IEtlPipeline&lt;T&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L303"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Removes duplicate items using <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.equalitycomparer-1.default">Default</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;T&gt; Distinct&lt;T&gt;(this IEtlPipeline&lt;T&gt; pipeline) where T : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>The pipeline to deduplicate.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>A pipeline with duplicate items removed, preserving first-seen order.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>The item type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
   <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Distinct_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Distinct*"></a>
 
   <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Distinct__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Collections_Generic_IEqualityComparer___0__" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Distinct``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Collections.Generic.IEqualityComparer{``0})">
   Distinct&lt;T&gt;(IEtlPipeline&lt;T&gt;, IEqualityComparer&lt;T&gt;?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L154"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L288"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Removes duplicate items, optionally using a supplied <code class="paramref">comparer</code>.</p>
@@ -395,7 +688,7 @@ The item type is unchanged; this batches nothing.</p>
   <div class="markdown level1 conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;T&gt; Distinct&lt;T&gt;(this IEtlPipeline&lt;T&gt; pipeline, IEqualityComparer&lt;T&gt;? comparer = null) where T : notnull</code></pre>
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;T&gt; Distinct&lt;T&gt;(this IEtlPipeline&lt;T&gt; pipeline, IEqualityComparer&lt;T&gt;? comparer) where T : notnull</code></pre>
   </div>
 
   <h4 class="section">Parameters</h4>
@@ -438,11 +731,70 @@ The item type is unchanged; this batches nothing.</p>
 
 
 
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Distinct_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Distinct*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Distinct__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Collections_Generic_IEqualityComparer___0__Wolfgang_Etl_Transformers_DelegateTransformerOptions_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Distinct``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Collections.Generic.IEqualityComparer{``0},Wolfgang.Etl.Transformers.DelegateTransformerOptions)">
+  Distinct&lt;T&gt;(IEtlPipeline&lt;T&gt;, IEqualityComparer&lt;T&gt;?, DelegateTransformerOptions)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L322"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>De-duplicates the pipeline like <code>Distinct</code> without options, but applies the
+<a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html#Wolfgang_Etl_Transformers_DelegateTransformerOptions_ErrorPolicy">ErrorPolicy</a> in <code class="paramref">options</code> to an item whose delegate (or comparer) throws, so
+the item can be skipped and counted in <code>EtlPipelineProgress.ErrorItemCount</code> instead of aborting the run.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;T&gt; Distinct&lt;T&gt;(this IEtlPipeline&lt;T&gt; pipeline, IEqualityComparer&lt;T&gt;? comparer, DelegateTransformerOptions options) where T : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>The pipeline to extend.</p>
+</dd>
+    <dt><code>comparer</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iequalitycomparer-1">IEqualityComparer</a>&lt;T&gt;</dt>
+    <dd><p>The equality comparer, or null for the default.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html">DelegateTransformerOptions</a></dt>
+    <dd><p>The per-item error handling options.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>The extended pipeline.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>The item type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> or <code class="paramref">options</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>, or the delegate argument is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
   <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Log_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Log*"></a>
 
   <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Log__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_String__System_Action_System_String__" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Log``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.String},System.Action{System.String})">
   Log&lt;T&gt;(IEtlPipeline&lt;T&gt;, Func&lt;T, string&gt;, Action&lt;string&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L420"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L755"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Writes a log line per item and passes the item through unchanged — a <a class="xref" href="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.html#Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Tap__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Action___0__">Tap&lt;T&gt;(IEtlPipeline&lt;T&gt;, Action&lt;T&gt;)</a>
@@ -509,7 +861,7 @@ referencing <code>Microsoft.Extensions.Logging</code>, so bridge to an <code>ILo
 
   <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_OfType__2_Wolfgang_Etl_Abstractions_IEtlPipeline___0__" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.OfType``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0})">
   OfType&lt;TSource, TDestination&gt;(IEtlPipeline&lt;TSource&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L340"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L675"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Passes through only the items assignable to <code class="typeparamref">TDestination</code>.</p>
@@ -563,7 +915,7 @@ referencing <code>Microsoft.Extensions.Logging</code>, so bridge to an <code>ILo
 
   <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_SelectMany__2_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Collections_Generic_IAsyncEnumerable___1___" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SelectMany``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Collections.Generic.IAsyncEnumerable{``1}})">
   SelectMany&lt;TSource, TDestination&gt;(IEtlPipeline&lt;TSource&gt;, Func&lt;TSource, IAsyncEnumerable&lt;TDestination&gt;&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L134"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L222"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Fans each item out to an asynchronous sequence and flattens the results.</p>
@@ -618,9 +970,71 @@ referencing <code>Microsoft.Extensions.Logging</code>, so bridge to an <code>ILo
 
   <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_SelectMany_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SelectMany*"></a>
 
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_SelectMany__2_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Collections_Generic_IAsyncEnumerable___1___Wolfgang_Etl_Transformers_DelegateTransformerOptions_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SelectMany``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Collections.Generic.IAsyncEnumerable{``1}},Wolfgang.Etl.Transformers.DelegateTransformerOptions)">
+  SelectMany&lt;TSource, TDestination&gt;(IEtlPipeline&lt;TSource&gt;, Func&lt;TSource, IAsyncEnumerable&lt;TDestination&gt;&gt;, DelegateTransformerOptions)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L268"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Flattens the pipeline like <code>SelectMany</code> without options, but applies the
+<a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html#Wolfgang_Etl_Transformers_DelegateTransformerOptions_ErrorPolicy">ErrorPolicy</a> in <code class="paramref">options</code> to an item whose delegate (or comparer) throws, so
+the item can be skipped and counted in <code>EtlPipelineProgress.ErrorItemCount</code> instead of aborting the run.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;TDestination&gt; SelectMany&lt;TSource, TDestination&gt;(this IEtlPipeline&lt;TSource&gt; pipeline, Func&lt;TSource, IAsyncEnumerable&lt;TDestination&gt;&gt; selector, DelegateTransformerOptions options) where TSource : notnull where TDestination : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;TSource&gt;</dt>
+    <dd><p>The pipeline to extend.</p>
+</dd>
+    <dt><code>selector</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TSource, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iasyncenumerable-1">IAsyncEnumerable</a>&lt;TDestination&gt;&gt;</dt>
+    <dd><p>The caller-supplied delegate.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html">DelegateTransformerOptions</a></dt>
+    <dd><p>The per-item error handling options.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;TDestination&gt;</dt>
+    <dd><p>The extended pipeline.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TSource</code></dt>
+    <dd><p>The source item type. Must be non-null.</p>
+</dd>
+    <dt><code>TDestination</code></dt>
+    <dd><p>The destination item type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> or <code class="paramref">options</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>, or the delegate argument is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_SelectMany_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SelectMany*"></a>
+
   <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_SelectMany__2_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Collections_Generic_IEnumerable___1___" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SelectMany``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Collections.Generic.IEnumerable{``1}})">
   SelectMany&lt;TSource, TDestination&gt;(IEtlPipeline&lt;TSource&gt;, Func&lt;TSource, IEnumerable&lt;TDestination&gt;&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L116"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L204"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Fans each item out to a synchronous sequence and flattens the results.</p>
@@ -673,11 +1087,73 @@ referencing <code>Microsoft.Extensions.Logging</code>, so bridge to an <code>ILo
 
 
 
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_SelectMany_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SelectMany*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_SelectMany__2_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Collections_Generic_IEnumerable___1___Wolfgang_Etl_Transformers_DelegateTransformerOptions_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SelectMany``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Collections.Generic.IEnumerable{``1}},Wolfgang.Etl.Transformers.DelegateTransformerOptions)">
+  SelectMany&lt;TSource, TDestination&gt;(IEtlPipeline&lt;TSource&gt;, Func&lt;TSource, IEnumerable&lt;TDestination&gt;&gt;, DelegateTransformerOptions)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L245"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Flattens the pipeline like <code>SelectMany</code> without options, but applies the
+<a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html#Wolfgang_Etl_Transformers_DelegateTransformerOptions_ErrorPolicy">ErrorPolicy</a> in <code class="paramref">options</code> to an item whose delegate (or comparer) throws, so
+the item can be skipped and counted in <code>EtlPipelineProgress.ErrorItemCount</code> instead of aborting the run.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;TDestination&gt; SelectMany&lt;TSource, TDestination&gt;(this IEtlPipeline&lt;TSource&gt; pipeline, Func&lt;TSource, IEnumerable&lt;TDestination&gt;&gt; selector, DelegateTransformerOptions options) where TSource : notnull where TDestination : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;TSource&gt;</dt>
+    <dd><p>The pipeline to extend.</p>
+</dd>
+    <dt><code>selector</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TSource, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;TDestination&gt;&gt;</dt>
+    <dd><p>The caller-supplied delegate.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html">DelegateTransformerOptions</a></dt>
+    <dd><p>The per-item error handling options.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;TDestination&gt;</dt>
+    <dd><p>The extended pipeline.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TSource</code></dt>
+    <dd><p>The source item type. Must be non-null.</p>
+</dd>
+    <dt><code>TDestination</code></dt>
+    <dd><p>The destination item type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> or <code class="paramref">options</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>, or the delegate argument is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
   <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Select_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Select*"></a>
 
   <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Select__2_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Threading_Tasks_ValueTask___1___" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Select``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Threading.Tasks.ValueTask{``1}})">
   Select&lt;TSource, TDestination&gt;(IEtlPipeline&lt;TSource&gt;, Func&lt;TSource, ValueTask&lt;TDestination&gt;&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L98"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L140"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Projects each item with an asynchronous <code class="paramref">selector</code>.</p>
@@ -732,9 +1208,71 @@ referencing <code>Microsoft.Extensions.Logging</code>, so bridge to an <code>ILo
 
   <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Select_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Select*"></a>
 
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Select__2_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Threading_Tasks_ValueTask___1___Wolfgang_Etl_Transformers_DelegateTransformerOptions_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Select``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Threading.Tasks.ValueTask{``1}},Wolfgang.Etl.Transformers.DelegateTransformerOptions)">
+  Select&lt;TSource, TDestination&gt;(IEtlPipeline&lt;TSource&gt;, Func&lt;TSource, ValueTask&lt;TDestination&gt;&gt;, DelegateTransformerOptions)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L186"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Projects the pipeline like <code>Select</code> without options, but applies the
+<a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html#Wolfgang_Etl_Transformers_DelegateTransformerOptions_ErrorPolicy">ErrorPolicy</a> in <code class="paramref">options</code> to an item whose delegate (or comparer) throws, so
+the item can be skipped and counted in <code>EtlPipelineProgress.ErrorItemCount</code> instead of aborting the run.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;TDestination&gt; Select&lt;TSource, TDestination&gt;(this IEtlPipeline&lt;TSource&gt; pipeline, Func&lt;TSource, ValueTask&lt;TDestination&gt;&gt; selector, DelegateTransformerOptions options) where TSource : notnull where TDestination : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;TSource&gt;</dt>
+    <dd><p>The pipeline to extend.</p>
+</dd>
+    <dt><code>selector</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TSource, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.valuetask-1">ValueTask</a>&lt;TDestination&gt;&gt;</dt>
+    <dd><p>The caller-supplied delegate.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html">DelegateTransformerOptions</a></dt>
+    <dd><p>The per-item error handling options.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;TDestination&gt;</dt>
+    <dd><p>The extended pipeline.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TSource</code></dt>
+    <dd><p>The source item type. Must be non-null.</p>
+</dd>
+    <dt><code>TDestination</code></dt>
+    <dd><p>The destination item type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> or <code class="paramref">options</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>, or the delegate argument is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Select_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Select*"></a>
+
   <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Select__2_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0___1__" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Select``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,``1})">
   Select&lt;TSource, TDestination&gt;(IEtlPipeline&lt;TSource&gt;, Func&lt;TSource, TDestination&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L80"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L122"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Projects each item with a synchronous <code class="paramref">selector</code>.</p>
@@ -787,11 +1325,73 @@ referencing <code>Microsoft.Extensions.Logging</code>, so bridge to an <code>ILo
 
 
 
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Select_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Select*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Select__2_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0___1__Wolfgang_Etl_Transformers_DelegateTransformerOptions_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Select``2(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,``1},Wolfgang.Etl.Transformers.DelegateTransformerOptions)">
+  Select&lt;TSource, TDestination&gt;(IEtlPipeline&lt;TSource&gt;, Func&lt;TSource, TDestination&gt;, DelegateTransformerOptions)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L163"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Projects the pipeline like <code>Select</code> without options, but applies the
+<a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html#Wolfgang_Etl_Transformers_DelegateTransformerOptions_ErrorPolicy">ErrorPolicy</a> in <code class="paramref">options</code> to an item whose delegate (or comparer) throws, so
+the item can be skipped and counted in <code>EtlPipelineProgress.ErrorItemCount</code> instead of aborting the run.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;TDestination&gt; Select&lt;TSource, TDestination&gt;(this IEtlPipeline&lt;TSource&gt; pipeline, Func&lt;TSource, TDestination&gt; selector, DelegateTransformerOptions options) where TSource : notnull where TDestination : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;TSource&gt;</dt>
+    <dd><p>The pipeline to extend.</p>
+</dd>
+    <dt><code>selector</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;TSource, TDestination&gt;</dt>
+    <dd><p>The caller-supplied delegate.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html">DelegateTransformerOptions</a></dt>
+    <dd><p>The per-item error handling options.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;TDestination&gt;</dt>
+    <dd><p>The extended pipeline.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>TSource</code></dt>
+    <dd><p>The source item type. Must be non-null.</p>
+</dd>
+    <dt><code>TDestination</code></dt>
+    <dd><p>The destination item type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> or <code class="paramref">options</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>, or the delegate argument is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
   <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_SkipWhile_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SkipWhile*"></a>
 
   <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_SkipWhile__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Boolean__" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SkipWhile``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Boolean})">
   SkipWhile&lt;T&gt;(IEtlPipeline&lt;T&gt;, Func&lt;T, bool&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L256"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L506"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Skips items while a synchronous <code class="paramref">predicate</code> holds, then yields the rest.</p>
@@ -843,9 +1443,68 @@ referencing <code>Microsoft.Extensions.Logging</code>, so bridge to an <code>ILo
 
   <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_SkipWhile_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SkipWhile*"></a>
 
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_SkipWhile__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Boolean__Wolfgang_Etl_Transformers_DelegateTransformerOptions_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SkipWhile``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Boolean},Wolfgang.Etl.Transformers.DelegateTransformerOptions)">
+  SkipWhile&lt;T&gt;(IEtlPipeline&lt;T&gt;, Func&lt;T, bool&gt;, DelegateTransformerOptions)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L543"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Skips items while a predicate holds the pipeline like <code>SkipWhile</code> without options, but applies the
+<a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html#Wolfgang_Etl_Transformers_DelegateTransformerOptions_ErrorPolicy">ErrorPolicy</a> in <code class="paramref">options</code> to an item whose delegate (or comparer) throws, so
+the item can be skipped and counted in <code>EtlPipelineProgress.ErrorItemCount</code> instead of aborting the run.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;T&gt; SkipWhile&lt;T&gt;(this IEtlPipeline&lt;T&gt; pipeline, Func&lt;T, bool&gt; predicate, DelegateTransformerOptions options) where T : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>The pipeline to extend.</p>
+</dd>
+    <dt><code>predicate</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;T, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;</dt>
+    <dd><p>The caller-supplied delegate.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html">DelegateTransformerOptions</a></dt>
+    <dd><p>The per-item error handling options.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>The extended pipeline.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>The item type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> or <code class="paramref">options</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>, or the delegate argument is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_SkipWhile_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SkipWhile*"></a>
+
   <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_SkipWhile__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Threading_Tasks_ValueTask_System_Boolean___" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SkipWhile``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Threading.Tasks.ValueTask{System.Boolean}})">
   SkipWhile&lt;T&gt;(IEtlPipeline&lt;T&gt;, Func&lt;T, ValueTask&lt;bool&gt;&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L272"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L522"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Skips items while an asynchronous <code class="paramref">predicate</code> holds, then yields the rest.</p>
@@ -895,11 +1554,70 @@ referencing <code>Microsoft.Extensions.Logging</code>, so bridge to an <code>ILo
 
 
 
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_SkipWhile_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SkipWhile*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_SkipWhile__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Threading_Tasks_ValueTask_System_Boolean___Wolfgang_Etl_Transformers_DelegateTransformerOptions_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.SkipWhile``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Threading.Tasks.ValueTask{System.Boolean}},Wolfgang.Etl.Transformers.DelegateTransformerOptions)">
+  SkipWhile&lt;T&gt;(IEtlPipeline&lt;T&gt;, Func&lt;T, ValueTask&lt;bool&gt;&gt;, DelegateTransformerOptions)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L564"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Skips items while a predicate holds the pipeline like <code>SkipWhile</code> without options, but applies the
+<a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html#Wolfgang_Etl_Transformers_DelegateTransformerOptions_ErrorPolicy">ErrorPolicy</a> in <code class="paramref">options</code> to an item whose delegate (or comparer) throws, so
+the item can be skipped and counted in <code>EtlPipelineProgress.ErrorItemCount</code> instead of aborting the run.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;T&gt; SkipWhile&lt;T&gt;(this IEtlPipeline&lt;T&gt; pipeline, Func&lt;T, ValueTask&lt;bool&gt;&gt; predicate, DelegateTransformerOptions options) where T : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>The pipeline to extend.</p>
+</dd>
+    <dt><code>predicate</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;T, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.valuetask-1">ValueTask</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;&gt;</dt>
+    <dd><p>The caller-supplied delegate.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html">DelegateTransformerOptions</a></dt>
+    <dd><p>The per-item error handling options.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>The extended pipeline.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>The item type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> or <code class="paramref">options</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>, or the delegate argument is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
   <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Skip_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Skip*"></a>
 
   <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Skip__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Int32_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Skip``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Int32)">
   Skip&lt;T&gt;(IEtlPipeline&lt;T&gt;, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L208"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L416"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Skips the first <code class="paramref">count</code> items, then yields the rest.</p>
@@ -953,7 +1671,7 @@ referencing <code>Microsoft.Extensions.Logging</code>, so bridge to an <code>ILo
 
   <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_TakeWhile__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Boolean__" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.TakeWhile``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Boolean})">
   TakeWhile&lt;T&gt;(IEtlPipeline&lt;T&gt;, Func&lt;T, bool&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L224"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L432"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Yields items while a synchronous <code class="paramref">predicate</code> holds, then stops.</p>
@@ -1005,9 +1723,68 @@ referencing <code>Microsoft.Extensions.Logging</code>, so bridge to an <code>ILo
 
   <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_TakeWhile_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.TakeWhile*"></a>
 
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_TakeWhile__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Boolean__Wolfgang_Etl_Transformers_DelegateTransformerOptions_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.TakeWhile``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Boolean},Wolfgang.Etl.Transformers.DelegateTransformerOptions)">
+  TakeWhile&lt;T&gt;(IEtlPipeline&lt;T&gt;, Func&lt;T, bool&gt;, DelegateTransformerOptions)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L469"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Takes items while a predicate holds the pipeline like <code>TakeWhile</code> without options, but applies the
+<a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html#Wolfgang_Etl_Transformers_DelegateTransformerOptions_ErrorPolicy">ErrorPolicy</a> in <code class="paramref">options</code> to an item whose delegate (or comparer) throws, so
+the item can be skipped and counted in <code>EtlPipelineProgress.ErrorItemCount</code> instead of aborting the run.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;T&gt; TakeWhile&lt;T&gt;(this IEtlPipeline&lt;T&gt; pipeline, Func&lt;T, bool&gt; predicate, DelegateTransformerOptions options) where T : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>The pipeline to extend.</p>
+</dd>
+    <dt><code>predicate</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;T, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;</dt>
+    <dd><p>The caller-supplied delegate.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html">DelegateTransformerOptions</a></dt>
+    <dd><p>The per-item error handling options.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>The extended pipeline.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>The item type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> or <code class="paramref">options</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>, or the delegate argument is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_TakeWhile_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.TakeWhile*"></a>
+
   <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_TakeWhile__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Threading_Tasks_ValueTask_System_Boolean___" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.TakeWhile``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Threading.Tasks.ValueTask{System.Boolean}})">
   TakeWhile&lt;T&gt;(IEtlPipeline&lt;T&gt;, Func&lt;T, ValueTask&lt;bool&gt;&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L240"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L448"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Yields items while an asynchronous <code class="paramref">predicate</code> holds, then stops.</p>
@@ -1057,11 +1834,70 @@ referencing <code>Microsoft.Extensions.Logging</code>, so bridge to an <code>ILo
 
 
 
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_TakeWhile_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.TakeWhile*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_TakeWhile__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Threading_Tasks_ValueTask_System_Boolean___Wolfgang_Etl_Transformers_DelegateTransformerOptions_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.TakeWhile``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Threading.Tasks.ValueTask{System.Boolean}},Wolfgang.Etl.Transformers.DelegateTransformerOptions)">
+  TakeWhile&lt;T&gt;(IEtlPipeline&lt;T&gt;, Func&lt;T, ValueTask&lt;bool&gt;&gt;, DelegateTransformerOptions)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L490"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Takes items while a predicate holds the pipeline like <code>TakeWhile</code> without options, but applies the
+<a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html#Wolfgang_Etl_Transformers_DelegateTransformerOptions_ErrorPolicy">ErrorPolicy</a> in <code class="paramref">options</code> to an item whose delegate (or comparer) throws, so
+the item can be skipped and counted in <code>EtlPipelineProgress.ErrorItemCount</code> instead of aborting the run.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;T&gt; TakeWhile&lt;T&gt;(this IEtlPipeline&lt;T&gt; pipeline, Func&lt;T, ValueTask&lt;bool&gt;&gt; predicate, DelegateTransformerOptions options) where T : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>The pipeline to extend.</p>
+</dd>
+    <dt><code>predicate</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;T, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.valuetask-1">ValueTask</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;&gt;</dt>
+    <dd><p>The caller-supplied delegate.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html">DelegateTransformerOptions</a></dt>
+    <dd><p>The per-item error handling options.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>The extended pipeline.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>The item type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> or <code class="paramref">options</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>, or the delegate argument is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
   <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Take_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Take*"></a>
 
   <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Take__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Int32_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Take``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Int32)">
   Take&lt;T&gt;(IEtlPipeline&lt;T&gt;, int)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L192"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L400"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Yields only the first <code class="paramref">count</code> items, then stops.</p>
@@ -1115,7 +1951,7 @@ referencing <code>Microsoft.Extensions.Logging</code>, so bridge to an <code>ILo
 
   <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Tap__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Action___0__" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Tap``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Action{``0})">
   Tap&lt;T&gt;(IEtlPipeline&lt;T&gt;, Action&lt;T&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L370"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L705"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Runs a synchronous side effect on each item and passes the item through unchanged — an
@@ -1178,7 +2014,7 @@ observability &quot;tap&quot; point (logging, metrics, debugging) that does not 
 
   <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Tap__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Threading_Tasks_ValueTask__" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Tap``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Threading.Tasks.ValueTask})">
   Tap&lt;T&gt;(IEtlPipeline&lt;T&gt;, Func&lt;T, ValueTask&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L389"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L724"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Runs an asynchronous side effect on each item and passes the item through unchanged — an
@@ -1233,7 +2069,7 @@ observability &quot;tap&quot; point that does not alter the stream's shape.</p>
 
   <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Throttle__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_TimeSpan_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Throttle``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.TimeSpan)">
   Throttle&lt;T&gt;(IEtlPipeline&lt;T&gt;, TimeSpan)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L453"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L793"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Paces the pipeline so successive items are yielded at least <code class="paramref">minInterval</code> apart,
@@ -1253,7 +2089,8 @@ not delayed further) and observes the pipeline's cancellation token.</p>
     <dd><p>The pipeline to pace.</p>
 </dd>
     <dt><code>minInterval</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan">TimeSpan</a></dt>
-    <dd><p>The minimum time between successive items. <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan.zero">Zero</a> is a pass-through.</p>
+    <dd><p>The minimum time between successive items. <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.timespan.zero">Zero</a> is a pass-through. Must not
+exceed <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32.maxvalue">MaxValue</a> milliseconds (about 24.8 days).</p>
 </dd>
   </dl>
 
@@ -1291,7 +2128,7 @@ not delayed further) and observes the pipeline's cancellation token.</p>
     <dd><p><code class="paramref">pipeline</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
 </dd>
     <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception">ArgumentOutOfRangeException</a></dt>
-    <dd><p><code class="paramref">minInterval</code> is negative.</p>
+    <dd><p><code class="paramref">minInterval</code> is negative or longer than <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32.maxvalue">MaxValue</a> milliseconds.</p>
 </dd>
   </dl>
 
@@ -1301,7 +2138,7 @@ not delayed further) and observes the pipeline's cancellation token.</p>
 
   <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Where__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Boolean__" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Where``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Boolean})">
   Where&lt;T&gt;(IEtlPipeline&lt;T&gt;, Func&lt;T, bool&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L47"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L47"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Filters the pipeline to items that satisfy a synchronous <code class="paramref">predicate</code>.</p>
@@ -1353,9 +2190,68 @@ not delayed further) and observes the pipeline's cancellation token.</p>
 
   <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Where_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Where*"></a>
 
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Where__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Boolean__Wolfgang_Etl_Transformers_DelegateTransformerOptions_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Where``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Boolean},Wolfgang.Etl.Transformers.DelegateTransformerOptions)">
+  Where&lt;T&gt;(IEtlPipeline&lt;T&gt;, Func&lt;T, bool&gt;, DelegateTransformerOptions)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L84"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Filters the pipeline like <code>Where</code> without options, but applies the
+<a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html#Wolfgang_Etl_Transformers_DelegateTransformerOptions_ErrorPolicy">ErrorPolicy</a> in <code class="paramref">options</code> to an item whose delegate (or comparer) throws, so
+the item can be skipped and counted in <code>EtlPipelineProgress.ErrorItemCount</code> instead of aborting the run.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;T&gt; Where&lt;T&gt;(this IEtlPipeline&lt;T&gt; pipeline, Func&lt;T, bool&gt; predicate, DelegateTransformerOptions options) where T : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>The pipeline to extend.</p>
+</dd>
+    <dt><code>predicate</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;T, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;</dt>
+    <dd><p>The caller-supplied delegate.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html">DelegateTransformerOptions</a></dt>
+    <dd><p>The per-item error handling options.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>The extended pipeline.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>The item type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> or <code class="paramref">options</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>, or the delegate argument is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Where_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Where*"></a>
+
   <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Where__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Threading_Tasks_ValueTask_System_Boolean___" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Where``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Threading.Tasks.ValueTask{System.Boolean}})">
   Where&lt;T&gt;(IEtlPipeline&lt;T&gt;, Func&lt;T, ValueTask&lt;bool&gt;&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L63"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L63"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Filters the pipeline to items that satisfy an asynchronous <code class="paramref">predicate</code>.</p>
@@ -1405,11 +2301,70 @@ not delayed further) and observes the pipeline's cancellation token.</p>
 
 
 
+  <a id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Where_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Where*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_EtlPipelineOperatorExtensions_Where__1_Wolfgang_Etl_Abstractions_IEtlPipeline___0__System_Func___0_System_Threading_Tasks_ValueTask_System_Boolean___Wolfgang_Etl_Transformers_DelegateTransformerOptions_" data-uid="Wolfgang.Etl.Transformers.EtlPipelineOperatorExtensions.Where``1(Wolfgang.Etl.Abstractions.IEtlPipeline{``0},System.Func{``0,System.Threading.Tasks.ValueTask{System.Boolean}},Wolfgang.Etl.Transformers.DelegateTransformerOptions)">
+  Where&lt;T&gt;(IEtlPipeline&lt;T&gt;, Func&lt;T, ValueTask&lt;bool&gt;&gt;, DelegateTransformerOptions)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L105"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Filters the pipeline like <code>Where</code> without options, but applies the
+<a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html#Wolfgang_Etl_Transformers_DelegateTransformerOptions_ErrorPolicy">ErrorPolicy</a> in <code class="paramref">options</code> to an item whose delegate (or comparer) throws, so
+the item can be skipped and counted in <code>EtlPipelineProgress.ErrorItemCount</code> instead of aborting the run.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEtlPipeline&lt;T&gt; Where&lt;T&gt;(this IEtlPipeline&lt;T&gt; pipeline, Func&lt;T, ValueTask&lt;bool&gt;&gt; predicate, DelegateTransformerOptions options) where T : notnull</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>pipeline</code> <span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>The pipeline to extend.</p>
+</dd>
+    <dt><code>predicate</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.func-2">Func</a>&lt;T, <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.tasks.valuetask-1">ValueTask</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a>&gt;&gt;</dt>
+    <dd><p>The caller-supplied delegate.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="Wolfgang.Etl.Transformers.DelegateTransformerOptions.html">DelegateTransformerOptions</a></dt>
+    <dd><p>The per-item error handling options.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><span class="xref">IEtlPipeline</span>&lt;T&gt;</dt>
+    <dd><p>The extended pipeline.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Type Parameters</h4>
+  <dl class="parameters">
+    <dt><code>T</code></dt>
+    <dd><p>The item type. Must be non-null.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">pipeline</code> or <code class="paramref">options</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>, or the delegate argument is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
 
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L35" class="edit-link">Edit this page</a>
+          <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/EtlPipelineOperatorExtensions.cs/#L35" class="edit-link">Edit this page</a>
         </div>
 
 

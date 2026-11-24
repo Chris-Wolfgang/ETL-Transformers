@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/ETL-Transformers/new/v0.8.1/apiSpec/new?filename=Wolfgang_Etl_Transformers_CastTransformer_2.md&amp;value=---%0Auid%3A%20Wolfgang.Etl.Transformers.CastTransformer%602%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/ETL-Transformers/new/v0.9.0/apiSpec/new?filename=Wolfgang_Etl_Transformers_CastTransformer_2.md&amp;value=---%0Auid%3A%20Wolfgang.Etl.Transformers.CastTransformer%602%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -75,11 +75,11 @@
 
 
   <h1 id="Wolfgang_Etl_Transformers_CastTransformer_2" data-uid="Wolfgang.Etl.Transformers.CastTransformer`2" class="text-break">
-Class CastTransformer&lt;TSource, TDestination&gt;  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/CastTransformer.cs/#L71"><i class="bi bi-code-slash"></i></a>
+Class CastTransformer&lt;TSource, TDestination&gt;  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/CastTransformer.cs/#L74"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
-    <dl><dt>Namespace</dt><dd><a class="xref" href="Wolfgang.html">Wolfgang</a>.<a class="xref" href="Wolfgang.Etl.html">Etl</a>.<a class="xref" href="Wolfgang.Etl.Transformers.html">Transformers</a></dd></dl>
+    <dl><dt>Namespace</dt><dd><span class="xref">Wolfgang</span>.<span class="xref">Etl</span>.<a class="xref" href="Wolfgang.Etl.Transformers.html">Transformers</a></dd></dl>
   <dl><dt>Assembly</dt><dd>Wolfgang.Etl.Transformers.dll</dd></dl>
   </div>
 
@@ -89,7 +89,7 @@ Class CastTransformer&lt;TSource, TDestination&gt;  <a class="header-action link
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class CastTransformer&lt;TSource, TDestination&gt; : ITransformAsync&lt;TSource, TDestination&gt;, IReportsItemErrors where TSource : notnull where TDestination : notnull</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class CastTransformer&lt;TSource, TDestination&gt; : ITransformWithCancellationAsync&lt;TSource, TDestination&gt;, ITransformAsync&lt;TSource, TDestination&gt;, IReportsItemErrors where TSource : notnull where TDestination : notnull</code></pre>
   </div>
 
 
@@ -116,6 +116,7 @@ Class CastTransformer&lt;TSource, TDestination&gt;  <a class="header-action link
   <dl class="typelist implements">
     <dt>Implements</dt>
     <dd>
+      <div><span class="xref">ITransformWithCancellationAsync</span>&lt;TSource, TDestination&gt;</div>
       <div><span class="xref">ITransformAsync</span>&lt;TSource, TDestination&gt;</div>
       <div><span class="xref">IReportsItemErrors</span></div>
     </dd>
@@ -150,6 +151,9 @@ Class CastTransformer&lt;TSource, TDestination&gt;  <a class="header-action link
     <dd>
   <div>
       <a class="xref" href="Wolfgang.Etl.Transformers.TransformerExtensions.html#Wolfgang_Etl_Transformers_TransformerExtensions_Then__3_Wolfgang_Etl_Abstractions_ITransformAsync___0___1__Wolfgang_Etl_Abstractions_ITransformAsync___1___2__">TransformerExtensions.Then&lt;TSource, TIntermediate, TDestination&gt;(ITransformAsync&lt;TSource, TIntermediate&gt;, ITransformAsync&lt;TIntermediate, TDestination&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Wolfgang.Etl.Transformers.TransformerExtensions.html#Wolfgang_Etl_Transformers_TransformerExtensions_Then__3_Wolfgang_Etl_Abstractions_ITransformWithCancellationAsync___0___1__Wolfgang_Etl_Abstractions_ITransformWithCancellationAsync___1___2__">TransformerExtensions.Then&lt;TSource, TIntermediate, TDestination&gt;(ITransformWithCancellationAsync&lt;TSource, TIntermediate&gt;, ITransformWithCancellationAsync&lt;TIntermediate, TDestination&gt;)</a>
   </div>
   </dd></dl>
 
@@ -189,9 +193,11 @@ dead-letter collection. Reach for it when mismatches are unexpected and you need
 ones occurred.
 </li></ul>
 <p>
-Implements only <span class="xref">Wolfgang.Etl.Abstractions.ITransformAsync&lt;TSource, TDestination&gt;</span> - no progress, no
-cancellation, no Skip/Max - to keep the hot loop minimal. The one counter is the opt-in
-<a class="xref" href="Wolfgang.Etl.Transformers.CastTransformer-2.html#Wolfgang_Etl_Transformers_CastTransformer_2_CurrentErrorItemCount">CurrentErrorItemCount</a>, which stays at zero on the default path.
+Implements <span class="xref">Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync&lt;TSource, TDestination&gt;</span> - no progress,
+no <code>SkipItemCount</code>/<code>MaximumItemCount</code> limits (unrelated to
+<span class="xref">Wolfgang.Etl.Abstractions.ItemErrorAction.Skip</span>, which the error policy uses to drop a failing item) - to keep
+the hot loop minimal. The one counter is the opt-in <a class="xref" href="Wolfgang.Etl.Transformers.CastTransformer-2.html#Wolfgang_Etl_Transformers_CastTransformer_2_CurrentErrorItemCount">CurrentErrorItemCount</a>, which stays
+at zero on the default path.
 </p>
 </div>
 
@@ -204,7 +210,7 @@ cancellation, no Skip/Max - to keep the hot loop minimal. The one counter is the
 
   <h3 id="Wolfgang_Etl_Transformers_CastTransformer_2__ctor" data-uid="Wolfgang.Etl.Transformers.CastTransformer`2.#ctor">
   CastTransformer()
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/CastTransformer.cs/#L84"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/CastTransformer.cs/#L86"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Wolfgang.Etl.Transformers.CastTransformer-2.html">CastTransformer&lt;TSource, TDestination&gt;</a> class
@@ -232,7 +238,7 @@ that throws <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.
 
   <h3 id="Wolfgang_Etl_Transformers_CastTransformer_2__ctor_Wolfgang_Etl_Transformers_DelegateTransformerOptions_" data-uid="Wolfgang.Etl.Transformers.CastTransformer`2.#ctor(Wolfgang.Etl.Transformers.DelegateTransformerOptions)">
   CastTransformer(DelegateTransformerOptions)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/CastTransformer.cs/#L101"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/CastTransformer.cs/#L103"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance with an error policy controlling what happens when an item does
@@ -278,7 +284,7 @@ itself, and the exception handed to the policy is an <a class="xref" href="https
 
   <h3 id="Wolfgang_Etl_Transformers_CastTransformer_2_CurrentErrorItemCount" data-uid="Wolfgang.Etl.Transformers.CastTransformer`2.CurrentErrorItemCount">
   CurrentErrorItemCount
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/CastTransformer.cs/#L118"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/CastTransformer.cs/#L120"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The number of items dropped so far because they did not convert and the error policy
@@ -304,7 +310,7 @@ returned <span class="xref">Wolfgang.Etl.Abstractions.ItemErrorAction.Skip</span
 
 
   <h4 class="section" id="Wolfgang_Etl_Transformers_CastTransformer_2_CurrentErrorItemCount_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>Cumulative across every enumeration produced by this instance. An item whose failure aborted
+  <div class="markdown level1 remarks"><p>Per run: restarts at zero when a new enumeration begins while no other one is active. An item whose failure aborted
 the run is not counted, because the exception is re-thrown instead.</p>
 </div>
 
@@ -319,7 +325,7 @@ the run is not counted, because the exception is re-thrown instead.</p>
 
   <h3 id="Wolfgang_Etl_Transformers_CastTransformer_2_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__" data-uid="Wolfgang.Etl.Transformers.CastTransformer`2.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})">
   TransformAsync(IAsyncEnumerable&lt;TSource&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/CastTransformer.cs/#L132"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/CastTransformer.cs/#L134"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Asynchronously yields each item from <code class="paramref">items</code> cast to
@@ -364,11 +370,60 @@ the run is not counted, because the exception is re-thrown instead.</p>
 
 
 
+  <a id="Wolfgang_Etl_Transformers_CastTransformer_2_TransformAsync_" data-uid="Wolfgang.Etl.Transformers.CastTransformer`2.TransformAsync*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_CastTransformer_2_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__System_Threading_CancellationToken_" data-uid="Wolfgang.Etl.Transformers.CastTransformer`2.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0},System.Threading.CancellationToken)">
+  TransformAsync(IAsyncEnumerable&lt;TSource&gt;, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/CastTransformer.cs/#L151"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Transforms <code class="paramref">items</code> like the overload without a token, and forwards
+<code class="paramref">token</code> to the stages above this one and to the source.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IAsyncEnumerable&lt;TDestination&gt; TransformAsync(IAsyncEnumerable&lt;TSource&gt; items, CancellationToken token)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>items</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iasyncenumerable-1">IAsyncEnumerable</a>&lt;TSource&gt;</dt>
+    <dd><p>The sequence to transform.</p>
+</dd>
+    <dt><code>token</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>A token that cancels the enumeration, including the source.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iasyncenumerable-1">IAsyncEnumerable</a>&lt;TDestination&gt;</dt>
+    <dd><p>The transformed sequence.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">items</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
 
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/CastTransformer.cs/#L71" class="edit-link">Edit this page</a>
+          <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/CastTransformer.cs/#L74" class="edit-link">Edit this page</a>
         </div>
 
 

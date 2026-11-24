@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/docfx_project/docs/getting-started.md/#L1">
+      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/docfx_project/docs/getting-started.md/#L1">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -76,7 +76,7 @@
 <p>This guide will help you quickly get up and running with Wolfgang.Etl.Transformers.</p>
 <h2 id="prerequisites">Prerequisites</h2>
 <ul>
-<li>.NET 5.0 or later (any TFM from .NET Framework 4.6.2 to .NET 10.0 is supported at runtime)</li>
+<li>.NET Framework 4.6.2 or later, any .NET Standard 2.0 platform, or .NET 5.0 or later</li>
 <li>.NET 10.0 SDK to build from source and run the full TFM matrix</li>
 </ul>
 <h2 id="installation">Installation</h2>
@@ -95,10 +95,7 @@ ITransformAsync&lt;string, InvoiceRow&gt; pipeline =
         .Then(new WhereTransformer&lt;Order&gt;(o =&gt; o.IsValid))
         .Then(new SelectTransformer&lt;Order, InvoiceRow&gt;(ToInvoice));
 
-await foreach (var row in pipeline.TransformAsync(rawLines))
-{
-    await loader.LoadAsync(row, token);
-}
+await loader.LoadAsync(pipeline.TransformAsync(rawLines), token);
 </code></pre>
 <h3 id="buffered-producerconsumer">Buffered producer–consumer</h3>
 <p>Insert <code>BufferedTransformer&lt;T&gt;</code> (or <code>.Buffered(n)</code>) to decouple a slow producer from a slow
@@ -135,7 +132,7 @@ ITransformAsync&lt;string, InvoiceRow&gt; pipeline =
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/docfx_project/docs/getting-started.md/#L1" class="edit-link">Edit this page</a>
+          <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/docfx_project/docs/getting-started.md/#L1" class="edit-link">Edit this page</a>
         </div>
 
         <div class="next-article d-print-none border-top" id="nextArticle"></div>

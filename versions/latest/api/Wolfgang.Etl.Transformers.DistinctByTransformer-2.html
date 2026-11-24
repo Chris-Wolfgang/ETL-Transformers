@@ -16,7 +16,7 @@
       <meta name="docfx:rel" content="../">
       
       
-      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/ETL-Transformers/new/v0.8.1/apiSpec/new?filename=Wolfgang_Etl_Transformers_DistinctByTransformer_2.md&amp;value=---%0Auid%3A%20Wolfgang.Etl.Transformers.DistinctByTransformer%602%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+      <meta name="docfx:docurl" content="https://github.com/Chris-Wolfgang/ETL-Transformers/new/v0.9.0/apiSpec/new?filename=Wolfgang_Etl_Transformers_DistinctByTransformer_2.md&amp;value=---%0Auid%3A%20Wolfgang.Etl.Transformers.DistinctByTransformer%602%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
       <meta name="loc:inThisArticle" content="In this article">
       <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
       <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
@@ -75,11 +75,11 @@
 
 
   <h1 id="Wolfgang_Etl_Transformers_DistinctByTransformer_2" data-uid="Wolfgang.Etl.Transformers.DistinctByTransformer`2" class="text-break">
-Class DistinctByTransformer&lt;TSource, TKey&gt;  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/DistinctByTransformer.cs/#L64"><i class="bi bi-code-slash"></i></a>
+Class DistinctByTransformer&lt;TSource, TKey&gt;  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/DistinctByTransformer.cs/#L67"><i class="bi bi-code-slash"></i></a>
   </h1>
 
   <div class="facts text-secondary">
-    <dl><dt>Namespace</dt><dd><a class="xref" href="Wolfgang.html">Wolfgang</a>.<a class="xref" href="Wolfgang.Etl.html">Etl</a>.<a class="xref" href="Wolfgang.Etl.Transformers.html">Transformers</a></dd></dl>
+    <dl><dt>Namespace</dt><dd><span class="xref">Wolfgang</span>.<span class="xref">Etl</span>.<a class="xref" href="Wolfgang.Etl.Transformers.html">Transformers</a></dd></dl>
   <dl><dt>Assembly</dt><dd>Wolfgang.Etl.Transformers.dll</dd></dl>
   </div>
 
@@ -89,7 +89,7 @@ caller-supplied selector. Subsequent items whose key has already been seen are d
   <div class="markdown conceptual"></div>
 
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class DistinctByTransformer&lt;TSource, TKey&gt; : ITransformAsync&lt;TSource, TSource&gt;, IReportsItemErrors where TSource : notnull where TKey : notnull</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class DistinctByTransformer&lt;TSource, TKey&gt; : ITransformWithCancellationAsync&lt;TSource, TSource&gt;, ITransformAsync&lt;TSource, TSource&gt;, IReportsItemErrors where TSource : notnull where TKey : notnull</code></pre>
   </div>
 
 
@@ -115,6 +115,7 @@ caller-supplied selector. Subsequent items whose key has already been seen are d
   <dl class="typelist implements">
     <dt>Implements</dt>
     <dd>
+      <div><span class="xref">ITransformWithCancellationAsync</span>&lt;TSource, TSource&gt;</div>
       <div><span class="xref">ITransformAsync</span>&lt;TSource, TSource&gt;</div>
       <div><span class="xref">IReportsItemErrors</span></div>
     </dd>
@@ -149,6 +150,9 @@ caller-supplied selector. Subsequent items whose key has already been seen are d
     <dd>
   <div>
       <a class="xref" href="Wolfgang.Etl.Transformers.TransformerExtensions.html#Wolfgang_Etl_Transformers_TransformerExtensions_Then__3_Wolfgang_Etl_Abstractions_ITransformAsync___0___1__Wolfgang_Etl_Abstractions_ITransformAsync___1___2__">TransformerExtensions.Then&lt;TSource, TIntermediate, TDestination&gt;(ITransformAsync&lt;TSource, TIntermediate&gt;, ITransformAsync&lt;TIntermediate, TDestination&gt;)</a>
+  </div>
+  <div>
+      <a class="xref" href="Wolfgang.Etl.Transformers.TransformerExtensions.html#Wolfgang_Etl_Transformers_TransformerExtensions_Then__3_Wolfgang_Etl_Abstractions_ITransformWithCancellationAsync___0___1__Wolfgang_Etl_Abstractions_ITransformWithCancellationAsync___1___2__">TransformerExtensions.Then&lt;TSource, TIntermediate, TDestination&gt;(ITransformWithCancellationAsync&lt;TSource, TIntermediate&gt;, ITransformWithCancellationAsync&lt;TIntermediate, TDestination&gt;)</a>
   </div>
   </dd></dl>
 
@@ -186,9 +190,11 @@ result.
 stream.
 </p>
 <p>
-Implements only <span class="xref">Wolfgang.Etl.Abstractions.ITransformAsync&lt;TSource, TDestination&gt;</span> - no progress, no
-cancellation, no Skip/Max - to keep the hot loop minimal. The one counter is the opt-in
-<a class="xref" href="Wolfgang.Etl.Transformers.DistinctByTransformer-2.html#Wolfgang_Etl_Transformers_DistinctByTransformer_2_CurrentErrorItemCount">CurrentErrorItemCount</a>, which stays at zero on the default path.
+Implements <span class="xref">Wolfgang.Etl.Abstractions.ITransformWithCancellationAsync&lt;TSource, TDestination&gt;</span> - no progress,
+no <code>SkipItemCount</code>/<code>MaximumItemCount</code> limits (unrelated to
+<span class="xref">Wolfgang.Etl.Abstractions.ItemErrorAction.Skip</span>, which the error policy uses to drop a failing item) - to keep
+the hot loop minimal. The one counter is the opt-in <a class="xref" href="Wolfgang.Etl.Transformers.DistinctByTransformer-2.html#Wolfgang_Etl_Transformers_DistinctByTransformer_2_CurrentErrorItemCount">CurrentErrorItemCount</a>, which stays
+at zero on the default path.
 </p>
 <p>
 By default an exception thrown by the key selector, or by the comparer while the key is being
@@ -209,7 +215,7 @@ transformer doing its job, not an error, and is never counted.
 
   <h3 id="Wolfgang_Etl_Transformers_DistinctByTransformer_2__ctor_System_Func__0__1__" data-uid="Wolfgang.Etl.Transformers.DistinctByTransformer`2.#ctor(System.Func{`0,`1})">
   DistinctByTransformer(Func&lt;TSource, TKey&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/DistinctByTransformer.cs/#L81"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/DistinctByTransformer.cs/#L83"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance with the given key selector, using
@@ -249,7 +255,7 @@ transformer doing its job, not an error, and is never counted.
 
   <h3 id="Wolfgang_Etl_Transformers_DistinctByTransformer_2__ctor_System_Func__0__1__System_Collections_Generic_IEqualityComparer__1__" data-uid="Wolfgang.Etl.Transformers.DistinctByTransformer`2.#ctor(System.Func{`0,`1},System.Collections.Generic.IEqualityComparer{`1})">
   DistinctByTransformer(Func&lt;TSource, TKey&gt;, IEqualityComparer&lt;TKey&gt;?)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/DistinctByTransformer.cs/#L97"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/DistinctByTransformer.cs/#L99"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance with the given key selector and equality comparer.</p>
@@ -292,7 +298,7 @@ transformer doing its job, not an error, and is never counted.
 
   <h3 id="Wolfgang_Etl_Transformers_DistinctByTransformer_2__ctor_System_Func__0__1__System_Collections_Generic_IEqualityComparer__1__Wolfgang_Etl_Transformers_DelegateTransformerOptions_" data-uid="Wolfgang.Etl.Transformers.DistinctByTransformer`2.#ctor(System.Func{`0,`1},System.Collections.Generic.IEqualityComparer{`1},Wolfgang.Etl.Transformers.DelegateTransformerOptions)">
   DistinctByTransformer(Func&lt;TSource, TKey&gt;, IEqualityComparer&lt;TKey&gt;?, DelegateTransformerOptions)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/DistinctByTransformer.cs/#L125"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/DistinctByTransformer.cs/#L127"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Initializes a new instance with the given key selector, equality comparer and error policy.</p>
@@ -349,7 +355,7 @@ ambiguous with <code>(keySelector, comparer)</code> at any existing call site pa
 
   <h3 id="Wolfgang_Etl_Transformers_DistinctByTransformer_2_CurrentErrorItemCount" data-uid="Wolfgang.Etl.Transformers.DistinctByTransformer`2.CurrentErrorItemCount">
   CurrentErrorItemCount
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/DistinctByTransformer.cs/#L151"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/DistinctByTransformer.cs/#L153"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>The number of items dropped so far because the key selector or comparer threw and the error
@@ -375,7 +381,7 @@ policy returned <span class="xref">Wolfgang.Etl.Abstractions.ItemErrorAction.Ski
 
 
   <h4 class="section" id="Wolfgang_Etl_Transformers_DistinctByTransformer_2_CurrentErrorItemCount_remarks">Remarks</h4>
-  <div class="markdown level1 remarks"><p>Cumulative across every enumeration produced by this instance, and counts only failures - an
+  <div class="markdown level1 remarks"><p>Per run: restarts at zero when a new enumeration begins while no other one is active, and counts only failures - an
 item dropped as a duplicate is not an error. An item whose failure aborted the run is not
 counted either, because the exception is re-thrown instead.</p>
 </div>
@@ -391,7 +397,7 @@ counted either, because the exception is re-thrown instead.</p>
 
   <h3 id="Wolfgang_Etl_Transformers_DistinctByTransformer_2_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__" data-uid="Wolfgang.Etl.Transformers.DistinctByTransformer`2.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0})">
   TransformAsync(IAsyncEnumerable&lt;TSource&gt;)
-  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/DistinctByTransformer.cs/#L162"><i class="bi bi-code-slash"></i></a>
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/DistinctByTransformer.cs/#L164"><i class="bi bi-code-slash"></i></a>
   </h3>
 
   <div class="markdown level1 summary"><p>Asynchronously yields the first item in <code class="paramref">items</code> for each unique key
@@ -433,11 +439,60 @@ produced by the configured selector, dropping later items with already-seen keys
 
 
 
+  <a id="Wolfgang_Etl_Transformers_DistinctByTransformer_2_TransformAsync_" data-uid="Wolfgang.Etl.Transformers.DistinctByTransformer`2.TransformAsync*"></a>
+
+  <h3 id="Wolfgang_Etl_Transformers_DistinctByTransformer_2_TransformAsync_System_Collections_Generic_IAsyncEnumerable__0__System_Threading_CancellationToken_" data-uid="Wolfgang.Etl.Transformers.DistinctByTransformer`2.TransformAsync(System.Collections.Generic.IAsyncEnumerable{`0},System.Threading.CancellationToken)">
+  TransformAsync(IAsyncEnumerable&lt;TSource&gt;, CancellationToken)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/DistinctByTransformer.cs/#L181"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Transforms <code class="paramref">items</code> like the overload without a token, and forwards
+<code class="paramref">token</code> to the stages above this one and to the source.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IAsyncEnumerable&lt;TSource&gt; TransformAsync(IAsyncEnumerable&lt;TSource&gt; items, CancellationToken token)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>items</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iasyncenumerable-1">IAsyncEnumerable</a>&lt;TSource&gt;</dt>
+    <dd><p>The sequence to transform.</p>
+</dd>
+    <dt><code>token</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></dt>
+    <dd><p>A token that cancels the enumeration, including the source.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.collections.generic.iasyncenumerable-1">IAsyncEnumerable</a>&lt;TSource&gt;</dt>
+    <dd><p>The transformed sequence.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+  <h4 class="section">Exceptions</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></dt>
+    <dd><p><code class="paramref">items</code> is <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/keywords/null">null</a>.</p>
+</dd>
+  </dl>
+
+
+
 
 </article>
 
         <div class="contribution d-print-none">
-          <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.8.1/src/Wolfgang.Etl.Transformers/DistinctByTransformer.cs/#L64" class="edit-link">Edit this page</a>
+          <a href="https://github.com/Chris-Wolfgang/ETL-Transformers/blob/v0.9.0/src/Wolfgang.Etl.Transformers/DistinctByTransformer.cs/#L67" class="edit-link">Edit this page</a>
         </div>
 
 
