@@ -40,6 +40,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Wolfgang.Etl.Abstractions;
 using Wolfgang.Etl.TestKit;
+using BasicChain;
 using Wolfgang.Etl.Transformers;
 
 // ---------------------------------------------------------------------------
@@ -152,4 +153,8 @@ Console.WriteLine
 // Order - the projected type produced by the pipeline.
 // ---------------------------------------------------------------------------
 
-public sealed record Order(string Id, string Name, int Quantity, decimal Price);
+namespace BasicChain
+{
+    // A block namespace: a file with top-level statements cannot use a file-scoped one.
+    public sealed record Order(string Id, string Name, int Quantity, decimal Price);
+}
