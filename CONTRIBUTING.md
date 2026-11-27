@@ -160,7 +160,7 @@ var now = DateTimeOffset.UtcNow;
 ## Build and Test Instructions
 
 ### Prerequisites
-- .NET 10.0 SDK or later (required to build and run the full TFM matrix)
+- .NET 11.0 SDK or later (`global.json` pins 11.0.100; required to build and run the full TFM matrix)
 - PowerShell Core (optional, for formatting scripts)
 
 ### Build the Project

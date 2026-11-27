@@ -29,7 +29,7 @@ handling, and composition.
   sides implement `ITransformWithCancellationAsync<TSource, TDestination>` (every transformer in this package does; a
   chain that includes a custom transformer implementing only `ITransformAsync` uses the plain overload)
 - **Multi-TFM**: targets .NET Framework 4.6.2, 4.7.2, 4.8 and 4.8.1, .NET Standard 2.0, and
-  .NET 5.0–10.0
+  .NET 5.0–11.0
 - **No per-item allocations in the pass-through, filter and projection transformers**: they yield
   items via `IAsyncEnumerable<T>` without intermediate buffering. The stateful ones are the
   exceptions: `BufferedTransformer` (an explicit channel), `ChunkTransformer` (a `T[]` per chunk)

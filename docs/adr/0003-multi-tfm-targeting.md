@@ -1,6 +1,6 @@
-# ADR-0003: Broad multi-target-framework matrix (net462 → net10.0)
+# ADR-0003: Broad multi-target-framework matrix (net462 → net11.0)
 
-- **Status**: Accepted
+- **Status**: Accepted (matrix extended to net11.0 in 0.9.0 - see "Update: net11.0 (0.9.0)" below)
 - **Date**: 2026-07-20
 - **Deciders**: @Chris-Wolfgang
 
@@ -38,3 +38,9 @@ in the csproj because CI greps it.
   .NET Framework consumers this library is meant to serve.
 - **`netstandard2.0` only** — one TFM, but forgoes modern-runtime optimizations
   and newer BCL surface available on `net6.0+`.
+
+## Update: net11.0 (0.9.0)
+
+The decision stands. Release 0.9.0 added `net11.0` to the top of the matrix (#795), so the list under
+Context now ends `...;net9.0;net10.0;net11.0`. Building it needs the .NET 11 SDK, which `global.json`
+pins (`11.0.100`, `rollForward: latestFeature`).
