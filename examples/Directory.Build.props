@@ -1,5 +1,12 @@
 <Project>
   <!--
+    MSBuild stops at the nearest Directory.Build.props, so import the root one first: without it
+    the examples get none of the repo's analyzers, TreatWarningsAsErrors or BannedSymbols.txt
+    (issue #816). The settings below are applied on top of it.
+  -->
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+  <!--
     Relaxed analyzer rules for example projects.
     Examples use top-level statements with helper types in Program.cs,
     which triggers MA0048 (file name must match type name) and
