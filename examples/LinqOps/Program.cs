@@ -42,6 +42,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Wolfgang.Etl.Abstractions;
 using Wolfgang.Etl.TestKit;
+using LinqOps;
 using Wolfgang.Etl.Transformers;
 
 // ---------------------------------------------------------------------------
@@ -124,4 +125,8 @@ Console.WriteLine($"Total Bucket items:   {chunks.Sum(c => c.Count)}");
 // Bucket - intermediate record type produced by the Select stage.
 // ---------------------------------------------------------------------------
 
-public sealed record Bucket(int Number, string Label);
+namespace LinqOps
+{
+    // A block namespace: a file with top-level statements cannot use a file-scoped one.
+    public sealed record Bucket(int Number, string Label);
+}
