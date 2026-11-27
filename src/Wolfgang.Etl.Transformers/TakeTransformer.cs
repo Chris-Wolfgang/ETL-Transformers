@@ -119,8 +119,15 @@ public sealed class TakeTransformer<T> : ITransformWithCancellationAsync<T, T>
         }
 
         var taken = 0;
+
+        // Observe the token here, not only through WithCancellation: a source that ignores
+        // the token would otherwise be drained after cancellation (issues #209, #813).
+        token.ThrowIfCancellationRequested();
+
         await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
         {
+            token.ThrowIfCancellationRequested();
+
             yield return item;
             taken++;
             if (taken >= count)

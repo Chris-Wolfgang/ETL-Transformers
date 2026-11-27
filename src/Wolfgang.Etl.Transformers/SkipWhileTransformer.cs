@@ -189,8 +189,14 @@ public sealed class SkipWhileTransformer<T> : ITransformWithCancellationAsync<T,
         var skipping = true;
         var itemNumber = 0L;
 
+        // Observe the token here, not only through WithCancellation: a source that ignores
+        // the token would otherwise be drained after cancellation (issues #209, #813).
+        token.ThrowIfCancellationRequested();
+
         await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
         {
+            token.ThrowIfCancellationRequested();
+
             itemNumber++;
 
             if (skipping)
@@ -239,8 +245,14 @@ public sealed class SkipWhileTransformer<T> : ITransformWithCancellationAsync<T,
         var skipping = true;
         var itemNumber = 0L;
 
+        // Observe the token here, not only through WithCancellation: a source that ignores
+        // the token would otherwise be drained after cancellation (issues #209, #813).
+        token.ThrowIfCancellationRequested();
+
         await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
         {
+            token.ThrowIfCancellationRequested();
+
             itemNumber++;
 
             if (skipping)

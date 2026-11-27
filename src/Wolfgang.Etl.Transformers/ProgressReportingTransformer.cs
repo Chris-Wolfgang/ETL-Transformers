@@ -156,8 +156,14 @@ public sealed class ProgressReportingTransformer<T> : ITransformWithCancellation
         [EnumeratorCancellation] CancellationToken token = default
     )
     {
+        // Observe the token here, not only through WithCancellation: a source that ignores
+        // the token would otherwise be drained after cancellation (issues #209, #813).
+        token.ThrowIfCancellationRequested();
+
         await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
         {
+            token.ThrowIfCancellationRequested();
+
             callback(item);
             yield return item;
         }
@@ -172,8 +178,14 @@ public sealed class ProgressReportingTransformer<T> : ITransformWithCancellation
         [EnumeratorCancellation] CancellationToken token = default
     )
     {
+        // Observe the token here, not only through WithCancellation: a source that ignores
+        // the token would otherwise be drained after cancellation (issues #209, #813).
+        token.ThrowIfCancellationRequested();
+
         await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
         {
+            token.ThrowIfCancellationRequested();
+
             await callback(item).ConfigureAwait(continueOnCapturedContext: false);
             yield return item;
         }

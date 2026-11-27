@@ -105,8 +105,14 @@ public sealed class OfTypeTransformer<TSource, TDestination> : ITransformWithCan
         [EnumeratorCancellation] CancellationToken token = default
     )
     {
+        // Observe the token here, not only through WithCancellation: a source that ignores
+        // the token would otherwise be drained after cancellation (issues #209, #813).
+        token.ThrowIfCancellationRequested();
+
         await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
         {
+            token.ThrowIfCancellationRequested();
+
             if (item is TDestination typed)
             {
                 yield return typed;

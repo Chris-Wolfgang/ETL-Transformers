@@ -229,7 +229,7 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformWit
     {
         using var run = _errors.BeginRun();
         var itemNumber = 0L;
-        await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
+        await foreach (var item in ObserveTokenAsync(items, token).ConfigureAwait(continueOnCapturedContext: false))
         {
             itemNumber++;
 
@@ -301,7 +301,7 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformWit
 
         var itemNumber = 0L;
 
-        await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
+        await foreach (var item in ObserveTokenAsync(items, token).ConfigureAwait(continueOnCapturedContext: false))
         {
             itemNumber++;
 
@@ -411,6 +411,26 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformWit
         {
             // Deliberately ignored: this item was skipped by the error policy, so a cleanup error
             // must neither end the run nor be counted a second time.
+        }
+    }
+
+
+
+    // Observes the token itself, not only through WithCancellation: a source that ignores the
+    // token would otherwise be drained after cancellation (issues #209, #813). A separate
+    // iterator because both flatten methods are at the MA0051 length limit.
+    private static async IAsyncEnumerable<TSource> ObserveTokenAsync
+    (
+        IAsyncEnumerable<TSource> items,
+        [EnumeratorCancellation] CancellationToken token
+    )
+    {
+        token.ThrowIfCancellationRequested();
+
+        await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
+        {
+            token.ThrowIfCancellationRequested();
+            yield return item;
         }
     }
 }
