@@ -46,20 +46,19 @@
   </ItemGroup>
 
   <!--
-    Microsoft.Bcl.AsyncInterfaces: IAsyncEnumerable<T> / IAsyncDisposable are in-box from
-    netcoreapp3.0 / net5.0, so only the .NET Framework and netstandard2.0 slots strictly need the
-    full reference; net5.0-net7.0 keep it as well, which only pins the version. The net8+ group pins the version with ExcludeAssets="runtime" to
-    prevent NuGet from resolving an older transitive version - no runtime assembly is copied.
+    Microsoft.Bcl.AsyncInterfaces (IAsyncEnumerable<T>, IAsyncDisposable) and System.Threading.Channels
+    are in-box from netcoreapp3.0, so they are referenced only on the .NET Framework and netstandard2.0
+    slots. The 11.0.0 packages support only net462, netstandard2.0/2.1, net10.0 and net11.0, and ship a
+    buildTransitive targets file that warns on every older modern TFM; that warning flows to consumers,
+    where this project's SuppressTfmSupportBuildWarnings does not reach (issue #814). Referencing them
+    on net5.0+ would hand every net8.0/net9.0 consumer two "doesn't support net8.0" warnings.
   -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'net462' OR '$(TargetFramework)' == 'net472' OR '$(TargetFramework)' == 'net48' OR '$(TargetFramework)' == 'net481' OR '$(TargetFramework)' == 'netstandard2.0' OR '$(TargetFramework)' == 'net5.0' OR '$(TargetFramework)' == 'net6.0' OR '$(TargetFramework)' == 'net7.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net462' OR '$(TargetFramework)' == 'net472' OR '$(TargetFramework)' == 'net48' OR '$(TargetFramework)' == 'net481' OR '$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="11.0.0" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0' OR '$(TargetFramework)' == 'net9.0' OR '$(TargetFramework)' == 'net10.0' OR '$(TargetFramework)' == 'net11.0'">
-    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="11.0.0" ExcludeAssets="runtime" />
+    <PackageReference Include="System.Threading.Channels" Version="11.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Threading.Channels" Version="11.0.0" />
     <PackageReference Include="Wolfgang.Etl.Abstractions" Version="0.28.0" />
   </ItemGroup>
 
