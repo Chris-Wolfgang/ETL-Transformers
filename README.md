@@ -188,7 +188,7 @@ await Task.Delay(1000);
 
 ### Prerequisites
 
-- [.NET 10.0 SDK](https://dotnet.microsoft.com/download) or later (required to build the full TFM matrix)
+- [.NET 11.0 SDK](https://dotnet.microsoft.com/download) or later (`global.json` pins 11.0.100; required to build the full TFM matrix)
 - Optional: [PowerShell Core](https://github.com/PowerShell/PowerShell) for formatting scripts
 
 ### Build Steps

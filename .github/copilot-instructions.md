@@ -11,14 +11,14 @@ error policy (`DelegateTransformerOptions`). The repository was created from `re
 its CI, security and maintenance tooling, but it is a working library, not a template.
 
 **Repository Type**: Library (NuGet package `Wolfgang.Etl.Transformers`)
-**Target Platforms** (src): `net462;net472;net48;net481;netstandard2.0;net5.0;net6.0;net7.0;net8.0;net9.0;net10.0`
+**Target Platforms** (src): `net462;net472;net48;net481;netstandard2.0;net5.0;net6.0;net7.0;net8.0;net9.0;net10.0;net11.0`
 (read `<TargetFrameworks>` in `src/Wolfgang.Etl.Transformers/Wolfgang.Etl.Transformers.csproj`; there is no `netcoreapp3.1` target)
 **Primary Language**: C#
 
 ## Build and Validation Instructions
 
 ### Prerequisites
-- .NET 10.0 SDK (builds every TFM; the test matrix also needs the .NET 5.0-9.0 runtimes, and
+- .NET 11.0 SDK (`global.json` pins 11.0.100; builds every TFM; the test matrix also needs the .NET Core 3.1 and .NET 5.0-10.0 runtimes, and
   .NET Framework 4.6.2-4.8.1 developer packs on Windows)
 - PowerShell 7+ for the scripts under `scripts/`
 - The tools pinned in `.config/dotnet-tools.json` (`dotnet tool restore`; `scripts/build-pr.ps1` does this)
