@@ -185,9 +185,9 @@ public sealed class BufferedTransformer<T> : ITransformWithCancellationAsync<T, 
 
     /// <summary>
     /// The producer task body: drains the source into the channel, completing the channel
-    /// normally on natural end, or with an exception on fault. Cancellation - whether from
-    /// external <c>.WithCancellation</c> or from consumer abandonment - completes the channel
-    /// quietly without surfacing as a fault.
+    /// normally on natural end, or with an exception on fault. Cancellation of
+    /// <paramref name="token"/> completes the channel with the <see cref="OperationCanceledException"/>,
+    /// so the reader observes the cancellation rather than a short but normal-looking end.
     /// </summary>
     private static async Task PumpAsync(IAsyncEnumerable<T> items, Channel<T> channel, CancellationToken token)
     {

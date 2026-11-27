@@ -25,7 +25,8 @@ namespace Wolfgang.Etl.Transformers;
 /// <para>
 /// This class deliberately does <b>not</b> inherit from <see cref="TransformerBase{TSource, TDestination, TProgress}"/>.
 /// Because it performs no work, it does not need progress reporting, skip/max item counts, or a reporting timer,
-/// and implementing the interface directly keeps the type minimal and allocation-free.
+/// and implementing the interface directly keeps the type minimal: the overload without a token returns
+/// the source itself and allocates nothing, while the token overload allocates one iterator to observe the token.
 /// </para>
 /// </remarks>
 /// <example>
