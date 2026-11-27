@@ -220,6 +220,9 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformWit
     // for two redundancy findings. Current is read inside the try, as in the asynchronous
     // path, so an exception from it goes through the error policy. The explanation sits
     // here, outside the body, because the method is at the MA0051 length limit.
+    // Both flatten methods observe the token themselves before the first pull and per item, not
+    // only through WithCancellation: a source that ignores the token would otherwise be drained
+    // after cancellation (issues #209, #813).
     private async IAsyncEnumerable<TDestination> FlattenWithSyncSelectorAsync
     (
         IAsyncEnumerable<TSource> items,
@@ -229,26 +232,17 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformWit
     {
         using var run = _errors.BeginRun();
         var itemNumber = 0L;
-        await foreach (var item in ObserveTokenAsync(items, token).ConfigureAwait(continueOnCapturedContext: false))
+        token.ThrowIfCancellationRequested();
+
+        await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
         {
+            token.ThrowIfCancellationRequested();
             itemNumber++;
 
-            // The selector's sequence is usually lazy, so a throw can surface either here or on a
-            // later MoveNext. The enumerator is therefore driven by hand: a try/catch cannot wrap
-            // the yield, because a C# async iterator cannot resume after it throws.
-            IEnumerator<TDestination> enumerator;
-            try
+            var enumerator = TryGetEnumerator(selector, item, itemNumber);
+            if (enumerator is null)
             {
-                enumerator = selector(item).GetEnumerator();
-            }
-            catch (Exception exception) when (exception is not OperationCanceledException)
-            {
-                if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
-                {
-                    continue;
-                }
-
-                throw;
+                continue;
             }
 
             var failureSkipped = false;
@@ -300,24 +294,17 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformWit
         using var run = _errors.BeginRun();
 
         var itemNumber = 0L;
+        token.ThrowIfCancellationRequested();
 
-        await foreach (var item in ObserveTokenAsync(items, token).ConfigureAwait(continueOnCapturedContext: false))
+        await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
         {
+            token.ThrowIfCancellationRequested();
             itemNumber++;
 
-            IAsyncEnumerator<TDestination> enumerator;
-            try
+            var enumerator = TryGetAsyncEnumerator(selector, item, itemNumber, token);
+            if (enumerator is null)
             {
-                enumerator = selector(item).GetAsyncEnumerator(token);
-            }
-            catch (Exception exception) when (exception is not OperationCanceledException)
-            {
-                if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
-                {
-                    continue;
-                }
-
-                throw;
+                continue;
             }
 
             var failureSkipped = false;
@@ -354,6 +341,60 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformWit
                 await DisposeAfterItemAsync(enumerator, failureSkipped)
                     .ConfigureAwait(continueOnCapturedContext: false);
             }
+        }
+    }
+
+
+
+    // The selector's sequence is usually lazy, so a throw can surface here or on a later
+    // MoveNext. The enumerator is therefore driven by hand by the caller: a try/catch cannot wrap
+    // the yield, because a C# async iterator cannot resume after it throws. Returns null when the
+    // error policy skips the item; rethrows otherwise.
+    private IEnumerator<TDestination>? TryGetEnumerator
+    (
+        Func<TSource, IEnumerable<TDestination>> selector,
+        TSource item,
+        long itemNumber
+    )
+    {
+        try
+        {
+            return selector(item).GetEnumerator();
+        }
+        catch (Exception exception) when (exception is not OperationCanceledException)
+        {
+            if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
+            {
+                return null;
+            }
+
+            throw;
+        }
+    }
+
+
+
+    // The asynchronous counterpart of TryGetEnumerator, with the same skip-or-rethrow rule.
+    private IAsyncEnumerator<TDestination>? TryGetAsyncEnumerator
+    (
+        Func<TSource, IAsyncEnumerable<TDestination>> selector,
+        TSource item,
+        long itemNumber,
+        CancellationToken token
+    )
+    {
+        try
+        {
+            return selector(item).GetAsyncEnumerator(token);
+        }
+        catch (Exception exception) when (exception is not OperationCanceledException)
+        {
+            if (_errors.Handle(itemNumber, exception) == ItemErrorAction.Skip)
+            {
+                return null;
+            }
+
+            throw;
         }
     }
 
@@ -411,26 +452,6 @@ public sealed class SelectManyTransformer<TSource, TDestination> : ITransformWit
         {
             // Deliberately ignored: this item was skipped by the error policy, so a cleanup error
             // must neither end the run nor be counted a second time.
-        }
-    }
-
-
-
-    // Observes the token itself, not only through WithCancellation: a source that ignores the
-    // token would otherwise be drained after cancellation (issues #209, #813). A separate
-    // iterator because both flatten methods are at the MA0051 length limit.
-    private static async IAsyncEnumerable<TSource> ObserveTokenAsync
-    (
-        IAsyncEnumerable<TSource> items,
-        [EnumeratorCancellation] CancellationToken token
-    )
-    {
-        token.ThrowIfCancellationRequested();
-
-        await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
-        {
-            token.ThrowIfCancellationRequested();
-            yield return item;
         }
     }
 }
