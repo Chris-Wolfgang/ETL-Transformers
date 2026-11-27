@@ -200,8 +200,14 @@ public sealed class DistinctByTransformer<TSource, TKey> : ITransformWithCancell
         var seen = new HashSet<TKey>(comparer);
         var itemNumber = 0L;
 
+        // Observe the token here, not only through WithCancellation: a source that ignores
+        // the token would otherwise be drained after cancellation (issues #209, #813).
+        token.ThrowIfCancellationRequested();
+
         await foreach (var item in items.WithCancellation(token).ConfigureAwait(continueOnCapturedContext: false))
         {
+            token.ThrowIfCancellationRequested();
+
             itemNumber++;
 
             // Both the key selector and the comparer are caller-supplied, and either can throw for
