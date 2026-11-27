@@ -72,7 +72,7 @@ public static class EtlPipelineOperatorExtensions
 
     /// <summary>
     /// Filters the pipeline like <c>Where</c> without options, but applies the
-    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose delegate (or comparer) throws, so
+    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose delegate throws, so
     /// the item can be skipped and counted in <c>EtlPipelineProgress.ErrorItemCount</c> instead of aborting the run.
     /// </summary>
     /// <typeparam name="T">The item type. Must be non-null.</typeparam>
@@ -93,7 +93,7 @@ public static class EtlPipelineOperatorExtensions
 
     /// <summary>
     /// Filters the pipeline like <c>Where</c> without options, but applies the
-    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose delegate (or comparer) throws, so
+    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose delegate throws, so
     /// the item can be skipped and counted in <c>EtlPipelineProgress.ErrorItemCount</c> instead of aborting the run.
     /// </summary>
     /// <typeparam name="T">The item type. Must be non-null.</typeparam>
@@ -150,7 +150,7 @@ public static class EtlPipelineOperatorExtensions
 
     /// <summary>
     /// Projects the pipeline like <c>Select</c> without options, but applies the
-    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose delegate (or comparer) throws, so
+    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose delegate throws, so
     /// the item can be skipped and counted in <c>EtlPipelineProgress.ErrorItemCount</c> instead of aborting the run.
     /// </summary>
     /// <typeparam name="TSource">The source item type. Must be non-null.</typeparam>
@@ -173,7 +173,7 @@ public static class EtlPipelineOperatorExtensions
 
     /// <summary>
     /// Projects the pipeline like <c>Select</c> without options, but applies the
-    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose delegate (or comparer) throws, so
+    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose delegate throws, so
     /// the item can be skipped and counted in <c>EtlPipelineProgress.ErrorItemCount</c> instead of aborting the run.
     /// </summary>
     /// <typeparam name="TSource">The source item type. Must be non-null.</typeparam>
@@ -232,7 +232,7 @@ public static class EtlPipelineOperatorExtensions
 
     /// <summary>
     /// Flattens the pipeline like <c>SelectMany</c> without options, but applies the
-    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose delegate (or comparer) throws, so
+    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose delegate throws, so
     /// the item can be skipped and counted in <c>EtlPipelineProgress.ErrorItemCount</c> instead of aborting the run.
     /// </summary>
     /// <typeparam name="TSource">The source item type. Must be non-null.</typeparam>
@@ -255,7 +255,7 @@ public static class EtlPipelineOperatorExtensions
 
     /// <summary>
     /// Flattens the pipeline like <c>SelectMany</c> without options, but applies the
-    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose delegate (or comparer) throws, so
+    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose delegate throws, so
     /// the item can be skipped and counted in <c>EtlPipelineProgress.ErrorItemCount</c> instead of aborting the run.
     /// </summary>
     /// <typeparam name="TSource">The source item type. Must be non-null.</typeparam>
@@ -310,7 +310,7 @@ public static class EtlPipelineOperatorExtensions
 
     /// <summary>
     /// De-duplicates the pipeline like <c>Distinct</c> without options, but applies the
-    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose delegate (or comparer) throws, so
+    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose comparer throws, so
     /// the item can be skipped and counted in <c>EtlPipelineProgress.ErrorItemCount</c> instead of aborting the run.
     /// </summary>
     /// <typeparam name="T">The item type. Must be non-null.</typeparam>
@@ -368,8 +368,8 @@ public static class EtlPipelineOperatorExtensions
 
 
     /// <summary>
-    /// De-duplicates by key the pipeline like <c>DistinctBy</c> without options, but applies the
-    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose delegate (or comparer) throws, so
+    /// De-duplicates the pipeline by key, like <c>DistinctBy</c> without options, but applies the
+    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose key selector or comparer throws, so
     /// the item can be skipped and counted in <c>EtlPipelineProgress.ErrorItemCount</c> instead of aborting the run.
     /// </summary>
     /// <typeparam name="TSource">The source item type. Must be non-null.</typeparam>
@@ -394,7 +394,7 @@ public static class EtlPipelineOperatorExtensions
     /// <summary>Yields only the first <paramref name="count"/> items, then stops.</summary>
     /// <typeparam name="T">The item type. Must be non-null.</typeparam>
     /// <param name="pipeline">The pipeline to truncate.</param>
-    /// <param name="count">The maximum number of items to yield. Must be non-negative.</param>
+    /// <param name="count">The maximum number of items to yield. A count of 0 or less yields no items; it is not an error.</param>
     /// <returns>A pipeline yielding at most <paramref name="count"/> items.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="pipeline"/> is <see langword="null"/>.</exception>
     public static IEtlPipeline<T> Take<T>(this IEtlPipeline<T> pipeline, int count)
@@ -410,7 +410,7 @@ public static class EtlPipelineOperatorExtensions
     /// <summary>Skips the first <paramref name="count"/> items, then yields the rest.</summary>
     /// <typeparam name="T">The item type. Must be non-null.</typeparam>
     /// <param name="pipeline">The pipeline to skip within.</param>
-    /// <param name="count">The number of leading items to skip. Must be non-negative.</param>
+    /// <param name="count">The number of leading items to skip. A count of 0 or less skips nothing; it is not an error.</param>
     /// <returns>A pipeline yielding the items after the first <paramref name="count"/>.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="pipeline"/> is <see langword="null"/>.</exception>
     public static IEtlPipeline<T> Skip<T>(this IEtlPipeline<T> pipeline, int count)
@@ -456,8 +456,8 @@ public static class EtlPipelineOperatorExtensions
 
 
     /// <summary>
-    /// Takes items while a predicate holds the pipeline like <c>TakeWhile</c> without options, but applies the
-    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose delegate (or comparer) throws, so
+    /// Takes items from the pipeline while a predicate holds, like <c>TakeWhile</c> without options, but applies the
+    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose predicate throws, so
     /// the item can be skipped and counted in <c>EtlPipelineProgress.ErrorItemCount</c> instead of aborting the run.
     /// </summary>
     /// <typeparam name="T">The item type. Must be non-null.</typeparam>
@@ -477,8 +477,8 @@ public static class EtlPipelineOperatorExtensions
 
 
     /// <summary>
-    /// Takes items while a predicate holds the pipeline like <c>TakeWhile</c> without options, but applies the
-    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose delegate (or comparer) throws, so
+    /// Takes items from the pipeline while a predicate holds, like <c>TakeWhile</c> without options, but applies the
+    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose predicate throws, so
     /// the item can be skipped and counted in <c>EtlPipelineProgress.ErrorItemCount</c> instead of aborting the run.
     /// </summary>
     /// <typeparam name="T">The item type. Must be non-null.</typeparam>
@@ -530,8 +530,8 @@ public static class EtlPipelineOperatorExtensions
 
 
     /// <summary>
-    /// Skips items while a predicate holds the pipeline like <c>SkipWhile</c> without options, but applies the
-    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose delegate (or comparer) throws, so
+    /// Skips items from the pipeline while a predicate holds, like <c>SkipWhile</c> without options, but applies the
+    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose predicate throws, so
     /// the item can be skipped and counted in <c>EtlPipelineProgress.ErrorItemCount</c> instead of aborting the run.
     /// </summary>
     /// <typeparam name="T">The item type. Must be non-null.</typeparam>
@@ -551,8 +551,8 @@ public static class EtlPipelineOperatorExtensions
 
 
     /// <summary>
-    /// Skips items while a predicate holds the pipeline like <c>SkipWhile</c> without options, but applies the
-    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose delegate (or comparer) throws, so
+    /// Skips items from the pipeline while a predicate holds, like <c>SkipWhile</c> without options, but applies the
+    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose predicate throws, so
     /// the item can be skipped and counted in <c>EtlPipelineProgress.ErrorItemCount</c> instead of aborting the run.
     /// </summary>
     /// <typeparam name="T">The item type. Must be non-null.</typeparam>
@@ -646,7 +646,7 @@ public static class EtlPipelineOperatorExtensions
 
     /// <summary>
     /// Casts the pipeline like <c>Cast</c> without options, but applies the
-    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item whose delegate (or comparer) throws, so
+    /// <see cref="DelegateTransformerOptions.ErrorPolicy"/> in <paramref name="options"/> to an item that cannot be cast, so
     /// the item can be skipped and counted in <c>EtlPipelineProgress.ErrorItemCount</c> instead of aborting the run.
     /// </summary>
     /// <typeparam name="TSource">The source item type. Must be non-null.</typeparam>

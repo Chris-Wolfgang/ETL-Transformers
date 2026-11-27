@@ -31,10 +31,10 @@ namespace Wolfgang.Etl.Transformers;
 /// It carries no progress reporting, and counts nothing on the default
 /// path - the only counter is the opt-in <see cref="CurrentErrorItemCount"/>, which stays at zero
 /// unless an error policy skips an item - keeping the hot loop as small as possible for use as a
-/// building block in composed pipelines. Callers needing
-/// cancellation or windowing should compose with dedicated transformers (for example
-/// <see cref="SkipTransformer{T}"/>, <see cref="TakeTransformer{T}"/> or
-/// <see cref="BufferedTransformer{T}"/>). The <c>WhereBenchmarks</c> class in the benchmarks project
+/// building block in composed pipelines. Cancellation is available through the
+/// token-taking <c>TransformAsync</c> overload; callers needing windowing or buffering should
+/// compose with dedicated transformers (for example <see cref="SkipTransformer{T}"/>,
+/// <see cref="TakeTransformer{T}"/> or <see cref="BufferedTransformer{T}"/>). The <c>WhereBenchmarks</c> class in the benchmarks project
 /// measures this choice against a <see cref="TransformerBase{TSource, TDestination, TProgress}"/>
 /// implementation.
 /// </para>
